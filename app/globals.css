@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../public/fonts/fonts.css";
 
 /* Light-only site — dark: utilities require .dark class, not OS preference */
 @custom-variant dark (&:where(.dark, .dark *));

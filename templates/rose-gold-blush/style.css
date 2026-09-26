@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Italianno&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Marcellus&family=Montserrat:wght@300;400;500;600;700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rozha+One&display=swap');
+@import "../../public/fonts/fonts.css";
 
 :root {
   --color-bg-deep: #080c14;
@@ -13,6 +13,18 @@
   --color-border-gold: rgba(212, 175, 55, 0.4);
   --color-border-subtle: rgba(255, 255, 255, 0.12);
   --color-rose-gold: #c98a75;
+}
+
+.font-allura {
+  font-family: 'Allura', 'Great Vibes', cursive;
+}
+
+.font-montecarlo {
+  font-family: 'MonteCarlo', 'Pinyon Script', cursive;
+}
+
+.font-bodoni {
+  font-family: 'Bodoni Moda', 'Playfair Display', serif;
 }
 
 .font-playfair {
