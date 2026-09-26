@@ -30,6 +30,7 @@ import {
   FloppyDisk,
   Eye,
   Lock,
+  ArrowsClockwise,
 } from "@phosphor-icons/react";
 
 export interface EventItem {
@@ -86,7 +87,20 @@ export function InvitationCustomizerWizard({
   const [venueAddress, setVenueAddress] = useState(
     initialData?.venueAddress || "Fatehsagar Lake Road, Udaipur, Rajasthan 313001"
   );
-  const [slug, setSlug] = useState(initialData?.slug || "");
+  // Helper function to generate slug from couple names
+  const generateSlugFromNames = (bride: string, groom: string) => {
+    const cleanBride = (bride || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const cleanGroom = (groom || "").trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    const parts = [cleanBride, cleanGroom].filter(Boolean);
+    return parts.join("-").replace(/^-+|-+$/g, "");
+  };
+
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(
+    Boolean(initialData?.slug && isEdit)
+  );
+  const [slug, setSlug] = useState(
+    initialData?.slug || generateSlugFromNames(defaultBride, defaultGroom)
+  );
   const [heroImageUrl, setHeroImageUrl] = useState(initialData?.heroImageUrl || "");
   const [heroBgChoice, setHeroBgChoice] = useState<"default" | "custom">(
     initialData?.heroImageUrl ? "custom" : "default"
@@ -130,7 +144,10 @@ export function InvitationCustomizerWizard({
       if (initialData.weddingTime) setWeddingTime(initialData.weddingTime);
       if (initialData.venueName) setVenueName(initialData.venueName);
       if (initialData.venueAddress) setVenueAddress(initialData.venueAddress);
-      if (initialData.slug) setSlug(initialData.slug);
+      if (initialData.slug) {
+        setSlug(initialData.slug);
+        if (isEdit) setIsSlugManuallyEdited(true);
+      }
       if (initialData.heroImageUrl) {
         setHeroImageUrl(initialData.heroImageUrl);
         setHeroBgChoice("custom");
@@ -149,16 +166,15 @@ export function InvitationCustomizerWizard({
     }
   }, [initialData]);
 
-  // Auto-fill slug only for new templates when slug is not explicitly set
+  // Auto-update slug live from bride & groom names unless user explicitly customized the slug
   useEffect(() => {
-    if (!isEdit && !slug) {
-      const generated = `${brideName}-${groomName}`
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-      setSlug(generated);
+    if (!isSlugManuallyEdited) {
+      const generated = generateSlugFromNames(brideName, groomName);
+      if (generated) {
+        setSlug(generated);
+      }
     }
-  }, [brideName, groomName, isEdit, slug]);
+  }, [brideName, groomName, isSlugManuallyEdited]);
 
   const handleAddEvent = () => {
     setEvents([
@@ -527,9 +543,25 @@ export function InvitationCustomizerWizard({
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
-                  Your Custom Invitation Web Link *
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-600">
+                    Your Custom Invitation Web Link *
+                  </label>
+                  {isSlugManuallyEdited && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSlugManuallyEdited(false);
+                        const generated = generateSlugFromNames(brideName, groomName);
+                        if (generated) setSlug(generated);
+                      }}
+                      className="text-[11px] font-semibold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer transition-colors"
+                    >
+                      <ArrowsClockwise size={12} weight="bold" />
+                      <span>Auto from names</span>
+                    </button>
+                  )}
+                </div>
                 <div className="flex rounded-xl overflow-hidden border border-stone-200 bg-stone-50/50 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20">
                   <span className="bg-stone-100 px-3.5 py-3 text-xs text-stone-500 select-none flex items-center font-mono border-r border-stone-200">
                     unfoldwed.com/
@@ -538,7 +570,15 @@ export function InvitationCustomizerWizard({
                     type="text"
                     required
                     value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+                      setSlug(val);
+                      if (val.trim() === "") {
+                        setIsSlugManuallyEdited(false);
+                      } else {
+                        setIsSlugManuallyEdited(true);
+                      }
+                    }}
                     placeholder="diya-shaan"
                     className="w-full px-3 py-3 text-sm focus:outline-none bg-transparent font-mono text-stone-800"
                   />

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&family=Rozha+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Italianno&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Marcellus&family=Montserrat:wght@300;400;500;600;700&family=Parisienne&family=Pinyon+Script&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Rozha+One&display=swap');
 
 :root {
   --color-bg-deep: #080c14;
@@ -13,6 +13,30 @@
   --color-border-gold: rgba(212, 175, 55, 0.4);
   --color-border-subtle: rgba(255, 255, 255, 0.12);
   --color-rose-gold: #c98a75;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', 'Lora', serif;
+}
+
+.font-cinzel-dec {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+}
+
+.font-marcellus {
+  font-family: 'Marcellus', 'Cinzel', serif;
+}
+
+.font-parisienne {
+  font-family: 'Parisienne', 'Great Vibes', cursive;
+}
+
+.font-italianno {
+  font-family: 'Italianno', 'Pinyon Script', cursive;
+}
+
+.font-jakarta {
+  font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
 }
 
 .font-lora {
@@ -94,6 +118,30 @@
   background-size: 32px 32px;
 }
 
+.mask-radial-fade {
+  mask-image: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 80%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 80%);
+}
+
+.mask-palace-arch {
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 60%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 60%, rgba(0, 0, 0, 0) 100%);
+}
+
+.mask-mandala-soft {
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.85) 75%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.85) 75%, rgba(0, 0, 0, 0) 100%);
+}
+
+.mask-linear-bottom-fade {
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 100%);
+}
+
+.bg-palace-glow {
+  filter: brightness(1.2) contrast(1.12) saturate(1.08);
+}
+
 /* Photo Scatter & Assemble Animations */
 .photo-polaroid-frame {
   background: linear-gradient(180deg, #1c2538 0%, #121a29 100%);
@@ -113,27 +161,31 @@
   position: fixed;
   bottom: 24px;
   right: 20px;
-  z-index: 99;
-  width: 48px;
-  height: 48px;
+  z-index: 99999;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: rgba(8, 14, 24, 0.88);
+  background: rgba(14, 22, 38, 0.94);
   border: 1.5px solid #d4af37;
   color: #f3cf7a;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 22px rgba(212, 175, 55, 0.38);
   cursor: pointer;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  transition: all 0.25s ease;
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  outline: none;
 }
 
 .rgb-music-toggle:hover {
   transform: scale(1.08);
   border-color: #fae4a8;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(243, 207, 122, 0.45);
+  color: #fff6d6;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.85), 0 0 30px rgba(243, 207, 122, 0.55);
 }
 
 .rgb-music-toggle:active {

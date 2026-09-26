@@ -32,6 +32,17 @@ import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
 import "./style.css";
 
+// Helper to safely resolve audio track URLs (preventing 'track1' / 404 / unsupported source errors)
+function resolveAudioTrack(track?: string | null): string {
+  if (!track || track === "track1" || track === "track2" || track === "track3" || track === "default" || track === "ambient-sitar" || track.trim() === "") {
+    return "/templates/rose-gold-blush/music.mp3";
+  }
+  if (track.startsWith("/") || track.startsWith("http://") || track.startsWith("https://") || track.startsWith("blob:")) {
+    return track;
+  }
+  return `/audio/${track}.mp3`;
+}
+
 interface RoseGoldBlushProps {
   data?: any;
 }
@@ -110,19 +121,46 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const contentSectionRef = useRef<HTMLDivElement | null>(null);
 
-  // Parallax Scroll Tracking
+  const audioTrackUrl = resolveAudioTrack(data?.musicTrack || defaultData.musicTrack);
+
+  // Multi-layer Parallax Scroll Tracking
   const { scrollYProgress } = useScroll();
   const backgroundFloatY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const mandalaRotate = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const archParallaxY = useTransform(scrollYProgress, [0, 1], ["-2%", "20%"]);
 
-  // Toggle Audio
-  const toggleAudio = () => {
-    if (!audioRef.current) return;
-    if (isPlayingMusic) {
-      audioRef.current.pause();
-      setIsPlayingMusic(false);
+  // Toggle Audio Safely & Unmute
+  const toggleAudio = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (!audio.src || audio.src.includes("track1") || audio.error) {
+      audio.src = audioTrackUrl;
+      audio.load();
+    }
+
+    if (audio.paused) {
+      audio.muted = false;
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlayingMusic(true);
+          })
+          .catch((err) => {
+            console.warn("Audio play blocked, fallback to default track:", err);
+            audio.src = "/templates/rose-gold-blush/music.mp3";
+            audio.muted = false;
+            audio.load();
+            audio.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+          });
+      }
     } else {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch((e) => console.log("Audio play error:", e));
+      audio.pause();
+      setIsPlayingMusic(false);
     }
   };
 
@@ -154,7 +192,17 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
       heroVideoRef.current.play().catch(() => {});
     }
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+      const audio = audioRef.current;
+      if (!audio.src || audio.src.includes("track1") || audio.error) {
+        audio.src = audioTrackUrl;
+        audio.load();
+      }
+      audio.muted = false;
+      audio.play().then(() => {
+        setIsPlayingMusic(true);
+      }).catch((err) => {
+        console.warn("Audio autoplay blocked on gate open:", err);
+      });
     }
 
     // Fallback timer with +2 seconds delay
@@ -271,18 +319,26 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
       {/* Ambient Starlight Gold Petals */}
       <FloatingPetals density={16} theme="gold-dust" />
 
-      {/* Hidden Synchronized Audio Track */}
+      {/* Synchronized Background Audio Track */}
       <audio
         ref={audioRef}
-        src={data?.musicTrack || defaultData.musicTrack}
+        src={audioTrackUrl}
         loop
         preload="auto"
-      />
+        playsInline
+        onPlay={() => setIsPlayingMusic(true)}
+        onPause={() => setIsPlayingMusic(false)}
+      >
+        <source src={audioTrackUrl} type="audio/mpeg" />
+        <source src="/templates/rose-gold-blush/music.mp3" type="audio/mpeg" />
+        <source src="/audio/wedding-ambience.mp3" type="audio/mpeg" />
+      </audio>
 
-      {/* Floating Audio Toggle (Bottom-Right Circular Gold Button matching other templates) */}
+      {/* Floating Audio Toggle (Bottom-Right Circular Gold Button) */}
       <motion.button
         type="button"
-        className="rgb-music-toggle"
+        id="rgb-music-toggle-btn"
+        className="rgb-music-toggle pointer-events-auto cursor-pointer"
         onClick={toggleAudio}
         aria-label={isPlayingMusic ? "Mute soundtrack" : "Play soundtrack"}
         whileHover={{ scale: 1.08 }}
@@ -290,7 +346,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
       >
         {isPlayingMusic ? (
           <>
-            <SpeakerHigh size={18} weight="fill" />
+            <SpeakerHigh size={19} weight="fill" />
             <span className="rgb-soundwave-bars">
               <span />
               <span />
@@ -298,7 +354,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
             </span>
           </>
         ) : (
-          <SpeakerSlash size={18} weight="fill" />
+          <SpeakerSlash size={19} weight="fill" />
         )}
       </motion.button>
 
@@ -503,19 +559,11 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
       {/* ----------------------------------------------------
           2. CONTINUOUS STORYTELLING CHAPTERS (THEMED TO CASTLE)
           ---------------------------------------------------- */}
-      <main ref={contentSectionRef} className="relative z-10 bg-castle-twilight">
-        {/* Rotating Ambient Mandala Aura */}
-        <motion.div
-          style={{ rotate: mandalaRotate }}
-          className="pointer-events-none fixed -top-40 -right-40 w-[600px] h-[600px] opacity-[0.04] z-0 animate-slow-spin"
-        >
-          <svg viewBox="0 0 100 100" className="w-full h-full stroke-current text-[#d4af37]" fill="none" strokeWidth="0.5">
-            <circle cx="50" cy="50" r="46" />
-            <circle cx="50" cy="50" r="36" />
-            <circle cx="50" cy="50" r="26" />
-            <path d="M50 4 L50 96 M4 50 L96 50 M17 17 L83 83 M17 83 L83 17" />
-          </svg>
-        </motion.div>
+      <main ref={contentSectionRef} className="relative z-10 bg-castle-twilight overflow-hidden">
+        {/* Ambient Royal Gold Glow Orbs */}
+        <div className="pointer-events-none absolute top-40 -left-20 w-[420px] h-[420px] rounded-full bg-[#d4af37]/[0.04] blur-3xl z-0" />
+        <div className="pointer-events-none absolute top-[900px] -right-20 w-[480px] h-[480px] rounded-full bg-[#fae4a8]/[0.04] blur-3xl z-0" />
+        <div className="pointer-events-none absolute bottom-40 left-1/4 w-[500px] h-[500px] rounded-full bg-[#c98a75]/[0.03] blur-3xl z-0" />
 
         {/* CHAPTER 1: SACRED BLESSINGS & INVOCATIONS */}
         <section className="py-14 sm:py-20 md:py-28 px-4 max-w-3xl mx-auto text-center relative z-10">
@@ -528,23 +576,23 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
           >
             <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full castle-card-inner border border-[#d4af37]/40 shadow-sm">
               <Sparkle size={14} weight="fill" className="text-[#f3cf7a]" />
-              <span className="font-lora text-xs md:text-sm font-bold tracking-[0.2em] gold-shimmer-text">
+              <span className="font-jakarta text-xs md:text-sm font-bold tracking-[0.2em] gold-shimmer-text">
                 {invocation.tag}
               </span>
               <Sparkle size={14} weight="fill" className="text-[#f3cf7a]" />
             </div>
 
-            <h2 className="font-lora text-xl sm:text-2xl md:text-3xl font-bold text-[#fae4a8]">
+            <h2 className="font-playfair text-2xl sm:text-3xl md:text-4xl font-bold text-[#fae4a8]">
               {invocation.title}
             </h2>
 
-            <p className="font-lora text-base sm:text-lg md:text-xl text-[#fcf9f2] italic leading-relaxed whitespace-pre-line font-medium">
+            <p className="font-amiri text-lg sm:text-xl md:text-2xl text-[#fcf9f2] italic leading-relaxed whitespace-pre-line font-medium">
               {invocation.arabicOrSanskrit}
             </p>
 
             <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto" />
 
-            <p className="font-lora text-xs sm:text-sm md:text-base text-stone-300 leading-relaxed max-w-xl mx-auto">
+            <p className="font-cormorant text-sm sm:text-base md:text-lg text-stone-200 leading-relaxed max-w-xl mx-auto">
               {invocation.english}
             </p>
           </motion.div>
@@ -559,10 +607,10 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
             transition={{ duration: 0.8 }}
             className="space-y-4"
           >
-            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#d4af37] font-bold font-montserrat">
+            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#d4af37] font-bold font-jakarta">
               Auspicious Wedding Muhurat
             </span>
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-lora font-bold text-[#fcf9f2]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#fcf9f2]">
               Scratch To Reveal The Date
             </h2>
             <p className="text-xs sm:text-sm text-stone-300 font-lora">
@@ -583,10 +631,13 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
           </motion.div>
         </section>
 
-        {/* CHAPTER 3: CELESTIAL COUNTDOWN */}
-        <section className="py-10 sm:py-14 md:py-20 px-4 max-w-4xl mx-auto text-center relative z-10">
-          <CountdownSection targetDate={rawDate} />
-        </section>
+        {/* CHAPTER 3: CELESTIAL COUNTDOWN (FULL-HEIGHT & FULL-WIDTH CRAZY PARALLAX SHOWCASE) */}
+        <PalaceParallaxCountdownSection
+          targetDate={rawDate}
+          dayStr={dayStr}
+          dateStr={dateStr}
+          yearStr={yearStr}
+        />
 
         {/* CHAPTER 4: ORDER OF CEREMONIES (ROYAL CEREMONY JOURNEY) */}
         <section className="relative z-10">
@@ -938,8 +989,31 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
   );
 }
 
-// Sub-Component: Countdown Timer
-function CountdownSection({ targetDate }: { targetDate: string }) {
+// Sub-Component: Full-Width Full-Height Crazy Parallax Palace Countdown Section
+function PalaceParallaxCountdownSection({
+  targetDate,
+  dayStr,
+  dateStr,
+  yearStr,
+}: {
+  targetDate: string;
+  dayStr: string;
+  dateStr: string;
+  yearStr: string;
+}) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  // Crazy multi-layered parallax transforms across height, scale, rotation and glow
+  const bgY = useTransform(scrollYProgress, [0, 1], ["-26%", "26%"]);
+  const bgScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.3, 1.08, 1.25]);
+  const bgRotate = useTransform(scrollYProgress, [0, 1], [-2, 2]);
+  const contentY = useTransform(scrollYProgress, [0, 1], ["75px", "-75px"]);
+  const glowOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.85, 0.3]);
+
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -966,35 +1040,97 @@ function CountdownSection({ targetDate }: { targetDate: string }) {
   }, [targetDate]);
 
   return (
-    <div className="castle-card-shell p-5 sm:p-8 md:p-12 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl max-w-xl mx-auto">
-      <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#d4af37] font-bold font-montserrat block mb-1.5">
-        Counting Down The Moments
-      </span>
-      <h3 className="text-xl sm:text-2xl md:text-4xl font-lora font-bold text-[#fcf9f2] mb-6 sm:mb-8">
-        Until We Say &quot;Forever&quot;
-      </h3>
+    <section
+      ref={containerRef}
+      className="relative w-full min-h-[100vh] sm:min-h-[110vh] overflow-hidden flex items-center justify-center py-20 sm:py-28 px-4 select-none my-8 md:my-14"
+    >
+      {/* FULL WIDTH & FULL HEIGHT CRAZY PARALLAX PALACE BACKGROUND IMAGE */}
+      <motion.div
+        style={{
+          y: bgY,
+          scale: bgScale,
+          rotate: bgRotate,
+        }}
+        className="absolute inset-x-0 -top-[30%] h-[160%] w-full pointer-events-none z-0 overflow-hidden"
+      >
+        <img
+          src="/templates/rose-gold-blush/palace-arch.jpg"
+          alt="Royal Palace Arch"
+          className="w-full h-full object-cover object-center filter brightness-[0.78] contrast-[1.14] saturate-[1.2]"
+        />
+      </motion.div>
 
-      <div className="grid grid-cols-4 gap-2 sm:gap-3 md:gap-4 font-montserrat">
-        {[
-          { label: "Days", value: timeLeft.days },
-          { label: "Hours", value: timeLeft.hours },
-          { label: "Mins", value: timeLeft.minutes },
-          { label: "Secs", value: timeLeft.seconds },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="py-3 px-1.5 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl castle-card-inner border border-[#d4af37]/35 shadow-sm flex flex-col items-center justify-center min-w-0"
-          >
-            <span className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#fae4a8] font-lora block leading-none truncate">
-              {String(item.value).padStart(2, "0")}
-            </span>
-            <span className="text-[9px] sm:text-[10px] md:text-xs uppercase font-bold tracking-wider text-stone-300 mt-1.5 block truncate">
-              {item.label}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+      {/* Atmospheric Top & Bottom Seamless Dark Twilight Gradients */}
+      <div className="absolute inset-x-0 top-0 h-44 sm:h-64 bg-gradient-to-b from-[#080c14] via-[#080c14]/80 to-transparent z-[1] pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-44 sm:h-64 bg-gradient-to-t from-[#080c14] via-[#080c14]/80 to-transparent z-[1] pointer-events-none" />
+
+      {/* Central Ambient Vignette Overlay */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[0.5px] z-[1] pointer-events-none" />
+
+      {/* Luminous Pulsing Gold Glow Aura */}
+      <motion.div
+        style={{ opacity: glowOpacity }}
+        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(212,175,55,0.18)_0%,_transparent_70%)] z-[1] pointer-events-none"
+      />
+
+      {/* FOREGROUND CONTENT: FLOATING CELESTIAL COUNTDOWN PEDESTAL */}
+      <motion.div
+        style={{ y: contentY }}
+        initial={{ opacity: 0, scale: 0.92 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full max-w-2xl mx-auto p-6 sm:p-10 md:p-14 rounded-[2.2rem] sm:rounded-[2.8rem] bg-black/65 backdrop-blur-2xl border border-[#d4af37]/45 shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(212,175,55,0.2)] text-center space-y-6 sm:space-y-8"
+      >
+        {/* Top Floating Badge */}
+        <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-black/70 border border-[#d4af37]/50 shadow-md">
+          <Sparkle size={14} weight="fill" className="text-[#f3cf7a] animate-spin" style={{ animationDuration: "6s" }} />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#fae4a8] font-bold font-jakarta">
+            ✦ Celestial Wedding Countdown ✦
+          </span>
+          <Sparkle size={14} weight="fill" className="text-[#f3cf7a] animate-spin" style={{ animationDuration: "6s" }} />
+        </div>
+
+        {/* Title */}
+        <div className="space-y-2">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#fcf9f2] drop-shadow-[0_2px_15px_rgba(0,0,0,0.9)]">
+            Until We Say &quot;Forever&quot;
+          </h2>
+          <p className="text-xs sm:text-sm text-stone-300 font-lora max-w-md mx-auto italic">
+            Every passing moment brings us closer to the sacred vows of our eternal union
+          </p>
+        </div>
+
+        {/* Golden Countdown Grid */}
+        <div className="grid grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 font-jakarta pt-2">
+          {[
+            { label: "Days", value: timeLeft.days },
+            { label: "Hours", value: timeLeft.hours },
+            { label: "Mins", value: timeLeft.minutes },
+            { label: "Secs", value: timeLeft.seconds },
+          ].map((item, idx) => (
+            <motion.div
+              key={idx}
+              whileHover={{ scale: 1.05, y: -4 }}
+              className="py-4 px-2 sm:py-5 sm:px-3 md:py-6 rounded-2xl bg-black/60 border border-[#d4af37]/40 shadow-lg flex flex-col items-center justify-center min-w-0 group hover:border-[#d4af37] transition-all"
+            >
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#fae4a8] group-hover:text-[#fff6d6] font-cinzel block leading-none drop-shadow-md truncate">
+                {String(item.value).padStart(2, "0")}
+              </span>
+              <span className="text-[9px] sm:text-[10px] md:text-xs uppercase font-bold tracking-[0.15em] text-stone-300 group-hover:text-[#f3cf7a] mt-2 block truncate transition-colors">
+                {item.label}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Bottom Sub-Pill with Auspicious Date Summary */}
+        <div className="pt-2 border-t border-white/10 flex flex-wrap items-center justify-center gap-3 text-[11px] font-montserrat text-stone-300">
+          <span className="text-[#d4af37] font-bold">✨ Auspicious Muhurat:</span>
+          <span>{dayStr}, {dateStr} {yearStr}</span>
+        </div>
+      </motion.div>
+    </section>
   );
 }
 
@@ -1076,17 +1212,17 @@ function CeremonyJourney({
     <div className="py-16 sm:py-24 md:py-32 px-4 max-w-6xl mx-auto relative z-10">
       {/* Section Header */}
       <div className="text-center space-y-3 mb-12 md:mb-16">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/40 border border-[#d4af37]/30 text-[#fae4a8] text-[10px] font-bold font-montserrat tracking-[0.25em] uppercase">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/40 border border-[#d4af37]/30 text-[#fae4a8] text-[10px] font-bold font-jakarta tracking-[0.25em] uppercase">
           <Sparkle size={12} weight="fill" className="text-[#f3cf7a]" />
           <span>The Sacred Celebration Journey</span>
           <Sparkle size={12} weight="fill" className="text-[#f3cf7a]" />
         </div>
 
-        <h2 className="text-2xl sm:text-3xl md:text-5xl font-lora font-bold text-[#fcf9f2]">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#fcf9f2]">
           Order of Ceremonies
         </h2>
 
-        <p className="text-xs sm:text-sm text-stone-300 max-w-md mx-auto font-lora">
+        <p className="text-sm sm:text-base text-stone-300 max-w-md mx-auto font-cormorant">
           We warmly invite you to journey with us across each joyous ceremony and sacred ritual
         </p>
 
@@ -1467,17 +1603,17 @@ function ScatteredMemoriesGallery({
     >
       {/* Chapter Title & Subtitle */}
       <div className="text-center space-y-3 mb-10 md:mb-14">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/40 border border-[#d4af37]/30 text-[#fae4a8] text-[10px] font-bold font-montserrat tracking-[0.25em] uppercase">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-black/40 border border-[#d4af37]/30 text-[#fae4a8] text-[10px] font-bold font-jakarta tracking-[0.25em] uppercase">
           <Sparkle size={12} weight="fill" className="text-[#f3cf7a]" />
           <span>Chapter V · Captured Moments</span>
           <Sparkle size={12} weight="fill" className="text-[#f3cf7a]" />
         </div>
 
-        <h2 className="text-2xl sm:text-3xl md:text-5xl font-lora font-bold text-[#fcf9f2]">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#fcf9f2]">
           Scattered Memories
         </h2>
 
-        <p className="text-xs sm:text-sm text-stone-300 max-w-md mx-auto font-lora">
+        <p className="text-sm sm:text-base text-stone-300 max-w-md mx-auto font-cormorant">
           Glimpses of laughter, stolen glances, and cherished milestones woven into our eternal love story
         </p>
       </div>
@@ -1488,7 +1624,7 @@ function ScatteredMemoriesGallery({
         <div className="flex justify-center mb-6">
           <button
             onClick={() => setIsAssembled((prev) => !prev)}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full castle-card-inner border border-[#d4af37]/35 text-[11px] font-semibold text-[#fae4a8] hover:border-[#d4af37] transition-all cursor-pointer font-montserrat"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full castle-card-inner border border-[#d4af37]/35 text-[11px] font-semibold text-[#fae4a8] hover:border-[#d4af37] transition-all cursor-pointer font-jakarta"
           >
             <Sparkle size={13} className="text-[#f3cf7a]" />
             <span>{isAssembled ? "✦ Memories Collected · 3D Reel Active" : "✦ Scroll to Collect Scattered Memories"}</span>
