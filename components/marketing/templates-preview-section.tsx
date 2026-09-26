@@ -11,9 +11,31 @@ import { WhatsappShareDemo } from "@/components/marketing/whatsapp-share-demo";
 import { staggerContainer, fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
 import { TEMPLATE_META } from "@/lib/template-meta";
 
-const FILTERS = ["All", "Hindu", "Muslim", "Best Sellers", "New"] as const;
+const FILTERS = ["All", "Universal", "Hindu", "Muslim", "Best Sellers", "New"] as const;
 
 const CATALOG: TemplateCatalogItem[] = [
+  {
+    id: TEMPLATE_META["royal-grace"].id,
+    name: TEMPLATE_META["royal-grace"].name,
+    description: TEMPLATE_META["royal-grace"].description,
+    tag: "New",
+    gradient: TEMPLATE_META["royal-grace"].gradient,
+    leftScreen: "curtain",
+    accentClass: "text-emerald-800",
+    religion: TEMPLATE_META["royal-grace"].religion,
+    religionLabel: TEMPLATE_META["royal-grace"].religionLabel,
+  },
+  {
+    id: TEMPLATE_META["rose-gold-blush"].id,
+    name: TEMPLATE_META["rose-gold-blush"].name,
+    description: TEMPLATE_META["rose-gold-blush"].description,
+    tag: "New",
+    gradient: TEMPLATE_META["rose-gold-blush"].gradient,
+    leftScreen: "hero",
+    accentClass: "text-amber-800",
+    religion: TEMPLATE_META["rose-gold-blush"].religion,
+    religionLabel: TEMPLATE_META["rose-gold-blush"].religionLabel,
+  },
   {
     id: TEMPLATE_META["noor-e-nikah"].id,
     name: TEMPLATE_META["noor-e-nikah"].name,
@@ -131,6 +153,7 @@ export function TemplatesPreviewSection() {
 
   const filtered = CATALOG.filter((t) => {
     if (filter === "All") return true;
+    if (filter === "Universal") return t.religion?.includes("universal");
     if (filter === "Hindu") return t.religion?.includes("hindu");
     if (filter === "Muslim") return t.religion?.includes("muslim");
     if (filter === "Best Sellers") return t.tag === "Best Seller" || t.tag === "Exclusive";

@@ -23,6 +23,8 @@ const TEMPLATES_LIST = [
   { id: "emerald-noir", name: "Emerald Noir (Luxury Dark)" },
   { id: "royal-elegance", name: "Royal Elegance (Classic South Asian)" },
   { id: "modern-minimal", name: "Modern Minimal (Contemporary)" },
+  { id: "rose-gold-blush", name: "Rose Gold Blush (Dual Faith & Universal)" },
+  { id: "royal-grace", name: "Royal Grace (Botanical Velvet & Gold)" },
 ];
 
 export function AdminCreateModal({

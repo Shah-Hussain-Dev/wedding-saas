@@ -11,9 +11,11 @@ import { PageHero } from "@/components/ui/page-hero";
 import { staggerContainer, fadeUp, cardHover, viewportOnce } from "@/components/ui/motion-primitives";
 import { ArrowUpRight } from "@phosphor-icons/react";
 
-const FILTERS = ["All", "Hindu", "Muslim", "Best Sellers", "New"];
+const FILTERS = ["All", "Universal", "Hindu", "Muslim", "Best Sellers", "New"];
 
 const TEMPLATES = [
+  { id: "royal-grace", name: "Royal Grace", style: "Botanical Velvet & Gold", tag: "New", religion: ["hindu", "muslim", "universal"], religionLabel: "Universal", colors: "Sage Green + Antique Gold", opening: "Cinematic Gate Opening", desc: "Enchanted botanical velvet gate opening video synchronized at 6s, 24K antique gold filigree, multi-axis parallax glasshouse palace, scratch date reveal, and 3D scattered memories reel.", gradient: "from-[#0e1713] via-[#1b2d24] to-[#121c17]" },
+  { id: "rose-gold-blush", name: "Rose Gold Blush Royal", style: "Rose Gold & Blush Parchment", tag: "New", religion: ["hindu", "muslim", "universal"], religionLabel: "Universal", colors: "Rose Gold + Blush Parchment", opening: "Cinematic Video Opening", desc: "Timeless dual-faith celebration with Ishaan & Anaya, featuring high-definition envelope opening video, Vedic & Islamic blessings, and scratch reveal card.", gradient: "from-[#F7EEE9] via-[#F3E9E2] to-[#E2DACF]" },
   { id: "noor-e-nikah", name: "Noor-e-Nikah", style: "Sacred Elegance", tag: "Featured", religion: ["muslim"], religionLabel: "Muslim", colors: "Ivory + 24K Gold", opening: "3D Floral Envelope", desc: "Sacred Islamic wedding experience with 3D embossed floral envelope, slow-lighting gold wax seal, grand mosque archway portal, and Nikah timeline.", gradient: "from-[#FAF8F5] via-[#F3EDE2] to-[#E5DAC6]" },
   { id: "emerald-qasr", name: "Emerald Qasr", style: "Ottoman Royale", tag: "New", religion: ["muslim"], religionLabel: "Muslim", colors: "Emerald + 24K Gold", opening: "Cinematic Video Opening", desc: "Opulent Ottoman palace aesthetic with animated envelope opening video, gold filigree, Ayat Ar-Rum blessings, and scratch reveal.", gradient: "from-[#081F1A] via-[#0F382E] to-[#04120F]" },
   { id: "gul-e-noor", name: "Gul-e-Noor", style: "Blush Velvet & Rose", tag: "New", religion: ["muslim"], religionLabel: "Muslim", colors: "Pastel Rose + Pearl", opening: "Cinematic Video Opening", desc: "Dreamy blush pink & rose velvet celebration with floating floral envelope opening video, glowing pearl accents, and RSVP.", gradient: "from-[#FFF5F7] via-[#FCE8ED] to-[#F5D0DB]" },
@@ -24,13 +26,13 @@ const TEMPLATES = [
   { id: "emerald-noir", name: "Emerald Noir", style: "Luxury Dark", tag: "Best Seller", religion: ["hindu", "universal"], religionLabel: "Hindu", colors: "Emerald + 24K Gold", opening: "3D Haveli Gate Reveal", desc: "Ornate 24K gold details on rich emerald canvas. 3D Haveli Gate reveal with glowing Ganesha seal, multi-layer parallax, and Muhurat scratch card.", gradient: "from-[#081F1A] via-[#0F382E] to-[#04120F]" },
   { id: "royal-elegance", name: "Royal Elegance", style: "Classic South Asian", tag: "Best Seller", religion: ["hindu", "universal"], religionLabel: "Hindu", colors: "Royal Crimson + Gold", opening: "Maharani Curtain Reveal", desc: "Traditional South Asian grandeur with 3D Maharani Silk Curtains, Royal Kundan Wax Seal, Gauri Ganesh blessings, and interactive scratch reveal.", gradient: "from-[#faf7f0] to-[#f0e8d8]" },
   { id: "modern-minimal", name: "Modern Minimal", style: "Contemporary Chic", tag: "New", religion: ["hindu", "universal"], religionLabel: "Hindu", colors: "Warm Champagne + Gold", opening: "3D Origami Envelope", desc: "Contemporary Vedic luxury with a 3D architectural origami envelope & pure gold monogram seal, multi-layer parallax, and gallery lightbox.", gradient: "from-stone-50 to-stone-200" },
-  { id: "rose-gold-blush", name: "Rose Gold Blush Royal", style: "Rose Gold & Blush Parchment", tag: "New", religion: ["hindu", "muslim", "universal"], religionLabel: "Universal", colors: "Rose Gold + Blush Parchment", opening: "Cinematic Video Opening", desc: "Timeless dual-faith celebration with Ishaan & Anaya, featuring high-definition envelope opening video, Vedic & Islamic blessings, and scratch reveal card.", gradient: "from-[#F7EEE9] via-[#F3E9E2] to-[#E2DACF]" },
 ];
 
 export default function TemplatesPage() {
   const [filter, setFilter] = useState("All");
   const filtered = TEMPLATES.filter((t) => {
     if (filter === "All") return true;
+    if (filter === "Universal") return t.religion.includes("universal");
     if (filter === "Hindu") return t.religion.includes("hindu");
     if (filter === "Muslim") return t.religion.includes("muslim");
     if (filter === "Best Sellers") return t.tag === "Best Seller" || t.tag === "Trending";
@@ -56,7 +58,7 @@ export default function TemplatesPage() {
                     : "bg-white border border-black/[0.06] text-stone-500 hover:border-accent-gold/30 hover:text-stone-700"
                 }`}
               >
-                {f === "Hindu" ? "🕉️ Hindu Weddings" : f === "Muslim" ? "🌙 Muslim Weddings" : f}
+                {f === "Hindu" ? "🕉️ Hindu Weddings" : f === "Muslim" ? "🌙 Muslim Weddings" : f === "Universal" ? "✦ Universal Themes" : f}
               </button>
             ))}
           </div>

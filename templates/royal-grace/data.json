@@ -1,0 +1,87 @@
+{
+  "templateId": "royal-grace",
+  "name": "Royal Grace",
+  "religion": "universal",
+  "couple": {
+    "brideName": "Samaira",
+    "groomName": "Aarav",
+    "tagline": "The Grand Royal Botanical Wedding Of",
+    "groomParents": "Son of Mr. & Mrs. Singhania",
+    "groomEducation": "MBA, Harvard",
+    "groomProfession": "Investment Director",
+    "brideParents": "Daughter of Mr. & Mrs. Kapoor",
+    "brideEducation": "M.Arch, London",
+    "brideProfession": "Principal Architect"
+  },
+  "weddingDate": "2027-11-22T18:30:00",
+  "weddingTime": "06:30 PM onwards",
+  "dateFormatted": "Monday, November 22, 2027",
+  "hashtag": "#AaravWedsSamaira",
+  "videoUrl": "/videos/royal-grace.mp4",
+  "musicTrack": "/templates/royal-grace/music.mp3",
+  "quote": "Two hearts entwined in timeless grace, blessed by the love of family, destined for an eternal journey of togetherness.",
+  "invocations": {
+    "universal": "With joyful hearts and the blessings of our parents, we invite you to celebrate our union as we exchange vows of everlasting love.",
+    "hindu": "|| ॐ श्री गणेशाय नमः ||\nमङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
+    "muslim": "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He has put love and mercy between your hearts.” (Surah Ar-Rum 30:21)"
+  },
+  "venue": {
+    "name": "The Oberoi Grand Botanical Pavilion & Glasshouse Estate",
+    "address": "Lakeside Royal Garden Road, Udaipur, Rajasthan 313001",
+    "mapUrl": "https://maps.google.com/?q=The+Oberoi+Udaipur"
+  },
+  "dressCode": {
+    "title": "Royal Botanical Sage & Champagne Gold Formal",
+    "description": "We invite our cherished guests to celebrate in soft olive greens, champagne ivory, sage velvet, antique gold, or regal formal attire."
+  },
+  "events": [
+    {
+      "name": "Mehendi & Floral Garden Soirée",
+      "date": "November 21, 2027",
+      "time": "03:30 PM",
+      "venue": "The Conservatory Lawn",
+      "description": "An enchanted afternoon of delicate henna artistry, live acoustic melodies, artisanal cocktails, and joyous family celebrations.",
+      "dress": "Sage Green & Pastel Florals"
+    },
+    {
+      "name": "Sangeet & Sufi Gala Night",
+      "date": "November 21, 2027",
+      "time": "07:30 PM",
+      "venue": "The Royal Glasshouse Ballroom",
+      "description": "A starlit evening of glamorous choreography, sufi fusion symphony, gourmet dining, and dance.",
+      "dress": "Shimmering Emerald & Antique Gold"
+    },
+    {
+      "name": "Auspicious Haldi & Phoolon Ki Holi",
+      "date": "November 22, 2027",
+      "time": "10:30 AM",
+      "venue": "Sunken Courtyard Lotus Pool",
+      "description": "Traditional turmeric ceremony filled with marigold petals, vibrant dhol beats, and blessings.",
+      "dress": "Sun-Kissed Ochre & Ivory"
+    },
+    {
+      "name": "Baraat Swagat & Sacred Vivah Ceremony",
+      "date": "November 22, 2027",
+      "time": "05:30 PM",
+      "venue": "The Grand Botanical Arch Pavilion",
+      "description": "Royal groom procession followed by sacred pheras and eternal wedding vows under the twilight canopy.",
+      "dress": "Regal Sage Velvet & Royal Sherwanis"
+    },
+    {
+      "name": "Grand Reception & Toast to Forever",
+      "date": "November 22, 2027",
+      "time": "08:30 PM",
+      "venue": "The Moonlight Palace Terrace",
+      "description": "A magnificent dinner banquet, champagne toasts, speeches, and celestial celebrations with friends and family.",
+      "dress": "Black Tie & Royal Formal Couture"
+    }
+  ],
+  "gallery": [
+    "/templates/crimson-royale/gallery-1.webp",
+    "/templates/crimson-royale/gallery-2.webp",
+    "/templates/crimson-royale/gallery-3.webp",
+    "/templates/crimson-royale/gallery-4.webp",
+    "/templates/crimson-royale/gallery-5.webp",
+    "/templates/crimson-royale/gallery-6.webp"
+  ]
+}

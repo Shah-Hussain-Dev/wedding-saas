@@ -9,7 +9,8 @@ export type TemplateId =
   | "gul-e-noor"
   | "azure-nikah"
   | "kitab-e-nikah"
-  | "rose-gold-blush";
+  | "rose-gold-blush"
+  | "royal-grace";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -146,6 +147,17 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
       "A timeless dual-faith royal wedding celebration featuring Ishaan & Anaya with an ultra-smooth cinematic local video opening, switchable Vedic & Islamic blessings, rose-gold shaped scratch card, and modern luxury aesthetics.",
     gradient: "from-[#F7EEE9] via-[#F3E9E2] to-[#E2DACF]",
   },
+  "royal-grace": {
+    id: "royal-grace",
+    name: "Royal Grace",
+    style: "Botanical Velvet & Antique Gold",
+    tag: "Cinematic Gate",
+    religion: ["hindu", "muslim", "universal"],
+    religionLabel: "Universal Royale",
+    description:
+      "An enchanted botanical velvet gate & golden curtain reveal video synchronized at 6s, featuring deep sage & olive tones, antique gold filigree, multi-axis parallax botanical glasshouse palace, scratch date reveal, and a 3D scattered card memory reel.",
+    gradient: "from-[#0e1713] via-[#1b2d24] to-[#121c17]",
+  },
 };
 
 export const INCLUDED_FEATURES = [
@@ -220,4 +232,5 @@ export const TEMPLATE_COMPONENTS = {
   "azure-nikah": () => import("@/templates/azure-nikah"),
   "kitab-e-nikah": () => import("@/templates/kitab-e-nikah"),
   "rose-gold-blush": () => import("@/templates/rose-gold-blush"),
+  "royal-grace": () => import("@/templates/royal-grace"),
 } as const;

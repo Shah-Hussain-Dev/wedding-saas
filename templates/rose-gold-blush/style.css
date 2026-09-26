@@ -1,174 +1,208 @@
+/* ==========================================================================
+   ROSE GOLD BLUSH — LUXURY PALACE & ROMANTIC TWILIGHT CSS
+   Core Palette: Warm Ivory, Champagne Gold, Moonlit Royal Navy, Deep Navy, Dusty Rose
+   ========================================================================== */
+
 @import "../../public/fonts/fonts.css";
 
 :root {
-  --color-bg-deep: #080c14;
-  --color-bg-surface: #0e1626;
-  --color-bg-card: rgba(18, 25, 42, 0.88);
-  --color-gold-glow: #f3cf7a;
-  --color-gold-foil: #d4af37;
-  --color-gold-champagne: #fae4a8;
-  --color-text-primary: #fcf9f2;
-  --color-text-secondary: #e2d7c5;
-  --color-text-muted: #9ea8ba;
-  --color-border-gold: rgba(212, 175, 55, 0.4);
-  --color-border-subtle: rgba(255, 255, 255, 0.12);
-  --color-rose-gold: #c98a75;
+  /* 🤍 WARM IVORY & CREAM PALETTE */
+  --ivory: #F1E9D8;
+  --warm-cream: #E7DCC5;
+  --ivory-card: #F7F1E6;
+  --ivory-pure: #FAF7F0;
+
+  /* 🌌 MIDNIGHT ROYAL BLUE & NAVY PALETTE */
+  --midnight-blue: #17334F;
+  --deep-navy: #102A43;
+  --navy-glow: #244766;
+
+  /* 🥂 CHAMPAGNE & ANTIQUE GOLD PALETTE */
+  --champagne: #C5A46A;
+  --antique-gold: #B78C4E;
+  --light-gold: #D7B875;
+
+  /* 🌹 ROMANTIC DUSTY ROSE (ACCENT ONLY) */
+  --dusty-rose: #8D5B5C;
+
+  /* 🖋️ TYPOGRAPHY CONTRAST */
+  --dark-text: #17334F;
+  --light-text: #F5EFE3;
+  --muted-text: #5A4633;
+
+  /* BORDERS & ACCENTS */
+  --border-gold: rgba(183, 140, 78, 0.45);
+  --border-gold-strong: rgba(183, 140, 78, 0.65);
+  --border-subtle: rgba(255, 255, 255, 0.12);
 }
 
-.font-allura {
-  font-family: 'Allura', 'Great Vibes', cursive;
+/* ====================================================
+   FONT UTILITIES
+   ==================================================== */
+.font-allura { font-family: 'Allura', 'Great Vibes', cursive; }
+.font-montecarlo { font-family: 'MonteCarlo', 'Pinyon Script', cursive; }
+.font-bodoni { font-family: 'Bodoni Moda', 'Playfair Display', serif; }
+.font-playfair { font-family: 'Playfair Display', 'Lora', serif; }
+.font-cinzel-dec { font-family: 'Cinzel Decorative', 'Cinzel', serif; }
+.font-marcellus { font-family: 'Marcellus', 'Cinzel', serif; }
+.font-parisienne { font-family: 'Parisienne', 'Great Vibes', cursive; }
+.font-italianno { font-family: 'Italianno', 'Pinyon Script', cursive; }
+.font-jakarta { font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif; }
+.font-lora { font-family: 'Lora', serif; }
+.font-great-vibes { font-family: 'Great Vibes', cursive, 'Pinyon Script', 'Alex Brush'; }
+.font-alex-brush { font-family: 'Alex Brush', cursive; }
+.font-pinyon { font-family: 'Pinyon Script', cursive; }
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-montserrat { font-family: 'Montserrat', sans-serif; }
+.font-cinzel { font-family: 'Cinzel', serif; }
+.font-amiri { font-family: 'Amiri', serif; }
+.font-rozha { font-family: 'Rozha One', serif; }
+
+/* ====================================================
+   SECTION BACKGROUNDS & CONTINUOUS CINEMATIC TRANSITIONS
+   ==================================================== */
+
+/* 1. 🤍 WARM IVORY STATIONERY SECTION */
+.bg-rgb-ivory {
+  background-color: var(--ivory);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #FAF7F0 0%, #F1E9D8 70%, #E7DCC5 100%),
+    radial-gradient(circle at 15% 25%, rgba(197, 164, 106, 0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(183, 140, 78, 0.06) 0%, transparent 45%);
 }
 
-.font-montecarlo {
-  font-family: 'MonteCarlo', 'Pinyon Script', cursive;
+/* 2. 🕯️ SCRATCH CARD ROMANTIC SECTION (Ivory to Navy Smooth Bleed) */
+.bg-rgb-scratch {
+  background-color: var(--ivory);
+  background-image: 
+    radial-gradient(ellipse at 50% 30%, #FAF7F0 0%, #F1E9D8 50%, #E7DCC5 85%, #DCD0B7 100%),
+    radial-gradient(circle at 80% 35%, rgba(141, 91, 92, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 20% 70%, rgba(197, 164, 106, 0.09) 0%, transparent 45%);
 }
 
-.font-bodoni {
-  font-family: 'Bodoni Moda', 'Playfair Display', serif;
+/* 3. 🌌 MOONLIT ROYAL NAVY SECTION */
+.bg-rgb-midnight {
+  background-color: var(--midnight-blue);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #244766 0%, #17334F 55%, #102A43 100%),
+    radial-gradient(circle at 80% 35%, rgba(215, 184, 117, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 20% 75%, rgba(141, 91, 92, 0.06) 0%, transparent 50%);
 }
 
-.font-playfair {
-  font-family: 'Playfair Display', 'Lora', serif;
+/* 4. 🌙 CINEMATIC RSVP SECTION (Midnight Blue Environment) */
+.rsvp-section,
+.bg-rgb-rsvp {
+  background: radial-gradient(
+    circle at 50% 40%,
+    #244766 0%,
+    #17334F 45%,
+    #102A43 100%
+  );
+  position: relative;
 }
 
-.font-cinzel-dec {
-  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+/* 5. 🏛️ FOOTER SECTION (Seamless Deep Navy with Antique Gold Accent) */
+.bg-rgb-footer {
+  background: #102A43;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(36, 71, 102, 0.35) 0%, #102A43 75%);
 }
 
-.font-marcellus {
-  font-family: 'Marcellus', 'Cinzel', serif;
+/* Smooth Soft Edge Blending Masks & Seamless Overlays */
+.soft-bottom-to-navy {
+  background: linear-gradient(180deg, transparent 0%, rgba(23, 51, 79, 0.08) 60%, rgba(23, 51, 79, 0.95) 100%);
 }
 
-.font-parisienne {
-  font-family: 'Parisienne', 'Great Vibes', cursive;
+.soft-top-from-navy {
+  background: linear-gradient(180deg, rgba(23, 51, 79, 0.95) 0%, rgba(23, 51, 79, 0.08) 40%, transparent 100%);
 }
 
-.font-italianno {
-  font-family: 'Italianno', 'Pinyon Script', cursive;
+/* ====================================================
+   LUXURY CARD SHELLS
+   ==================================================== */
+
+/* 🤍 WARM IVORY STATIONERY CARD */
+.rgb-card-ivory {
+  background: #F7F1E6;
+  border: 1px solid rgba(183, 140, 78, 0.45);
+  box-shadow: 0 20px 50px rgba(16, 42, 67, 0.08), 0 0 30px rgba(197, 164, 106, 0.06);
+  color: var(--dark-text);
 }
 
-.font-jakarta {
-  font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+.rgb-card-ivory-inner {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(183, 140, 78, 0.3);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
-.font-lora {
-  font-family: 'Lora', serif;
+/* 🌙 RSVP CARD (Illuminated against Midnight Navy) */
+.rsvp-card {
+  background: #F1E9D8;
+  border: 1px solid rgba(183, 140, 78, 0.65);
+  box-shadow:
+    0 25px 70px rgba(10, 29, 46, 0.35),
+    0 0 40px rgba(197, 164, 106, 0.08);
+  color: var(--dark-text);
+  position: relative;
 }
 
-.font-great-vibes {
-  font-family: 'Great Vibes', cursive, 'Pinyon Script', 'Alex Brush';
+.rsvp-glow-aura {
+  position: absolute;
+  inset: -20px;
+  border-radius: 3.2rem;
+  background: radial-gradient(ellipse at 50% 50%, rgba(197, 164, 106, 0.2) 0%, rgba(215, 184, 117, 0.05) 50%, transparent 70%);
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.font-alex-brush {
-  font-family: 'Alex Brush', cursive;
-}
-
-.font-pinyon {
-  font-family: 'Pinyon Script', cursive;
-}
-
-.font-cormorant {
-  font-family: 'Cormorant Garamond', serif;
-}
-
-.font-montserrat {
-  font-family: 'Montserrat', sans-serif;
-}
-
-.font-cinzel {
-  font-family: 'Cinzel', serif;
-}
-
-.font-amiri {
-  font-family: 'Amiri', serif;
-}
-
-.font-rozha {
-  font-family: 'Rozha One', serif;
-}
-
-/* Midnight Gold & Shimmering Gradients */
-.gold-shimmer-text {
-  background: linear-gradient(135deg, #fae4a8 0%, #f3cf7a 35%, #d4af37 70%, #fff6d6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.rose-gold-gradient-text {
-  background: linear-gradient(135deg, #fae4a8 0%, #c98a75 50%, #f3cf7a 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Luxury Castle Glassmorphic Card Shells */
-.castle-card-shell {
-  background: linear-gradient(145deg, rgba(16, 24, 40, 0.88) 0%, rgba(10, 15, 26, 0.94) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+/* 🌌 MIDNIGHT GLASS CARD (Used on Parallax / Gallery) */
+.rgb-card-midnight {
+  background: linear-gradient(145deg, rgba(23, 51, 79, 0.92) 0%, rgba(16, 42, 67, 0.96) 100%);
+  border: 1px solid rgba(183, 140, 78, 0.45);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(197, 164, 106, 0.15);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  color: var(--light-text);
 }
 
-.castle-card-inner {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(212, 175, 55, 0.2);
+.rgb-card-midnight-inner {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(183, 140, 78, 0.25);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
 }
 
-/* Atmosphere Backgrounds */
-.bg-castle-twilight {
-  background-color: #080c14;
-  background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(26, 42, 74, 0.5) 0%, transparent 70%),
-    radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 20% 80%, rgba(201, 138, 117, 0.06) 0%, transparent 50%);
+/* ====================================================
+   BUTTONS & INTERACTIVE CONTROLS
+   ==================================================== */
+
+/* Primary RSVP CTA */
+.rsvp-button {
+  background: #C5A46A;
+  color: #102A43;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.bg-castle-parchment {
-  background-color: #0a0f1d;
-  background-image: radial-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px);
-  background-size: 32px 32px;
+.rsvp-button:hover {
+  background: #D7B875;
+  box-shadow: 0 10px 25px rgba(197, 164, 106, 0.4);
 }
 
-.mask-radial-fade {
-  mask-image: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 80%);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 40%, rgba(0, 0, 0, 1) 35%, rgba(0, 0, 0, 0) 80%);
+/* Seal Button on Gate */
+.rose-gold-seal-btn {
+  background: linear-gradient(135deg, #F1E9D8 0%, #C5A46A 50%, #B78C4E 100%);
+  border: 2px solid #FAF7F0;
+  box-shadow: 0 0 45px rgba(215, 184, 117, 0.75), 0 15px 35px rgba(0, 0, 0, 0.5);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.mask-palace-arch {
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 60%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 60%, rgba(0, 0, 0, 0) 100%);
+.rose-gold-seal-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 65px rgba(215, 184, 117, 0.95), 0 20px 45px rgba(0, 0, 0, 0.6);
+  border-color: #FAF7F0;
 }
 
-.mask-mandala-soft {
-  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.85) 75%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0.85) 75%, rgba(0, 0, 0, 0) 100%);
-}
-
-.mask-linear-bottom-fade {
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0) 100%);
-}
-
-.bg-palace-glow {
-  filter: brightness(1.2) contrast(1.12) saturate(1.08);
-}
-
-/* Photo Scatter & Assemble Animations */
-.photo-polaroid-frame {
-  background: linear-gradient(180deg, #1c2538 0%, #121a29 100%);
-  border: 1px solid rgba(212, 175, 55, 0.45);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.15);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-}
-
-.photo-polaroid-frame:hover {
-  transform: scale(1.04) rotate(0deg) !important;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(243, 207, 122, 0.35);
-  z-index: 30 !important;
-}
-
-/* Floating Audio Toggle (Bottom-Right Circular Gold Button) */
+/* Floating Audio Toggle */
 .rgb-music-toggle {
   position: fixed;
   bottom: 24px;
@@ -177,13 +211,13 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(14, 22, 38, 0.94);
-  border: 1.5px solid #d4af37;
-  color: #f3cf7a;
+  background: rgba(23, 51, 79, 0.94);
+  border: 1.5px solid #C5A46A;
+  color: #D7B875;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 22px rgba(212, 175, 55, 0.38);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 22px rgba(197, 164, 106, 0.35);
   cursor: pointer;
   pointer-events: auto;
   backdrop-filter: blur(12px);
@@ -195,16 +229,16 @@
 
 .rgb-music-toggle:hover {
   transform: scale(1.08);
-  border-color: #fae4a8;
-  color: #fff6d6;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.85), 0 0 30px rgba(243, 207, 122, 0.55);
+  border-color: #D7B875;
+  color: #FAF7F0;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.85), 0 0 30px rgba(215, 184, 117, 0.55);
 }
 
 .rgb-music-toggle:active {
   transform: scale(0.94);
 }
 
-/* Equalizer Bars */
+/* Soundwave Equalizer Bars */
 .rgb-soundwave-bars {
   display: flex;
   align-items: center;
@@ -215,7 +249,7 @@
 
 .rgb-soundwave-bars span {
   width: 2px;
-  background: #f3cf7a;
+  background: #D7B875;
   border-radius: 9999px;
   animation: rgb-bounce 1.2s ease-in-out infinite alternate;
 }
@@ -228,113 +262,25 @@
   0% { transform: scaleY(0.4); }
   100% { transform: scaleY(1); }
 }
-.rose-gold-gradient-text {
-  background: linear-gradient(135deg, #864e3c 0%, #d7a542 40%, #e2b474 70%, #864e3c 100%);
+
+/* ====================================================
+   GOLD GRADIENTS & SHIMMER TEXT
+   ==================================================== */
+.gold-shimmer-text {
+  background: linear-gradient(135deg, #F5EFE3 0%, #D7B875 35%, #C5A46A 70%, #F5EFE3 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.gold-foil-text {
-  background: linear-gradient(135deg, #b8860b 0%, #d7a542 45%, #f7e199 75%, #996515 100%);
+.gold-shimmer-ivory {
+  background: linear-gradient(135deg, #17334F 0%, #B78C4E 40%, #17334F 75%, #5A4633 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-}
-
-/* Rose Gold Blush Double-Bezel Card Shells */
-.blush-card-shell {
-  background: linear-gradient(135deg, rgba(247, 238, 233, 0.92) 0%, rgba(243, 233, 226, 0.95) 100%);
-  border: 1px solid var(--color-border-default);
-  box-shadow: 0 15px 40px rgba(134, 78, 60, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-/* RSVP Modal Styles */
-.rgb-modal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  background: rgba(4, 7, 13, 0.88);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  overflow-y: auto;
-}
-
-.rgb-modal-container {
-  width: 100%;
-  max-width: 460px;
-  background: linear-gradient(150deg, #10192c 0%, #090e1a 100%);
-  border: 1.5px solid #d4af37;
-  border-radius: 28px;
-  padding: 28px 22px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(212, 175, 55, 0.25);
-  position: relative;
-  box-sizing: border-box;
-}
-
-.rgb-modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fae4a8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.rgb-modal-close:hover {
-  background: #d4af37;
-  color: #080c14;
 }
 
 /* ====================================================
-   ROYAL CEREMONY JOURNEY SECTION STYLES
+   CEREMONY TIMELINE JOURNEY
    ==================================================== */
-.ceremony-journey-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.ceremony-pinned-stage {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  z-index: 10;
-}
-
-.ceremony-watermark-num {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(120px, 20vw, 280px);
-  font-weight: 900;
-  line-height: 1;
-  color: rgba(212, 175, 55, 0.05);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  user-select: none;
-  z-index: 0;
-  text-shadow: 0 0 60px rgba(212, 175, 55, 0.08);
-}
-
 .ceremony-progress-pill {
   padding: 6px 14px;
   border-radius: 9999px;
@@ -344,54 +290,52 @@
   text-transform: uppercase;
   font-family: 'Montserrat', sans-serif;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(8, 14, 24, 0.7);
-  color: #a0aec0;
+  border: 1px solid rgba(183, 140, 78, 0.35);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--dark-text);
   cursor: pointer;
   white-space: nowrap;
 }
 
 .ceremony-progress-pill.active {
-  background: linear-gradient(135deg, #d4af37 0%, #f3cf7a 100%);
-  color: #080c14;
-  border-color: #f3cf7a;
-  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, #C5A46A 0%, #D7B875 100%);
+  color: #102A43;
+  border-color: #C5A46A;
+  box-shadow: 0 0 20px rgba(197, 164, 106, 0.4);
   font-weight: 700;
   transform: scale(1.05);
 }
 
 .ceremony-progress-pill:hover:not(.active) {
-  border-color: rgba(212, 175, 55, 0.4);
-  color: #fae4a8;
-  background: rgba(18, 25, 42, 0.85);
+  border-color: #C5A46A;
+  color: #17334F;
+  background: #FFFFFF;
 }
 
 .ceremony-dress-tag {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(183, 140, 78, 0.35);
   border-radius: 16px;
   padding: 12px 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(16, 42, 67, 0.05);
 }
 
 .ceremony-swatch-dot {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Mobile Vertical Journey Spine */
 .ceremony-spine-line {
   position: absolute;
   left: 24px;
   top: 40px;
   bottom: 40px;
   width: 2px;
-  background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, #d4af37 20%, #f3cf7a 80%, rgba(212, 175, 55, 0.1) 100%);
-  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+  background: linear-gradient(180deg, rgba(183, 140, 78, 0.1) 0%, #C5A46A 20%, #D7B875 80%, rgba(183, 140, 78, 0.1) 100%);
+  box-shadow: 0 0 10px rgba(197, 164, 106, 0.3);
 }
 
 @media (min-width: 640px) {
@@ -404,13 +348,13 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #0e1626;
-  border: 2px solid #d4af37;
-  color: #f3cf7a;
+  background: #F1E9D8;
+  border: 2px solid #C5A46A;
+  color: var(--dark-text);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
+  box-shadow: 0 0 15px rgba(197, 164, 106, 0.3);
   flex-shrink: 0;
   z-index: 2;
   font-family: 'Cinzel', serif;
@@ -419,7 +363,7 @@
 }
 
 /* ====================================================
-   SCATTERED MEMORIES 3D PERSPECTIVE REEL STYLES
+   3D GALLERY MOUNTS
    ==================================================== */
 .scattered-gallery-stage {
   perspective: 1200px;
@@ -429,75 +373,75 @@
 }
 
 .memory-photo-mount {
-  background: linear-gradient(150deg, #182236 0%, #0c1322 100%);
-  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  background: linear-gradient(150deg, #244766 0%, #17334F 100%);
+  border: 1.5px solid rgba(183, 140, 78, 0.45);
   border-radius: 24px;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.15);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75), 0 0 25px rgba(197, 164, 106, 0.18);
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   user-select: none;
 }
 
 .memory-photo-mount:hover {
-  border-color: #fae4a8;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(243, 207, 122, 0.35);
+  border-color: #D7B875;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(215, 184, 117, 0.35);
 }
 
 .memory-hero-mount {
-  border: 2px solid #d4af37;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.35);
+  border: 2px solid #C5A46A;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(197, 164, 106, 0.4);
 }
 
-.memory-deck-stack {
-  position: relative;
+/* ====================================================
+   RSVP MODAL DIALOG
+   ==================================================== */
+.rgb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(16, 42, 67, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.rgb-modal-container {
   width: 100%;
-  max-width: 340px;
-  height: 440px;
-  margin: 0 auto;
-  perspective: 1000px;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #FAF7F0 0%, #F1E9D8 100%);
+  border: 1px solid rgba(183, 140, 78, 0.65);
+  border-radius: 28px;
+  padding: 28px 24px;
+  box-shadow: 0 30px 80px rgba(10, 29, 46, 0.7), 0 0 40px rgba(197, 164, 106, 0.25);
+  position: relative;
+  box-sizing: border-box;
+  color: var(--dark-text);
 }
 
-/* Video Stage Container */
-.video-stage-wrapper {
-  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.45), 0 0 35px rgba(215, 165, 66, 0.25);
-  border: 2px solid rgba(215, 165, 66, 0.5);
+.rgb-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(23, 51, 79, 0.08);
+  border: 1px solid rgba(183, 140, 78, 0.35);
+  color: #17334F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* Rose Gold Foil Texture Background */
-.bg-blush-parchment {
-  background-color: #f7eee9;
-  background-image: radial-gradient(rgba(215, 165, 66, 0.12) 1px, transparent 1px),
-    radial-gradient(rgba(134, 78, 60, 0.04) 1px, #f7eee9 1px);
-  background-size: 28px 28px;
-  background-position: 0 0, 14px 14px;
-}
-
-.bg-blush-banner {
-  background: linear-gradient(180deg, #f3e9e2 0%, #f7eee9 50%, #f3e9e2 100%);
-}
-
-/* Pulse animation for Video Play CTA Seal */
-.rose-gold-seal-btn {
-  background: radial-gradient(circle at 35% 35%, #fff3cc 0%, #d7a542 50%, #864e3c 100%);
-  box-shadow: 0 0 35px rgba(215, 165, 66, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.4);
-  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.rose-gold-seal-btn:hover {
-  transform: scale(1.08);
-  box-shadow: 0 0 50px rgba(215, 165, 66, 0.9), inset 0 2px 6px rgba(255, 255, 255, 0.9);
-}
-
-/* Slow Rotating Mandala */
-@keyframes slow-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-slow-spin {
-  animation: slow-rotate 120s linear infinite;
+.rgb-modal-close:hover {
+  background: #C5A46A;
+  color: #102A43;
 }

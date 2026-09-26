@@ -25,6 +25,7 @@ const KNOWN_TEMPLATE_IDS = [
   "royal-elegance",
   "modern-minimal",
   "rose-gold-blush",
+  "royal-grace",
 ];
 
 function PreviewContent({ templateId }: { templateId: string }) {

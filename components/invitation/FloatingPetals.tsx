@@ -62,11 +62,11 @@ export function FloatingPetals({
           ];
         case "gold-dust":
           return [
-            "#f3e5ab", // Champagne Gold
-            "#d4af37", // 24K Pure Gold
-            "#aa771c", // Antique Gold
-            "#ffffff", // Shimmer Diamond
-            "#ffe8a3", // Soft Warm Gold
+            "#D7B875", // Champagne Light Gold
+            "#C5A46A", // Warm Champagne
+            "#F1E9D8", // Moon Ivory
+            "#FAF7F0", // Soft Shimmer Ivory
+            "#8D5B5C", // Subtle Dusty Rose
           ];
         case "lotus":
           return [
