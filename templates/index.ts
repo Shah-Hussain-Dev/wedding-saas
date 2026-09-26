@@ -9,6 +9,7 @@ import EmeraldQasr, { defaultData as emeraldQasrData } from "./emerald-qasr";
 import GulENoor, { defaultData as gulENoorData } from "./gul-e-noor";
 import AzureNikah, { defaultData as azureNikahData } from "./azure-nikah";
 import KitabENikah, { defaultData as kitabENikahData } from "./kitab-e-nikah";
+import RoseGoldBlush, { defaultData as roseGoldBlushData } from "./rose-gold-blush";
 
 export {
   NoorNikah,
@@ -21,6 +22,7 @@ export {
   GulENoor,
   AzureNikah,
   KitabENikah,
+  RoseGoldBlush,
   noorNikahData,
   royalLotusData,
   crimsonRoyaleData,
@@ -31,6 +33,7 @@ export {
   gulENoorData,
   azureNikahData,
   kitabENikahData,
+  roseGoldBlushData,
 };
 
 export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> = {
@@ -44,6 +47,7 @@ export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> 
   "gul-e-noor": GulENoor,
   "azure-nikah": AzureNikah,
   "kitab-e-nikah": KitabENikah,
+  "rose-gold-blush": RoseGoldBlush,
 };
 
 export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
@@ -57,6 +61,7 @@ export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
   "gul-e-noor": gulENoorData,
   "azure-nikah": azureNikahData,
   "kitab-e-nikah": kitabENikahData,
+  "rose-gold-blush": roseGoldBlushData,
 };
 
 export function getTemplateComponent(templateId: string): React.ComponentType<{ data?: any }> {
@@ -66,3 +71,4 @@ export function getTemplateComponent(templateId: string): React.ComponentType<{ 
 export function getTemplateDefaultData(templateId: string): any {
   return TEMPLATE_DEFAULT_DATA[templateId] || noorNikahData;
 }
+

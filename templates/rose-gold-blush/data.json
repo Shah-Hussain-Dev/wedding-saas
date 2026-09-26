@@ -1,0 +1,87 @@
+{
+  "templateId": "rose-gold-blush",
+  "name": "Rose Gold Blush",
+  "religion": "universal",
+  "couple": {
+    "brideName": "Anaya",
+    "groomName": "Ishaan",
+    "tagline": "The Royal Wedding Celebration Of",
+    "groomParents": "Son of Mr. & Mrs. Malhotra",
+    "groomEducation": "M.Tech",
+    "groomProfession": "Software Engineer",
+    "brideParents": "Daughter of Mr. & Mrs. Peter",
+    "brideEducation": "M.Com, CA",
+    "brideProfession": "Chartered Accountant"
+  },
+  "weddingDate": "2027-05-18T18:30:00",
+  "weddingTime": "06:30 PM onwards",
+  "dateFormatted": "Tuesday, May 18, 2027",
+  "hashtag": "#IshaanFoundAnaya",
+  "videoUrl": "/videos/rose-gold-blush.mp4",
+  "musicTrack": "/templates/crimson-royale/music.mp3",
+  "quote": "Two souls united by destiny, bound by eternal love, honor, and the cherished blessings of our parents and elders.",
+  "invocations": {
+    "universal": "Together with our families, we invite you to share in our joy as we exchange vows of eternal togetherness.",
+    "hindu": "|| ॐ श्री गणेशाय नमः ||\nमङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
+    "muslim": "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He has put love and mercy between your hearts.” (Surah Ar-Rum 30:21)"
+  },
+  "venue": {
+    "name": "The Grand Rosewood Palace & Lakeside Estate",
+    "address": "Heritage Pavilion Road, Fatehsagar Lakefront, Udaipur, Rajasthan 313001",
+    "mapUrl": "https://maps.google.com/?q=Fatehsagar+Lakefront+Udaipur"
+  },
+  "dressCode": {
+    "title": "Rose Gold Elegance & Pastel Royal Formal",
+    "description": "We invite our gracious guests to celebrate in soft pastel tones, champagne blush, rose gold embroidery, or classic formal attire."
+  },
+  "events": [
+    {
+      "name": "Welcome Mehendi & Sangeet Soirée",
+      "date": "May 17, 2027",
+      "time": "04:30 PM",
+      "venue": "The Rose Petal Courtyard",
+      "description": "An enchanting afternoon of intricate henna, live acoustic sufi & folk melodies, cocktails, and family dances.",
+      "dress": "Blush Rose & Pastel Florals"
+    },
+    {
+      "name": "Haldi / Manjha Ceremony",
+      "date": "May 18, 2027",
+      "time": "10:30 AM",
+      "venue": "Sunken Poolside Lawn",
+      "description": "A joyous morning of golden turmeric rasam, phoolon ki holi, festive beats, and refreshing spritzers.",
+      "dress": "Sun-Kissed Yellows & Soft Saffron"
+    },
+    {
+      "name": "Baraat Swagat & Grand Procession",
+      "date": "May 18, 2027",
+      "time": "04:30 PM",
+      "venue": "The Grand Palace Gate",
+      "description": "Royal groom's procession with royal brass band followed by traditional warm floral welcome.",
+      "dress": "Royal Rose Gold & Ivory Sherwanis"
+    },
+    {
+      "name": "Wedding Vows / Shubh Vivah (Nikah)",
+      "date": "May 18, 2027",
+      "time": "06:30 PM",
+      "venue": "Lakeside Starlight Glass Mandap",
+      "description": "The sacred ceremonial vows and eternal union under golden arches by the tranquil lakeside at twilight.",
+      "dress": "Regal Indian / Modest Couture"
+    },
+    {
+      "name": "The Royal Reception & Banquet",
+      "date": "May 18, 2027",
+      "time": "08:30 PM onwards",
+      "venue": "The Crystal Ballroom & Lawns",
+      "description": "A gourmet celebratory banquet, heartfelt toasts, champagne toasts, and midnight dancing under the stars.",
+      "dress": "Black Tie / Royal Evening Wear"
+    }
+  ],
+  "gallery": [
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544077960-604201fe74bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop"
+  ]
+}

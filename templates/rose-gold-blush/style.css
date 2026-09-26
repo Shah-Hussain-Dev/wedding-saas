@@ -1,0 +1,439 @@
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Pinyon+Script&family=Rozha+One&display=swap');
+
+:root {
+  --color-bg-deep: #080c14;
+  --color-bg-surface: #0e1626;
+  --color-bg-card: rgba(18, 25, 42, 0.88);
+  --color-gold-glow: #f3cf7a;
+  --color-gold-foil: #d4af37;
+  --color-gold-champagne: #fae4a8;
+  --color-text-primary: #fcf9f2;
+  --color-text-secondary: #e2d7c5;
+  --color-text-muted: #9ea8ba;
+  --color-border-gold: rgba(212, 175, 55, 0.4);
+  --color-border-subtle: rgba(255, 255, 255, 0.12);
+  --color-rose-gold: #c98a75;
+}
+
+.font-lora {
+  font-family: 'Lora', serif;
+}
+
+.font-great-vibes {
+  font-family: 'Great Vibes', cursive, 'Pinyon Script', 'Alex Brush';
+}
+
+.font-alex-brush {
+  font-family: 'Alex Brush', cursive;
+}
+
+.font-pinyon {
+  font-family: 'Pinyon Script', cursive;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-amiri {
+  font-family: 'Amiri', serif;
+}
+
+.font-rozha {
+  font-family: 'Rozha One', serif;
+}
+
+/* Midnight Gold & Shimmering Gradients */
+.gold-shimmer-text {
+  background: linear-gradient(135deg, #fae4a8 0%, #f3cf7a 35%, #d4af37 70%, #fff6d6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.rose-gold-gradient-text {
+  background: linear-gradient(135deg, #fae4a8 0%, #c98a75 50%, #f3cf7a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Luxury Castle Glassmorphic Card Shells */
+.castle-card-shell {
+  background: linear-gradient(145deg, rgba(16, 24, 40, 0.88) 0%, rgba(10, 15, 26, 0.94) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.castle-card-inner {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Atmosphere Backgrounds */
+.bg-castle-twilight {
+  background-color: #080c14;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(26, 42, 74, 0.5) 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 50%, rgba(212, 175, 55, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(201, 138, 117, 0.06) 0%, transparent 50%);
+}
+
+.bg-castle-parchment {
+  background-color: #0a0f1d;
+  background-image: radial-gradient(rgba(212, 175, 55, 0.1) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Photo Scatter & Assemble Animations */
+.photo-polaroid-frame {
+  background: linear-gradient(180deg, #1c2538 0%, #121a29 100%);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.15);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+
+.photo-polaroid-frame:hover {
+  transform: scale(1.04) rotate(0deg) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), 0 0 35px rgba(243, 207, 122, 0.35);
+  z-index: 30 !important;
+}
+
+/* Floating Audio Toggle (Bottom-Right Circular Gold Button) */
+.rgb-music-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 99;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(8, 14, 24, 0.88);
+  border: 1.5px solid #d4af37;
+  color: #f3cf7a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.25);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.25s ease;
+}
+
+.rgb-music-toggle:hover {
+  transform: scale(1.08);
+  border-color: #fae4a8;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(243, 207, 122, 0.45);
+}
+
+.rgb-music-toggle:active {
+  transform: scale(0.94);
+}
+
+/* Equalizer Bars */
+.rgb-soundwave-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 2px;
+  height: 14px;
+}
+
+.rgb-soundwave-bars span {
+  width: 2px;
+  background: #f3cf7a;
+  border-radius: 9999px;
+  animation: rgb-bounce 1.2s ease-in-out infinite alternate;
+}
+
+.rgb-soundwave-bars span:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+.rgb-soundwave-bars span:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+.rgb-soundwave-bars span:nth-child(3) { height: 6px; animation-delay: 0.2s; }
+
+@keyframes rgb-bounce {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
+.rose-gold-gradient-text {
+  background: linear-gradient(135deg, #864e3c 0%, #d7a542 40%, #e2b474 70%, #864e3c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-foil-text {
+  background: linear-gradient(135deg, #b8860b 0%, #d7a542 45%, #f7e199 75%, #996515 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Rose Gold Blush Double-Bezel Card Shells */
+.blush-card-shell {
+  background: linear-gradient(135deg, rgba(247, 238, 233, 0.92) 0%, rgba(243, 233, 226, 0.95) 100%);
+  border: 1px solid var(--color-border-default);
+  box-shadow: 0 15px 40px rgba(134, 78, 60, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* RSVP Modal Styles */
+.rgb-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(4, 7, 13, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.rgb-modal-container {
+  width: 100%;
+  max-width: 460px;
+  background: linear-gradient(150deg, #10192c 0%, #090e1a 100%);
+  border: 1.5px solid #d4af37;
+  border-radius: 28px;
+  padding: 28px 22px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(212, 175, 55, 0.25);
+  position: relative;
+  box-sizing: border-box;
+}
+
+.rgb-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fae4a8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rgb-modal-close:hover {
+  background: #d4af37;
+  color: #080c14;
+}
+
+/* ====================================================
+   ROYAL CEREMONY JOURNEY SECTION STYLES
+   ==================================================== */
+.ceremony-journey-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.ceremony-pinned-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.ceremony-watermark-num {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(120px, 20vw, 280px);
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(212, 175, 55, 0.05);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  text-shadow: 0 0 60px rgba(212, 175, 55, 0.08);
+}
+
+.ceremony-progress-pill {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(8, 14, 24, 0.7);
+  color: #a0aec0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ceremony-progress-pill.active {
+  background: linear-gradient(135deg, #d4af37 0%, #f3cf7a 100%);
+  color: #080c14;
+  border-color: #f3cf7a;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+.ceremony-progress-pill:hover:not(.active) {
+  border-color: rgba(212, 175, 55, 0.4);
+  color: #fae4a8;
+  background: rgba(18, 25, 42, 0.85);
+}
+
+.ceremony-dress-tag {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(212, 175, 55, 0.05) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  border-radius: 16px;
+  padding: 12px 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ceremony-swatch-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Mobile Vertical Journey Spine */
+.ceremony-spine-line {
+  position: absolute;
+  left: 24px;
+  top: 40px;
+  bottom: 40px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, #d4af37 20%, #f3cf7a 80%, rgba(212, 175, 55, 0.1) 100%);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
+@media (min-width: 640px) {
+  .ceremony-spine-line {
+    left: 32px;
+  }
+}
+
+.ceremony-spine-node {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0e1626;
+  border: 2px solid #d4af37;
+  color: #f3cf7a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(212, 175, 55, 0.35);
+  flex-shrink: 0;
+  z-index: 2;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+/* ====================================================
+   SCATTERED MEMORIES 3D PERSPECTIVE REEL STYLES
+   ==================================================== */
+.scattered-gallery-stage {
+  perspective: 1200px;
+  perspective-origin: center center;
+  position: relative;
+  width: 100%;
+}
+
+.memory-photo-mount {
+  background: linear-gradient(150deg, #182236 0%, #0c1322 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.75), 0 0 25px rgba(212, 175, 55, 0.15);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  user-select: none;
+}
+
+.memory-photo-mount:hover {
+  border-color: #fae4a8;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(243, 207, 122, 0.35);
+}
+
+.memory-hero-mount {
+  border: 2px solid #d4af37;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9), 0 0 40px rgba(212, 175, 55, 0.35);
+}
+
+.memory-deck-stack {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  height: 440px;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+/* Video Stage Container */
+.video-stage-wrapper {
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.45), 0 0 35px rgba(215, 165, 66, 0.25);
+  border: 2px solid rgba(215, 165, 66, 0.5);
+}
+
+/* Rose Gold Foil Texture Background */
+.bg-blush-parchment {
+  background-color: #f7eee9;
+  background-image: radial-gradient(rgba(215, 165, 66, 0.12) 1px, transparent 1px),
+    radial-gradient(rgba(134, 78, 60, 0.04) 1px, #f7eee9 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+.bg-blush-banner {
+  background: linear-gradient(180deg, #f3e9e2 0%, #f7eee9 50%, #f3e9e2 100%);
+}
+
+/* Pulse animation for Video Play CTA Seal */
+.rose-gold-seal-btn {
+  background: radial-gradient(circle at 35% 35%, #fff3cc 0%, #d7a542 50%, #864e3c 100%);
+  box-shadow: 0 0 35px rgba(215, 165, 66, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.rose-gold-seal-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 50px rgba(215, 165, 66, 0.9), inset 0 2px 6px rgba(255, 255, 255, 0.9);
+}
+
+/* Slow Rotating Mandala */
+@keyframes slow-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-slow-spin {
+  animation: slow-rotate 120s linear infinite;
+}

@@ -8,7 +8,8 @@ export type TemplateId =
   | "emerald-qasr"
   | "gul-e-noor"
   | "azure-nikah"
-  | "kitab-e-nikah";
+  | "kitab-e-nikah"
+  | "rose-gold-blush";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -134,6 +135,17 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
       "Contemporary Vedic luxury with a 3D architectural origami envelope & pure gold monogram seal, multi-layer parallax, interactive Muhurat scratch card, and photo lightbox gallery.",
     gradient: "from-stone-50 to-stone-200",
   },
+  "rose-gold-blush": {
+    id: "rose-gold-blush",
+    name: "Rose Gold Blush Royal",
+    style: "Rose Gold & Blush Parchment",
+    tag: "Cinematic Video",
+    religion: ["hindu", "muslim", "universal"],
+    religionLabel: "Hindu & Muslim",
+    description:
+      "A timeless dual-faith royal wedding celebration featuring Ishaan & Anaya with an ultra-smooth cinematic local video opening, switchable Vedic & Islamic blessings, rose-gold shaped scratch card, and modern luxury aesthetics.",
+    gradient: "from-[#F7EEE9] via-[#F3E9E2] to-[#E2DACF]",
+  },
 };
 
 export const INCLUDED_FEATURES = [
@@ -207,4 +219,5 @@ export const TEMPLATE_COMPONENTS = {
   "gul-e-noor": () => import("@/templates/gul-e-noor"),
   "azure-nikah": () => import("@/templates/azure-nikah"),
   "kitab-e-nikah": () => import("@/templates/kitab-e-nikah"),
+  "rose-gold-blush": () => import("@/templates/rose-gold-blush"),
 } as const;
