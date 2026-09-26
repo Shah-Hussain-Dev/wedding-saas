@@ -137,45 +137,8 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
         </div>
       )}
 
-      {["royal-lotus", "crimson-royale", "noor-e-nikah", "emerald-qasr", "gul-e-noor", "azure-nikah", "kitab-e-nikah", "modern-minimal"].includes(invitation.templateId) ? (
-        <SelectedTemplate data={mergedInvitation} />
-      ) : (
-        <>
-          {/* 3D Curtain open screen overlay */}
-          <DoorAnimation
-            onOpen={handleOpenDoors}
-            brideName={mergedInvitation.brideName}
-            groomName={mergedInvitation.groomName}
-            theme={
-              invitation.templateId === "emerald-noir"
-                ? "emerald"
-                : invitation.templateId === "royal-elegance"
-                ? "royal"
-                : "minimal"
-            }
-          />
-
-          {/* Main template container */}
-          {hasOpenedDoors && (
-            <>
-              <SelectedTemplate data={mergedInvitation} />
-              
-              {/* Background Audio */}
-              <MusicPlayer
-                trackUrl={invitation.musicTrack || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"}
-                autoPlay={true}
-              />
-              
-              {/* Language Toggle */}
-              <LanguageToggle
-                languages={invitation.languages || ["en"]}
-                activeLanguage={activeLanguage}
-                onChangeLanguage={setActiveLanguage}
-              />
-            </>
-          )}
-        </>
-      )}
+      {/* Render Self-Contained Template */}
+      <SelectedTemplate data={mergedInvitation} />
     </div>
   );
 }

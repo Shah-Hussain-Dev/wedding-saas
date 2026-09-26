@@ -104,23 +104,23 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
   "emerald-noir": {
     id: "emerald-noir",
     name: "Emerald Noir",
-    style: "Luxury Dark",
+    style: "Luxury Dark & Gold",
     tag: "Best Seller",
-    religion: ["muslim"],
-    religionLabel: "Muslim",
+    religion: ["hindu", "universal"],
+    religionLabel: "Hindu",
     description:
-      "Ornate gold details on a rich velvet forest green canvas. Dramatic 3D door reveal, ambient shehnai music, and bilingual storytelling — ideal for high-end evening celebrations and royal Nikah ceremonies.",
-    gradient: "from-[#e8f0ed] to-[#c5ddd3]",
+      "Ornate 24K gold details on rich emerald canvas. Features a 3D Royal Haveli Gate reveal with glowing Ganesha seal, multi-layer parallax, Vedic rituals, interactive scratch reveal card, and photo gallery.",
+    gradient: "from-[#081F1A] via-[#0F382E] to-[#04120F]",
   },
   "royal-elegance": {
     id: "royal-elegance",
     name: "Royal Elegance",
     style: "Classic South Asian",
     tag: "Best Seller",
-    religion: ["hindu", "muslim", "universal"],
-    religionLabel: "Universal",
+    religion: ["hindu", "universal"],
+    religionLabel: "Hindu",
     description:
-      "Traditional South Asian grandeur featuring soft bone backdrops, golden arches, and royal accents. A curtain reveal that feels like opening a physical invitation.",
+      "Traditional South Asian grandeur featuring 3D Maharani Crimson Silk Curtains with Royal Kundan Wax Seal, Gauri Ganesh blessings, multi-layer parallax, interactive scratch card, and gallery lightbox.",
     gradient: "from-[#faf7f0] to-[#f0e8d8]",
   },
   "modern-minimal": {
@@ -128,10 +128,10 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
     name: "Modern Minimal",
     style: "Contemporary Chic",
     tag: "New",
-    religion: ["hindu", "muslim", "universal"],
-    religionLabel: "Universal",
+    religion: ["hindu", "universal"],
+    religionLabel: "Hindu",
     description:
-      "Ultra-clean editorial typography, massive whitespace, and elegant framing. Perfect for destination weddings and couples who love contemporary design.",
+      "Contemporary Vedic luxury with a 3D architectural origami envelope & pure gold monogram seal, multi-layer parallax, interactive Muhurat scratch card, and photo lightbox gallery.",
     gradient: "from-stone-50 to-stone-200",
   },
 };

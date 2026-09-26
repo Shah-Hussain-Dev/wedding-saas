@@ -1,6 +1,99 @@
-/* Royal Elegance Template Styles */
-.tmpl-royal-elegance {
-  --re-bg: #fcfaf6;
-  --re-gold: #b89730;
-  --re-text: #2c2b29;
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Rozha+One&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-cinzel-decorative {
+  font-family: 'Cinzel Decorative', serif;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-rozha {
+  font-family: 'Rozha One', serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Royal Crimson & Gold Leaf Styling */
+.gold-text-royal {
+  background: linear-gradient(135deg, #a87922 0%, #d4af37 40%, #f7e199 70%, #8c5d12 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.crimson-text-gradient {
+  background: linear-gradient(135deg, #5a0e1a 0%, #8b182d 50%, #420912 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Raw Silk Ivory Double-Bezel Card Shell */
+.silk-card-shell {
+  background: linear-gradient(135deg, rgba(253, 248, 240, 0.94) 0%, rgba(246, 237, 220, 0.96) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  box-shadow: 0 15px 40px rgba(90, 14, 26, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.crimson-velvet-shell {
+  background: linear-gradient(135deg, #420912 0%, #5a0e1a 50%, #30060d 100%);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 20px 50px rgba(66, 9, 18, 0.4);
+}
+
+/* 3D Maharani Silk Curtains Opening */
+.curtain-container {
+  perspective: 1400px;
+}
+
+.curtain-left, .curtain-right {
+  transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+}
+
+.curtain-left.open {
+  transform: translateX(-100%) scaleX(0.2);
+  opacity: 0.1;
+}
+
+.curtain-right.open {
+  transform: translateX(100%) scaleX(0.2);
+  opacity: 0.1;
+}
+
+/* Royal Kundan Wax Seal */
+.kundan-seal-btn {
+  background: radial-gradient(circle at 35% 35%, #f9e8af 0%, #d4af37 45%, #7a1c2a 100%);
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.6);
+  animation: kundan-pulse 3s infinite alternate ease-in-out;
+}
+
+@keyframes kundan-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.5);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 0 45px rgba(212, 175, 55, 0.85);
+  }
+}
+
+/* Silk Parchment Texture */
+.bg-silk-parchment {
+  background-color: #fcf8f0;
+  background-image: radial-gradient(rgba(212, 175, 55, 0.12) 1px, transparent 1px),
+    radial-gradient(rgba(90, 14, 26, 0.03) 1px, #fcf8f0 1px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+.bg-palace-banner {
+  background: linear-gradient(180deg, #f7eedb 0%, #fcf8f0 50%, #f7eedb 100%);
 }

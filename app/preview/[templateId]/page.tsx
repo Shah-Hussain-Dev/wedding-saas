@@ -131,25 +131,8 @@ function PreviewContent({ templateId }: { templateId: string }) {
         expiresInSeconds={900} // 15-minute interactive demo session
       />
 
-      {/* Render Template */}
-      {["royal-lotus", "crimson-royale", "noor-e-nikah", "emerald-qasr", "gul-e-noor", "azure-nikah", "kitab-e-nikah", "modern-minimal"].includes(activeTemplateId) ? (
-        <SelectedTemplate data={invitationData} />
-      ) : (
-        <>
-          <DoorAnimation
-            onOpen={() => setHasOpenedDoors(true)}
-            brideName={invitationData.brideName}
-            groomName={invitationData.groomName}
-            theme={activeTemplateId === "emerald-noir" ? "emerald" : "royal"}
-          />
-          {hasOpenedDoors && (
-            <>
-              <SelectedTemplate data={invitationData} />
-              <MusicPlayer trackUrl={invitationData.musicTrack || "/templates/crimson-royale/music.mp3"} autoPlay />
-            </>
-          )}
-        </>
-      )}
+      {/* Render Self-Contained Template */}
+      <SelectedTemplate data={invitationData} />
     </div>
   );
 }

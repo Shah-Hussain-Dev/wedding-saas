@@ -1,45 +1,86 @@
 {
   "templateId": "modern-minimal",
   "name": "Modern Minimal",
-  "religion": "universal",
+  "religion": "hindu",
   "couple": {
     "brideName": "Maya",
     "groomName": "Arjun",
-    "tagline": "The Wedding of"
+    "tagline": "|| ॐ श्री गणेशाय नमः ||",
+    "brideParents": "Daughter of Smt. Sunita & Shri Rajesh Sharma",
+    "groomParents": "Son of Smt. Meenakshi & Shri Vikram Singhania"
   },
-  "weddingDate": "2027-04-10T16:30:00",
-  "weddingTime": "04:30 PM onwards",
+  "weddingDate": "2027-04-10T18:30:00",
+  "weddingTime": "06:30 PM onwards",
   "dateFormatted": "Saturday, April 10, 2027",
+  "hashtag": "#MayaArjunInfinite",
+  "quote": "Two souls united under the sacred fire, bound by love, respect, and the eternal grace of the Divine.",
+  "vedicMantra": "|| मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
   "venue": {
-    "name": "The Glasshouse Estate",
-    "address": "Goa Beachfront, Candolim, Goa, India",
-    "mapUrl": "https://maps.google.com/?q=Candolim+Goa"
+    "name": "The Glasshouse Pavilion & Estate",
+    "address": "Candolim Beachfront, North Goa, 403515, India",
+    "mapUrl": "https://maps.google.com/?q=Candolim+Beachfront+Goa"
   },
   "musicTrack": "/templates/crimson-royale/music.mp3",
   "dressCode": {
-    "title": "Minimalist Chic",
-    "description": "Contemporary beach formal in monochrome or earth tones."
+    "title": "Minimalist Indian Chic & Pastel Formal",
+    "description": "Contemporary Indian couture in warm champagnes, pastel blushes, soft sage, or tailored modern neutrals."
   },
   "events": [
     {
-      "name": "Sunset Welcome Cocktails",
+      "name": "Ganesh Sthapana & Tilak",
       "date": "April 09, 2027",
-      "time": "05:30 PM",
-      "venue": "Beachfront Lawn",
-      "description": "Casual welcome drinks as the sun sets."
+      "time": "10:30 AM",
+      "venue": "The Lotus Courtyard",
+      "description": "Auspicious invocation to Lord Ganesha for joy, prosperity, and obstacle-free festivities.",
+      "dress": "Traditional Festive Florals"
     },
     {
-      "name": "The Wedding Vows",
+      "name": "Haldi & Mehendi Soirée",
+      "date": "April 09, 2027",
+      "time": "03:30 PM",
+      "venue": "Sunken Pool Lawn",
+      "description": "Turmeric sunshine, intricate bridal henna, live folk percussion, and refreshing coastal spritzers.",
+      "dress": "Sun-Kissed Yellows & Sage Greens"
+    },
+    {
+      "name": "Sangeet & Garba Night",
+      "date": "April 09, 2027",
+      "time": "07:30 PM",
+      "venue": "The Starlight Amphitheatre",
+      "description": "High-octane musical performances, dandiya beats, signature cocktail bar, and midnight dance floor.",
+      "dress": "Indo-Western Glitz & Metallics"
+    },
+    {
+      "name": "Baraat & Varmala",
       "date": "April 10, 2027",
       "time": "04:30 PM",
-      "venue": "Glass Pavilion",
-      "description": "Ceremony followed by dinner and dancing."
+      "venue": "Sunset Palm Esplanade",
+      "description": "Groom's grand procession along the coast followed by the ceremonial exchange of floral garlands.",
+      "dress": "Pastel Sherwanis & Designer Sarees"
+    },
+    {
+      "name": "Shubh Vivah (Saat Pheras)",
+      "date": "April 10, 2027",
+      "time": "06:30 PM",
+      "venue": "The Glass Mandap (By the Shore)",
+      "description": "Sacred Vedic rituals, Mangal Pheras around the sacred Agni, and eternal wedding vows at twilight.",
+      "dress": "Regal Indian Coutures"
+    },
+    {
+      "name": "The Grand Reception Gala",
+      "date": "April 10, 2027",
+      "time": "08:30 PM onwards",
+      "venue": "The Horizon Ballroom & Lawns",
+      "description": "A curated Michelin-inspired Indian banquet, heartfelt toasts, champagne tower, and celebration.",
+      "dress": "Black Tie or Royal Indian Evening Wear"
     }
   ],
   "gallery": [
-    "/templates/crimson-royale/gallery-1.webp",
-    "/templates/crimson-royale/gallery-2.webp",
-    "/templates/crimson-royale/gallery-3.webp",
-    "/templates/crimson-royale/gallery-4.webp"
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544077960-604201fe74bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop"
   ]
 }

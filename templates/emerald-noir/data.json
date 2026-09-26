@@ -1,45 +1,80 @@
 {
   "templateId": "emerald-noir",
   "name": "Emerald Noir",
-  "religion": "muslim",
+  "religion": "hindu",
   "couple": {
-    "brideName": "Zoya",
-    "groomName": "Farhan",
-    "tagline": "The Nikah Celebration Of"
+    "brideName": "Radhika",
+    "groomName": "Devendra",
+    "tagline": "The Shubh Vivah Celebration Of",
+    "brideParents": "Daughter of Smt. Gayathri & Shri Raghavan Murthy",
+    "groomParents": "Son of Smt. Anuradha & Shri Devraj Rathore"
   },
   "weddingDate": "2027-02-18T18:00:00",
   "weddingTime": "06:00 PM onwards",
   "dateFormatted": "Thursday, February 18, 2027",
+  "hashtag": "#RadhikaWedsDevendra",
+  "vedicMantra": "|| वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ | निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा ||",
+  "quote": "Two souls bound by eternal Vedic vows, embarking on the sacred journey of Saat Pheras under the divine blessings of Lord Ganesha.",
   "venue": {
-    "name": "Emerald Grand Pavilion",
-    "address": "Heritage Palace Grounds, Hyderabad, India",
-    "mapUrl": "https://maps.google.com/?q=Heritage+Palace+Hyderabad"
+    "name": "The Emerald Palace & Royal Pavilion",
+    "address": "Fatehsagar Lake Road, Udaipur, Rajasthan, India",
+    "mapUrl": "https://maps.google.com/?q=Fatehsagar+Lake+Road+Udaipur"
   },
   "musicTrack": "/templates/crimson-royale/music.mp3",
   "dressCode": {
-    "title": "Midnight Emerald & Antique Gold",
-    "description": "Guests are requested to wear evening formals in shades of Deep Emerald, Velvet Black, and Champagne Gold."
+    "title": "Royal Emerald, Velvet & 24K Antique Gold",
+    "description": "Guests are cordially invited to grace the celebration in traditional Indian formals in shades of Deep Emerald, Royal Maroon, and Antique Gold."
   },
   "events": [
     {
-      "name": "Sacred Nikah Ceremony",
-      "date": "Feb 18, 2027",
-      "time": "06:00 PM",
-      "venue": "Grand Emerald Diwan",
-      "description": "Solemnization of marriage under starlight."
+      "name": "Ganesh Pujan & Tilak",
+      "date": "Feb 17, 2027",
+      "time": "10:00 AM",
+      "venue": "Emerald Courtyard",
+      "description": "Auspicious invocation of Lord Ganesha to bless the commencement of wedding rituals."
     },
     {
-      "name": "Royal Walima Banquet",
+      "name": "Haldi & Mehendi Utsav",
+      "date": "Feb 17, 2027",
+      "time": "03:30 PM",
+      "venue": "Lakeside Marigold Gardens",
+      "description": "Golden turmeric rasam, fragrant henna, dhol beats, and joyful celebration."
+    },
+    {
+      "name": "Sangeet Sandhya & Dandiya Raas",
+      "date": "Feb 17, 2027",
+      "time": "07:30 PM",
+      "venue": "Royal Grand Ballroom",
+      "description": "An evening of musical performances, Garba, dance, and joyous festivities."
+    },
+    {
+      "name": "Baraat & Swagat",
+      "date": "Feb 18, 2027",
+      "time": "04:30 PM",
+      "venue": "Palace Main Gate",
+      "description": "Grand royal procession of the groom with royal band, horses, and floral welcome."
+    },
+    {
+      "name": "Shubh Vivah & Sacred Pheras",
+      "date": "Feb 18, 2027",
+      "time": "06:30 PM",
+      "venue": "Starlight Lake Mandap",
+      "description": "The sacred seven vows around the holy Agni under the starlit sky."
+    },
+    {
+      "name": "Royal Reception & Dinner Feast",
       "date": "Feb 18, 2027",
       "time": "08:30 PM",
-      "venue": "Crystal Ballroom",
-      "description": "An evening of celebration and grand dinner."
+      "venue": "Palace Royal Banquet Lawns",
+      "description": "A celebratory feast and royal dinner to honor the newlyweds."
     }
   ],
   "gallery": [
-    "/templates/crimson-royale/gallery-1.webp",
-    "/templates/crimson-royale/gallery-2.webp",
-    "/templates/crimson-royale/gallery-3.webp",
-    "/templates/crimson-royale/gallery-4.webp"
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544077960-604201fe74bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop"
   ]
 }

@@ -1,8 +1,125 @@
-/* Emerald Noir Template Styles */
-.tmpl-emerald-noir {
-  --en-bg: #061c17;
-  --en-gold: #D4AF37;
-  --en-cream: #FAF7F2;
-  background-color: var(--en-bg);
-  color: var(--en-cream);
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Rozha+One&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+.font-cinzel-decorative {
+  font-family: 'Cinzel Decorative', serif;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.font-rozha {
+  font-family: 'Rozha One', serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Luxury Emerald Gold Foil Gradient Text */
+.gold-text-glow {
+  background: linear-gradient(135deg, #fff2be 0%, #d4af37 40%, #f3e5ab 70%, #aa771c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.25));
+}
+
+.emerald-text-gradient {
+  background: linear-gradient(135deg, #a7f3d0 0%, #34d399 50%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Emerald Dark Double-Bezel Architecture */
+.emerald-card-shell {
+  background: linear-gradient(135deg, rgba(8, 38, 28, 0.85) 0%, rgba(3, 20, 14, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.emerald-card-inner {
+  background: radial-gradient(circle at 50% 0%, rgba(18, 66, 53, 0.5) 0%, rgba(4, 18, 13, 0.8) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* 3D Haveli Gate Opening Screen */
+.haveli-door-container {
+  perspective: 1600px;
+}
+
+.haveli-door-left, .haveli-door-right {
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 1.2s ease;
+  transform-origin: left center;
+}
+
+.haveli-door-right {
+  transform-origin: right center;
+}
+
+.haveli-door-left.open {
+  transform: rotateY(-110deg);
+  opacity: 0.1;
+}
+
+.haveli-door-right.open {
+  transform: rotateY(110deg);
+  opacity: 0.1;
+}
+
+/* Glowing Ganesha Seal Button */
+.ganesha-seal-btn {
+  background: radial-gradient(circle at 35% 35%, #fff3cc 0%, #d4af37 45%, #8c5d12 100%);
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.8), inset 0 -3px 6px rgba(0, 0, 0, 0.5);
+  animation: pulse-glow 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 50px rgba(212, 175, 55, 0.8), inset 0 2px 6px rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Ornate Indian Jharokha Arch Border Overlay */
+.jharokha-arch {
+  clip-path: polygon(
+    0% 100%,
+    0% 25%,
+    10% 20%,
+    20% 14%,
+    30% 8%,
+    40% 3%,
+    50% 0%,
+    60% 3%,
+    70% 8%,
+    80% 14%,
+    90% 20%,
+    100% 25%,
+    100% 100%
+  );
+}
+
+/* Rich Damask Pattern Background */
+.bg-emerald-pattern {
+  background-color: #03140e;
+  background-image: radial-gradient(rgba(212, 175, 55, 0.08) 1px, transparent 1px),
+    radial-gradient(rgba(212, 175, 55, 0.04) 1px, #03140e 1px);
+  background-size: 32px 32px;
+  background-position: 0 0, 16px 16px;
+}
+
+.bg-emerald-hero {
+  background: radial-gradient(circle at 50% 20%, #0d382c 0%, #061c15 50%, #020d09 100%);
+}
+
+.bg-emerald-section {
+  background: linear-gradient(180deg, #03140e 0%, #08261c 50%, #03140e 100%);
 }

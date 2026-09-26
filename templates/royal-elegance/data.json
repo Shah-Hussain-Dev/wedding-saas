@@ -1,45 +1,80 @@
 {
   "templateId": "royal-elegance",
   "name": "Royal Elegance",
-  "religion": "universal",
+  "religion": "hindu",
   "couple": {
     "brideName": "Pooja",
     "groomName": "Rohan",
-    "tagline": "The Wedding Celebration Of"
+    "tagline": "The Auspicious Shubh Vivah Of",
+    "brideParents": "Daughter of Smt. Sharda & Shri Suresh Agrawal",
+    "groomParents": "Son of Smt. Kavita & Shri Mahendra Mittal"
   },
   "weddingDate": "2027-03-12T17:30:00",
   "weddingTime": "05:30 PM onwards",
   "dateFormatted": "Friday, March 12, 2027",
+  "hashtag": "#PoojaGotHerRohan",
+  "vedicMantra": "|| मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
+  "quote": "United under the sacred Agni, bound by seven eternal vows of love, truth, and dharma in the divine presence of family and elders.",
   "venue": {
-    "name": "The Heritage Ivory Palace",
+    "name": "The Heritage Ivory Palace & Royal Courtyard",
     "address": "Civil Lines, Jaipur, Rajasthan, India",
     "mapUrl": "https://maps.google.com/?q=Civil+Lines+Jaipur"
   },
   "musicTrack": "/templates/crimson-royale/music.mp3",
   "dressCode": {
-    "title": "Ivory & Champagne Traditional",
-    "description": "Traditional Indian formal attire in soft pastels, ivory, and blush tones."
+    "title": "Ivory, Silk & Royal Rose Gold",
+    "description": "Traditional Indian formal attire in soft pastel lehengas, banarasi silk sarees, bandhgalas, or embroidered sherwanis."
   },
   "events": [
     {
-      "name": "Sangeet & Cocktail Evening",
+      "name": "Gauri Ganesh Pujan & Tilak",
       "date": "March 11, 2027",
-      "time": "07:00 PM",
-      "venue": "Ivory Courtyard",
-      "description": "Music, dance, and celebrations."
+      "time": "10:30 AM",
+      "venue": "Ivory Palace Courtyard",
+      "description": "Vedic invocation prayers and traditional Tilak ceremony to bless the groom."
     },
     {
-      "name": "Wedding Vows & Dinner",
+      "name": "Haldi Ki Rasam & Phoolon Ki Holi",
+      "date": "March 11, 2027",
+      "time": "03:00 PM",
+      "venue": "Marigold Palace Terraces",
+      "description": "A delightful afternoon of turmeric, rose petals shower, music, and laughter."
+    },
+    {
+      "name": "Royal Sangeet & Dandiya Night",
+      "date": "March 11, 2027",
+      "time": "07:30 PM",
+      "venue": "Sheesh Mahal Grand Ballroom",
+      "description": "An enchanting night of family choreography, dhol beats, and Ras-Garba."
+    },
+    {
+      "name": "Baraat Arrival & Toran Welcome",
       "date": "March 12, 2027",
-      "time": "05:30 PM",
-      "venue": "Grand Palace Ballroom",
-      "description": "Nuital ceremony followed by dinner."
+      "time": "04:30 PM",
+      "venue": "Royal Elephant Porch",
+      "description": "Groom's royal entry with vintage cars, brass band, and traditional Swagat."
+    },
+    {
+      "name": "Shubh Vivah & Sacred Pheras",
+      "date": "March 12, 2027",
+      "time": "06:30 PM",
+      "venue": "Lotus Central Mandap",
+      "description": "The sacred Saat Pheras, Kanyadaan, and Hastamelap under golden arches."
+    },
+    {
+      "name": "Grand Palace Reception & Royal Feast",
+      "date": "March 12, 2027",
+      "time": "08:30 PM",
+      "venue": "Maharani Palace Gardens",
+      "description": "A grand royal dinner and blessings to celebrate the married couple."
     }
   ],
   "gallery": [
-    "/templates/crimson-royale/gallery-1.webp",
-    "/templates/crimson-royale/gallery-2.webp",
-    "/templates/crimson-royale/gallery-3.webp",
-    "/templates/crimson-royale/gallery-4.webp"
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1544077960-604201fe74bc?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop"
   ]
 }

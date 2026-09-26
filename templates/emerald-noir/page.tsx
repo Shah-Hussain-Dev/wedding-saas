@@ -1,14 +1,27 @@
 "use client";
 
-import { motion } from "motion/react";
-import { Sparkle, Calendar, Clock, MapPin } from "@phosphor-icons/react";
-import { CountdownTimer } from "@/components/invitation/CountdownTimer";
-import { ScratchCard } from "@/components/invitation/ScratchCard";
-import { PhotoSlideshow } from "@/components/invitation/PhotoSlideshow";
-import { GoogleMapEmbed } from "@/components/invitation/GoogleMapEmbed";
-import { GuestMessageForm } from "@/components/invitation/GuestMessageForm";
-import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
-import { formatDate } from "@/lib/utils";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
+import confetti from "canvas-confetti";
+import {
+  Sparkle,
+  CalendarBlank,
+  Clock,
+  MapPin,
+  Heart,
+  X,
+  CheckCircle,
+  CaretLeft,
+  CaretRight,
+  Copy,
+  ArrowSquareOut,
+  FlowerLotus,
+  EnvelopeOpen,
+  MapPinLine,
+} from "@phosphor-icons/react";
+import { FloatingPetals } from "@/components/invitation/FloatingPetals";
+import { LuxuryAudioDock } from "@/components/invitation/LuxuryAudioDock";
+import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
 import "./style.css";
 
@@ -24,266 +37,899 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
   const dayStr = weddingDateObj.toLocaleDateString("en-IN", { weekday: "long" });
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
+  const hashtag = data?.hashtag || defaultData.hashtag || `#${brideName}${groomName}Vivah`.replace(/\s+/g, "");
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15 },
-    },
+  const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
+  const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
+  const venueMapUrl = data?.venue?.mapUrl || defaultData.venue.mapUrl || `https://maps.google.com/?q=${encodeURIComponent(venueName + " " + venueAddress)}`;
+
+  const galleryImages: string[] = (data?.gallery && data.gallery.length > 0)
+    ? data.gallery
+    : defaultData.gallery;
+
+  const rawEvents = data?.events || data?.eventsJson;
+  const events = (rawEvents && rawEvents.length > 0) ? rawEvents : defaultData.events;
+
+  // Opening State
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
+  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
+  const [activePhotoIdx, setActivePhotoIdx] = useState<number | null>(null);
+  const [copiedAddress, setCopiedAddress] = useState(false);
+
+  // Scratch Card Canvas
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [isScratched, setIsScratched] = useState(false);
+  const isDrawingRef = useRef(false);
+  const scratchedPixelsRef = useRef(0);
+  const confettiFiredRef = useRef(false);
+
+  // RSVP Form State
+  const [rsvpName, setRsvpName] = useState("");
+  const [rsvpPhone, setRsvpPhone] = useState("");
+  const [rsvpAttending, setRsvpAttending] = useState("yes");
+  const [rsvpGuests, setRsvpGuests] = useState("2");
+  const [rsvpWishes, setRsvpWishes] = useState("");
+  const [isRsvpSubmitted, setIsRsvpSubmitted] = useState(false);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Parallax Scroll Tracking (Window-level to prevent unhydrated ref errors)
+  const { scrollYProgress } = useScroll();
+  const heroParallaxY = useTransform(scrollYProgress, [0, 0.25], ["0%", "22%"]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.2], [1, 1.1]);
+  const heroMandalaRotate = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const scratchCardY = useTransform(scrollYProgress, [0.15, 0.45], ["30px", "-30px"]);
+  const galleryCol1Y = useTransform(scrollYProgress, [0.35, 0.75], ["25px", "-25px"]);
+  const galleryCol2Y = useTransform(scrollYProgress, [0.35, 0.75], ["-25px", "25px"]);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (isPlayingMusic) {
+      audioRef.current.pause();
+      setIsPlayingMusic(false);
+    } else {
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch((e) => console.log("Audio play:", e));
+    }
   };
 
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.8, ease: [0.25, 1, 0.5, 1] as const },
-    },
+  const handleOpenInvitation = () => {
+    setIsOpening(true);
+    if (audioRef.current) {
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+    }
+    confetti({
+      particleCount: 75,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ["#d4af37", "#f3e5ab", "#059669", "#ffffff", "#ffb703"],
+    });
+
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 1400);
+  };
+
+  // Scratch Card Canvas Drawing Logic
+  const initCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Rich Emerald & 24K Gold Foil Scratch Layer
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#0a382b");
+    gradient.addColorStop(0.3, "#d4af37");
+    gradient.addColorStop(0.7, "#0f4d3c");
+    gradient.addColorStop(1, "#c5a059");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+
+    // Gold Filigree Border
+    ctx.strokeStyle = "rgba(255, 235, 150, 0.75)";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(10, 10, width - 20, height - 20);
+
+    // Text on Scratch Surface
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 13px Montserrat, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("✦ SCRATCH WITH FINGER / MOUSE ✦", width / 2, height / 2 - 6);
+    ctx.fillStyle = "#fff2be";
+    ctx.font = "11px Montserrat, sans-serif";
+    ctx.fillText("Reveal Shubh Vivah Muhurat", width / 2, height / 2 + 14);
+  };
+
+  useEffect(() => {
+    if (isOpen && !isScratched) {
+      initCanvas();
+    }
+  }, [isOpen]);
+
+  const scratch = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas || isScratched) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 26, 0, Math.PI * 2, false);
+    ctx.fill();
+
+    scratchedPixelsRef.current += 1;
+    if (scratchedPixelsRef.current > 35 && !confettiFiredRef.current) {
+      confettiFiredRef.current = true;
+      setIsScratched(true);
+      confetti({
+        particleCount: 100,
+        spread: 90,
+        origin: { y: 0.65 },
+        colors: ["#d4af37", "#f3e5ab", "#34d399", "#ffb703", "#ffffff"],
+      });
+    }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    isDrawingRef.current = true;
+    scratch(e.clientX, e.clientY);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDrawingRef.current) return;
+    scratch(e.clientX, e.clientY);
+  };
+
+  const handlePointerUp = () => {
+    isDrawingRef.current = false;
+  };
+
+  // Lightbox Keyboard Navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (activePhotoIdx === null) return;
+      if (e.key === "Escape") setActivePhotoIdx(null);
+      if (e.key === "ArrowRight") {
+        setActivePhotoIdx((prev) => (prev !== null ? (prev + 1) % galleryImages.length : 0));
+      }
+      if (e.key === "ArrowLeft") {
+        setActivePhotoIdx((prev) => (prev !== null ? (prev - 1 + galleryImages.length) % galleryImages.length : 0));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activePhotoIdx, galleryImages.length]);
+
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText(`${venueName}, ${venueAddress}`);
+    setCopiedAddress(true);
+    setTimeout(() => setCopiedAddress(false), 2500);
+  };
+
+  const handleRsvpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          invitationId: data?.id || "emerald-noir-demo",
+          guestName: rsvpName,
+          phone: rsvpPhone,
+          attending: rsvpAttending === "yes",
+          guestCount: parseInt(rsvpGuests) || 1,
+          notes: rsvpWishes,
+        }),
+      });
+    } catch (err) {
+      console.error("RSVP submission error:", err);
+    }
+    setIsRsvpSubmitted(true);
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ["#d4af37", "#34d399", "#ffffff", "#ffb703"],
+    });
   };
 
   return (
-    <div className="min-h-screen bg-[#061c17] text-[#f5f5f4] overflow-x-hidden relative font-sans">
-      {/* Background Decorative Shapes */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.04)_0%,transparent_70%)] pointer-events-none" />
-      
-      {/* Editorial Luxury Header/Hero */}
-      <section className="relative min-h-[90dvh] flex flex-col justify-center items-center px-6 py-24 text-center max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          className="flex flex-col items-center"
-        >
-          {/* Ornate Gold Top Header Element */}
-          <div className="flex justify-center items-center gap-2 mb-8 opacity-70">
-            <div className="h-[1px] w-8 bg-gradient-to-r from-transparent to-[#d4af37]" />
-            <Sparkle className="h-4 w-4 text-[#d4af37] animate-pulse" weight="fill" />
-            <div className="h-[1px] w-8 bg-gradient-to-l from-transparent to-[#d4af37]" />
-          </div>
+    <div
+      className="min-h-screen bg-emerald-pattern text-[#f5f0e6] overflow-x-hidden relative font-montserrat antialiased selection:bg-[#d4af37]/30 selection:text-[#fff2be]"
+    >
+      {/* Background Audio */}
+      <audio
+        ref={audioRef}
+        src={data?.musicTrack || defaultData.musicTrack}
+        loop
+        preload="auto"
+      />
 
-          <span className="text-[10px] md:text-xs uppercase tracking-[0.25em] font-bold text-[#d4af37] mb-6">
-            The Celebration of Love
-          </span>
+      {/* Floating Dynamic Particle Petals Engine (Marigold & Gold Dust) */}
+      {isOpen && <FloatingPetals theme="marigold" density={24} />}
 
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.05] tracking-tight mb-8">
-            {brideName} <br />
-            <span className="font-sans italic text-2xl md:text-3xl block my-2 text-[#d4af37]/80 font-light">and</span>
-            {groomName}
-          </h1>
+      {/* Floating Luxury Audio Dock Widget */}
+      {isOpen && (
+        <LuxuryAudioDock
+          isPlaying={isPlayingMusic}
+          onToggle={toggleMusic}
+          trackTitle="Royal Shehnai & Sitar"
+          theme="emerald"
+        />
+      )}
 
-          <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent my-6" />
+      {/* 1. CRAZY OPENING ANIMATION: 3D ROYAL EMERALD HAVELI GATE */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.div
+            key="haveli-gate-opening"
+            exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+            transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#020d09] px-4 overflow-hidden"
+          >
+            {/* Ambient Background Gold Mesh Glow */}
+            <div className="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#d4af37]/40 via-[#0d382c]/40 to-transparent" />
 
-          {/* Intro date */}
-          <p className="text-sm md:text-base font-serif italic text-[#d4af37]/90 tracking-wider">
-            Kindly join us for our wedding celebration on <br />
-            <span className="font-sans font-bold not-italic tracking-widest text-[#f5f5f4] uppercase text-sm block mt-2">
-              {formatDate(rawDate)}
-            </span>
-          </p>
+            {/* Sacred Vedic Tag Header */}
+            <motion.div
+              initial={{ opacity: 0, y: -25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="text-center mb-6 relative z-10"
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#06241b] border border-[#d4af37]/40 shadow-lg mb-2">
+                <FlowerLotus size={16} weight="fill" className="text-[#d4af37]" />
+                <span className="font-cormorant text-sm md:text-base font-bold tracking-[0.25em] gold-text-glow">
+                  || ॐ श्री गणेशाय नमः ||
+                </span>
+                <FlowerLotus size={16} weight="fill" className="text-[#d4af37]" />
+              </div>
+              <h2 className="text-[#c5ddd3] text-xs font-light tracking-[0.3em] uppercase">
+                Royal Wedding Invocation
+              </h2>
+            </motion.div>
 
-          {/* Hero Banner image with concentric double-bezel border */}
-          {(data?.heroImageUrl || defaultData.gallery[0]) && (
-            <div className="mt-12 rounded-[2rem] bg-white/5 p-1.5 border border-white/10 shadow-2xl max-w-md w-full aspect-[4/5] overflow-hidden">
-              <div className="rounded-[calc(2rem-0.375rem)] overflow-hidden w-full h-full">
+            {/* 3D Haveli Gate Frame */}
+            <div className="haveli-door-container relative w-full max-w-md aspect-[3/4] flex items-center justify-center rounded-3xl p-3 bg-gradient-to-b from-[#124235] via-[#08261c] to-[#020d09] border-2 border-[#d4af37]/50 shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
+              {/* Left Door */}
+              <div
+                className={`haveli-door-left absolute top-3 bottom-3 left-3 w-[calc(50%-12px)] bg-gradient-to-r from-[#061e16] to-[#0d3b2e] rounded-l-2xl border-r border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${
+                  isOpening ? "open" : ""
+                }`}
+              >
+                <div className="w-full h-8 border-t-2 border-b border-[#d4af37]/40" />
+                <div className="my-auto text-center opacity-30">
+                  <span className="text-4xl text-[#d4af37] font-cinzel">✦</span>
+                </div>
+                <div className="w-full h-8 border-b-2 border-t border-[#d4af37]/40" />
+              </div>
+
+              {/* Right Door */}
+              <div
+                className={`haveli-door-right absolute top-3 bottom-3 right-3 w-[calc(50%-12px)] bg-gradient-to-l from-[#061e16] to-[#0d3b2e] rounded-r-2xl border-l border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${
+                  isOpening ? "open" : ""
+                }`}
+              >
+                <div className="w-full h-8 border-t-2 border-b border-[#d4af37]/40" />
+                <div className="my-auto text-center opacity-30">
+                  <span className="text-4xl text-[#d4af37] font-cinzel">✦</span>
+                </div>
+                <div className="w-full h-8 border-b-2 border-t border-[#d4af37]/40" />
+              </div>
+
+              {/* Inner Revealed Content Behind Doors */}
+              <div className="relative z-0 flex flex-col items-center justify-center text-center p-6 w-full h-full bg-[#051c14] rounded-2xl border border-[#d4af37]/30">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37] font-semibold mb-2">
+                  Vivah Nimantran
+                </span>
+                <h1 className="text-3xl md:text-4xl font-cormorant font-bold text-[#fff2be] leading-none mb-1">
+                  {brideName}
+                </h1>
+                <span className="text-xl font-rozha text-[#d4af37] my-0.5">&</span>
+                <h1 className="text-3xl md:text-4xl font-cormorant font-bold text-[#fff2be] leading-none mb-3">
+                  {groomName}
+                </h1>
+                <p className="text-xs text-[#a7f3d0] font-light tracking-widest font-cormorant text-sm">
+                  {dateStr} • {yearStr}
+                </p>
+              </div>
+
+              {/* Center Glowing Ganesha Seal */}
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={handleOpenInvitation}
+                disabled={isOpening}
+                className="ganesha-seal-btn absolute z-30 w-20 h-20 rounded-full flex flex-col items-center justify-center cursor-pointer text-[#3b2405] border-2 border-[#fff3cc]"
+                aria-label="Tap to Open Royal Haveli Gate"
+              >
+                <span className="text-2xl font-bold font-cormorant leading-none">ॐ</span>
+                <span className="text-[8px] font-extrabold tracking-widest uppercase mt-0.5">Enter</span>
+              </motion.button>
+            </div>
+
+            {/* Tap Prompt */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="mt-6 text-xs text-[#d4af37] tracking-[0.3em] uppercase font-light animate-pulse"
+            >
+              ✦ Tap the golden seal to enter ✦
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 2. MAIN INVITATION BODY */}
+      {isOpen && (
+        <main className="relative">
+          {/* Parallax Rotating Sacred Gold Mandala in Background */}
+          <motion.div
+            style={{ rotate: heroMandalaRotate }}
+            className="pointer-events-none fixed top-10 right-[-100px] md:right-0 w-[550px] h-[550px] opacity-[0.06] z-0"
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full stroke-current text-[#d4af37]" fill="none" strokeWidth="0.6">
+              <circle cx="50" cy="50" r="46" />
+              <circle cx="50" cy="50" r="38" />
+              <circle cx="50" cy="50" r="28" />
+              <circle cx="50" cy="50" r="16" />
+              <path d="M50 4 L50 96 M4 50 L96 50 M17 17 L83 83 M17 83 L83 17" />
+            </svg>
+          </motion.div>
+
+          {/* ----------------------------------------------------
+              HERO SECTION (PERFECT FOR BOTH DESKTOP & MOBILE)
+              ---------------------------------------------------- */}
+          <section
+            className="relative min-h-[95dvh] flex flex-col justify-center px-4 py-8 md:py-16 max-w-6xl mx-auto overflow-hidden"
+          >
+            {/* DESKTOP HERO: Grand Split Layout (Left: Sacred Calligraphy & Info, Right: Royal Framed Couple Portrait) */}
+            <div className="hidden md:grid md:grid-cols-12 gap-8 items-center z-10 my-auto">
+              {/* Left Column: Royal Typography & Vedic Invocations */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.9 }}
+                className="col-span-7 space-y-6 text-left"
+              >
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#07291e]/90 border border-[#d4af37]/40 shadow-md">
+                  <FlowerLotus size={16} weight="fill" className="text-[#d4af37]" />
+                  <span className="font-cormorant text-base font-bold tracking-[0.25em] gold-text-glow">
+                    || ॐ श्री गणेशाय नमः ||
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-xs uppercase tracking-[0.3em] text-[#a7f3d0] font-semibold block mb-2">
+                    Auspicious Wedding Invitation
+                  </span>
+                  <h1 className="text-6xl lg:text-7xl font-cormorant font-bold text-[#fff2be] leading-[1.05]">
+                    {brideName} <br />
+                    <span className="font-rozha text-3xl text-[#d4af37] italic my-1 inline-block">&</span> <br />
+                    {groomName}
+                  </h1>
+                </div>
+
+                <div className="border-l-2 border-[#d4af37]/50 pl-4 py-1 space-y-1">
+                  <p className="font-cormorant text-lg text-[#d4af37] font-semibold">
+                    {defaultData.couple.brideParents}
+                  </p>
+                  <p className="font-cormorant text-lg text-[#d4af37] font-semibold">
+                    {defaultData.couple.groomParents}
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <div className="px-5 py-2.5 rounded-2xl bg-[#06241b] border border-[#d4af37]/30 flex items-center gap-2.5">
+                    <CalendarBlank size={18} className="text-[#d4af37]" />
+                    <span className="text-xs font-semibold text-[#f5f0e6]">{dateStr}, {yearStr}</span>
+                  </div>
+
+                  <div className="px-5 py-2.5 rounded-2xl bg-[#06241b] border border-[#d4af37]/30 flex items-center gap-2.5">
+                    <Clock size={18} className="text-[#d4af37]" />
+                    <span className="text-xs font-semibold text-[#f5f0e6]">{data?.weddingTime || defaultData.weddingTime}</span>
+                  </div>
+
+                  <div className="px-5 py-2.5 rounded-2xl bg-[#06241b] border border-[#d4af37]/30 flex items-center gap-2.5">
+                    <MapPin size={18} className="text-[#d4af37]" />
+                    <span className="text-xs font-semibold text-[#f5f0e6]">{venueName}</span>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Right Column: Royal Framed Couple Portrait with 24K Gold Filigree */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+                style={{ y: heroParallaxY }}
+                className="col-span-5 relative"
+              >
+                <div className="relative w-full aspect-[4/5] rounded-[2.5rem] p-2 bg-gradient-to-b from-[#d4af37] via-[#124235] to-[#d4af37] shadow-[0_25px_60px_rgba(0,0,0,0.8)] border border-[#fff3cc]/30">
+                  <div className="w-full h-full rounded-[2.2rem] overflow-hidden bg-[#041a12] relative">
+                    <img
+                      src={data?.heroImageUrl || defaultData.gallery[0]}
+                      alt={`${brideName} and ${groomName}`}
+                      className="w-full h-full object-cover object-top filter brightness-[0.98] contrast-[1.05]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#03140e]/70 via-transparent to-transparent pointer-events-none" />
+                    
+                    <div className="absolute bottom-4 left-4 right-4 text-center py-2 px-3 rounded-xl bg-[#03140e]/85 backdrop-blur-md border border-[#d4af37]/40">
+                      <span className="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold">
+                        {hashtag}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* MOBILE HERO: 100% Facial Clearance Guarantee Layout */}
+            <div className="md:hidden flex flex-col justify-between items-center min-h-[85dvh] text-center w-full">
+              {/* Top: Sacred Mantra (No face blocking) */}
+              <motion.div
+                initial={{ opacity: 0, y: -15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="pt-2 pb-1 z-10 w-full"
+              >
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#06241b]/95 border border-[#d4af37]/40 shadow-md">
+                  <FlowerLotus size={14} weight="fill" className="text-[#d4af37]" />
+                  <span className="font-cormorant text-sm font-bold tracking-widest gold-text-glow">
+                    || ॐ श्री गणेशाय नमः ||
+                  </span>
+                  <FlowerLotus size={14} weight="fill" className="text-[#d4af37]" />
+                </div>
+              </motion.div>
+
+              {/* Middle: 100% Unobstructed Couple Portrait */}
+              <motion.div
+                style={{ scale: heroScale, y: heroParallaxY }}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1 }}
+                className="relative w-full max-w-[320px] aspect-[4/5] my-auto rounded-3xl overflow-hidden shadow-2xl border-2 border-[#d4af37]/50 bg-[#061e16]"
+              >
                 <img
                   src={data?.heroImageUrl || defaultData.gallery[0]}
                   alt={`${brideName} and ${groomName}`}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-top filter brightness-[0.98]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#03140e]/60 via-transparent to-transparent pointer-events-none" />
+              </motion.div>
+
+              {/* Bottom: Frosted Emerald Pedestal Card */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+                className="w-full max-w-sm emerald-card-shell rounded-2xl p-4 z-10 mt-2 text-center"
+              >
+                <span className="text-[9px] uppercase tracking-[0.25em] text-[#a7f3d0] font-semibold block mb-0.5">
+                  Shubh Vivah Celebration
+                </span>
+                <h1 className="text-3xl font-cormorant font-bold text-[#fff2be] leading-none mb-1">
+                  {brideName} <span className="font-rozha text-xl text-[#d4af37]">&</span> {groomName}
+                </h1>
+                <p className="text-xs text-[#d4af37] font-medium tracking-wider font-cormorant text-base">
+                  {dayStr}, {dateStr}, {yearStr}
+                </p>
+                <div className="mt-2 pt-2 border-t border-[#d4af37]/20 flex items-center justify-between text-[10px] text-[#c5ddd3]">
+                  <span className="flex items-center gap-1">
+                    <MapPin size={12} weight="fill" className="text-[#d4af37]" />
+                    {venueName}
+                  </span>
+                  <span className="font-semibold text-[#d4af37]">{hashtag}</span>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+
+          {/* 3. VEDIC SHLOKA & BLESSING SECTION */}
+          <section className="py-16 px-4 bg-emerald-section border-y border-[#d4af37]/20">
+            <motion.div
+              initial={{ opacity: 0, y: 25 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="max-w-4xl mx-auto text-center emerald-card-shell rounded-3xl p-8 md:p-12 relative overflow-hidden"
+            >
+              <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-[#083024] border border-[#d4af37]/50 flex items-center justify-center text-[#d4af37] shadow-lg">
+                <Sparkle size={24} weight="fill" />
+              </div>
+              <p className="font-cormorant text-xl md:text-2xl text-[#fff2be] font-bold leading-relaxed tracking-wider italic mb-4 gold-text-glow">
+                {defaultData.vedicMantra}
+              </p>
+              <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto my-4" />
+              <p className="text-xs md:text-sm text-[#c5ddd3] font-light leading-relaxed max-w-2xl mx-auto">
+                {defaultData.quote}
+              </p>
+              <div className="mt-6 text-[10px] uppercase tracking-[0.25em] text-[#d4af37] font-bold">
+                || सुमुहूर्त सावधान ||
+              </div>
+            </motion.div>
+          </section>
+
+          {/* 4. INTERACTIVE SCRATCH CARD: ROYAL JHAROKHA ARCH */}
+          <section
+            className="py-20 px-4 max-w-4xl mx-auto text-center"
+          >
+            <motion.div style={{ y: scratchCardY }}>
+              <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#a7f3d0] block mb-2">
+                Auspicious Vedic Timing
+              </span>
+              <h2 className="text-3xl md:text-5xl font-cormorant font-bold text-[#fff2be] mb-8">
+                Shubh Vivah Muhurat
+              </h2>
+
+              <ShapedScratchCard
+                shape="arch"
+                theme="emerald"
+                dateStr={dateStr}
+                dayStr={dayStr}
+                yearStr={yearStr}
+                timeStr={data?.weddingTime || defaultData.weddingTime}
+                badgeText="✦ Saat Pheras & Kanyadaan ✦"
+              />
+            </motion.div>
+          </section>
+
+          {/* 5. VEDIC CEREMONIES & ITINERARY */}
+          <section className="py-20 px-4 max-w-5xl mx-auto">
+            <div className="text-center mb-14">
+              <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#a7f3d0] block mb-2">
+                Celebration Timeline
+              </span>
+              <h2 className="text-3xl md:text-5xl font-cormorant font-bold text-[#fff2be]">
+                Vedic Ceremonies
+              </h2>
+            </div>
+
+            {/* Desktop & Mobile Responsive Events Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {events.map((evt: any, idx: number) => (
+                <motion.div
+                  key={evt.name || idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.08, duration: 0.6 }}
+                  className="emerald-card-shell rounded-3xl p-6 md:p-8 hover:border-[#d4af37] transition-all group"
+                >
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest bg-[#d4af37]/20 text-[#fff2be] border border-[#d4af37]/30">
+                      Rasam 0{idx + 1}
+                    </span>
+                    <span className="text-xs font-semibold text-[#a7f3d0] flex items-center gap-1">
+                      <Clock size={14} className="text-[#d4af37]" />
+                      {evt.time}
+                    </span>
+                  </div>
+
+                  <h3 className="text-2xl font-cormorant font-bold text-[#fff2be] group-hover:text-[#d4af37] transition-colors mb-2">
+                    {evt.name}
+                  </h3>
+
+                  {evt.description && (
+                    <p className="text-xs text-[#c5ddd3] font-light leading-relaxed mb-4">
+                      {evt.description}
+                    </p>
+                  )}
+
+                  <div className="pt-3 border-t border-[#d4af37]/20 flex flex-wrap items-center justify-between gap-2 text-xs text-[#d4af37]">
+                    <span className="flex items-center gap-1.5 font-medium">
+                      <CalendarBlank size={14} />
+                      {evt.date}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-medium text-stone-300">
+                      <MapPin size={14} className="text-[#d4af37]" />
+                      {evt.venue}
+                    </span>
+                  </div>
+
+                  {evt.dress && (
+                    <div className="mt-3 pt-2 text-[11px] text-[#a7f3d0] bg-[#041a12]/60 px-3 py-1.5 rounded-xl border border-[#d4af37]/20">
+                      ✨ <span className="font-semibold text-[#d4af37]">Attire:</span> {evt.dress}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </section>
+
+          {/* 6. PHOTO GALLERY WITH PARALLAX & FULL-SCREEN LIGHTBOX */}
+          <section
+            className="py-20 px-4 bg-emerald-section border-t border-[#d4af37]/20"
+          >
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-14">
+                <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#a7f3d0] block mb-2">
+                  Memories & Love
+                </span>
+                <h2 className="text-3xl md:text-5xl font-cormorant font-bold text-[#fff2be]">
+                  Royal Moments
+                </h2>
+              </div>
+
+              {/* Multi-Column Desktop Masonry Grid / Mobile Parallax */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                {galleryImages.map((imgUrl, idx) => (
+                  <motion.div
+                    key={idx}
+                    style={{ y: idx % 2 === 0 ? galleryCol1Y : galleryCol2Y }}
+                    whileHover={{ scale: 1.03 }}
+                    onClick={() => setActivePhotoIdx(idx)}
+                    className="relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer shadow-2xl border border-[#d4af37]/40 bg-[#03140e] group"
+                  >
+                    <img
+                      src={imgUrl}
+                      alt={`Moment ${idx + 1}`}
+                      className="w-full h-full object-cover object-center group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020d09]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center p-4">
+                      <span className="px-4 py-1.5 rounded-full bg-[#d4af37] text-[#041a12] text-[10px] font-bold uppercase tracking-wider shadow-lg">
+                        Expand Photo
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Lightbox Modal */}
+          <AnimatePresence>
+            {activePhotoIdx !== null && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-lg flex items-center justify-center p-4"
+              >
+                <button
+                  onClick={() => setActivePhotoIdx(null)}
+                  className="absolute top-6 right-6 p-3 text-white/80 hover:text-white rounded-full bg-white/10 hover:bg-white/20 transition-all z-20"
+                  aria-label="Close Lightbox"
+                >
+                  <X size={24} weight="bold" />
+                </button>
+
+                <button
+                  onClick={() => setActivePhotoIdx((prev) => (prev !== null ? (prev - 1 + galleryImages.length) % galleryImages.length : 0))}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-white/10 hover:bg-white/20 transition-all z-20"
+                  aria-label="Previous Photo"
+                >
+                  <CaretLeft size={28} weight="bold" />
+                </button>
+
+                <button
+                  onClick={() => setActivePhotoIdx((prev) => (prev !== null ? (prev + 1) % galleryImages.length : 0))}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 text-white/80 hover:text-white rounded-full bg-white/10 hover:bg-white/20 transition-all z-20"
+                  aria-label="Next Photo"
+                >
+                  <CaretRight size={28} weight="bold" />
+                </button>
+
+                <div className="relative max-w-4xl max-h-[85vh] flex flex-col items-center">
+                  <img
+                    src={galleryImages[activePhotoIdx]}
+                    alt={`Enlarged ${activePhotoIdx + 1}`}
+                    className="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl border border-[#d4af37]/40"
+                  />
+                  <div className="mt-4 text-center text-[#d4af37] text-xs tracking-widest font-cormorant text-base">
+                    {activePhotoIdx + 1} / {galleryImages.length} • {brideName} & {groomName}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* 7. VENUE & MAP DIRECTIONS */}
+          <section className="py-20 px-4 max-w-4xl mx-auto text-center">
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#a7f3d0] block mb-2">
+              Royal Palace Venue
+            </span>
+            <h2 className="text-3xl md:text-5xl font-cormorant font-bold text-[#fff2be] mb-8">
+              Location & Directions
+            </h2>
+
+            <div className="emerald-card-shell rounded-3xl p-6 md:p-8 text-left">
+              <h3 className="text-2xl md:text-3xl font-cormorant font-bold text-[#fff2be] mb-1">
+                {venueName}
+              </h3>
+              <p className="text-xs md:text-sm text-[#c5ddd3] font-light mb-6">
+                {venueAddress}
+              </p>
+
+              <div className="flex flex-wrap gap-3 mb-6">
+                <a
+                  href={venueMapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#d4af37] text-[#03140e] text-xs font-bold hover:bg-[#fff2be] transition-colors shadow-lg"
+                >
+                  <ArrowSquareOut size={16} weight="bold" />
+                  Get Google Maps Directions
+                </a>
+
+                <button
+                  onClick={handleCopyAddress}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#06241b] text-xs font-semibold text-[#fff2be] border border-[#d4af37]/50 hover:bg-[#093527] transition-colors"
+                >
+                  <Copy size={16} weight="bold" />
+                  {copiedAddress ? "Copied to Clipboard!" : "Copy Address"}
+                </button>
+              </div>
+
+              <div className="w-full h-64 rounded-2xl overflow-hidden border border-[#d4af37]/30 shadow-inner">
+                <iframe
+                  title="Venue Map"
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(venueName + " " + venueAddress)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                  className="w-full h-full border-0 filter invert-[0.9] hue-rotate-[180deg]"
+                  loading="lazy"
                 />
               </div>
             </div>
-          )}
-        </motion.div>
-      </section>
+          </section>
 
-      {/* Countdown & Save the Date Scratch */}
-      <section className="py-24 px-6 border-t border-b border-white/5 bg-black/[0.15]">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="max-w-4xl mx-auto text-center flex flex-col items-center gap-12"
-        >
-          <motion.div variants={itemVariants}>
-            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#d4af37]">Countdown</span>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white mt-2 mb-6">
-              Counting down the moments
+          {/* 8. ON-SITE RSVP (NO EXTERNAL WHATSAPP REDIRECT) */}
+          <section className="py-20 px-4 max-w-xl mx-auto text-center">
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#a7f3d0] block mb-2">
+              Accept With Pleasure
+            </span>
+            <h2 className="text-3xl md:text-5xl font-cormorant font-bold text-[#fff2be] mb-4">
+              Shubh Vivah RSVP
             </h2>
-            <CountdownTimer targetDate={rawDate} />
-          </motion.div>
+            <p className="text-xs text-[#c5ddd3] font-light max-w-md mx-auto mb-8">
+              Kindly confirm your graceful presence to help us prepare royal hospitality for you and your family.
+            </p>
 
-          <motion.div variants={itemVariants} className="w-full">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#d4af37]">Interactive Calendar</span>
-            <h2 className="font-serif text-2xl md:text-4xl font-bold tracking-tight text-white mt-2 mb-6">
-              Scratch to Reveal the Date
-            </h2>
-            <ScratchCard
-              revealDate={dateStr}
-              revealDay={dayStr}
-              revealYear={yearStr}
-              overlayColor="#d4af37"
-            />
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Schedule of Events (Timeline) */}
-      <section className="py-24 px-6 max-w-4xl mx-auto">
-        <div className="text-center mb-16">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#d4af37]">Schedule</span>
-          <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white mt-2">
-            Wedding Itinerary
-          </h2>
-        </div>
-
-        <div className="space-y-12 relative before:absolute before:left-4 md:before:left-1/2 before:top-4 before:bottom-4 before:w-[1px] before:bg-gradient-to-b before:from-[#d4af37]/0 before:via-[#d4af37]/30 before:to-[#d4af37]/0">
-          {data.eventsJson && data.eventsJson.length > 0 ? (
-            data.eventsJson.map((event: any, idx: number) => {
-              if (!event.enabled) return null;
-              
-              const isEven = idx % 2 === 0;
-
-              return (
-                <div
-                  key={event.name}
-                  className={`flex flex-col md:flex-row items-stretch gap-6 relative ${
-                    isEven ? "md:flex-row-reverse" : ""
-                  }`}
-                >
-                  {/* Timeline dot */}
-                  <div className="absolute left-4 md:left-1/2 -translate-x-[7px] w-[15px] h-[15px] rounded-full bg-[#d4af37] border-4 border-[#061c17] z-10 top-6" />
-
-                  {/* Spacer or content depending on alignment */}
-                  <div className="w-full md:w-1/2" />
-
-                  {/* Event Card with Double-Bezel Architecture */}
-                  <div className="w-full md:w-1/2 pl-10 md:pl-0">
-                    <DoubleBezelCard className="border-[#d4af37]/15 bg-[#082a22]">
-                      <div className="flex items-center gap-2 text-[#d4af37] text-xs font-semibold uppercase tracking-wider mb-2">
-                        <Sparkle className="h-3.5 w-3.5" weight="fill" />
-                        <span>Event Ceremony</span>
-                      </div>
-                      
-                      <h3 className="font-serif text-xl md:text-2xl text-white font-bold mb-3">
-                        {event.name}
-                      </h3>
-
-                      <div className="space-y-2 text-xs md:text-sm text-stone-300">
-                        {event.date && (
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 opacity-75 text-[#d4af37]" />
-                            <span>{event.date}</span>
-                          </div>
-                        )}
-                        {event.time && (
-                          <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 opacity-75 text-[#d4af37]" />
-                            <span>{event.time}</span>
-                          </div>
-                        )}
-                        {event.venue && (
-                          <div className="flex items-start gap-2">
-                            <MapPin className="h-4 w-4 opacity-75 text-[#d4af37] shrink-0 mt-0.5" />
-                            <span>{event.venue}</span>
-                          </div>
-                        )}
-                      </div>
-                    </DoubleBezelCard>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            // Fallback default wedding event
-            <div className="flex flex-col md:flex-row items-stretch gap-6 relative">
-              <div className="absolute left-4 md:left-1/2 -translate-x-[7px] w-[15px] h-[15px] rounded-full bg-[#d4af37] border-4 border-[#061c17] z-10 top-6" />
-              <div className="w-full md:w-1/2" />
-              <div className="w-full md:w-1/2 pl-10 md:pl-0">
-                <DoubleBezelCard className="border-[#d4af37]/15 bg-[#082a22]">
-                  <h3 className="font-serif text-xl text-white font-bold mb-2">Main Nuptials</h3>
-                  <p className="text-xs text-stone-300">{dateStr}, {yearStr} at {data?.weddingTime || defaultData.weddingTime}</p>
-                  <p className="text-xs text-stone-300 mt-2">{data?.venueName || defaultData.venue.name}</p>
-                </DoubleBezelCard>
+            <form
+              onSubmit={handleRsvpSubmit}
+              className="emerald-card-shell rounded-3xl p-6 md:p-8 text-left space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-semibold text-[#a7f3d0] uppercase tracking-wider mb-1.5">
+                  Your Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={rsvpName}
+                  onChange={(e) => setRsvpName(e.target.value)}
+                  placeholder="e.g. Shri Vikramaditya Rathore & Family"
+                  className="w-full px-4 py-3 rounded-xl bg-[#03140e] border border-[#d4af37]/40 text-xs text-[#fff2be] focus:outline-none focus:border-[#d4af37]"
+                />
               </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#a7f3d0] uppercase tracking-wider mb-1.5">
+                  Phone / WhatsApp Number
+                </label>
+                <input
+                  type="tel"
+                  value={rsvpPhone}
+                  onChange={(e) => setRsvpPhone(e.target.value)}
+                  placeholder="+91 98765 43210"
+                  className="w-full px-4 py-3 rounded-xl bg-[#03140e] border border-[#d4af37]/40 text-xs text-[#fff2be] focus:outline-none focus:border-[#d4af37]"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[#a7f3d0] uppercase tracking-wider mb-1.5">
+                    Will You Attend?
+                  </label>
+                  <select
+                    value={rsvpAttending}
+                    onChange={(e) => setRsvpAttending(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-[#03140e] border border-[#d4af37]/40 text-xs text-[#fff2be] focus:outline-none focus:border-[#d4af37]"
+                  >
+                    <option value="yes">Joyfully Attending</option>
+                    <option value="no">Regretfully Declining</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-[#a7f3d0] uppercase tracking-wider mb-1.5">
+                    Number of Guests
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={rsvpGuests}
+                    onChange={(e) => setRsvpGuests(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-[#03140e] border border-[#d4af37]/40 text-xs text-[#fff2be] focus:outline-none focus:border-[#d4af37]"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#a7f3d0] uppercase tracking-wider mb-1.5">
+                  Blessings & Wishes for the Couple
+                </label>
+                <textarea
+                  rows={3}
+                  value={rsvpWishes}
+                  onChange={(e) => setRsvpWishes(e.target.value)}
+                  placeholder="Share your warm blessings, congratulatory messages..."
+                  className="w-full px-4 py-3 rounded-xl bg-[#03140e] border border-[#d4af37]/40 text-xs text-[#fff2be] focus:outline-none focus:border-[#d4af37] resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-3.5 rounded-xl bg-[#d4af37] text-[#03140e] text-xs font-bold uppercase tracking-widest hover:bg-[#fff2be] transition-colors shadow-lg mt-2"
+              >
+                Submit RSVP Confirmation
+              </button>
+            </form>
+          </section>
+
+          {/* RSVP Confirmation Modal */}
+          <AnimatePresence>
+            {isRsvpSubmitted && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[150] bg-black/80 backdrop-blur-md flex items-center justify-center p-4"
+              >
+                <motion.div
+                  initial={{ scale: 0.9, y: 20 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.9, y: 20 }}
+                  className="emerald-card-shell rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#d4af37]/60"
+                >
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#083024] border border-[#d4af37] flex items-center justify-center text-[#d4af37]">
+                    <CheckCircle size={36} weight="fill" />
+                  </div>
+                  <h3 className="text-2xl font-cormorant font-bold text-[#fff2be] mb-2">
+                    RSVP Confirmed!
+                  </h3>
+                  <p className="text-xs text-[#c5ddd3] font-light leading-relaxed mb-6">
+                    Thank you, <strong className="text-[#fff2be]">{rsvpName}</strong>! Your RSVP and blessings have been gracefully recorded.
+                  </p>
+                  <button
+                    onClick={() => setIsRsvpSubmitted(false)}
+                    className="w-full py-3 rounded-xl bg-[#d4af37] text-[#03140e] text-xs font-bold uppercase tracking-wider"
+                  >
+                    Return to Invitation
+                  </button>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* 9. FOOTER */}
+          <footer className="py-16 px-4 text-center border-t border-[#d4af37]/30 bg-[#020d09]">
+            <p className="font-cormorant text-2xl font-bold text-[#fff2be] mb-1">
+              {brideName} & {groomName}
+            </p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37] font-semibold mb-4">
+              # {hashtag.replace(/^#/, "")}
+            </p>
+            <p className="text-[11px] text-[#c5ddd3] font-light">
+              We look forward to celebrating our sacred union in your divine presence.
+            </p>
+            <div className="mt-8 text-[9px] text-stone-500 uppercase tracking-widest">
+              UnfoldWed • Royal Wedding Experience
             </div>
-          )}
-        </div>
-      </section>
-
-      {/* Photo Gallery Slideshow */}
-      <section className="py-24 px-6 border-t border-b border-white/5 bg-black/[0.15]">
-        <div className="max-w-4xl mx-auto text-center">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#d4af37] mb-2 block">Gallery</span>
-          <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white mb-12">
-            Captured Moments
-          </h2>
-          <PhotoSlideshow images={data?.slideshowImages || data?.gallery || defaultData.gallery} />
-        </div>
-      </section>
-
-      {/* Map Embed */}
-      <section className="py-24 px-6 max-w-4xl mx-auto text-center">
-        <span className="text-[10px] uppercase tracking-[0.2em] font-semibold text-[#d4af37] mb-2 block">Directions</span>
-        <h2 className="font-serif text-3xl md:text-5xl font-bold tracking-tight text-white mb-12">
-          Venue Map
-        </h2>
-        <GoogleMapEmbed
-          venueName={data?.venueName || defaultData.venue.name}
-          venueAddress={data?.venueAddress || defaultData.venue.address}
-          lat={data?.venueLat}
-          lng={data?.venueLng}
-        />
-      </section>
-
-      {/* Toggles: Dress code / Transport */}
-      <section className="py-24 px-6 bg-black/[0.15] border-t border-b border-white/5">
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-          <DoubleBezelCard className="border-[#d4af37]/15 bg-[#082a22]">
-            <h3 className="font-serif text-xl text-white font-bold mb-3 flex items-center gap-2">
-              <Sparkle className="h-4 w-4 text-[#d4af37]" />
-              <span>Dress Code</span>
-            </h3>
-            <p className="text-xs md:text-sm text-stone-300 leading-relaxed whitespace-pre-line">
-              {data?.dressCodeText || defaultData.dressCode.description}
-            </p>
-          </DoubleBezelCard>
-
-          <DoubleBezelCard className="border-[#d4af37]/15 bg-[#082a22]">
-            <h3 className="font-serif text-xl text-white font-bold mb-3 flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-[#d4af37]" />
-              <span>Travel & Lodging</span>
-            </h3>
-            <p className="text-xs md:text-sm text-stone-300 leading-relaxed whitespace-pre-line">
-              {data?.transportText || "Accommodations can be arranged upon request. Please contact the coordinator for transport options."}
-            </p>
-          </DoubleBezelCard>
-        </div>
-      </section>
-
-      {/* Guest Messages & RSVP Form */}
-      <section className="py-24 px-6 max-w-4xl mx-auto">
-        <GuestMessageForm
-          invitationId={data?.id || "demo-emerald"}
-          events={data?.eventsJson || defaultData.events}
-        />
-      </section>
-
-      {/* Ornate Footer */}
-      <footer className="py-16 text-center border-t border-white/5 bg-[#041511] relative overflow-hidden">
-        <div className="flex justify-center items-center gap-2 opacity-55 mb-6">
-          <div className="h-[1px] w-8 bg-[#d4af37]" />
-          <Sparkle className="h-3 w-3 text-[#d4af37]" weight="fill" />
-          <div className="h-[1px] w-8 bg-[#d4af37]" />
-        </div>
-        <p className="font-serif italic text-[#d4af37]/70 text-sm">
-          We look forward to celebrating with you!
-        </p>
-        <span className="block text-[9px] uppercase tracking-widest text-stone-600 mt-6 font-sans">
-          unfoldwed.com Invitation
-        </span>
-      </footer>
+          </footer>
+        </main>
+      )}
     </div>
   );
 }

@@ -53,24 +53,8 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
 
   return (
     <div className={`relative min-h-[100dvh] bg-[#380D17] overflow-x-hidden ${isEmbed ? "overflow-y-auto" : ""}`}>
-      {["royal-lotus", "crimson-royale", "noor-e-nikah", "emerald-qasr", "gul-e-noor", "azure-nikah", "kitab-e-nikah", "modern-minimal"].includes(templateId) ? (
-        <SelectedTemplate data={sampleData} />
-      ) : (
-        <>
-          <DoorAnimation
-            onOpen={() => setHasOpenedDoors(true)}
-            brideName={brideName}
-            groomName={groomName}
-            theme={theme}
-          />
-          {hasOpenedDoors && (
-            <>
-              <SelectedTemplate data={sampleData} />
-              <MusicPlayer trackUrl={musicTrack} autoPlay />
-            </>
-          )}
-        </>
-      )}
+      {/* Directly render self-contained template with its own opening animation and luxury audio dock */}
+      <SelectedTemplate data={sampleData} />
 
       {!isEmbed && (
         <>
