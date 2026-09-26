@@ -233,3 +233,83 @@ html.lenis, html.lenis body {
 .lenis-scrolling iframe {
   pointer-events: none;
 }
+
+/* ==========================================================================
+   GLOBAL LUXURY WEDDING TYPOGRAPHY UTILITIES
+   ========================================================================== */
+
+/* 1. Royal Scripts & Calligraphy */
+.font-great-vibes {
+  font-family: 'Great Vibes', 'Pinyon Script', 'Alex Brush', cursive;
+}
+
+.font-alex-brush {
+  font-family: 'Alex Brush', 'Great Vibes', cursive;
+}
+
+.font-pinyon {
+  font-family: 'Pinyon Script', 'Italianno', cursive;
+}
+
+.font-parisienne {
+  font-family: 'Parisienne', 'Great Vibes', cursive;
+}
+
+.font-allura {
+  font-family: 'Allura', 'Great Vibes', cursive;
+}
+
+.font-montecarlo {
+  font-family: 'MonteCarlo', 'Pinyon Script', cursive;
+}
+
+.font-italianno {
+  font-family: 'Italianno', 'Pinyon Script', cursive;
+}
+
+/* 2. Royal Heritage Serif & Editorial Display */
+.font-cinzel-dec {
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', 'Playfair Display', serif;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', 'Lora', serif;
+}
+
+.font-cormorant {
+  font-family: 'Cormorant Garamond', 'Lora', serif;
+}
+
+.font-marcellus {
+  font-family: 'Marcellus', 'Cinzel', serif;
+}
+
+.font-bodoni {
+  font-family: 'Bodoni Moda', 'Playfair Display', serif;
+}
+
+.font-rozha {
+  font-family: 'Rozha One', 'Cinzel', serif;
+}
+
+.font-lora {
+  font-family: 'Lora', Georgia, serif;
+}
+
+/* 3. Sacred Invocation & Eastern */
+.font-amiri {
+  font-family: 'Amiri', 'Scheherazade New', serif;
+}
+
+/* 4. Modern Clean Luxury Sans */
+.font-jakarta {
+  font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+}

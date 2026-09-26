@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Rozha+One&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import "../../public/fonts/fonts.css";
 
 .font-cinzel {
   font-family: 'Cinzel', serif;
@@ -18,6 +18,18 @@
 
 .font-montserrat {
   font-family: 'Montserrat', sans-serif;
+}
+
+.font-bodoni {
+  font-family: 'Bodoni Moda', serif;
+}
+
+.font-pinyon {
+  font-family: 'Pinyon Script', cursive;
+}
+
+.font-jakarta {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* Luxury Emerald Gold Foil Gradient Text */

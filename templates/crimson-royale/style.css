@@ -1,12 +1,13 @@
 /* Crimson Royale Template Styles — Design Tokens & Exact Visual System */
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&display=swap');
+@import "../../public/fonts/fonts.css";
 
 .tmpl-crimson-royale {
   /* Brand Typography Tokens */
-  --font-primary: "Jost", system-ui, -apple-system, sans-serif;
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-script: "Alex Brush", cursive;
-  --font-body: "Jost", sans-serif;
+  --font-primary: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-display: "Cinzel Decorative", "Rozha One", "Cormorant Garamond", Georgia, serif;
+  --font-script: "Great Vibes", "Alex Brush", cursive;
+  --font-royal: "Rozha One", "Cinzel Decorative", serif;
+  --font-body: "Plus Jakarta Sans", "Montserrat", sans-serif;
 
   /* Color Palette Tokens */
   --color-text-primary: #3d232a;

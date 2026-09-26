@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@200;300;400;500;600;700&family=Cinzel:wght@400;600;700;900&family=Rozha+One&display=swap');
+@import "../../public/fonts/fonts.css";
 
 .font-cormorant {
   font-family: 'Cormorant Garamond', serif;
@@ -14,6 +14,22 @@
 
 .font-rozha {
   font-family: 'Rozha One', serif;
+}
+
+.font-bodoni {
+  font-family: 'Bodoni Moda', 'Playfair Display', serif;
+}
+
+.font-allura {
+  font-family: 'Allura', 'Great Vibes', cursive;
+}
+
+.font-playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-jakarta {
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* Modern Minimalist Gold Text Gradient */

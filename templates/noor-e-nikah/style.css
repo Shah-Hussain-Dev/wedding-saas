@@ -1,8 +1,4 @@
-/* ========================================================================= */
-/* NOOR-E-NIKAH — LUXURY ISLAMIC WEDDING INVITATION TEMPLATE CSS            */
-/* ========================================================================= */
-
-@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
+@import "../../public/fonts/fonts.css";
 
 :root {
   --noor-ivory: #FBF9F5;
@@ -13,11 +9,11 @@
   --noor-gold-dark: #A8862A;
   --noor-espresso: #241619;
   --noor-emerald: #1B3D2F;
-  --noor-font-display: 'Cinzel', serif;
-  --noor-font-script: 'Alex Brush', cursive;
-  --noor-font-serif: 'Cormorant Garamond', serif;
-  --noor-font-body: 'Montserrat', sans-serif;
-  --noor-font-arabic: 'Scheherazade New', serif;
+  --noor-font-display: 'Cinzel Decorative', 'Cinzel', serif;
+  --noor-font-script: 'Pinyon Script', 'Alex Brush', cursive;
+  --noor-font-serif: 'Cormorant Garamond', 'Playfair Display', serif;
+  --noor-font-body: 'Plus Jakarta Sans', 'Montserrat', sans-serif;
+  --noor-font-arabic: 'Amiri', 'Scheherazade New', serif;
 }
 
 .tmpl-noor-nikah {
