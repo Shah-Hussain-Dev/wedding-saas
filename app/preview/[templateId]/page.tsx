@@ -14,6 +14,9 @@ interface PreviewPageProps {
 }
 
 const KNOWN_TEMPLATE_IDS = [
+  "royal-heritage",
+  "royal-grace",
+  "rose-gold-blush",
   "noor-e-nikah",
   "emerald-qasr",
   "gul-e-noor",
@@ -24,8 +27,6 @@ const KNOWN_TEMPLATE_IDS = [
   "emerald-noir",
   "royal-elegance",
   "modern-minimal",
-  "rose-gold-blush",
-  "royal-grace",
 ];
 
 function PreviewContent({ templateId }: { templateId: string }) {

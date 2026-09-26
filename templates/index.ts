@@ -11,6 +11,7 @@ import AzureNikah, { defaultData as azureNikahData } from "./azure-nikah";
 import KitabENikah, { defaultData as kitabENikahData } from "./kitab-e-nikah";
 import RoseGoldBlush, { defaultData as roseGoldBlushData } from "./rose-gold-blush";
 import RoyalGrace, { defaultData as royalGraceData } from "./royal-grace";
+import RoyalHeritage, { defaultData as royalHeritageData } from "./royal-heritage";
 
 export {
   NoorNikah,
@@ -25,6 +26,7 @@ export {
   KitabENikah,
   RoseGoldBlush,
   RoyalGrace,
+  RoyalHeritage,
   noorNikahData,
   royalLotusData,
   crimsonRoyaleData,
@@ -37,6 +39,7 @@ export {
   kitabENikahData,
   roseGoldBlushData,
   royalGraceData,
+  royalHeritageData,
 };
 
 export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> = {
@@ -52,6 +55,7 @@ export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> 
   "kitab-e-nikah": KitabENikah,
   "rose-gold-blush": RoseGoldBlush,
   "royal-grace": RoyalGrace,
+  "royal-heritage": RoyalHeritage,
 };
 
 export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
@@ -67,6 +71,7 @@ export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
   "kitab-e-nikah": kitabENikahData,
   "rose-gold-blush": roseGoldBlushData,
   "royal-grace": royalGraceData,
+  "royal-heritage": royalHeritageData,
 };
 
 export function getTemplateComponent(templateId: string): React.ComponentType<{ data?: any }> {

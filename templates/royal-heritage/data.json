@@ -1,0 +1,87 @@
+{
+  "templateId": "royal-heritage",
+  "name": "Royal Heritage",
+  "religion": "universal",
+  "couple": {
+    "brideName": "Samaira",
+    "groomName": "Aarav",
+    "tagline": "The Royal Mediterranean Heritage Celebration Of",
+    "groomParents": "Son of Mr. & Mrs. Devendra Singhania",
+    "groomEducation": "MBA, Harvard Business School",
+    "groomProfession": "Chief Investment Officer",
+    "brideParents": "Daughter of Mr. & Mrs. Rajeshwar Rathore",
+    "brideEducation": "M.Arch, Architectural Association London",
+    "brideProfession": "Principal Heritage Architect"
+  },
+  "weddingDate": "2027-11-24T18:30:00",
+  "weddingTime": "06:30 PM onwards",
+  "dateFormatted": "Wednesday, November 24, 2027",
+  "hashtag": "#AaravWedsSamaira",
+  "videoUrl": "/videos/royal-heritage.mp4",
+  "musicTrack": "/templates/royal-heritage/music.mp3",
+  "quote": "Two souls drawn together by timeless destiny, bound by eternal vows amidst sunlit shores and blooming bougainvillea.",
+  "invocations": {
+    "universal": "Together with our families, we joyfully invite you to celebrate our union as two hearts begin an eternal adventure under the azure skies.",
+    "hindu": "|| ॐ श्री गणेशाय नमः ||\nमङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
+    "muslim": "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He has put love and mercy between your hearts.” (Surah Ar-Rum 30:21)"
+  },
+  "venue": {
+    "name": "Villa Bellavista & Azure Waterfront Estate",
+    "address": "Lakeside Royal Riviera Pavilion, Lake Como / Udaipur Heritage Valley 313001",
+    "mapUrl": "https://maps.google.com/?q=Lake+Como+Villa+Waterfront+Estate"
+  },
+  "dressCode": {
+    "title": "Mediterranean Chic & Riviera Royal Elegance",
+    "description": "We invite our gracious guests to celebrate in soft powder blues, sun-washed ivory, coral accents, linen suits, or traditional regal couture."
+  },
+  "events": [
+    {
+      "name": "Welcome Mehendi & Riviera Soirée",
+      "date": "November 23, 2027",
+      "time": "04:00 PM",
+      "venue": "The Bougainvillea Terrace",
+      "description": "An enchanting afternoon of artisanal henna, live acoustic mediterranean folk & sufi harmonies, handcrafted gelato, and floral cocktails.",
+      "dress": "Powder Blue & Coral Floral Chic"
+    },
+    {
+      "name": "Sun-Kissed Haldi & Citrus Fiesta",
+      "date": "November 24, 2027",
+      "time": "10:30 AM",
+      "venue": "The Sunken Olive Grove & Poolside",
+      "description": "A joyous morning of golden saffron rasam, phoolon ki holi, festive beats, fresh spritzers, and laughter by the water.",
+      "dress": "Sun-Kissed Yellows & White Linen"
+    },
+    {
+      "name": "Baraat Swagat & Grand Procession",
+      "date": "November 24, 2027",
+      "time": "04:30 PM",
+      "venue": "The Archway Courtyard",
+      "description": "Grand royal groom's arrival along the scenic cobblestone waterfront, greeted with rosewater and brass fanfares.",
+      "dress": "Pastel Sherwanis & Powder Blue Accents"
+    },
+    {
+      "name": "The Sacred Vows / Vivah & Nikah",
+      "date": "November 24, 2027",
+      "time": "06:30 PM",
+      "venue": "Lakeside Starlight Arch Mandap",
+      "description": "The sacred eternal covenant under a cascading arch of coral bougainvillea and olive vines overlooking tranquil twilight waters.",
+      "dress": "Regal Heritage Couture"
+    },
+    {
+      "name": "The Grand Waterfront Banquet",
+      "date": "November 24, 2027",
+      "time": "08:30 PM onwards",
+      "venue": "The Villa Grand Promenade",
+      "description": "A Michelin-curated celebratory feast, heartfelt toasts under fairy-lit stone arches, and midnight dancing by the moonlit lake.",
+      "dress": "Black Tie / Royal Formal Evening Wear"
+    }
+  ],
+  "gallery": [
+    "/templates/royal-heritage/couple-arch.jpg",
+    "/templates/royal-heritage/couple-waterfront.jpg",
+    "/templates/royal-heritage/villa-mobile.jpg",
+    "/templates/royal-heritage/villa-terrace.jpg",
+    "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop"
+  ]
+}

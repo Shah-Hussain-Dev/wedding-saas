@@ -15,6 +15,17 @@ const FILTERS = ["All", "Universal", "Hindu", "Muslim", "Best Sellers", "New"] a
 
 const CATALOG: TemplateCatalogItem[] = [
   {
+    id: TEMPLATE_META["royal-heritage"].id,
+    name: TEMPLATE_META["royal-heritage"].name,
+    description: TEMPLATE_META["royal-heritage"].description,
+    tag: "New",
+    gradient: TEMPLATE_META["royal-heritage"].gradient,
+    leftScreen: "hero",
+    accentClass: "text-teal-800",
+    religion: TEMPLATE_META["royal-heritage"].religion,
+    religionLabel: TEMPLATE_META["royal-heritage"].religionLabel,
+  },
+  {
     id: TEMPLATE_META["royal-grace"].id,
     name: TEMPLATE_META["royal-grace"].name,
     description: TEMPLATE_META["royal-grace"].description,

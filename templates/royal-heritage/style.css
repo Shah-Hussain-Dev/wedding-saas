@@ -1,0 +1,422 @@
+/* ==========================================================================
+   ROYAL HERITAGE — MEDITERRANEAN ARCH & CORAL BOUGAINVILLEA PALACE CSS
+   Palette: Powder Blue (#77A3AE), Coral Red (#D95147), Warm Ivory (#E8E3D9),
+            Deep Teal (#315F6B), Dark Navy Teal (#153E4B), Antique Bronze (#876B45)
+   ========================================================================== */
+
+@import "../../public/fonts/fonts.css";
+
+:root {
+  /* 🩵 POWDER BLUE & TEAL PALETTE */
+  --powder-blue: #77A3AE;
+  --light-dusty-blue: #91B5BC;
+  --deep-teal: #315F6B;
+  --navy-teal: #153E4B;
+  --ice-blue: #EAF2F4;
+
+  /* 🌺 CORAL & TERRACOTTA PALETTE */
+  --coral: #D95147;
+  --salmon-coral: #E66B5E;
+  --deep-terracotta: #A63832;
+
+  /* 🤍 WARM IVORY & CREAM PALETTE */
+  --warm-ivory: #E8E3D9;
+  --soft-cream: #D9D3C8;
+  --ivory-card: #FAF8F5;
+  --ivory-pure: #FFFFFF;
+
+  /* 🌿 OLIVE & ANTIQUE BRONZE */
+  --dark-olive: #4C4D31;
+  --antique-bronze: #876B45;
+  --bronze-glow: #B89668;
+
+  /* BORDERS & ACCENTS */
+  --border-powder: rgba(119, 163, 174, 0.45);
+  --border-bronze: rgba(135, 107, 69, 0.35);
+  --border-coral: rgba(217, 81, 71, 0.3);
+}
+
+/* ====================================================
+   FONT UTILITIES
+   ==================================================== */
+.font-allura { font-family: 'Allura', 'Great Vibes', cursive; }
+.font-montecarlo { font-family: 'MonteCarlo', 'Pinyon Script', cursive; }
+.font-bodoni { font-family: 'Bodoni Moda', 'Playfair Display', serif; }
+.font-playfair { font-family: 'Playfair Display', 'Lora', serif; }
+.font-cinzel-dec { font-family: 'Cinzel Decorative', 'Cinzel', serif; }
+.font-marcellus { font-family: 'Marcellus', 'Cinzel', serif; }
+.font-parisienne { font-family: 'Parisienne', 'Great Vibes', cursive; }
+.font-italianno { font-family: 'Italianno', 'Pinyon Script', cursive; }
+.font-jakarta { font-family: 'Plus Jakarta Sans', 'Montserrat', sans-serif; }
+.font-lora { font-family: 'Lora', serif; }
+.font-great-vibes { font-family: 'Great Vibes', cursive, 'Pinyon Script', 'Alex Brush'; }
+.font-alex-brush { font-family: 'Alex Brush', cursive; }
+.font-pinyon { font-family: 'Pinyon Script', cursive; }
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-montserrat { font-family: 'Montserrat', sans-serif; }
+.font-cinzel { font-family: 'Cinzel', serif; }
+.font-amiri { font-family: 'Amiri', serif; }
+.font-rozha { font-family: 'Rozha One', serif; }
+
+/* ====================================================
+   SECTION BACKGROUNDS & CONTINUOUS AMBIENCE
+   ==================================================== */
+
+/* 1. 🤍 WARM IVORY STUCCO SECTION */
+.bg-heritage-ivory {
+  background-color: #E8E3D9;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #FAF8F5 0%, #E8E3D9 65%, #D9D3C8 100%),
+    radial-gradient(circle at 10% 25%, rgba(119, 163, 174, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 90% 75%, rgba(217, 81, 71, 0.08) 0%, transparent 45%);
+}
+
+/* 2. 🩵 POWDER BLUE & SEAFRONT AMBIENCE */
+.bg-heritage-azure {
+  background-color: #315F6B;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #77A3AE 0%, #315F6B 60%, #153E4B 100%),
+    radial-gradient(circle at 85% 35%, rgba(230, 107, 94, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 15% 75%, rgba(135, 107, 69, 0.15) 0%, transparent 50%);
+}
+
+/* 3. 🌊 DEEP NAVY TEAL EVENING SECTION */
+.bg-heritage-deep {
+  background-color: #153E4B;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #315F6B 0%, #153E4B 65%, #0B252E 100%),
+    radial-gradient(circle at 80% 40%, rgba(119, 163, 174, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 20% 70%, rgba(217, 81, 71, 0.1) 0%, transparent 50%);
+}
+
+/* ====================================================
+   LUXURY ARCHED CARDS & PORTALS
+   ==================================================== */
+
+/* 🤍 ARCHED IVORY MEDITERRANEAN CARD */
+.heritage-card-arch {
+  background: linear-gradient(160deg, #FAF8F5 0%, #F0ECE4 100%);
+  border: 1.5px solid #77A3AE;
+  border-top-left-radius: 3.5rem;
+  border-top-right-radius: 3.5rem;
+  border-bottom-left-radius: 1.8rem;
+  border-bottom-right-radius: 1.8rem;
+  box-shadow: 0 25px 60px rgba(21, 62, 75, 0.12), 0 0 35px rgba(119, 163, 174, 0.18);
+  color: #153E4B;
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heritage-card-arch:hover {
+  transform: translateY(-6px);
+  border-color: #315F6B;
+  box-shadow: 0 30px 70px rgba(21, 62, 75, 0.18), 0 0 45px rgba(217, 81, 71, 0.2);
+}
+
+.heritage-card-inner {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(119, 163, 174, 0.35);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+/* 🩵 AZURE GLASS CARD (On Deep Teal / Parallax) */
+.heritage-card-azure {
+  background: linear-gradient(150deg, rgba(49, 95, 107, 0.88) 0%, rgba(21, 62, 75, 0.94) 100%);
+  border: 1.5px solid #77A3AE;
+  border-radius: 2.2rem;
+  box-shadow: 0 25px 60px rgba(11, 37, 46, 0.65), 0 0 35px rgba(119, 163, 174, 0.25);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #FAF8F5;
+}
+
+/* 🌺 CORAL FLORAL ACCENT PILL */
+.heritage-coral-pill {
+  background: linear-gradient(135deg, rgba(217, 81, 71, 0.12) 0%, rgba(230, 107, 94, 0.18) 100%);
+  border: 1px solid rgba(217, 81, 71, 0.45);
+  color: #D95147;
+}
+
+/* ====================================================
+   HERO REVEAL ARCH PEDESTAL PLAQUE (HIGH CONTRAST & LUXURY)
+   ==================================================== */
+.heritage-hero-reveal-plaque {
+  background: linear-gradient(165deg, rgba(250, 248, 245, 0.96) 0%, rgba(244, 239, 230, 0.94) 50%, rgba(232, 227, 217, 0.96) 100%);
+  border: 1.5px solid #77A3AE;
+  border-top-left-radius: 4rem;
+  border-top-right-radius: 4rem;
+  border-bottom-left-radius: 2.2rem;
+  border-bottom-right-radius: 2.2rem;
+  box-shadow: 0 25px 80px rgba(11, 37, 46, 0.6), 0 0 35px rgba(119, 163, 174, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #153E4B;
+  position: relative;
+  overflow: hidden;
+}
+
+.heritage-hero-plaque-inner {
+  border: 1px solid rgba(135, 107, 69, 0.35);
+  border-top-left-radius: 3.5rem;
+  border-top-right-radius: 3.5rem;
+  border-bottom-left-radius: 1.8rem;
+  border-bottom-right-radius: 1.8rem;
+  padding: 24px 18px;
+}
+
+@media (min-width: 640px) {
+  .heritage-hero-plaque-inner {
+    padding: 32px 36px;
+  }
+}
+
+/* ====================================================
+   INTERACTIVE BUTTONS & AUDIO TOGGLE
+   ==================================================== */
+.heritage-btn-primary {
+  background: linear-gradient(135deg, #77A3AE 0%, #315F6B 100%);
+  color: #FAF8F5;
+  border: 1px solid #91B5BC;
+  box-shadow: 0 10px 25px rgba(49, 95, 107, 0.35), 0 0 20px rgba(119, 163, 174, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heritage-btn-primary:hover {
+  background: linear-gradient(135deg, #91B5BC 0%, #315F6B 100%);
+  box-shadow: 0 14px 30px rgba(49, 95, 107, 0.45), 0 0 30px rgba(217, 81, 71, 0.35);
+  transform: translateY(-2px);
+}
+
+.heritage-btn-coral {
+  background: linear-gradient(135deg, #D95147 0%, #A63832 100%);
+  color: #FFFFFF;
+  border: 1px solid #E66B5E;
+  box-shadow: 0 10px 25px rgba(217, 81, 71, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heritage-btn-coral:hover {
+  background: linear-gradient(135deg, #E66B5E 0%, #D95147 100%);
+  box-shadow: 0 14px 35px rgba(217, 81, 71, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Floating Audio Toggle (Bottom-Right Circular Azure Button) */
+.heritage-music-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 99999;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(21, 62, 75, 0.94);
+  border: 1.5px solid #77A3AE;
+  color: #EAF2F4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 22px rgba(119, 163, 174, 0.4);
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  outline: none;
+}
+
+.heritage-music-toggle:hover {
+  transform: scale(1.08);
+  border-color: #D95147;
+  color: #FFFFFF;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.8), 0 0 30px rgba(217, 81, 71, 0.55);
+}
+
+.heritage-music-toggle:active {
+  transform: scale(0.94);
+}
+
+/* Equalizer Bars */
+.heritage-soundwave-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 2px;
+  height: 14px;
+}
+
+.heritage-soundwave-bars span {
+  width: 2px;
+  background: #77A3AE;
+  border-radius: 9999px;
+  animation: heritage-bounce 1.2s ease-in-out infinite alternate;
+}
+
+.heritage-soundwave-bars span:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+.heritage-soundwave-bars span:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+.heritage-soundwave-bars span:nth-child(3) { height: 6px; animation-delay: 0.2s; }
+
+@keyframes heritage-bounce {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
+
+/* ====================================================
+   CEREMONY CARDS ANIMATIONS & TIMELINE
+   ==================================================== */
+.heritage-ceremony-node {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #FAF8F5;
+  border: 2px solid #77A3AE;
+  color: #153E4B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(119, 163, 174, 0.45);
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 11px;
+  transition: all 0.3s ease;
+}
+
+.heritage-ceremony-node:hover {
+  border-color: #D95147;
+  color: #D95147;
+  transform: scale(1.15);
+}
+
+.heritage-ceremony-pill {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(119, 163, 174, 0.4);
+  background: rgba(255, 255, 255, 0.85);
+  color: #153E4B;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.heritage-ceremony-pill.active {
+  background: linear-gradient(135deg, #77A3AE 0%, #315F6B 100%);
+  color: #FFFFFF;
+  border-color: #77A3AE;
+  box-shadow: 0 0 18px rgba(119, 163, 174, 0.45);
+  font-weight: 700;
+  transform: scale(1.05);
+}
+
+/* ====================================================
+   UNIQUE 3D PANORAMIC ARCH HORIZON GALLERY
+   ==================================================== */
+.heritage-gallery-stage {
+  perspective: 1400px;
+  perspective-origin: center center;
+  position: relative;
+  width: 100%;
+}
+
+.heritage-photo-arch-mount {
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  border: 1.5px solid rgba(119, 163, 174, 0.6);
+  background: #102A43;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 20px rgba(119, 163, 174, 0.2);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  user-select: none;
+}
+
+.heritage-photo-arch-mount:hover {
+  border-color: #77A3AE;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(119, 163, 174, 0.4);
+}
+
+.heritage-photo-hero-mount {
+  border-top-left-radius: 2.5rem;
+  border-top-right-radius: 2.5rem;
+  border-bottom-left-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  border: 2px solid #77A3AE;
+  background: #102A43;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75), 0 0 35px rgba(119, 163, 174, 0.35);
+  overflow: hidden;
+}
+
+.memory-deck-stack {
+  position: relative;
+  width: 100%;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+  perspective: 1000px;
+}
+
+/* ====================================================
+   HIGH CONTRAST CRISP RSVP MODAL
+   ==================================================== */
+.heritage-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(11, 37, 46, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.heritage-modal-container {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #FAF8F5 0%, #E8E3D9 100%);
+  border: 1.5px solid #77A3AE;
+  border-top-left-radius: 3rem;
+  border-top-right-radius: 3rem;
+  border-bottom-left-radius: 1.8rem;
+  border-bottom-right-radius: 1.8rem;
+  padding: 28px 24px;
+  box-shadow: 0 30px 80px rgba(11, 37, 46, 0.75), 0 0 40px rgba(119, 163, 174, 0.3);
+  position: relative;
+  box-sizing: border-box;
+  color: #153E4B;
+}
+
+.heritage-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(49, 95, 107, 0.1);
+  border: 1px solid rgba(119, 163, 174, 0.4);
+  color: #153E4B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.heritage-modal-close:hover {
+  background: #D95147;
+  color: #FFFFFF;
+  border-color: #D95147;
+}

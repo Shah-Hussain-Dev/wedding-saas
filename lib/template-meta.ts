@@ -10,7 +10,8 @@ export type TemplateId =
   | "azure-nikah"
   | "kitab-e-nikah"
   | "rose-gold-blush"
-  | "royal-grace";
+  | "royal-grace"
+  | "royal-heritage";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -158,6 +159,17 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
       "An enchanted botanical velvet gate & golden curtain reveal video synchronized at 6s, featuring deep sage & olive tones, antique gold filigree, multi-axis parallax botanical glasshouse palace, scratch date reveal, and a 3D scattered card memory reel.",
     gradient: "from-[#0e1713] via-[#1b2d24] to-[#121c17]",
   },
+  "royal-heritage": {
+    id: "royal-heritage",
+    name: "Royal Heritage",
+    style: "Powder Blue & Coral Floral Arch",
+    tag: "Universal Royale",
+    religion: ["hindu", "muslim", "universal"],
+    religionLabel: "Universal Heritage",
+    description:
+      "A sun-kissed Mediterranean arched portal & blooming coral bougainvillea cinematic video reveal. Featuring powder-blue architectural doorways, warm ivory terraces, 3D panoramic arch photo horizon, and floating ceremony portals.",
+    gradient: "from-[#77A3AE] via-[#E8E3D9] to-[#D95147]",
+  },
 };
 
 export const INCLUDED_FEATURES = [
@@ -233,4 +245,5 @@ export const TEMPLATE_COMPONENTS = {
   "kitab-e-nikah": () => import("@/templates/kitab-e-nikah"),
   "rose-gold-blush": () => import("@/templates/rose-gold-blush"),
   "royal-grace": () => import("@/templates/royal-grace"),
+  "royal-heritage": () => import("@/templates/royal-heritage"),
 } as const;

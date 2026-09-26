@@ -25,6 +25,7 @@ const TEMPLATES_LIST = [
   { id: "modern-minimal", name: "Modern Minimal (Contemporary)" },
   { id: "rose-gold-blush", name: "Rose Gold Blush (Dual Faith & Universal)" },
   { id: "royal-grace", name: "Royal Grace (Botanical Velvet & Gold)" },
+  { id: "royal-heritage", name: "Royal Heritage (Powder Blue & Coral Mediterranean)" },
 ];
 
 export function AdminCreateModal({
