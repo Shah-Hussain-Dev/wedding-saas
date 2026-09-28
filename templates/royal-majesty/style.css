@@ -1,0 +1,415 @@
+/* ==========================================================================
+   ROYAL MAJESTY — FRENCH CHÂTEAU & REGENCY LAKESIDE BALLROOM
+   LOCKED COLOR SOURCE OF TRUTH:
+   - Powder Blue: #A9C1D0
+   - Soft Baby Blue: #BCD0DA
+   - Dusty Blue: #8FAABD
+   - French Blue: #708FA8
+   - Slate Blue: #607C91
+   - Deep Blue Grey: #4E687A
+   - Pearl Ivory: #EBECE8
+   - Cool Ivory: #DEE3E2
+   - Blue Grey White: #CFD9DD
+   - Soft Grey: #B9C2C3
+   - Champagne Gold: #B7A16E
+   - Light Champagne: #C9B989
+   - Antique Gold: #9B875D
+   ========================================================================== */
+
+@import "../../public/fonts/fonts.css";
+
+:root {
+  /* 🩵 BLUE PALETTE */
+  --majesty-powder-blue: #A9C1D0;
+  --majesty-baby-blue: #BCD0DA;
+  --majesty-dusty-blue: #8FAABD;
+  --majesty-french-blue: #708FA8;
+  --majesty-slate-blue: #607C91;
+  --majesty-deep-blue: #4E687A;
+
+  /* 🤍 NEUTRALS */
+  --majesty-pearl-ivory: #EBECE8;
+  --majesty-cool-ivory: #DEE3E2;
+  --majesty-blue-white: #CFD9DD;
+  --majesty-soft-grey: #B9C2C3;
+  --majesty-card-bg: #FAFBF9;
+
+  /* 🥂 MUTED GOLD ACCENTS */
+  --majesty-champagne-gold: #B7A16E;
+  --majesty-light-gold: #C9B989;
+  --majesty-antique-gold: #9B875D;
+
+  /* BORDERS & GLOWS */
+  --majesty-border-blue: rgba(169, 193, 208, 0.55);
+  --majesty-border-gold: rgba(183, 161, 110, 0.45);
+}
+
+/* ====================================================
+   TYPOGRAPHY
+   ==================================================== */
+.font-great-vibes { font-family: 'Great Vibes', cursive, 'Pinyon Script', 'Alex Brush'; }
+.font-alex-brush { font-family: 'Alex Brush', cursive; }
+.font-pinyon { font-family: 'Pinyon Script', cursive; }
+.font-playfair { font-family: 'Playfair Display', 'Lora', serif; }
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-montserrat { font-family: 'Montserrat', sans-serif; }
+.font-lora { font-family: 'Lora', serif; }
+.font-cinzel { font-family: 'Cinzel', serif; }
+.font-amiri { font-family: 'Amiri', serif; }
+
+/* ====================================================
+   TEXTURES & ATMOSPHERIC LIGHTING
+   ==================================================== */
+.bg-majesty-ivory {
+  background-color: #EBECE8;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #FAFBF9 0%, #EBECE8 60%, #DEE3E2 100%),
+    radial-gradient(circle at 12% 28%, rgba(169, 193, 208, 0.2) 0%, transparent 45%),
+    radial-gradient(circle at 88% 72%, rgba(183, 161, 110, 0.15) 0%, transparent 45%);
+}
+
+.bg-majesty-powder {
+  background-color: #BCD0DA;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #EBECE8 0%, #BCD0DA 65%, #8FAABD 100%),
+    radial-gradient(circle at 85% 30%, rgba(183, 161, 110, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 15% 70%, rgba(112, 143, 168, 0.22) 0%, transparent 50%);
+}
+
+.bg-majesty-twilight {
+  background-color: #2D414E;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, #4E687A 0%, #2D414E 65%, #1D2C36 100%),
+    radial-gradient(circle at 80% 35%, rgba(169, 193, 208, 0.22) 0%, transparent 50%),
+    radial-gradient(circle at 20% 65%, rgba(183, 161, 110, 0.18) 0%, transparent 50%);
+}
+
+/* ====================================================
+   EDITORIAL REGENCY STYLING & BORDERS
+   ==================================================== */
+.majesty-editorial-card {
+  background: linear-gradient(155deg, rgba(250, 251, 249, 0.96) 0%, rgba(235, 236, 232, 0.94) 100%);
+  border: 1px solid rgba(169, 193, 208, 0.7);
+  box-shadow: 
+    0 20px 50px rgba(78, 104, 122, 0.12),
+    0 0 0 1px rgba(183, 161, 110, 0.25) inset,
+    0 0 30px rgba(169, 193, 208, 0.15);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.majesty-editorial-card:hover {
+  border-color: #B7A16E;
+  box-shadow: 
+    0 25px 60px rgba(78, 104, 122, 0.18),
+    0 0 0 1px rgba(183, 161, 110, 0.4) inset,
+    0 0 35px rgba(183, 161, 110, 0.25);
+}
+
+.majesty-gold-pill {
+  background: linear-gradient(135deg, rgba(183, 161, 110, 0.15) 0%, rgba(201, 185, 137, 0.22) 100%);
+  border: 1px solid rgba(183, 161, 110, 0.5);
+  color: #9B875D;
+}
+
+.majesty-btn-primary {
+  background: linear-gradient(135deg, #708FA8 0%, #4E687A 100%);
+  color: #FAFBF9;
+  border: 1px solid #A9C1D0;
+  box-shadow: 0 10px 25px rgba(78, 104, 122, 0.35), 0 0 20px rgba(169, 193, 208, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.majesty-btn-primary:hover {
+  background: linear-gradient(135deg, #8FAABD 0%, #4E687A 100%);
+  box-shadow: 0 14px 30px rgba(78, 104, 122, 0.45), 0 0 30px rgba(183, 161, 110, 0.4);
+  transform: translateY(-2px);
+}
+
+.majesty-btn-gold {
+  background: linear-gradient(135deg, #B7A16E 0%, #9B875D 100%);
+  color: #FFFFFF;
+  border: 1px solid #C9B989;
+  box-shadow: 0 10px 25px rgba(183, 161, 110, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.majesty-btn-gold:hover {
+  background: linear-gradient(135deg, #C9B989 0%, #B7A16E 100%);
+  box-shadow: 0 14px 35px rgba(183, 161, 110, 0.6);
+  transform: translateY(-2px);
+}
+
+/* ====================================================
+   KINETIC ROTATING CELESTIAL ASTROLABE
+   ==================================================== */
+.majesty-astrolabe-ring-outer {
+  border: 1.5px dashed rgba(183, 161, 110, 0.6);
+  border-radius: 50%;
+  animation: majesty-spin-slow 28s linear infinite;
+}
+
+.majesty-astrolabe-ring-inner {
+  border: 1px solid rgba(169, 193, 208, 0.7);
+  border-radius: 50%;
+  animation: majesty-spin-reverse 20s linear infinite;
+}
+
+@keyframes majesty-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes majesty-spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* ====================================================
+   CHÂTEAU SALON ITINERARY STAGE
+   ==================================================== */
+.majesty-itinerary-tab {
+  padding: 14px 18px;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(169, 193, 208, 0.4);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  text-align: left;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.majesty-itinerary-tab:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #B7A16E;
+  transform: translateX(4px);
+}
+
+.majesty-itinerary-tab.active {
+  background: linear-gradient(135deg, #708FA8 0%, #4E687A 100%);
+  color: #FFFFFF;
+  border-color: #A9C1D0;
+  box-shadow: 0 12px 30px rgba(78, 104, 122, 0.35), 0 0 20px rgba(169, 193, 208, 0.4);
+  transform: translateX(8px);
+}
+
+.majesty-itinerary-tab.active h4 {
+  color: #FFFFFF;
+}
+
+.majesty-itinerary-tab.active p {
+  color: #DEE3E2;
+}
+
+.majesty-itinerary-tab.active .badge-icon {
+  background: #B7A16E;
+  color: #FFFFFF;
+  border-color: #C9B989;
+}
+
+/* ====================================================
+   SPATIAL MEMORY UNIVERSE & 3D CAMERA VIEWPORT
+   ==================================================== */
+.majesty-spatial-stage {
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.majesty-spatial-plane {
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+.majesty-portal-arch-frame {
+  border-radius: 3rem 3rem 1.8rem 1.8rem;
+  border: 1.5px solid rgba(169, 193, 208, 0.7);
+  box-shadow: 
+    0 30px 80px rgba(29, 44, 54, 0.7),
+    0 0 40px rgba(169, 193, 208, 0.3),
+    0 0 0 1px rgba(183, 161, 110, 0.35) inset;
+  background: #1D2C36;
+  position: relative;
+  overflow: hidden;
+}
+
+.majesty-portal-split-hero {
+  border-radius: 2rem;
+  border: 1.5px solid rgba(169, 193, 208, 0.65);
+  box-shadow: 0 25px 70px rgba(29, 44, 54, 0.65), 0 0 35px rgba(183, 161, 110, 0.25);
+  background: #1D2C36;
+  overflow: hidden;
+}
+
+.majesty-portal-split-detail {
+  border-radius: 1.5rem;
+  border: 1.5px solid rgba(183, 161, 110, 0.6);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(183, 161, 110, 0.4);
+  background: #1D2C36;
+  overflow: hidden;
+}
+
+.majesty-portal-freeze-frame {
+  border-radius: 2.5rem;
+  border: 2px solid #B7A16E;
+  box-shadow: 
+    0 35px 90px rgba(0, 0, 0, 0.8),
+    0 0 50px rgba(183, 161, 110, 0.45),
+    0 0 0 1px rgba(169, 193, 208, 0.4) inset;
+  background: #1D2C36;
+  overflow: hidden;
+}
+
+.majesty-fragment-shard {
+  border-radius: 1.25rem;
+  border: 1px solid rgba(169, 193, 208, 0.5);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(169, 193, 208, 0.2);
+  background: #1D2C36;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.majesty-fragment-shard:hover {
+  border-color: #B7A16E;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(183, 161, 110, 0.4);
+}
+
+.majesty-giant-numeral {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(8rem, 20vw, 18rem);
+  font-weight: 900;
+  line-height: 0.8;
+  color: #A9C1D0;
+  opacity: 0.08;
+  user-select: none;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+  position: absolute;
+  z-index: 0;
+}
+
+/* Floating Audio Toggle */
+.majesty-music-toggle {
+  position: fixed;
+  bottom: max(18px, env(safe-area-inset-bottom, 18px));
+  right: 16px;
+  z-index: 9999;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(45, 65, 78, 0.94);
+  border: 1.5px solid #A9C1D0;
+  color: #EBECE8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 18px rgba(169, 193, 208, 0.35);
+  cursor: pointer;
+  pointer-events: auto;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  outline: none;
+}
+
+.majesty-music-toggle:hover {
+  transform: scale(1.08);
+  border-color: #B7A16E;
+  color: #FFFFFF;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75), 0 0 24px rgba(183, 161, 110, 0.5);
+}
+
+.majesty-music-toggle:active {
+  transform: scale(0.94);
+}
+
+/* Equalizer Bars */
+.majesty-soundwave-bars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 2px;
+  height: 14px;
+}
+
+.majesty-soundwave-bars span {
+  width: 2px;
+  background: #A9C1D0;
+  border-radius: 9999px;
+  animation: majesty-bounce 1.2s ease-in-out infinite alternate;
+}
+
+.majesty-soundwave-bars span:nth-child(1) { height: 8px; animation-delay: 0.1s; }
+.majesty-soundwave-bars span:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+.majesty-soundwave-bars span:nth-child(3) { height: 6px; animation-delay: 0.2s; }
+
+@keyframes majesty-bounce {
+  0% { transform: scaleY(0.4); }
+  100% { transform: scaleY(1); }
+}
+
+/* ====================================================
+   HIGH CONTRAST CRISP RSVP MODAL
+   ==================================================== */
+.majesty-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(29, 44, 54, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.majesty-modal-container {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #FAFBF9 0%, #EBECE8 100%);
+  border: 1.5px solid #A9C1D0;
+  border-top-left-radius: 3rem;
+  border-top-right-radius: 3rem;
+  border-bottom-left-radius: 1.8rem;
+  border-bottom-right-radius: 1.8rem;
+  padding: 28px 24px;
+  box-shadow: 0 30px 80px rgba(29, 44, 54, 0.75), 0 0 40px rgba(169, 193, 208, 0.35);
+  position: relative;
+  box-sizing: border-box;
+  color: #4E687A;
+}
+
+.majesty-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(78, 104, 122, 0.1);
+  border: 1px solid rgba(169, 193, 208, 0.4);
+  color: #4E687A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.majesty-modal-close:hover {
+  background: #B7A16E;
+  color: #FFFFFF;
+  border-color: #B7A16E;
+}

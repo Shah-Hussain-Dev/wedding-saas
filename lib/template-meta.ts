@@ -11,7 +11,8 @@ export type TemplateId =
   | "kitab-e-nikah"
   | "rose-gold-blush"
   | "royal-grace"
-  | "royal-heritage";
+  | "royal-heritage"
+  | "royal-majesty";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -170,6 +171,17 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
       "A sun-kissed Mediterranean arched portal & blooming coral bougainvillea cinematic video reveal. Featuring powder-blue architectural doorways, warm ivory terraces, 3D panoramic arch photo horizon, and floating ceremony portals.",
     gradient: "from-[#77A3AE] via-[#E8E3D9] to-[#D95147]",
   },
+  "royal-majesty": {
+    id: "royal-majesty",
+    name: "Royal Majesty",
+    style: "French Château & Regency Ballroom",
+    tag: "Imperial Royale",
+    religion: ["hindu", "muslim", "universal"],
+    religionLabel: "Universal Regency",
+    description:
+      "An enchanted French Château ballroom & starlit lakeside video reveal with shimmering crystal chandeliers, powder-blue hydrangea garlands, muted champagne gold accents, and 3D Rococo horizon gallery.",
+    gradient: "from-[#A9C1D0] via-[#EBECE8] to-[#B7A16E]",
+  },
 };
 
 export const INCLUDED_FEATURES = [
@@ -246,4 +258,5 @@ export const TEMPLATE_COMPONENTS = {
   "rose-gold-blush": () => import("@/templates/rose-gold-blush"),
   "royal-grace": () => import("@/templates/royal-grace"),
   "royal-heritage": () => import("@/templates/royal-heritage"),
+  "royal-majesty": () => import("@/templates/royal-majesty"),
 } as const;

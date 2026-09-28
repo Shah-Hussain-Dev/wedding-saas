@@ -1,0 +1,77 @@
+{
+  "templateId": "royal-majesty",
+  "name": "Royal Majesty",
+  "religion": "universal",
+  "couple": {
+    "brideName": "Genevieve",
+    "groomName": "Julian",
+    "tagline": "The Grand French Château & Regency Royal Celebration Of",
+    "groomParents": "Son of Lord & Lady Montgomery",
+    "groomEducation": "M.Phil, Oxford University",
+    "groomProfession": "Hereditary Arts Trust Director",
+    "brideParents": "Daughter of Count & Countess De Valois",
+    "brideEducation": "Diplôme Supérieur, Sorbonne Paris",
+    "brideProfession": "Classical Philharmonic Curator"
+  },
+  "weddingDate": "2027-09-18T18:00:00",
+  "weddingTime": "06:00 PM onwards",
+  "dateFormatted": "Saturday, September 18, 2027",
+  "hashtag": "#JulianAndGenevieve",
+  "videoUrl": "/videos/royal-majesty.mp4",
+  "musicTrack": "/templates/royal-majesty/music.mp3",
+  "quote": "Under the soft shimmer of crystal chandeliers and starlit waters, two souls unite in timeless elegance and everlasting devotion.",
+  "invocations": {
+    "universal": "Together with their noble families, Julian & Genevieve cordially request the honour of your presence at the solemnisation of their holy matrimony.",
+    "hindu": "|| ॐ श्री गणेशाय नमः ||\nमङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
+    "muslim": "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ\n“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them.” (Surah Ar-Rum 30:21)"
+  },
+  "venue": {
+    "name": "Château De La Belle Vue & Grand Lakeside Pavilion",
+    "address": "Route Du Lac Royal, French Riviera Estate, 74290 Talloires, France",
+    "mapUrl": "https://maps.google.com/?q=Chateau+De+La+Belle+Vue+Lakeside+Pavilion"
+  },
+  "dressCode": {
+    "title": "Regency Elegance & French Black-Tie",
+    "description": "Ladies are graciously requested to wear soft powder blues, pearl ivory gowns, or floral couture. Gentlemen in black-tie or deep French blue evening tailcoats."
+  },
+  "events": [
+    {
+      "name": "The Royal Welcome Soirée & High Tea",
+      "date": "September 17, 2027",
+      "time": "04:30 PM",
+      "venue": "The Orangerie & Rose Gardens",
+      "description": "An afternoon of artisanal French macarons, vintage champagne fountains, live harp serenade, and gentle lakeside waltzes.",
+      "dress": "Powder Blue & Pearl Daywear"
+    },
+    {
+      "name": "The Candlelight Sangeet & Musical Gala",
+      "date": "September 17, 2027",
+      "time": "07:30 PM",
+      "venue": "The Grand Mirror Ballroom",
+      "description": "An enchanted evening of celestial classical harmonies, choreographies under shimmering crystal chandeliers, and imperial banqueting.",
+      "dress": "Regal French Blue & Champagne Gold"
+    },
+    {
+      "name": "The Grand Procession & Solemn Matrimony",
+      "date": "September 18, 2027",
+      "time": "05:00 PM",
+      "venue": "The Lakeside Chandelier Rotunda",
+      "description": "The sacred vows exchanged amidst cascades of powder-blue hydrangeas, string quartets, and golden twilight lake reflections.",
+      "dress": "French Formal & Regal Couture"
+    },
+    {
+      "name": "The Imperial Ball & Waterfront Banquet",
+      "date": "September 18, 2027",
+      "time": "08:00 PM onwards",
+      "venue": "The Royal Promenade & Pavilion",
+      "description": "Michelin-curated five-course banquet, grand midnight waltz under starlight fireworks, and celebration by the moonlit lake.",
+      "dress": "Black-Tie / Grand Evening Ballgowns"
+    }
+  ],
+  "gallery": [
+    "/templates/royal-majesty/couple-portrait.jpg",
+    "/templates/royal-majesty/ballroom-terrace.jpg",
+    "/templates/royal-majesty/couple-portrait.jpg",
+    "/templates/royal-majesty/ballroom-terrace.jpg"
+  ]
+}
