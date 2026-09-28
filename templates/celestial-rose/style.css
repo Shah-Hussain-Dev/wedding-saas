@@ -1,0 +1,233 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600&family=Great+Vibes&family=Alex+Brush&family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --blush: #E8B8B8;
+  --dusty-rose: #C89898;
+  --antique-rose: #A87878;
+
+  --celestial-blue: #5898B8;
+  --twilight-blue: #4888A8;
+  --mist-blue: #788898;
+  --mauve-shadow: #685868;
+
+  --pearl-ivory: #F1E8E1;
+
+  --champagne: #C9A46E;
+  --rose-champagne: #E2B993;
+
+  --stardust-glow: 0 0 25px rgba(226, 185, 147, 0.45);
+  --celestial-shadow: 0 25px 60px rgba(88, 152, 184, 0.25);
+  --pearl-shadow: 0 20px 50px rgba(104, 88, 104, 0.15);
+}
+
+/* Typography Classes */
+.font-cinzel { font-family: 'Cinzel', serif; }
+.font-cormorant { font-family: 'Cormorant Garamond', serif; }
+.font-playfair { font-family: 'Playfair Display', serif; }
+.font-great-vibes { font-family: 'Great Vibes', cursive; }
+.font-alex-brush { font-family: 'Alex Brush', cursive; }
+.font-montserrat { font-family: 'Montserrat', sans-serif; }
+.font-amiri { font-family: 'Amiri', serif; }
+
+/* 3D Spatial Stage */
+.celestial-perspective-container {
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+/* Translucent Breathing Blue Curtains */
+.curtain-fabric-left {
+  background: radial-gradient(circle at 10% 40%, rgba(88, 152, 184, 0.35) 0%, rgba(120, 136, 152, 0.15) 60%, transparent 100%),
+              repeating-linear-gradient(90deg, rgba(88, 152, 184, 0.18) 0px, rgba(232, 184, 184, 0.12) 30px, rgba(88, 152, 184, 0.25) 60px);
+  backdrop-filter: blur(4px);
+  box-shadow: inset -20px 0 40px rgba(88, 152, 184, 0.2);
+  animation: curtainFloat 8s ease-in-out infinite alternate;
+}
+
+.curtain-fabric-right {
+  background: radial-gradient(circle at 90% 40%, rgba(88, 152, 184, 0.35) 0%, rgba(120, 136, 152, 0.15) 60%, transparent 100%),
+              repeating-linear-gradient(90deg, rgba(88, 152, 184, 0.18) 0px, rgba(232, 184, 184, 0.12) 30px, rgba(88, 152, 184, 0.25) 60px);
+  backdrop-filter: blur(4px);
+  box-shadow: inset 20px 0 40px rgba(88, 152, 184, 0.2);
+  animation: curtainFloat 9s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes curtainFloat {
+  0% { transform: scaleX(1) skewY(0deg); }
+  50% { transform: scaleX(1.04) skewY(1.2deg); }
+  100% { transform: scaleX(0.97) skewY(-0.8deg); }
+}
+
+/* Water Ripple Animation */
+@keyframes waterRipple {
+  0% {
+    transform: scale(0.1);
+    opacity: 0.9;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(3.5);
+    opacity: 0;
+  }
+}
+
+.animate-water-ripple {
+  animation: waterRipple 3.5s cubic-bezier(0.1, 0.8, 0.3, 1) infinite;
+}
+
+/* Reflective Marble Flooring Shimmer */
+.celestial-marble-reflection {
+  background: linear-gradient(180deg, rgba(88, 152, 184, 0.25) 0%, rgba(241, 232, 225, 0.85) 60%, #F1E8E1 100%);
+  position: relative;
+}
+
+.celestial-marble-reflection::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 164, 110, 0.3) 0%, transparent 75%);
+  pointer-events: none;
+}
+
+/* Celestial Stationery Pedestal Card */
+.celestial-stationery-card {
+  background: rgba(241, 232, 225, 0.92);
+  border: 1px solid rgba(201, 164, 110, 0.55);
+  box-shadow: 0 25px 60px rgba(104, 88, 104, 0.16), 0 0 35px rgba(226, 185, 147, 0.25);
+  backdrop-filter: blur(16px);
+  position: relative;
+}
+
+/* Celestial Floating Button */
+.celestial-btn-champagne {
+  background: linear-gradient(135deg, #C9A46E 0%, #E2B993 50%, #C9A46E 100%);
+  background-size: 200% 200%;
+  color: #36281D;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 10px 30px rgba(201, 164, 110, 0.45), 0 0 15px rgba(226, 185, 147, 0.3);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: shimmerMove 6s ease infinite;
+}
+
+.celestial-btn-champagne:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 15px 40px rgba(201, 164, 110, 0.65), 0 0 25px rgba(226, 185, 147, 0.5);
+  border-color: #FFFFFF;
+}
+
+@keyframes shimmerMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating Audio Soundtrack Player */
+.celestial-audio-pill {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  right: 16px;
+  z-index: 40;
+  background: rgba(72, 136, 168, 0.85);
+  border: 1px solid rgba(226, 185, 147, 0.6);
+  backdrop-filter: blur(14px);
+  color: #F1E8E1;
+  border-radius: 9999px;
+  padding: 8px 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 18px rgba(88, 152, 184, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 40px;
+}
+
+.celestial-audio-pill:hover {
+  transform: scale(1.05);
+  border-color: #E2B993;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(201, 164, 110, 0.5);
+}
+
+/* Soundwave Equalizer Bars */
+.soundwave-bar-celestial {
+  display: inline-block;
+  width: 2.5px;
+  background: #E2B993;
+  border-radius: 2px;
+  animation: soundwavePulseCelestial 1.2s ease-in-out infinite alternate;
+}
+
+.soundwave-bar-celestial:nth-child(1) { height: 6px; animation-delay: 0.1s; }
+.soundwave-bar-celestial:nth-child(2) { height: 14px; animation-delay: 0.3s; }
+.soundwave-bar-celestial:nth-child(3) { height: 9px; animation-delay: 0.2s; }
+.soundwave-bar-celestial:nth-child(4) { height: 16px; animation-delay: 0.4s; }
+
+@keyframes soundwavePulseCelestial {
+  0% { transform: scaleY(0.35); }
+  100% { transform: scaleY(1); }
+}
+
+/* Celestial Scratch Card Styling */
+.celestial-scratch-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(72, 136, 168, 0.3), 0 0 30px rgba(201, 164, 110, 0.25);
+  border: 2px solid rgba(201, 164, 110, 0.7);
+}
+
+.celestial-scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  touch-action: none;
+  z-index: 10;
+}
+
+/* Slow Spin Animation */
+@keyframes spinCelestialSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-celestial {
+  animation: spinCelestialSlow 24s linear infinite;
+}
+
+/* Star Twinkle Animation */
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.animate-twinkle {
+  animation: starTwinkle 3.5s ease-in-out infinite;
+}
+
+/* Mobile-First Root Container & Zero Horizontal Overflow */
+.celestial-template-root {
+  overflow-x: hidden;
+  max-width: 100vw;
+  background-color: var(--pearl-ivory);
+  color: var(--mauve-shadow);
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (max-width: 768px) {
+  .celestial-stationery-card {
+    border-radius: 1.5rem;
+    padding: 1.75rem 1.25rem;
+  }
+}

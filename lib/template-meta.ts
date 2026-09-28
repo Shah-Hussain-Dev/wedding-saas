@@ -13,7 +13,8 @@ export type TemplateId =
   | "royal-grace"
   | "royal-heritage"
   | "royal-majesty"
-  | "imperial-palace";
+  | "imperial-palace"
+  | "celestial-rose";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -21,14 +22,25 @@ export interface TemplateMeta {
   id: TemplateId;
   name: string;
   style: string;
-  description: string;
   tag?: string;
+  description: string;
   gradient: string;
   religion: ("hindu" | "muslim" | "universal")[];
   religionLabel: string;
 }
 
 export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
+  "celestial-rose": {
+    id: "celestial-rose",
+    name: "Celestial Rose Dreamscape",
+    style: "Celestial Rose & Ethereal Starlight",
+    tag: "Awwwards Dreamscape",
+    religion: ["hindu", "muslim", "universal"],
+    religionLabel: "Universal Celestial",
+    description:
+      "A transcendent Awwwards-level dreamscape. Features the royal prestige celestial rose terrace video, multi-layer depth stack with pointer lerp parallax, orbital countdown, pinned constellation story, 3D zero-gravity memories, scratch the stars reveal, and a wish-upon-a-star RSVP flight animation.",
+    gradient: "from-[#5898B8] via-[#E8B8B8] to-[#F1E8E1]",
+  },
   "noor-e-nikah": {
     id: "noor-e-nikah",
     name: "Noor-e-Nikah",

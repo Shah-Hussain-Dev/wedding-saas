@@ -7,7 +7,7 @@ import { MiniPhoneMockup } from "@/components/marketing/mini-phone-mockup";
 import { cardHover } from "@/components/ui/motion-primitives";
 import { cn } from "@/lib/utils";
 
-export type TemplateTag = "Best Seller" | "New" | "Exclusive" | "Featured" | "Masterpiece";
+export type TemplateTag = "Best Seller" | "New" | "Exclusive" | "Featured" | "Masterpiece" | "Awwwards Dreamscape";
 
 export type TemplateCatalogItem = {
   id: string;
@@ -27,6 +27,7 @@ const TAG_STYLES: Record<TemplateTag, string> = {
   Exclusive: "bg-accent-gold text-white",
   Featured: "bg-[#8A6D3B] text-white",
   Masterpiece: "bg-[#551618] text-[#E5D8C4] border border-[#B89773]",
+  "Awwwards Dreamscape": "bg-[#5898B8] text-[#F1E8E1] border border-[#E2B993]",
 };
 
 export function TemplateCatalogCard({ template }: { template: TemplateCatalogItem }) {

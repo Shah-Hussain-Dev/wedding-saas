@@ -14,6 +14,7 @@ import RoyalGrace, { defaultData as royalGraceData } from "./royal-grace";
 import RoyalHeritage, { defaultData as royalHeritageData } from "./royal-heritage";
 import RoyalMajesty, { defaultData as royalMajestyData } from "./royal-majesty";
 import ImperialPalace, { defaultData as imperialPalaceData } from "./imperial-palace";
+import CelestialRose, { celestialRoseData } from "./celestial-rose";
 
 export {
   NoorNikah,
@@ -31,6 +32,7 @@ export {
   RoyalHeritage,
   RoyalMajesty,
   ImperialPalace,
+  CelestialRose,
   noorNikahData,
   royalLotusData,
   crimsonRoyaleData,
@@ -46,6 +48,7 @@ export {
   royalHeritageData,
   royalMajestyData,
   imperialPalaceData,
+  celestialRoseData,
 };
 
 export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> = {
@@ -64,6 +67,7 @@ export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> 
   "royal-heritage": RoyalHeritage,
   "royal-majesty": RoyalMajesty,
   "imperial-palace": ImperialPalace,
+  "celestial-rose": CelestialRose,
 };
 
 export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
@@ -82,6 +86,7 @@ export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
   "royal-heritage": royalHeritageData,
   "royal-majesty": royalMajestyData,
   "imperial-palace": imperialPalaceData,
+  "celestial-rose": celestialRoseData,
 };
 
 export function getTemplateComponent(templateId: string): React.ComponentType<{ data?: any }> {
@@ -91,4 +96,5 @@ export function getTemplateComponent(templateId: string): React.ComponentType<{ 
 export function getTemplateDefaultData(templateId: string): any {
   return TEMPLATE_DEFAULT_DATA[templateId] || noorNikahData;
 }
+
 

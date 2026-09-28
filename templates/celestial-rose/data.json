@@ -1,0 +1,92 @@
+{
+  "templateId": "celestial-rose",
+  "couple": {
+    "groomName": "Aarav Sharma",
+    "groomParents": "Son of Mr. Vikram & Mrs. Meera Sharma",
+    "groomEducation": "M.S. Robotics & AI, Stanford University",
+    "groomProfession": "DeepTech Founder & Systems Architect",
+    "brideName": "Zara Al-Mansoor",
+    "brideParents": "Daughter of Dr. Tariq & Mrs. Yasmin Al-Mansoor",
+    "brideEducation": "M.Arch Celestial Architecture, ETH Zürich",
+    "brideProfession": "Sustainable Biophilic Designer"
+  },
+  "weddingDate": "2027-11-18T18:30:00.000Z",
+  "weddingTime": "06:30 PM IST",
+  "hashtag": "#AaravAndZara",
+  "religion": "universal",
+  "quote": "Under the quiet blessing of the crescent moon and starlit skies, two souls intertwine into an infinite dream.",
+  "videoUrl": "/videos/royal-prestige.mp4",
+  "musicTrack": "/templates/celestial-rose/music.mp3",
+  "venue": {
+    "name": "The Celestial Mirage Pavilions",
+    "address": "Skyline Terraces, Lake Pichola Waterfront, Udaipur, India",
+    "mapUrl": "https://maps.google.com/?q=Lake+Pichola+Udaipur+India"
+  },
+  "events": [
+    {
+      "name": "The Haldi Sunrise Bloom",
+      "date": "Tuesday, November 16, 2027",
+      "time": "10:30 AM",
+      "chamber": "Warm Sunrise Terrace",
+      "theme": "Haldi",
+      "description": "A joyous morning of turmeric blessings, golden marigolds, citrus infusions, and acoustic sitar melodies as the morning sun kisses the terrace.",
+      "venue": "The Golden Courtyard & Sunken Garden",
+      "dress": "Champagne Gold & Mustard Silk"
+    },
+    {
+      "name": "The Twilight Henna & Sangeet",
+      "date": "Wednesday, November 17, 2027",
+      "time": "06:00 PM",
+      "chamber": "Botanical Floating Garden",
+      "theme": "Mehendi",
+      "description": "An enchanted evening of intricate henna artistry, fragrant jasmine garlands, rhythmic dhol beats, and twilight dance performances under fairy-lit arches.",
+      "venue": "The Water Pavilion & Palm Terraces",
+      "dress": "Powder Blue, Blush & Mint Velvet"
+    },
+    {
+      "name": "The Sacred Vows & Pheras",
+      "date": "Thursday, November 18, 2027",
+      "time": "05:00 PM",
+      "chamber": "Pearl Ivory Mandap under the Crescent Moon",
+      "theme": "Wedding",
+      "description": "The sacred union and exchange of eternal vows beneath translucent blue drapes, cascading blush roses, and celestial starlight over reflecting waters.",
+      "venue": "The Celestial Lakeside Promenade",
+      "dress": "Traditional Royal Attire / Ivory & Rose Gold Sherwani"
+    },
+    {
+      "name": "The Starlight Reception Gala",
+      "date": "Friday, November 19, 2027",
+      "time": "08:00 PM",
+      "chamber": "Twilight Starlight Terrace",
+      "theme": "Reception",
+      "description": "A grand celebration of love featuring a symphony orchestra, curated royal gastronomy, celestial fireworks, and champagne toasts till dawn.",
+      "venue": "The Grand Mirror Ballroom & Starlit Amphitheatre",
+      "dress": "Midnight Black Tie & Haute Couture Gowns"
+    }
+  ],
+  "milestones": [
+    {
+      "year": "2021",
+      "title": "A Starlit First Encounter",
+      "description": "Beneath a clear autumn sky in Zurich, a serendipitous conversation about astronomy and architecture sparked an instant bond.",
+      "photo": "/templates/celestial-rose/gallery-1.jpg"
+    },
+    {
+      "year": "2023",
+      "title": "Whispers Across the Waters",
+      "description": "Travelling together from the Amalfi Coast to Lake Como, realizing that every horizon was brighter in each other's presence.",
+      "photo": "/templates/celestial-rose/gallery-2.jpg"
+    },
+    {
+      "year": "2025",
+      "title": "The Proposal Under the Stars",
+      "description": "Atop a secluded mountain observatory under the Perseid meteor shower, a promise for eternity was asked and joyfully answered.",
+      "photo": "/templates/celestial-rose/gallery-3.jpg"
+    }
+  ],
+  "gallery": [
+    "/templates/celestial-rose/gallery-1.jpg",
+    "/templates/celestial-rose/gallery-2.jpg",
+    "/templates/celestial-rose/gallery-3.jpg"
+  ]
+}

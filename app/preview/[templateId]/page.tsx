@@ -14,6 +14,7 @@ interface PreviewPageProps {
 }
 
 const KNOWN_TEMPLATE_IDS = [
+  "celestial-rose",
   "imperial-palace",
   "royal-majesty",
   "royal-heritage",

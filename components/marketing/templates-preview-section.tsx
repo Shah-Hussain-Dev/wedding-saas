@@ -15,6 +15,17 @@ const FILTERS = ["All", "Universal", "Hindu", "Muslim", "Best Sellers", "New"] a
 
 const CATALOG: TemplateCatalogItem[] = [
   {
+    id: TEMPLATE_META["celestial-rose"].id,
+    name: TEMPLATE_META["celestial-rose"].name,
+    description: TEMPLATE_META["celestial-rose"].description,
+    tag: "Awwwards Dreamscape",
+    gradient: TEMPLATE_META["celestial-rose"].gradient,
+    leftScreen: "hero",
+    accentClass: "text-[#5898B8]",
+    religion: TEMPLATE_META["celestial-rose"].religion,
+    religionLabel: TEMPLATE_META["celestial-rose"].religionLabel,
+  },
+  {
     id: TEMPLATE_META["imperial-palace"].id,
     name: TEMPLATE_META["imperial-palace"].name,
     description: TEMPLATE_META["imperial-palace"].description,
