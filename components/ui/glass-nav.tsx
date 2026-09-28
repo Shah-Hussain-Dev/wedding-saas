@@ -35,21 +35,24 @@ export function GlassNav() {
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.32, 0.72, 0, 1] }}
-        className={`fixed top-4 md:top-5 left-1/2 z-50 w-[94%] max-w-5xl -translate-x-1/2 rounded-full border border-black/[0.06] px-4 md:px-5 py-2.5 backdrop-blur-md transition-shadow duration-300 flex items-center justify-between bg-white shadow-[0_2px_20px_rgba(0,0,0,0.06)] ${
-          scrolled ? "shadow-[0_4px_24px_rgba(0,0,0,0.08)]" : ""
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className={`fixed top-4 md:top-5 left-1/2 z-40 w-[92%] max-w-5xl -translate-x-1/2 rounded-full border px-4 sm:px-6 py-3 backdrop-blur-xl transition-all duration-300 flex items-center justify-between shadow-[0_10px_30px_rgba(7,61,49,0.06)] ${
+          scrolled
+            ? "bg-[#FCFAF6]/90 border-[#073D31]/15 shadow-[0_15px_35px_rgba(7,61,49,0.1)] py-2.5"
+            : "bg-[#FCFAF6]/75 border-[#073D31]/8"
         }`}
       >
-        <Link href="/" className="text-xl font-serif text-primary lowercase tracking-tight">
-          unfold
+        <Link href="/" className="font-serif text-2xl font-bold text-[#073D31] lowercase tracking-tight flex items-center gap-1.5">
+          <span>unfold</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#C8A45E]" />
         </Link>
 
-        <div className="hidden lg:flex items-center gap-5">
+        <div className="hidden lg:flex items-center gap-6">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-xs font-medium text-stone-600 hover:text-accent-gold transition-colors"
+              className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans"
             >
               {link.label}
             </Link>
@@ -57,26 +60,29 @@ export function GlassNav() {
 
           {session ? (
             <>
-              <Link href="/dashboard" className="text-xs font-medium text-stone-600 hover:text-accent-gold transition-colors">
+              <Link href="/dashboard" className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans">
                 Dashboard
               </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="text-xs font-medium text-stone-600 hover:text-accent-gold transition-colors cursor-pointer"
+                className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
               >
                 Logout
               </button>
             </>
           ) : (
-            <Link href="/login" className="text-xs font-medium text-stone-600 hover:text-accent-gold transition-colors">
+            <Link href="/login" className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans">
               Login
             </Link>
           )}
         </div>
 
         <div className="hidden lg:block">
-          <Link href="/templates">
-            <PremiumButton className="text-xs py-1.5 pl-5">Get Started</PremiumButton>
+          <Link
+            href="/templates"
+            className="px-5 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105"
+          >
+            Get Started
           </Link>
         </div>
 
