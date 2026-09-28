@@ -1,0 +1,88 @@
+{
+  "templateId": "imperial-palace",
+  "couple": {
+    "groomName": "Prince Alexander",
+    "groomParents": "Son of His Imperial Highness Duke Leopold & Duchess Victoria",
+    "groomEducation": "M.A. International Diplomacy, Oxford",
+    "groomProfession": "Heritage Estate Conservator",
+    "brideName": "Princess Eleanor",
+    "brideParents": "Daughter of Count Maximilian & Countess Charlotte De Valois",
+    "brideEducation": "M.Sc. Classical Architecture, Sorbonne",
+    "brideProfession": "Fine Arts & Architecture Curator"
+  },
+  "weddingDate": "2027-10-24T18:00:00.000Z",
+  "weddingTime": "06:00 PM CET",
+  "hashtag": "#AlexanderAndEleanor",
+  "religion": "universal",
+  "quote": "In the presence of our cherished families and under starlit skies, two dynasties unite in eternal devotion, honour, and love.",
+  "videoUrl": "/videos/royal-elegance-royal.mp4",
+  "musicTrack": "/templates/imperial-palace/music.mp3",
+  "venue": {
+    "name": "Palais Impérial de Grand-Lieu",
+    "address": "42 Avenue des Monarques, Domaine de Versailles, France",
+    "mapUrl": "https://maps.google.com/?q=Palace+of+Versailles+France"
+  },
+  "events": [
+    {
+      "name": "The Sunlit Welcoming",
+      "date": "Friday, October 22, 2027",
+      "time": "11:00 AM",
+      "chamber": "Sunlit Golden Courtyard",
+      "description": "An intimate daytime gathering amid fragrant citrus groves, sunlit stone arches, and golden harps to welcome esteemed dignitaries.",
+      "venue": "The Imperial Orangery & South Courtyard",
+      "dress": "Champagne & Pastel Morning Dress"
+    },
+    {
+      "name": "The Twilight Conservatory Gala",
+      "date": "Friday, October 22, 2027",
+      "time": "06:30 PM",
+      "chamber": "Botanical Palace Conservatory",
+      "description": "An enchanted evening of floral botanical art, sitar and cellos, and delicate henna artistry under glass domed ceilings.",
+      "venue": "The Glass Pavilions & Rose Gardens",
+      "dress": "Botanical Silk & Velvet Evening Attire"
+    },
+    {
+      "name": "The Sacred Solemnisation",
+      "date": "Saturday, October 23, 2027",
+      "time": "04:30 PM",
+      "chamber": "Ivory Ceremonial Hall",
+      "description": "The sacred exchange of royal vows and blessings beneath monumental ivory marble vaults adorned with white hydrangeas.",
+      "venue": "The Sovereign Chapel & Ivory Hall",
+      "dress": "Formal Imperial Black Tie / Royal Sherwani"
+    },
+    {
+      "name": "The Grand Burgundy Ball",
+      "date": "Saturday, October 23, 2027",
+      "time": "08:00 PM",
+      "chamber": "Grand Burgundy Ballroom",
+      "description": "A magnificent royal banquet with crystal chandeliers, grand waltzes, ceremonial toasts, and midnight fireworks over the lake.",
+      "venue": "The Sovereign Hall of Mirrors",
+      "dress": "Imperial White Tie & Haute Couture"
+    }
+  ],
+  "gallery": [
+    "/templates/imperial-palace/couple-portrait.jpg",
+    "/templates/imperial-palace/bride-portrait.jpg",
+    "/templates/imperial-palace/ballroom.jpg",
+    "/templates/imperial-palace/art-gallery.jpg",
+    "/templates/imperial-palace/staircase.jpg",
+    "/templates/imperial-palace/doors-hero.jpg"
+  ],
+  "ourStory": [
+    {
+      "year": "MMXVIII",
+      "title": "A Serendipitous Encounter",
+      "description": "Introduced in the quiet archives of the Royal Library in Florence, bonded by a shared love for classical art, architecture, and timeless literature."
+    },
+    {
+      "year": "MMXXI",
+      "title": "Starlit Promises in Seville",
+      "description": "Beneath the illuminated arches of the Alcázar courtyards, quiet admiration blossomed into an unbreakable promise of lifelong devotion."
+    },
+    {
+      "year": "MMXXV",
+      "title": "The Imperial Betrothal",
+      "description": "At twilight on the shores of Lake Como, with family blessing and heirloom diamond seal, a sacred question was asked and answered."
+    }
+  ]
+}

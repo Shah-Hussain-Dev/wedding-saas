@@ -12,7 +12,8 @@ export type TemplateId =
   | "rose-gold-blush"
   | "royal-grace"
   | "royal-heritage"
-  | "royal-majesty";
+  | "royal-majesty"
+  | "imperial-palace";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -182,6 +183,17 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
       "An enchanted French Château ballroom & starlit lakeside video reveal with shimmering crystal chandeliers, powder-blue hydrangea garlands, muted champagne gold accents, and 3D Rococo horizon gallery.",
     gradient: "from-[#A9C1D0] via-[#EBECE8] to-[#B7A16E]",
   },
+  "imperial-palace": {
+    id: "imperial-palace",
+    name: "Imperial Palace",
+    style: "Grand European & Royal Indian Palace",
+    tag: "Masterpiece",
+    religion: ["hindu", "muslim", "universal"],
+    religionLabel: "Universal Imperial",
+    description:
+      "An ultra-luxury living palace experience. Features monumental 3D double walnut doors opening into a grand staircase, swaying crystal chandeliers, velvet curtain transitions, antique gold scratch reveal, palace art gallery, and royal guest register.",
+    gradient: "from-[#551618] via-[#E5D8C4] to-[#B89773]",
+  },
 };
 
 export const INCLUDED_FEATURES = [
@@ -259,4 +271,5 @@ export const TEMPLATE_COMPONENTS = {
   "royal-grace": () => import("@/templates/royal-grace"),
   "royal-heritage": () => import("@/templates/royal-heritage"),
   "royal-majesty": () => import("@/templates/royal-majesty"),
+  "imperial-palace": () => import("@/templates/imperial-palace"),
 } as const;
