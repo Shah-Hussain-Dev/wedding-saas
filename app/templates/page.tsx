@@ -6,10 +6,19 @@ import { motion, AnimatePresence } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
 import { LuxuryCursor } from "@/components/ui/luxury-cursor";
-import { Sparkle, ArrowUpRight, MusicNotes, Play, Eye, ShieldCheck, Heart, MoonStars } from "@phosphor-icons/react";
+import {
+  Sparkle,
+  ArrowRight,
+  Eye,
+  Heart,
+  MagnifyingGlass,
+  Crown,
+  MoonStars,
+  FlowerLotus,
+} from "@phosphor-icons/react";
 
 const FILTERS = [
-  { id: "All", label: "All Masterpieces" },
+  { id: "All", label: "All Masterpieces (16)" },
   { id: "Universal", label: "✦ Universal Themes" },
   { id: "Hindu", label: "🕉️ Hindu Weddings" },
   { id: "Muslim", label: "🌙 Muslim Weddings" },
@@ -25,24 +34,32 @@ const TEMPLATES = [
     tag: "Awwwards Dreamscape",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
-    colors: "Blush Rose + Celestial Blue + Champagne",
-    opening: "Celestial Rose Terrace Video",
-    desc: "A transcendent Awwwards-level dreamscape. Features celestial rose terrace video, multi-layer depth stack with pointer lerp parallax, orbital countdown, pinned constellation story, and wish-upon-a-star RSVP flight animation.",
-    gradient: "from-[#5898B8] via-[#E8B8B8] to-[#F1E8E1]",
+    price: "₹1,199",
+    desc: "A transcendent dreamscape with starlight terrace video, pointer lerp parallax, orbital countdown, pinned constellation story, and wish-upon-a-star RSVP flight.",
     video: "/videos/royal-prestige.mp4",
+    scenes: [
+      { title: "Starlight Terrace Video", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Scratch-the-Stars Reveal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Orchestral Score", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Wish RSVP Flight", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "imperial-palace",
     name: "Imperial Palace",
     style: "Grand European & Royal Indian Palace",
-    tag: "Masterpiece",
+    tag: "Signature Royale",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
-    colors: "Burgundy + Palace Ivory + Antique Gold",
-    opening: "3D Monumental Palace Doors",
-    desc: "Monumental 3D carved double walnut doors opening into an imperial palace staircase with crystal chandeliers, velvet transitions, gold foil scratch reveal, and royal art gallery.",
-    gradient: "from-[#551618] via-[#E5D8C4] to-[#B89773]",
+    price: "₹1,199",
+    desc: "Monumental 3D carved double walnut doors opening into an imperial palace ballroom with crystal chandeliers, velvet transitions, and royal procession itinerary.",
     image: "/templates/imperial-palace/ballroom.jpg",
+    scenes: [
+      { title: "3D Double Palace Doors", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Royal Procession Map", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Gold Wax Seal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "VIP Seating Portal", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "royal-majesty",
@@ -51,11 +68,15 @@ const TEMPLATES = [
     tag: "New",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
-    colors: "Powder Blue + Pearl Ivory + Gold",
-    opening: "Regency Ballroom Video",
-    desc: "Enchanted French Château ballroom & starlit lake video reveal with crystal chandeliers, powder-blue hydrangea garlands, and 3D Rococo horizon gallery.",
-    gradient: "from-[#A9C1D0] via-[#EBECE8] to-[#B7A16E]",
+    price: "₹1,199",
+    desc: "Enchanted French Château ballroom & starlit lake video reveal with crystal chandeliers, powder-blue hydrangea garlands, and live guestbook flights.",
     video: "/videos/royal-majesty.mp4",
+    scenes: [
+      { title: "Château Ballroom Waltz", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Crystal Chandeliers", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Guestbook Flight", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Dress Code Visualizer", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "royal-heritage",
@@ -64,329 +85,473 @@ const TEMPLATES = [
     tag: "New",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
-    colors: "Powder Blue + Warm Ivory + Coral",
-    opening: "Mediterranean Arch Video",
-    desc: "Sun-kissed Mediterranean arched doorway & blooming coral bougainvillea cinematic video reveal with 3D panoramic arch photo horizon and ceremony portals.",
-    gradient: "from-[#77A3AE] via-[#E8E3D9] to-[#D95147]",
+    price: "₹1,199",
+    desc: "Sun-kissed Mediterranean arched doorway & blooming coral bougainvillea cinematic video reveal with 3D panoramic arch photo horizon.",
     video: "/videos/royal-heritage.mp4",
+    scenes: [
+      { title: "Mediterranean Archway", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Bougainvillea Horizon", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Ceremony Timeline", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "One-Touch WhatsApp", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "royal-grace",
     name: "Royal Grace",
-    style: "Botanical Velvet & Gold",
-    tag: "New",
+    style: "Botanical Velvet & Gold Filigree",
+    tag: "Featured",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
-    colors: "Sage Green + Antique Gold",
-    opening: "Cinematic Gate Opening",
-    desc: "Enchanted botanical velvet gate opening video synchronized at 6s, 24K antique gold filigree, multi-axis parallax glasshouse palace, scratch date reveal, and 3D scattered memories reel.",
-    gradient: "from-[#0e1713] via-[#1b2d24] to-[#121c17]",
+    price: "₹1,199",
+    desc: "Enchanted botanical velvet gate opening video, 24K antique gold filigree, glasshouse palace parallax, and scratch date reveal.",
     video: "/videos/royal-grace.mp4",
+    scenes: [
+      { title: "Botanical Gate Opening", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Glasshouse Palace", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Scratch Date Card", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Interactive Travel Map", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "rose-gold-blush",
     name: "Rose Gold Blush Royal",
-    style: "Rose Gold & Blush Parchment",
-    tag: "New",
+    style: "Rose Gold & Champagne Silk",
+    tag: "Romantic Modern",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
-    colors: "Rose Gold + Blush Parchment",
-    opening: "Cinematic Video Opening",
-    desc: "Timeless dual-faith celebration with high-definition envelope opening video, Vedic & Islamic blessings, and scratch reveal card.",
-    gradient: "from-[#F7EEE9] via-[#F3E9E2] to-[#E2DACF]",
+    price: "₹1,199",
+    desc: "Falling sakura petals, velvet gold foil typography, synchronized orchestral harp, and dual Vedic & Islamic blessings.",
     video: "/videos/rose-gold-blush.mp4",
+    scenes: [
+      { title: "Falling Sakura Petals", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Gold Monogram Stamp", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Countdown Flight", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Venue Google Navigation", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "noor-e-nikah",
     name: "Noor-e-Nikah",
-    style: "Sacred Elegance",
-    tag: "Featured",
+    style: "Sacred Ivory & 24K Gold Archway",
+    tag: "Sacred Nikah",
     religion: ["muslim"],
     religionLabel: "Muslim",
-    colors: "Ivory + 24K Gold",
-    opening: "3D Floral Envelope",
-    desc: "Sacred Islamic wedding experience with 3D embossed floral envelope, slow-lighting gold wax seal, grand mosque archway portal, and Nikah timeline.",
-    gradient: "from-[#FAF8F5] via-[#F3EDE2] to-[#E5DAC6]",
+    price: "₹1,199",
+    desc: "3D embossed ivory floral envelope, slow-lighting wax seal, grand mosque archway portal, and Bismillah Nikah timeline.",
     image: "/templates/noor-e-nikah/envelope-bg.jpg",
+    scenes: [
+      { title: "Embossed Floral Envelope", image: "/templates/noor-e-nikah/envelope-bg.jpg" },
+      { title: "24K Gold Bismillah", image: "/templates/noor-e-nikah/envelope-bg.jpg" },
+      { title: "Nikah Ceremony Timeline", image: "/templates/noor-e-nikah/envelope-bg.jpg" },
+      { title: "Instant WhatsApp RSVP", image: "/templates/noor-e-nikah/envelope-bg.jpg" },
+    ],
   },
   {
     id: "emerald-qasr",
     name: "Emerald Qasr",
-    style: "Ottoman Royale",
-    tag: "New",
+    style: "Ottoman Royale & Emerald Velvet",
+    tag: "Cinematic Video",
     religion: ["muslim"],
     religionLabel: "Muslim",
-    colors: "Emerald + 24K Gold",
-    opening: "Cinematic Video Opening",
-    desc: "Opulent Ottoman palace aesthetic with animated envelope opening video, gold filigree, Ayat Ar-Rum blessings, and scratch reveal.",
-    gradient: "from-[#081F1A] via-[#0F382E] to-[#04120F]",
-    image: "/templates/emerald-qasr/couple.jpg",
+    price: "₹1,199",
+    desc: "Opulent Ottoman palace celebration featuring an animated cinematic envelope opening video, 24K gold filigree, Ayat Ar-Rum blessings, and multi-event Nikah itinerary.",
+    video: "/templates/emerald-qasr/opening.mp4",
+    image: "/templates/emerald-qasr/envelope-desktop.jpg",
+    scenes: [
+      { title: "Ottoman Envelope Opening", image: "/templates/emerald-qasr/envelope-desktop.jpg" },
+      { title: "24K Gold Filigree", image: "/templates/emerald-qasr/envelope-desktop.jpg" },
+      { title: "Ayat Ar-Rum Blessings", image: "/templates/emerald-qasr/envelope-desktop.jpg" },
+      { title: "Nikah Multi-Event Itinerary", image: "/templates/emerald-qasr/envelope-desktop.jpg" },
+    ],
   },
   {
     id: "gul-e-noor",
     name: "Gul-e-Noor",
-    style: "Blush Velvet & Rose",
-    tag: "New",
+    style: "Blush Velvet & Rose Gold",
+    tag: "Romantic Video",
     religion: ["muslim"],
     religionLabel: "Muslim",
-    colors: "Pastel Rose + Pearl",
-    opening: "Cinematic Video Opening",
-    desc: "Dreamy blush pink & rose velvet celebration with floating floral envelope opening video, glowing pearl accents, and RSVP.",
-    gradient: "from-[#FFF5F7] via-[#FCE8ED] to-[#F5D0DB]",
-    image: "/templates/gul-e-noor/couple.jpg",
+    price: "₹1,199",
+    desc: "A dreamy blush pink & rose velvet celebration with a floating floral envelope animation video, glowing pearl accents, Quranic blessings, and interactive RSVP.",
+    video: "/templates/gul-e-noor/opening.mp4",
+    image: "/templates/gul-e-noor/envelope-desktop.jpg",
+    scenes: [
+      { title: "Floating Floral Envelope", image: "/templates/gul-e-noor/envelope-desktop.jpg" },
+      { title: "Glowing Pearl Accents", image: "/templates/gul-e-noor/envelope-desktop.jpg" },
+      { title: "Quranic Blessings", image: "/templates/gul-e-noor/envelope-desktop.jpg" },
+      { title: "Interactive Guestbook RSVP", image: "/templates/gul-e-noor/envelope-desktop.jpg" },
+    ],
   },
   {
     id: "azure-nikah",
     name: "Azure Nikah",
-    style: "Royal Sapphire",
-    tag: "New",
+    style: "Persian Sapphire & Starlight Courtyard",
+    tag: "Sacred Nikah",
     religion: ["muslim"],
     religionLabel: "Muslim",
-    colors: "Midnight Sapphire + Gold",
-    opening: "Cinematic Video Opening",
-    desc: "Majestic midnight sapphire & celestial gold invitation with envelope opening video, crescent star motifs, and dual photo slider.",
-    gradient: "from-[#0A1628] via-[#0F2342] to-[#060D18]",
-    image: "/templates/azure-nikah/couple.jpg",
+    price: "₹1,199",
+    desc: "Persian sapphire tilework with celestial moonrise animations, Quranic Ayah in gold calligraphy, and family blessings.",
+    video: "/templates/azure-nikah/opening.mp4",
+    image: "/templates/azure-nikah/envelope-desktop.jpg",
+    scenes: [
+      { title: "Sapphire Tile Courtyard", image: "/templates/azure-nikah/envelope-desktop.jpg" },
+      { title: "Moonrise Calligraphy", image: "/templates/azure-nikah/envelope-desktop.jpg" },
+      { title: "Walima Schedule", image: "/templates/azure-nikah/envelope-desktop.jpg" },
+      { title: "Guest Flight Portal", image: "/templates/azure-nikah/envelope-desktop.jpg" },
+    ],
   },
   {
     id: "kitab-e-nikah",
     name: "Kitab-e-Nikah",
-    style: "Sacred Velvet & Gold",
-    tag: "New",
+    style: "Sacred Velvet & Arabesque Gold",
+    tag: "Luxury Video",
     religion: ["muslim"],
     religionLabel: "Muslim",
-    colors: "Velvet Burgundy + Gold",
-    opening: "Cinematic Video Opening",
-    desc: "Sacred illuminated Nikah book opening video, ivory parchment texture, gold arabesque borders, and ceremony guide.",
-    gradient: "from-[#1F080F] via-[#2F0D17] to-[#120409]",
-    image: "/templates/kitab-e-nikah/couple.jpg",
+    price: "₹1,199",
+    desc: "A sacred velvet tome unfolding invitation featuring a cinematic opening book video, ivory parchment texture, gold arabesque motifs, and an interactive Nikah ceremony guide.",
+    video: "/templates/kitab-e-nikah/opening.mp4",
+    image: "/templates/kitab-e-nikah/envelope-desktop.jpg",
+    scenes: [
+      { title: "Cinematic Unfolding Tome", image: "/templates/kitab-e-nikah/envelope-desktop.jpg" },
+      { title: "Gold Arabesque Motifs", image: "/templates/kitab-e-nikah/envelope-desktop.jpg" },
+      { title: "Sacred Nikah Schedule", image: "/templates/kitab-e-nikah/envelope-desktop.jpg" },
+      { title: "WhatsApp 1-Click RSVP", image: "/templates/kitab-e-nikah/envelope-desktop.jpg" },
+    ],
   },
   {
     id: "crimson-royale",
     name: "Crimson Royale",
-    style: "Royal Court",
-    tag: "Trending",
+    style: "Traditional Velvet & Marigold Elegance",
+    tag: "Hindu Heritage",
     religion: ["hindu"],
     religionLabel: "Hindu",
-    colors: "Crimson Velvet + 24K Gold",
-    opening: "3D Split Gate",
-    desc: "Regal crimson velvet and 24K gold foil aesthetic with royal gate reveal, interactive scratch card, and shehnai background music.",
-    gradient: "from-[#420f18] via-[#7c2c3b] to-[#20050a]",
-    image: "/templates/crimson-royale/bg-gate-closed.jpg",
+    price: "₹1,199",
+    desc: "Grand traditional double red doors opening into a royal courtyard with Ganesh Vandana, Sangeet & Pheras itinerary.",
+    image: "/templates/crimson-royale/bg-welcome-desktop.jpg",
+    scenes: [
+      { title: "Velvet Red Double Doors", image: "/templates/crimson-royale/bg-welcome-desktop.jpg" },
+      { title: "Ganesh Vandana Invocation", image: "/templates/crimson-royale/bg-events-desktop.jpg" },
+      { title: "Sangeet & Pheras Timetable", image: "/templates/crimson-royale/bg-gallery-desktop.jpg" },
+      { title: "Google Maps Venue Link", image: "/templates/crimson-royale/bg-venue-desktop.jpg" },
+    ],
   },
   {
     id: "royal-lotus",
     name: "Royal Lotus",
-    style: "Royal Heritage",
-    tag: "Best Seller",
+    style: "Rajasthani Haveli & Ivory Gold",
+    tag: "Auspicious",
     religion: ["hindu"],
     religionLabel: "Hindu",
-    colors: "Ivory + 24K Gold + Maroon",
-    opening: "3D Palace Gate",
-    desc: "Grand Rajasthani palace with ivory canvas, 24K gold filigree, crimson accents, and floating lotus petals.",
-    gradient: "from-[#FCF9F2] via-[#F5EFE0] to-[#EBDDC3]",
-    image: "/templates/royal-lotus/gate-closed.jpg",
+    price: "₹1,199",
+    desc: "A grand Rajasthani palace experience with ivory canvas, 24K antique gold filigree, deep crimson accents, floating lotus petals, and a 3D royal palace gate reveal.",
+    image: "/templates/imperial-palace/ballroom.jpg",
+    scenes: [
+      { title: "Royal Haveli Gate Reveal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Floating Lotus Petals", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Vedic Muhurat Countdown", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Interactive Haldi & Sangeet", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "emerald-noir",
     name: "Emerald Noir",
-    style: "Luxury Dark",
+    style: "Luxury Dark & 24K Gold Filigree",
     tag: "Best Seller",
     religion: ["hindu", "universal"],
     religionLabel: "Hindu",
-    colors: "Emerald + 24K Gold",
-    opening: "3D Haveli Gate Reveal",
-    desc: "Ornate 24K gold details on rich emerald canvas. 3D Haveli Gate reveal with glowing Ganesha seal, multi-layer parallax, and Muhurat scratch card.",
-    gradient: "from-[#081F1A] via-[#0F382E] to-[#04120F]",
-    image: "/templates/emerald-noir/gate-closed.jpg",
+    price: "₹1,199",
+    desc: "Ornate 24K gold details on rich emerald canvas. Features a 3D Royal Haveli Gate reveal with glowing Ganesha seal, multi-layer parallax, and interactive scratch reveal card.",
+    image: "/templates/imperial-palace/ballroom.jpg",
+    scenes: [
+      { title: "3D Haveli Gate Reveal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Glowing Ganesha Seal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Multi-Layer Parallax", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Interactive Scratch Card", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "royal-elegance",
     name: "Royal Elegance",
-    style: "Classic South Asian",
+    style: "Maharani Crimson Silk & Kundan Seal",
     tag: "Best Seller",
     religion: ["hindu", "universal"],
     religionLabel: "Hindu",
-    colors: "Royal Crimson + Gold",
-    opening: "Maharani Curtain Reveal",
-    desc: "Traditional South Asian grandeur with 3D Maharani Silk Curtains, Royal Kundan Wax Seal, Gauri Ganesh blessings, and interactive scratch reveal.",
-    gradient: "from-[#faf7f0] to-[#f0e8d8]",
+    price: "₹1,199",
+    desc: "Traditional South Asian grandeur featuring 3D Maharani Crimson Silk Curtains with Royal Kundan Wax Seal, Gauri Ganesh blessings, and gallery lightbox.",
     video: "/videos/royal-elegance-royal.mp4",
+    scenes: [
+      { title: "Maharani Silk Curtains", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Royal Kundan Wax Seal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Gauri Ganesh Blessings", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Photo Lightbox Gallery", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
   {
     id: "modern-minimal",
     name: "Modern Minimal",
-    style: "Contemporary Chic",
+    style: "Contemporary Chic & Origami Monogram",
     tag: "New",
     religion: ["hindu", "universal"],
     religionLabel: "Hindu",
-    colors: "Warm Champagne + Gold",
-    opening: "3D Origami Envelope",
-    desc: "Contemporary Vedic luxury with a 3D architectural origami envelope & pure gold monogram seal, multi-layer parallax, and gallery lightbox.",
-    gradient: "from-stone-50 to-stone-200",
+    price: "₹1,199",
+    desc: "Contemporary Vedic luxury with a 3D architectural origami envelope & pure gold monogram seal, multi-layer parallax, and interactive Muhurat scratch card.",
+    image: "/templates/imperial-palace/ballroom.jpg",
+    scenes: [
+      { title: "Architectural Origami Envelope", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Pure Gold Monogram Seal", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Muhurat Scratch Card", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Minimalist RSVP Form", image: "/templates/imperial-palace/ballroom.jpg" },
+    ],
   },
 ];
 
 export default function TemplatesPage() {
-  const [filter, setFilter] = useState("All");
+  const [activeFilter, setActiveFilter] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSceneIndex, setActiveSceneIndex] = useState<Record<string, number>>({});
+  const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
 
-  const filtered = TEMPLATES.filter((t) => {
-    if (filter === "All") return true;
-    if (filter === "Universal") return t.religion.includes("universal");
-    if (filter === "Hindu") return t.religion.includes("hindu");
-    if (filter === "Muslim") return t.religion.includes("muslim");
-    if (filter === "Best Sellers") return t.tag === "Best Seller" || t.tag === "Trending" || t.tag === "Masterpiece" || t.tag === "Awwwards Dreamscape";
-    if (filter === "New") return t.tag === "New";
+  const filteredTemplates = TEMPLATES.filter((t) => {
+    const matchesSearch =
+      searchQuery.trim() === "" ||
+      t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.style.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      t.desc.toLowerCase().includes(searchQuery.toLowerCase());
+
+    if (!matchesSearch) return false;
+
+    if (activeFilter === "All") return true;
+    if (activeFilter === "Universal") return t.religion.includes("universal");
+    if (activeFilter === "Hindu") return t.religion.includes("hindu");
+    if (activeFilter === "Muslim") return t.religion.includes("muslim");
+    if (activeFilter === "Best Sellers")
+      return (
+        t.tag === "Best Seller" ||
+        t.tag === "Masterpiece" ||
+        t.tag === "Signature Royale" ||
+        t.tag === "Awwwards Dreamscape"
+      );
+    if (activeFilter === "New") return t.tag === "New" || t.tag === "Trending";
     return true;
   });
 
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const progress = Math.max(0, Math.min(1, x / rect.width));
+    const sceneIdx = Math.min(3, Math.floor(progress * 4));
+    setActiveSceneIndex((prev) => ({ ...prev, [id]: sceneIdx }));
+  };
+
+  const toggleWishlist = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWishlisted((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-[#F7F4ED] text-[#18211E]">
+    <div className="flex flex-col min-h-screen bg-[#F7F4ED] text-[#18211E] selection:bg-[#C8A45E]/30 selection:text-[#073D31]">
       <LuxuryCursor />
       <GlassNav />
 
-      <main className="flex-grow pt-32 pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          {/* Editorial Catalogue Hero Header */}
-          <div className="text-center space-y-4 max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#073D31]/10 text-[10px] sm:text-[11px] font-bold tracking-[0.25em] text-[#073D31] uppercase font-sans shadow-xs">
+      <main className="flex-grow pt-28 sm:pt-36 pb-20 sm:pb-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          {/* HEADER SECTION */}
+          <div className="text-center max-w-3xl mx-auto space-y-4 mb-12 sm:mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#073D31]/12 shadow-xs text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-[#073D31] uppercase font-sans backdrop-blur-md"
+            >
               <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
-              Signature Catalogue
+              <span>Curated Showroom Collection · All 16 Masterpieces</span>
               <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="font-serif text-3.5xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#18211E]"
+            >
+              Every celebration has a sanctuary.
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xs sm:text-sm md:text-base text-[#76766F] font-sans max-w-xl mx-auto leading-relaxed"
+            >
+              Explore our full collection of 16 interactive 3D digital wedding stationery templates. Move your cursor across any card to scrub through ceremony chapters.
+            </motion.p>
+
+            {/* SEARCH & FILTER CONTROLS */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto">
+              <div className="relative w-full">
+                <MagnifyingGlass
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"
+                />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by theme, faith, ballroom, starlight..."
+                  className="w-full bg-white/90 border border-[#073D31]/12 rounded-full pl-11 pr-4 py-3 text-xs sm:text-sm text-[#18211E] placeholder:text-stone-400 outline-none focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] shadow-xs transition-all"
+                />
+              </div>
             </div>
-
-            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#18211E]">
-              Select your design.
-            </h1>
-
-            <p className="text-sm sm:text-base text-[#76766F] font-sans leading-relaxed max-w-xl mx-auto">
-              Each experience is an interactive digital world. Explore live samples with synchronized soundtracks, 3D door reveals, and real-time RSVPs.
-            </p>
           </div>
 
-          {/* Filter Bar with Animated Layout */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+          {/* CATEGORY FILTER TABS */}
+          <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-8">
             {FILTERS.map((f) => {
-              const isActive = filter === f.id;
+              const isActive = activeFilter === f.id;
               return (
                 <button
                   key={f.id}
-                  type="button"
-                  onClick={() => setFilter(f.id)}
-                  className={`relative px-4 sm:px-5 py-2.5 rounded-full text-xs font-sans font-bold transition-all cursor-pointer ${
+                  onClick={() => setActiveFilter(f.id)}
+                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 whitespace-nowrap cursor-pointer ${
                     isActive
-                      ? "bg-[#073D31] text-[#F7F4ED] shadow-md scale-[1.02]"
-                      : "bg-white hover:bg-stone-50 text-[#76766F] border border-[#073D31]/8"
+                      ? "bg-[#073D31] text-white shadow-md border border-[#C8A45E]/40 scale-105"
+                      : "bg-white/80 text-stone-600 hover:text-[#18211E] hover:bg-white border border-[#073D31]/10"
                   }`}
                 >
-                  {f.label}
+                  <span>{f.label}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Template Masterpiece Grid */}
-          <motion.div
-            layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-4"
-          >
-            <AnimatePresence>
-              {filtered.map((tpl) => (
-                <motion.div
-                  key={tpl.id}
-                  layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.35 }}
-                  className="rounded-3xl bg-white border border-[#073D31]/10 p-4 sm:p-5 shadow-xs hover:shadow-[0_20px_50px_rgba(7,61,49,0.1)] hover:border-[#C8A45E]/60 transition-all duration-300 flex flex-col justify-between group"
-                  data-cursor="view"
-                >
-                  <div className="space-y-4">
-                    {/* Visual Media Box */}
-                    <Link href={`/preview/${tpl.id}`} className="block relative aspect-[16/10] rounded-2xl overflow-hidden bg-stone-900 border border-black/5 shadow-inner">
-                      {tpl.video ? (
+          {/* TEMPLATES SHOWROOM GRID - ALL 16 TEMPLATES */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <AnimatePresence mode="popLayout">
+              {filteredTemplates.map((item) => {
+                const currentScene = activeSceneIndex[item.id] || 0;
+                const isWish = wishlisted[item.id];
+
+                return (
+                  <motion.div
+                    key={item.id}
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.4 }}
+                    className="group relative rounded-3xl bg-white border border-[#073D31]/10 p-3 shadow-sm hover:shadow-xl hover:border-[#073D31]/25 transition-all duration-500 flex flex-col justify-between overflow-hidden"
+                    onMouseMove={(e) => handleCardMouseMove(e, item.id)}
+                    onMouseLeave={() =>
+                      setActiveSceneIndex((prev) => ({ ...prev, [item.id]: 0 }))
+                    }
+                  >
+                    {/* MEDIA CONTAINER WITH SEGMENTED BARS */}
+                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-stone-900 border border-black/5">
+                      {/* 4 Segmented Scrubber Bars */}
+                      <div className="pcard__bars">
+                        {[0, 1, 2, 3].map((barIdx) => (
+                          <div
+                            key={barIdx}
+                            className="pcard__bar"
+                            data-state={barIdx === currentScene ? "on" : "off"}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Wishlist Button */}
+                      <button
+                        onClick={(e) => toggleWishlist(item.id, e)}
+                        aria-label="Save to wishlist"
+                        className={`absolute top-4 right-3 z-40 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-transform active:scale-90 cursor-pointer ${
+                          isWish
+                            ? "bg-rose-500 text-white shadow-md"
+                            : "bg-black/40 text-white/80 hover:text-white hover:bg-black/60"
+                        }`}
+                      >
+                        <Heart size={14} weight={isWish ? "fill" : "bold"} />
+                      </button>
+
+                      {/* Visual Content */}
+                      {item.video && currentScene === 0 ? (
                         <video
-                          src={tpl.video}
+                          src={item.video}
                           autoPlay
                           loop
                           muted
                           playsInline
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         />
-                      ) : tpl.image ? (
-                        <div
-                          className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
-                          style={{ backgroundImage: `url(${tpl.image})` }}
-                        />
                       ) : (
                         <div
-                          className={`w-full h-full bg-gradient-to-br ${tpl.gradient} flex items-center justify-center p-4`}
-                        >
-                          <span className="font-serif text-2xl font-bold text-stone-800">
-                            {tpl.name}
-                          </span>
-                        </div>
+                          className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
+                          style={{
+                            backgroundImage: `url(${item.scenes[currentScene]?.image || item.image || item.scenes[0].image})`,
+                          }}
+                        />
                       )}
 
-                      {/* Top Badges */}
-                      <div className="absolute top-3 left-3 flex items-center gap-1.5">
-                        <span className="px-2.5 py-0.5 rounded-full bg-black/65 backdrop-blur-md text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase">
-                          {tpl.tag}
+                      {/* Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/35" />
+
+                      {/* Scene Title Hover Tag */}
+                      <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between">
+                        <span className="px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-white/10">
+                          {item.scenes[currentScene]?.title}
                         </span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-white/90 backdrop-blur-md text-[9px] font-bold text-[#073D31] uppercase">
-                          {tpl.religionLabel}
+                        <span className="text-[10px] font-bold text-white font-mono">
+                          {item.price}
                         </span>
                       </div>
-                    </Link>
+                    </div>
 
-                    {/* Metadata Header */}
-                    <div className="space-y-1 text-left">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#C8A45E] font-sans">
-                        {tpl.style}
-                      </span>
-                      <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#18211E] group-hover:text-[#073D31] transition-colors">
-                        {tpl.name}
+                    {/* BOTTOM CARD DETAILS */}
+                    <div className="p-3 pt-4 flex flex-col gap-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#C8A45E]">
+                          {item.religionLabel}
+                        </span>
+                        <span className="text-[9px] font-semibold text-[#073D31] px-2 py-0.5 rounded-full bg-[#073D31]/8">
+                          {item.tag}
+                        </span>
+                      </div>
+
+                      <h3 className="font-serif text-lg font-bold text-[#18211E] group-hover:text-[#073D31] transition-colors line-clamp-1">
+                        {item.name}
                       </h3>
-                      <p className="text-xs text-[#76766F] font-sans line-clamp-2 leading-relaxed">
-                        {tpl.desc}
+
+                      <p className="text-xs text-[#76766F] font-sans line-clamp-2">
+                        {item.desc}
                       </p>
-                    </div>
 
-                    {/* Feature Details */}
-                    <div className="space-y-1.5 py-2 border-t border-stone-100 text-[11px] font-sans text-left">
-                      <div className="flex justify-between text-stone-600">
-                        <span className="text-stone-400">Opening</span>
-                        <span className="font-semibold truncate max-w-[65%]">{tpl.opening}</span>
+                      {/* Action Links */}
+                      <div className="flex items-center gap-2 pt-3 mt-1 border-t border-[#073D31]/8">
+                        <Link
+                          href={`/preview/${item.id}`}
+                          className="flex-1 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-all shadow-xs group-hover:shadow-md cursor-pointer"
+                        >
+                          <Eye size={13} weight="bold" className="text-[#E1C98E]" />
+                          <span className="roll">
+                            <span className="roll__a">Preview Live</span>
+                            <span className="roll__b" aria-hidden="true">Preview Live</span>
+                          </span>
+                        </Link>
+
+                        <Link
+                          href={`/customize/${item.id}`}
+                          className="px-4 py-2 rounded-full bg-white hover:bg-[#F7F4ED] text-[#073D31] border border-[#073D31]/20 text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center transition-all cursor-pointer"
+                        >
+                          <span className="roll">
+                            <span className="roll__a">Customize</span>
+                            <span className="roll__b" aria-hidden="true">Customize</span>
+                          </span>
+                        </Link>
                       </div>
-                      <div className="flex justify-between text-stone-600">
-                        <span className="text-stone-400">Palette</span>
-                        <span className="font-semibold truncate max-w-[65%]">{tpl.colors}</span>
-                      </div>
                     </div>
-                  </div>
-
-                  {/* Actions Bar */}
-                  <div className="pt-4 flex items-center gap-2.5">
-                    <Link
-                      href={`/preview/${tpl.id}`}
-                      className="flex-1 py-2.5 rounded-full bg-stone-100 hover:bg-stone-200 text-[#18211E] text-xs font-bold font-sans text-center transition-colors flex items-center justify-center gap-1"
-                    >
-                      <span>Sample</span>
-                      <ArrowUpRight size={13} weight="bold" />
-                    </Link>
-
-                    <Link
-                      href={`/customize/${tpl.id}`}
-                      className="flex-1 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold font-sans text-center transition-colors shadow-xs"
-                    >
-                      Try Free
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
-          </motion.div>
+          </div>
         </div>
       </main>
 

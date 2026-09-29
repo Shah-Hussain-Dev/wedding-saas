@@ -7,10 +7,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
-import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
-import { PremiumButton } from "@/components/ui/premium-button";
-import { fadeUp } from "@/components/ui/motion-primitives";
-import { EnvelopeSimple, Key, User, Phone, Sparkle } from "@phosphor-icons/react";
+import { EnvelopeSimple, Key, User, Phone, Sparkle, ArrowRight } from "@phosphor-icons/react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -76,18 +73,29 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF7] text-[#1A1A1A]">
+    <div className="flex flex-col min-h-screen bg-[#F7F4ED] text-[#18211E] selection:bg-[#C8A45E]/30 selection:text-[#073D31]">
       <GlassNav />
-      <main className="flex-grow flex items-center justify-center pt-28 px-4 sm:px-6 pb-20">
-        <motion.div initial="hidden" animate="visible" variants={fadeUp} className="w-full max-w-md">
-          <DoubleBezelCard className="p-6 sm:p-8 bg-white border-stone-200/60 shadow-xl">
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-1.5 text-amber-600 mb-2">
-                <Sparkle className="h-4 w-4" weight="fill" />
-                <span className="text-[10px] uppercase font-bold tracking-widest">Free Account</span>
+
+      <main className="flex-grow flex items-center justify-center pt-32 sm:pt-36 px-4 sm:px-6 pb-20 relative overflow-hidden">
+        {/* Background Subtle Auras */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[radial-gradient(circle,rgba(200,164,94,0.14)_0%,transparent_70%)] pointer-events-none" />
+
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="w-full max-w-md relative z-10"
+        >
+          <div className="p-8 sm:p-10 rounded-[2.5rem] bg-white border border-[#073D31]/12 shadow-[0_25px_60px_rgba(7,61,49,0.08)]">
+            <div className="text-center mb-7 space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#073D31]/8 text-[#073D31] text-[10px] font-bold tracking-widest uppercase font-sans">
+                <Sparkle size={12} weight="fill" className="text-[#C8A45E]" />
+                <span>Free Host Account</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-serif text-stone-900">Create Host Account</h1>
-              <p className="text-xs text-stone-500 mt-1.5">
+              <h1 className="font-serif text-3xl font-bold text-[#18211E] tracking-tight">
+                Create Host Account
+              </h1>
+              <p className="text-xs text-[#76766F] font-sans">
                 Save your wedding invitation drafts and manage guest RSVPs in real time.
               </p>
             </div>
@@ -97,7 +105,7 @@ export default function SignupPage() {
               <button
                 type="button"
                 onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-                className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl border border-stone-250 bg-white hover:bg-stone-50 text-stone-800 text-xs font-bold transition-all shadow-sm active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-3 py-3.5 px-4 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 text-xs font-bold transition-all shadow-xs hover:border-[#073D31]/30 active:scale-[0.98] cursor-pointer"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                   <path
@@ -120,7 +128,7 @@ export default function SignupPage() {
                 <span>Sign up with Google (1-Click)</span>
               </button>
 
-              <div className="relative flex items-center justify-center my-1">
+              <div className="relative flex items-center justify-center my-2">
                 <div className="border-t border-stone-200 w-full"></div>
                 <span className="bg-white px-3 text-[10px] uppercase font-bold text-stone-400 tracking-wider whitespace-nowrap shrink-0">
                   Or register with Email
@@ -130,95 +138,104 @@ export default function SignupPage() {
             </div>
 
             {errorMessage && (
-              <div className="p-3 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs leading-relaxed">
+              <div className="p-3.5 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs leading-relaxed">
                 {errorMessage}
               </div>
             )}
 
-            <form onSubmit={handleSignup} className="space-y-3.5">
-              <div>
-                <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1.5">
+            <form onSubmit={handleSignup} className="space-y-3.5 text-left">
+              <div className="space-y-1.5">
+                <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
                   Couple / Your Name
                 </label>
                 <div className="relative">
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Diya & Shaan"
-                    className="w-full bg-stone-50 border border-stone-250 rounded-xl pl-10 pr-3.5 py-2.5 text-xs outline-none focus:border-amber-500 focus:bg-white"
+                    className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1.5">
+              <div className="space-y-1.5">
+                <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
                   Email Address *
                 </label>
                 <div className="relative">
-                  <EnvelopeSimple className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <EnvelopeSimple className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@email.com"
-                    className="w-full bg-stone-50 border border-stone-250 rounded-xl pl-10 pr-3.5 py-2.5 text-xs outline-none focus:border-amber-500 focus:bg-white"
+                    className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-[10px] uppercase font-bold text-stone-400 mb-1.5">
+              <div className="space-y-1.5">
+                <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
                   Mobile Number (Optional)
                 </label>
                 <div className="relative">
-                  <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-stone-50 border border-stone-250 rounded-xl pl-10 pr-3.5 py-2.5 text-xs outline-none focus:border-amber-500 focus:bg-white"
+                    className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
                   />
                 </div>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-[10px] uppercase font-bold text-stone-400">
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
                     Create Password *
                   </label>
                   <span className="text-[10px] text-stone-400">Min 6 chars</span>
                 </div>
                 <div className="relative">
-                  <Key className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <Key className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Create a secure password"
-                    className="w-full bg-stone-50 border border-stone-250 rounded-xl pl-10 pr-3.5 py-2.5 text-xs outline-none focus:border-amber-500 focus:bg-white"
+                    className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
                   />
                 </div>
               </div>
 
-              <PremiumButton type="submit" disabled={isSubmitting} className="w-full justify-center mt-2">
-                {isSubmitting ? "Creating Account..." : "Create Account & Go to Dashboard"}
-              </PremiumButton>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans transition-all shadow-md hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 mt-2"
+              >
+                <span className="roll">
+                  <span className="roll__a">{isSubmitting ? "Creating Account..." : "Create Account & Start"}</span>
+                  <span className="roll__b" aria-hidden="true">{isSubmitting ? "Creating Account..." : "Create Account & Start"}</span>
+                </span>
+                <ArrowRight size={14} weight="bold" />
+              </button>
             </form>
 
-            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs">
+            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-sans">
               <span className="text-stone-500">Already have an account?</span>
-              <Link href="/login" className="text-amber-700 font-bold hover:underline">
+              <Link href="/login" className="text-[#073D31] font-bold hover:underline">
                 Log In →
               </Link>
             </div>
-          </DoubleBezelCard>
+          </div>
         </motion.div>
       </main>
+
       <PremiumFooter />
     </div>
   );
