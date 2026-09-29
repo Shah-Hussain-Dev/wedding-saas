@@ -52,27 +52,39 @@ export function GlassNav() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans"
+              className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans"
             >
-              {link.label}
+              <span className="roll">
+                <span className="roll__a">{link.label}</span>
+                <span className="roll__b" aria-hidden="true">{link.label}</span>
+              </span>
             </Link>
           ))}
 
           {session ? (
             <>
-              <Link href="/dashboard" className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans">
-                Dashboard
+              <Link href="/dashboard" className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans">
+                <span className="roll">
+                  <span className="roll__a">Dashboard</span>
+                  <span className="roll__b" aria-hidden="true">Dashboard</span>
+                </span>
               </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
+                className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
               >
-                Logout
+                <span className="roll">
+                  <span className="roll__a">Logout</span>
+                  <span className="roll__b" aria-hidden="true">Logout</span>
+                </span>
               </button>
             </>
           ) : (
-            <Link href="/login" className="text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans">
-              Login
+            <Link href="/login" className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans">
+              <span className="roll">
+                <span className="roll__a">Login</span>
+                <span className="roll__b" aria-hidden="true">Login</span>
+              </span>
             </Link>
           )}
         </div>
@@ -80,9 +92,12 @@ export function GlassNav() {
         <div className="hidden lg:block">
           <Link
             href="/templates"
-            className="px-5 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105"
+            className="group px-5 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105"
           >
-            Get Started
+            <span className="roll">
+              <span className="roll__a">Get Started</span>
+              <span className="roll__b" aria-hidden="true">Get Started</span>
+            </span>
           </Link>
         </div>
 

@@ -68,13 +68,14 @@
 html {
   color-scheme: light only;
   background-color: #FCFBF7;
+  overflow-x: clip;
 }
 
 body {
   background-color: #FCFBF7;
   color: #1A1A1A;
   font-family: var(--font-sans), system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -340,4 +341,72 @@ html.lenis, html.lenis body {
 
 .font-montserrat {
   font-family: 'Montserrat', 'Plus Jakarta Sans', sans-serif;
+}
+
+/* 5. Yushe-Inspired Kinetic 3D Text Roll (.roll) */
+.roll {
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  vertical-align: top;
+  line-height: 1.15;
+}
+
+.roll__a,
+.roll__b {
+  display: inline-block;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.roll__b {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+}
+
+.group:hover .roll__a,
+.hover-roll:hover .roll__a {
+  transform: translateY(-100%);
+}
+
+.group:hover .roll__b,
+.hover-roll:hover .roll__b {
+  transform: translateY(-100%);
+}
+
+/* 6. Multi-Scene Scrubber Bars (.pcard__bars) */
+.pcard__bars {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.pcard__bar {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.pcard__bar[data-state="on"] {
+  background: #C8A45E;
+  transform: scaleY(1.5);
+  box-shadow: 0 0 8px rgba(200, 164, 94, 0.6);
+}
+
+/* 7. Showroom & Lookbook Scroll Tracks */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
