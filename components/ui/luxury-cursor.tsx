@@ -96,13 +96,13 @@ export function LuxuryCursor() {
               ? "rgba(7, 61, 49, 0.92)"
               : cursorVariant === "hover"
               ? "rgba(200, 164, 94, 0.15)"
-              : "#073D31",
+              : "rgba(7, 61, 49, 1)",
           borderColor:
             cursorVariant === "view" || cursorVariant === "drag"
-              ? "#E1C98E"
+              ? "rgba(225, 201, 142, 1)"
               : cursorVariant === "hover"
-              ? "#C8A45E"
-              : "transparent",
+              ? "rgba(200, 164, 94, 1)"
+              : "rgba(200, 164, 94, 0)",
         }}
         transition={{ type: "spring", stiffness: 400, damping: 28 }}
         className="rounded-full flex items-center justify-center border shadow-sm backdrop-blur-xs pointer-events-none"
