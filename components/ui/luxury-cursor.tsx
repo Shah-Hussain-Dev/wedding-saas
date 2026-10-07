@@ -1,28 +1,41 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
 
 export function LuxuryCursor() {
   const [cursorText, setCursorText] = useState("");
   const [cursorVariant, setCursorVariant] = useState<"default" | "hover" | "view" | "drag">("default");
   const [isVisible, setIsVisible] = useState(false);
+  const isEnteringRef = useRef(true);
 
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 28, stiffness: 350 };
+  const springConfig = { damping: 32, stiffness: 450, mass: 0.5 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    // Only enable on desktop pointer devices
-    if (window.matchMedia("(pointer: coarse)").matches) return;
+    // Only enable on desktop fine-pointer devices
+    if (typeof window === "undefined" || window.matchMedia("(pointer: coarse)").matches) return;
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
-      if (!isVisible) setIsVisible(true);
+      // Prevent off-screen spring streaks on entry/re-entry
+      if (isEnteringRef.current) {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+        isEnteringRef.current = false;
+      } else {
+        mouseX.set(e.clientX);
+        mouseY.set(e.clientY);
+      }
+
+      if (!isVisible) {
+        setIsVisible(true);
+      }
 
       const target = e.target as HTMLElement | null;
       if (!target) return;
@@ -51,24 +64,38 @@ export function LuxuryCursor() {
       }
     };
 
+    const handleMouseEnter = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
+      isEnteringRef.current = false;
+      setIsVisible(true);
+    };
+
     const handleMouseLeave = () => {
       setIsVisible(false);
+      isEnteringRef.current = true;
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [mouseX, mouseY, isVisible]);
-
-  if (!isVisible) return null;
+  }, [mouseX, mouseY, cursorX, cursorY, isVisible]);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden hidden md:block">
-      {/* Ambient cursor light glow */}
+    <div
+      className={`pointer-events-none fixed inset-0 z-50 overflow-hidden hidden md:block transition-opacity duration-300 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
+    >
+      {/* Subtle Ambient cursor light glow */}
       <motion.div
         style={{
           x: cursorX,
@@ -76,7 +103,7 @@ export function LuxuryCursor() {
           translateX: "-50%",
           translateY: "-50%",
         }}
-        className="absolute w-80 h-80 rounded-full bg-[radial-gradient(circle,rgba(200,164,94,0.08)_0%,transparent_70%)] blur-2xl pointer-events-none"
+        className="absolute w-64 h-64 rounded-full bg-[radial-gradient(circle,rgba(200,164,94,0.06)_0%,transparent_70%)] blur-2xl pointer-events-none"
       />
 
       {/* Main Luxury Cursor Ring / Bead */}
@@ -88,27 +115,27 @@ export function LuxuryCursor() {
           translateY: "-50%",
         }}
         animate={{
-          scale: cursorVariant === "view" || cursorVariant === "drag" ? 1 : cursorVariant === "hover" ? 1.4 : 1,
-          width: cursorVariant === "view" || cursorVariant === "drag" ? 64 : cursorVariant === "hover" ? 28 : 10,
-          height: cursorVariant === "view" || cursorVariant === "drag" ? 64 : cursorVariant === "hover" ? 28 : 10,
+          scale: cursorVariant === "view" || cursorVariant === "drag" ? 1 : cursorVariant === "hover" ? 1.3 : 1,
+          width: cursorVariant === "view" || cursorVariant === "drag" ? 54 : cursorVariant === "hover" ? 24 : 8,
+          height: cursorVariant === "view" || cursorVariant === "drag" ? 54 : cursorVariant === "hover" ? 24 : 8,
           backgroundColor:
             cursorVariant === "view" || cursorVariant === "drag"
-              ? "rgba(7, 61, 49, 0.92)"
+              ? "rgba(7, 61, 49, 0.9)"
               : cursorVariant === "hover"
-              ? "rgba(200, 164, 94, 0.15)"
-              : "rgba(7, 61, 49, 1)",
+              ? "rgba(200, 164, 94, 0.2)"
+              : "rgba(7, 61, 49, 0.85)",
           borderColor:
             cursorVariant === "view" || cursorVariant === "drag"
-              ? "rgba(225, 201, 142, 1)"
+              ? "rgba(225, 201, 142, 0.9)"
               : cursorVariant === "hover"
-              ? "rgba(200, 164, 94, 1)"
+              ? "rgba(200, 164, 94, 0.85)"
               : "rgba(200, 164, 94, 0)",
         }}
-        transition={{ type: "spring", stiffness: 400, damping: 28 }}
-        className="rounded-full flex items-center justify-center border shadow-sm backdrop-blur-xs pointer-events-none"
+        transition={{ type: "spring", stiffness: 450, damping: 32 }}
+        className="rounded-full flex items-center justify-center border shadow-xs backdrop-blur-[2px] pointer-events-none"
       >
         {cursorText && (
-          <span className="text-[9px] font-bold tracking-widest text-[#F7F4ED] font-sans">
+          <span className="text-[8.5px] font-bold tracking-widest text-[#F7F4ED] font-sans">
             {cursorText}
           </span>
         )}
@@ -116,3 +143,4 @@ export function LuxuryCursor() {
     </div>
   );
 }
+

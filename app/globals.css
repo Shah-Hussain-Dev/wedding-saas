@@ -345,34 +345,61 @@ html.lenis, html.lenis body {
 
 /* 5. Yushe-Inspired Kinetic 3D Text Roll (.roll) */
 .roll {
-  display: inline-block;
-  overflow: hidden;
-  position: relative;
-  vertical-align: top;
-  line-height: 1.15;
+  display: inline-flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  overflow: hidden !important;
+  height: 1.25em !important;
+  line-height: 1.25em !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
 }
 
-.roll__a,
+.roll__a {
+  display: block !important;
+  height: 1.25em !important;
+  line-height: 1.25em !important;
+  white-space: nowrap !important;
+  transform: translateY(0%) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
 .roll__b {
-  display: inline-block;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  display: block !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 1.25em !important;
+  line-height: 1.25em !important;
+  white-space: nowrap !important;
+  transform: translateY(0%) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-.roll__b {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-}
-
+.group:hover .roll .roll__a,
+.group:hover > .roll .roll__a,
 .group:hover .roll__a,
-.hover-roll:hover .roll__a {
-  transform: translateY(-100%);
+.hover-roll:hover .roll__a,
+a:hover .roll .roll__a,
+a:hover > .roll .roll__a,
+button:hover .roll .roll__a,
+button:hover > .roll .roll__a,
+.roll:hover .roll__a {
+  transform: translateY(-100%) !important;
 }
 
+.group:hover .roll .roll__b,
+.group:hover > .roll .roll__b,
 .group:hover .roll__b,
-.hover-roll:hover .roll__b {
-  transform: translateY(-100%);
+.hover-roll:hover .roll__b,
+a:hover .roll .roll__b,
+a:hover > .roll .roll__b,
+button:hover .roll .roll__b,
+button:hover > .roll .roll__b,
+.roll:hover .roll__b {
+  transform: translateY(-100%) !important;
 }
 
 /* 6. Multi-Scene Scrubber Bars (.pcard__bars) */
