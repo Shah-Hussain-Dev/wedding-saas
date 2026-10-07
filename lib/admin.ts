@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 export { getAdminEmails, isUserAdmin } from "./admin-client";
 import { isUserAdmin } from "./admin-client";
 

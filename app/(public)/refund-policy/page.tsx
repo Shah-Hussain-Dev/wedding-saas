@@ -1,159 +1,58 @@
-"use client";
-
-import { motion } from "motion/react";
-import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
-import { PageHero } from "@/components/ui/page-hero";
-import { staggerContainer, fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
-import { Info, Warning, CreditCard, SealCheck, ArrowClockwise, CurrencyInr } from "@phosphor-icons/react";
+import React from "react";
+import Link from "next/link";
+import { Sparkle, Warning, SealCheck, ArrowClockwise, CurrencyInr } from "@phosphor-icons/react/dist/ssr";
 
 export default function RefundPolicyPage() {
   return (
-    <div className="py-24 px-6 max-w-4xl mx-auto">
-      <PageHero 
-        eyebrow="Billing Terms" 
-        title="Cancellation & Refund Policy" 
-        subtitle="Last updated: March 7, 2026" 
-      />
+    <div className="py-28 sm:py-36 bg-[#F7F4ED] text-[#18211E] selection:bg-[#C8A45E]/30 selection:text-[#073D31]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-12 sm:space-y-16">
+        {/* HEADER */}
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#073D31]/12 shadow-xs text-[10px] sm:text-[11px] font-bold tracking-[0.25em] text-[#073D31] uppercase font-sans backdrop-blur-md">
+            <SealCheck size={14} weight="fill" className="text-[#C8A45E]" />
+            <span>Billing &amp; Assurance</span>
+            <SealCheck size={14} weight="fill" className="text-[#C8A45E]" />
+          </div>
 
-      <motion.div 
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOnce}
-        className="space-y-8 text-xs text-stone-500 leading-relaxed font-sans"
-      >
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <Info size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                1. Digital Nature & Refund Limits
-              </h2>
-            </div>
-            <p className="text-sm text-stone-650 dark:text-stone-400">
-              Unfold is a customized digital service. Because each invitation webpage is uniquely generated based on your personal details, our refund policy is limited. Please read it carefully before making a purchase.
+          <h1 className="font-serif text-3.5xl sm:text-5xl font-medium tracking-tight text-[#18211E]">
+            Cancellation &amp; Refund Policy
+          </h1>
+
+          <p className="text-xs sm:text-sm text-[#76766F] font-sans">
+            Last updated: March 2026 · Transparent terms regarding digital purchases and payment protections.
+          </p>
+        </div>
+
+        {/* POLICY SECTIONS */}
+        <div className="space-y-6 text-xs sm:text-sm font-sans text-stone-600 leading-relaxed">
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#073D31]/10 shadow-xs space-y-3">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-[#18211E]">
+              1. Nature of Customized Digital Services
+            </h2>
+            <p>
+              Unfold generates personalized digital invitation webpages and real-time interactive portals. Because your unique invitation code, custom routes, and database assets are allocated immediately upon payment, all standard purchases are final.
             </p>
-          </DoubleBezelCard>
-        </motion.div>
+          </div>
 
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <Warning size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                2. Cancellation & Refund
-              </h2>
-            </div>
-            <ul className="list-disc pl-5 space-y-3.5 text-sm text-stone-650 dark:text-stone-400">
-              <li><strong>All purchases are final.</strong> Once payment is processed, the system assigns templates and configures routes.</li>
-              <li>Cancellation is not available after successful payment.</li>
-              <li>Refunds are not available for completed purchases.</li>
-              <li>Refunds may only be considered for duplicate or erroneous payments.</li>
-              <li>Technical delays, activation delays, temporary outages, or processing delays do not qualify for refunds — instead, the required plan access may be granted manually by our engineering team.</li>
-            </ul>
-          </DoubleBezelCard>
-        </motion.div>
-
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <CreditCard size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                3. Coupon Code Policy
-              </h2>
-            </div>
-            <ul className="list-disc pl-5 space-y-3.5 text-sm text-stone-650 dark:text-stone-400">
-              <li>Users are responsible for applying valid coupon codes before completing payment.</li>
-              <li>If a valid coupon is not applied during checkout, the standard plan price will apply.</li>
-              <li>Coupon benefits cannot be applied retroactively after payment.</li>
-              <li>No refund, adjustment, or compensation will be provided for missed coupon usage.</li>
-            </ul>
-          </DoubleBezelCard>
-        </motion.div>
-
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <CurrencyInr size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                4. Duplicate or Erroneous Payments
-              </h2>
-            </div>
-            <p className="text-sm text-stone-650 dark:text-stone-400 leading-relaxed">
-              If a duplicate payment occurs, we will review the transaction and process a refund after deducting any applicable payment processing or administrative charges. Refunds will typically be completed within 7–10 business days.
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#073D31]/10 shadow-xs space-y-3">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-[#18211E]">
+              2. Duplicate or Erroneous Transactions
+            </h2>
+            <p>
+              If a duplicate charge occurs due to network interruptions during checkout, we will gladly investigate and process a 100% refund for the duplicate transaction within 5 to 7 business days directly to your original payment method.
             </p>
-          </DoubleBezelCard>
-        </motion.div>
+          </div>
 
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <Warning size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                5. Payment Gateway Issues
-              </h2>
-            </div>
-            <p className="text-sm text-stone-650 dark:text-stone-400 leading-relaxed">
-              If a payment issue occurs due to a technical error from the payment gateway, we are not responsible for processing the refund directly, as payments are handled through the Razorpay payment gateway. In such cases, users may need to contact the payment provider for further assistance.
+          <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#073D31]/10 shadow-xs space-y-3">
+            <h2 className="font-serif text-lg sm:text-xl font-bold text-[#18211E]">
+              3. Dedicated Support Resolution
+            </h2>
+            <p>
+              If you experience any technical difficulty during customization or activation, our engineering team provides priority concierge resolution within 2 hours. Email your payment ID to <a href="mailto:contact@unfoldwed.com" className="text-[#073D31] font-bold underline">contact@unfoldwed.com</a>.
             </p>
-          </DoubleBezelCard>
-        </motion.div>
-
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <ArrowClockwise size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                6. Payment Successful But Features Not Activated
-              </h2>
-            </div>
-            <div className="text-sm text-stone-650 dark:text-stone-400 space-y-3">
-              <p>
-                If your payment is successfully processed but, due to technical or server-side issues, the paid features (such as invitation creation or editing) are not activated on your account, the following process will apply:
-              </p>
-              <ul className="list-disc pl-5 space-y-2">
-                <li>Our team will review and verify the payment transaction.</li>
-                <li>Upon successful verification, access to paid features will be manually granted to your account.</li>
-                <li>No refund will be issued in such cases — instead, the service will be activated as promised.</li>
-                <li>Refunds are only applicable for duplicate or erroneous payments, not for activation delays caused by technical issues.</li>
-              </ul>
-            </div>
-          </DoubleBezelCard>
-        </motion.div>
-
-        <motion.div variants={fadeUp}>
-          <DoubleBezelCard className="bg-white dark:bg-[#0a0f0d]">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-8 w-8 rounded-full bg-accent-gold/10 text-accent-gold flex items-center justify-center text-accent-gold shrink-0">
-                <SealCheck size={18} weight="light" />
-              </div>
-              <h2 className="text-lg font-serif text-[#1F1F1F] dark:text-white font-normal">
-                7. How to Request a Refund & Refund Method
-              </h2>
-            </div>
-            <div className="text-sm text-stone-650 dark:text-stone-400 space-y-4">
-              <p>
-                Email us at <a href="mailto:contact@unfoldwed.com" className="text-accent-gold font-bold hover:underline">contact@unfoldwed.com</a> with your registered email address and payment reference number. We will review your request and respond within 48 hours.
-              </p>
-              <p>
-                All approved refunds will be credited back to the original payment method (UPI, credit/debit card, net banking, etc.) used at the time of purchase.
-              </p>
-            </div>
-          </DoubleBezelCard>
-        </motion.div>
-      </motion.div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
