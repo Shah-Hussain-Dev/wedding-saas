@@ -8,6 +8,7 @@ import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { AdminCreateModal } from "@/components/admin/AdminCreateModal";
 import { AdminInvitationsTable } from "@/components/admin/AdminInvitationsTable";
+import { AdminTemplatesTable } from "@/components/admin/AdminTemplatesTable";
 import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
 import { AdminOrdersTable } from "@/components/admin/AdminOrdersTable";
 import { AdminRsvpsTable } from "@/components/admin/AdminRsvpsTable";
@@ -33,16 +34,18 @@ import {
   SignOut,
   ArrowSquareOut,
   User as UserIcon,
+  Tag,
 } from "@phosphor-icons/react";
 
 export default function AdminDashboardPage() {
   const { data: session, status: authStatus } = useSession();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"overview" | "invitations" | "rsvps" | "users" | "orders">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "invitations" | "templates" | "rsvps" | "users" | "orders">("overview");
 
   // Data State
   const [stats, setStats] = useState<any>(null);
   const [invitations, setInvitations] = useState<any[]>([]);
+  const [templates, setTemplates] = useState<any[]>([]);
   const [rsvps, setRsvps] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [orders, setOrders] = useState<any[]>([]);
@@ -66,9 +69,10 @@ export default function AdminDashboardPage() {
     if (!authorizedAdmin) return;
     setLoading(true);
     try {
-      const [statsRes, invRes, usersRes, ordersRes, rsvpsRes] = await Promise.all([
+      const [statsRes, invRes, templatesRes, usersRes, ordersRes, rsvpsRes] = await Promise.all([
         fetch("/api/admin/stats"),
         fetch("/api/admin/invitations"),
+        fetch("/api/admin/templates"),
         fetch("/api/admin/users"),
         fetch("/api/admin/orders"),
         fetch("/api/admin/rsvps"),
@@ -81,6 +85,10 @@ export default function AdminDashboardPage() {
       if (invRes.ok) {
         const invData = await invRes.json();
         setInvitations(invData.invitations || []);
+      }
+      if (templatesRes.ok) {
+        const templatesData = await templatesRes.json();
+        setTemplates(templatesData.templates || []);
       }
       if (usersRes.ok) {
         const usersData = await usersRes.json();
@@ -323,6 +331,18 @@ export default function AdminDashboardPage() {
           </button>
 
           <button
+            onClick={() => setActiveTab("templates")}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              activeTab === "templates"
+                ? "bg-white text-stone-900 shadow-sm border border-stone-200/80"
+                : "text-stone-600 hover:text-stone-900"
+            }`}
+          >
+            <Tag size={16} weight="bold" />
+            <span>Templates &amp; Pricing ({templates.length || 16})</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab("rsvps")}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
               activeTab === "rsvps"
@@ -527,6 +547,17 @@ export default function AdminDashboardPage() {
                     </button>
 
                     <button
+                      onClick={() => setActiveTab("templates")}
+                      className="w-full p-3 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-800 text-xs font-bold flex items-center justify-between transition cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2">
+                        <Tag size={16} weight="bold" />
+                        <span>Configure Template Prices ({templates.length || 16} Royal Themes)</span>
+                      </span>
+                      <span>→</span>
+                    </button>
+
+                    <button
                       onClick={() => setActiveTab("rsvps")}
                       className="w-full p-3 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-stone-800 text-xs font-bold flex items-center justify-between transition cursor-pointer"
                     >
@@ -568,6 +599,25 @@ export default function AdminDashboardPage() {
 
             <AdminInvitationsTable
               invitations={invitations}
+              onRefresh={loadAllAdminData}
+            />
+          </div>
+        )}
+
+        {/* ── TAB 2.2: TEMPLATES & PRICING MANAGEMENT ── */}
+        {activeTab === "templates" && (
+          <div className="space-y-4">
+            <div>
+              <h2 className="text-xl font-serif font-bold text-stone-900">
+                Template Catalog &amp; Dynamic Pricing
+              </h2>
+              <p className="text-xs text-stone-500">
+                Update live prices in ₹ (INR), toggle active/paused status, and preview all 16 royal wedding themes.
+              </p>
+            </div>
+
+            <AdminTemplatesTable
+              templates={templates}
               onRefresh={loadAllAdminData}
             />
           </div>

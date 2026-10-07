@@ -123,7 +123,7 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
           slug={invitation.slug || slug}
           templateId={invitation.templateId || "royal-lotus"}
           templateName={invitation.brideName ? `${invitation.brideName} & ${invitation.groomName}` : undefined}
-          amountPaise={149900}
+          amountPaise={invitation.amountPaise}
           isPublished={false}
           expiresInSeconds={900}
         />

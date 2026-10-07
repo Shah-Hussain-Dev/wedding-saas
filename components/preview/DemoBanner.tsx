@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { RazorpayCheckoutButton } from "@/components/payment/RazorpayCheckoutButton";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 import {
   Clock,
   Sparkle,
@@ -20,9 +21,9 @@ interface DemoBannerProps {
   slug: string;
   templateId: string;
   templateName?: string;
-  amountPaise?: number; // default 149900 (₹1,499)
+  amountPaise?: number;
   isPublished?: boolean;
-  expiresInSeconds?: number; // e.g. 900 (15 minutes)
+  expiresInSeconds?: number;
 }
 
 export function DemoBanner({
@@ -30,11 +31,19 @@ export function DemoBanner({
   slug,
   templateId,
   templateName = "Royal Wedding Invitation",
-  amountPaise = 149900,
+  amountPaise,
   isPublished = false,
   expiresInSeconds = 900,
 }: DemoBannerProps) {
   const { data: session } = useSession();
+  const { getPriceFormatted, getPriceNumber } = useTemplatePricing();
+  
+  const dynamicPriceInr = getPriceNumber(templateId, 1199);
+  const dynamicPriceFormatted = getPriceFormatted(templateId, "₹1,199");
+  const effectiveAmountPaise = amountPaise !== undefined && amountPaise !== 149900
+    ? amountPaise
+    : dynamicPriceInr * 100;
+
   const [timeLeft, setTimeLeft] = useState(expiresInSeconds);
   const [isUnlocked, setIsUnlocked] = useState(isPublished);
   const [isMinimized, setIsMinimized] = useState(true);
@@ -124,7 +133,7 @@ export function DemoBanner({
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-400"></span>
           </span>
           <span className="text-[9px] uppercase font-bold tracking-wider text-amber-300">
-            Live Demo
+            Live Demo · {dynamicPriceFormatted}
           </span>
 
           <span className="text-white/20 text-xs">|</span>
@@ -188,8 +197,8 @@ export function DemoBanner({
               invitationId={invitationId}
               slug={slug}
               templateId={templateId}
-              amountPaise={amountPaise}
-              buttonText="Unlock Website (₹1,499)"
+              amountPaise={effectiveAmountPaise}
+              buttonText={`Unlock Website (${dynamicPriceFormatted})`}
               className="!py-1.5 !px-3.5 !text-[11px] !rounded-full !shadow-md"
               onSuccess={handleUnlockSuccess}
             />
@@ -225,15 +234,15 @@ export function DemoBanner({
 
             <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/10">
               <span className="text-[10px] text-stone-400 font-mono">
-                One-time: <strong className="text-white">₹1,499</strong>
+                One-time: <strong className="text-white">{dynamicPriceFormatted}</strong>
               </span>
 
               <RazorpayCheckoutButton
                 invitationId={invitationId}
                 slug={slug}
                 templateId={templateId}
-                amountPaise={amountPaise}
-                buttonText="Unlock Website Now (₹1,499)"
+                amountPaise={effectiveAmountPaise}
+                buttonText={`Unlock Website Now (${dynamicPriceFormatted})`}
                 className="!py-2 !px-4 !text-xs !rounded-xl !shadow-lg"
                 onSuccess={handleUnlockSuccess}
               />

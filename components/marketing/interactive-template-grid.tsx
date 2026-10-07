@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Eye, Heart, Sparkle, Play, CaretRight } from "@phosphor-icons/react";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 
 interface TemplateItem {
   id: string;
@@ -126,6 +127,7 @@ const CATEGORY_TABS = [
 ];
 
 export function InteractiveTemplateGrid() {
+  const { getPriceFormatted } = useTemplatePricing();
   const [activeTab, setActiveTab] = useState<string>("all");
   const [activeSceneIndex, setActiveSceneIndex] = useState<Record<string, number>>({});
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
@@ -274,7 +276,7 @@ export function InteractiveTemplateGrid() {
                         {item.scenes[currentScene]?.title}
                       </span>
                       <span className="text-[10px] font-bold text-white font-mono">
-                        {item.price}
+                        {getPriceFormatted(item.id, item.price)}
                       </span>
                     </div>
                   </div>

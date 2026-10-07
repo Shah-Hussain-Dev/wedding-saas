@@ -23,14 +23,19 @@ import {
   DeviceMobile,
 } from "@phosphor-icons/react";
 import { fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 
 interface TemplateDemoPageProps {
   templateId: string;
 }
 
 export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
+  const { getPriceFormatted, getPriceNumber } = useTemplatePricing();
   const meta = getTemplateMeta(templateId);
   const interactiveUrl = `/preview/${templateId}/interactive?embed=1`;
+  const dynamicPriceFormatted = getPriceFormatted(templateId, "₹1,199");
+  const dynamicPriceNum = getPriceNumber(templateId, 1199);
+  const royalPriceFormatted = `₹${(dynamicPriceNum + 300).toLocaleString("en-IN")}`;
 
   return (
     <div className="min-h-screen bg-[#FCFBF7] text-[#1A1A1A]">
@@ -112,7 +117,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                   icon={Flower}
                   label="Classic"
                   subtitle="Template personalized to your style"
-                  price="₹1,199"
+                  price={dynamicPriceFormatted}
                   priceNote="one-time"
                   href={`/customize/${templateId}?plan=classic`}
                   cta="Customize Classic"
@@ -121,7 +126,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                   icon={Crown}
                   label="Royal"
                   subtitle="Full cinematic motion experience"
-                  price="₹1,499"
+                  price={royalPriceFormatted}
                   priceNote="one-time"
                   badge="More personalized"
                   highlighted

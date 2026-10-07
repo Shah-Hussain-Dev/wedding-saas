@@ -138,7 +138,7 @@ function PreviewContent({ templateId }: { templateId: string }) {
         slug={invitationData.slug || normalizedId}
         templateId={activeTemplateId}
         templateName={invitationData.brideName ? `${invitationData.brideName} & ${invitationData.groomName}` : undefined}
-        amountPaise={149900}
+        amountPaise={customData?.amountPaise}
         isPublished={invitationData.isPublished}
         expiresInSeconds={900} // 15-minute interactive demo session
       />

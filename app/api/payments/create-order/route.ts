@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createRazorpayOrder } from "@/lib/razorpay";
 import prisma from "@/lib/prisma";
+import { getTemplatePriceInr } from "@/lib/template-pricing";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { invitationId, templateId, amount = 1499 } = body;
+    const { invitationId, templateId } = body;
 
     if (!invitationId) {
       return NextResponse.json({ error: "Missing invitationId" }, { status: 400 });
     }
 
-    const amountPaise = amount * 100;
+    // Dynamic price lookup from admin configuration or body override
+    const configuredPrice = templateId ? await getTemplatePriceInr(templateId) : 1199;
+    const resolvedAmount = body.amount !== undefined ? Number(body.amount) : configuredPrice;
+
+    const amountPaise = resolvedAmount * 100;
     const receipt = `rcpt_${invitationId.slice(0, 10)}_${Date.now().toString().slice(-6)}`;
 
     // Create order on Razorpay

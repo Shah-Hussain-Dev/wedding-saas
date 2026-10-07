@@ -16,6 +16,7 @@ import {
   MoonStars,
   FlowerLotus,
 } from "@phosphor-icons/react";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 
 const FILTERS = [
   { id: "All", label: "All Masterpieces (16)" },
@@ -306,6 +307,7 @@ const TEMPLATES = [
 ];
 
 export default function TemplatesPage() {
+  const { getPriceFormatted } = useTemplatePricing();
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSceneIndex, setActiveSceneIndex] = useState<Record<string, number>>({});
@@ -499,7 +501,7 @@ export default function TemplatesPage() {
                           {item.scenes[currentScene]?.title}
                         </span>
                         <span className="text-[10px] font-bold text-white font-mono">
-                          {item.price}
+                          {getPriceFormatted(item.id, item.price)}
                         </span>
                       </div>
                     </div>
