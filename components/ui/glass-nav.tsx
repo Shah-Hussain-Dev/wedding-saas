@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
@@ -44,10 +44,37 @@ export function GlassNav() {
   const [isOpen, setIsOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
-    setScrolled(latest > 30);
+    const previous = lastScrollY.current;
+    const diff = latest - previous;
+
+    setScrolled(latest > 20);
+
+    // Never hide if mobile drawer or mega menu is open
+    if (isOpen || megaOpen) {
+      setHidden(false);
+      lastScrollY.current = latest;
+      return;
+    }
+
+    // Always keep visible when near the top of the page
+    if (latest < 40) {
+      setHidden(false);
+    } 
+    // User scrolling down significantly -> hide navbar
+    else if (diff > 6 && latest > 70) {
+      setHidden(true);
+    } 
+    // User scrolling up even a bit -> reveal navbar smoothly
+    else if (diff < -5) {
+      setHidden(false);
+    }
+
+    lastScrollY.current = latest;
   });
 
   useEffect(() => {
@@ -61,10 +88,15 @@ export function GlassNav() {
     <>
       <motion.nav
         initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        animate={{
+          y: hidden ? -90 : 0,
+          opacity: hidden ? 0 : 1,
+        }}
+        transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
         onMouseLeave={() => setMegaOpen(false)}
-        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[94%] max-w-5xl -translate-x-1/2 rounded-full border px-4 sm:px-6 py-2.5 sm:py-3 backdrop-blur-xl transition-all duration-300 flex items-center justify-between shadow-[0_10px_30px_rgba(7,61,49,0.06)] ${
+        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[94%] max-w-5xl -translate-x-1/2 rounded-full border px-4 sm:px-6 py-2.5 sm:py-3 backdrop-blur-xl transition-colors duration-300 flex items-center justify-between shadow-[0_10px_30px_rgba(7,61,49,0.06)] ${
+          hidden ? "pointer-events-none" : "pointer-events-auto"
+        } ${
           scrolled
             ? "bg-[#FCFAF6]/95 border-[#073D31]/15 shadow-[0_15px_35px_rgba(7,61,49,0.12)] py-2 sm:py-2.5"
             : "bg-[#FCFAF6]/80 border-[#073D31]/10"
@@ -150,8 +182,9 @@ export function GlassNav() {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-1.5 text-[#073D31] cursor-pointer"
-          aria-label="Toggle menu"
+          className="lg:hidden w-11 h-11 flex items-center justify-center text-[#073D31] rounded-full hover:bg-black/5 active:scale-95 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#073D31]"
+          aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isOpen}
         >
           {isOpen ? <X size={22} weight="bold" /> : <List size={22} weight="bold" />}
         </button>
