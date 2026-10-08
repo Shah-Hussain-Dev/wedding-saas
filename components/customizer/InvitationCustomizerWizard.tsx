@@ -9,6 +9,7 @@ import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ImageUploader } from "@/components/media/ImageUploader";
 import { MultiImageUploader } from "@/components/media/MultiImageUploader";
+import { AudioTrackSelector } from "@/components/media/AudioTrackSelector";
 import { getTemplateMeta } from "@/lib/template-meta";
 import {
   Sparkle,
@@ -952,21 +953,13 @@ export function InvitationCustomizerWizard({
                 />
               </div>
 
+              {/* 3. Audio & Wedding Soundtrack Selector */}
               <div className="pt-4 border-t border-stone-150">
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-2 flex items-center gap-1.5">
-                  <MusicNotes className="h-4 w-4 text-amber-600" />
-                  <span>Background Music Loop</span>
-                </label>
-                <input
-                  type="text"
-                  value={musicTrack}
-                  onChange={(e) => setMusicTrack(e.target.value)}
-                  placeholder={`/templates/${templateId}/music.mp3`}
-                  className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-amber-500 bg-stone-50/50 text-stone-800 font-mono text-xs"
+                <AudioTrackSelector
+                  selectedTrackUrl={musicTrack}
+                  onChange={(url) => setMusicTrack(url)}
+                  templateDefaultUrl={`/audio/wedding-ambience.mp3`}
                 />
-                <p className="text-[11px] text-stone-400 mt-1">
-                  Default: Theme soundtrack included with template.
-                </p>
               </div>
             </DoubleBezelCard>
           </motion.div>
