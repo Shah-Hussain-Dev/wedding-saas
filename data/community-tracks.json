@@ -1,0 +1,34 @@
+[
+  {
+    "id": "yt-zgeRC9vrtrM",
+    "videoId": "zgeRC9vrtrM",
+    "title": "Hum Tere Pyar Mein Sara Aalam (4k) | Dil Ek Mandir | Lata Mangeshkar Romantic Song | Romantic Song",
+    "artist": "Hindi Filmi Songs",
+    "audioUrl": "/audio/yt-zgeRC9vrtrM.mp3",
+    "thumbnail": "https://i.ytimg.com/vi/zgeRC9vrtrM/hqdefault.jpg",
+    "category": "universal",
+    "categoryLabel": "Community Imported",
+    "flag": "▶️",
+    "tag": "COMMUNITY",
+    "duration": "Full Audio",
+    "description": "Imported song: Hum Tere Pyar Mein Sara Aalam (4k) | Dil Ek Mandir | Lata Mangeshkar Romantic Song | Romantic Song",
+    "storage": "local",
+    "createdAt": "2026-10-08T16:06:49.212Z"
+  },
+  {
+    "id": "yt-dQw4w9WgXcQ",
+    "videoId": "dQw4w9WgXcQ",
+    "title": "Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "artist": "Rick Astley",
+    "audioUrl": "https://res.cloudinary.com/deki7n2z/video/upload/v1791475119/wedding-saas/audio/yt-dQw4w9WgXcQ.mp4",
+    "thumbnail": "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+    "category": "universal",
+    "categoryLabel": "Community Imported",
+    "flag": "☁️",
+    "tag": "CLOUDINARY",
+    "duration": "3:33",
+    "description": "Imported song: Rick Astley - Never Gonna Give You Up (Official Video) (4K Remaster)",
+    "createdAt": "2026-10-08T15:58:40.638Z",
+    "storage": "cloudinary"
+  }
+]

@@ -65,6 +65,52 @@ export async function uploadToCloudinary(
   });
 }
 
+export interface AudioUploadResult {
+  secure_url: string;
+  public_id: string;
+  format?: string;
+  duration?: number;
+  bytes: number;
+}
+
+/**
+ * Upload an audio file to Cloudinary
+ */
+export async function uploadAudioToCloudinary(
+  filePath: string,
+  folder: string = "wedding-saas/audio",
+  publicId?: string
+): Promise<AudioUploadResult> {
+  if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    throw new Error("Cloudinary credentials not found. Please set CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET.");
+  }
+
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      filePath,
+      {
+        folder,
+        public_id: publicId,
+        resource_type: "video", // Cloudinary stores and streams audio under the "video" resource type
+        overwrite: true,
+      },
+      (error, result) => {
+        if (error || !result) {
+          reject(error || new Error("Cloudinary audio upload failed"));
+        } else {
+          resolve({
+            secure_url: result.secure_url,
+            public_id: result.public_id,
+            format: result.format,
+            duration: result.duration,
+            bytes: result.bytes,
+          });
+        }
+      }
+    );
+  });
+}
+
 /**
  * Delete a media file from Cloudinary by public ID
  */
@@ -82,3 +128,4 @@ export async function deleteFromCloudinary(publicId: string): Promise<boolean> {
 }
 
 export default cloudinary;
+
