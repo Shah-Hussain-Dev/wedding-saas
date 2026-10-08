@@ -55,33 +55,40 @@ export function DemoBanner({
   useEffect(() => {
     if (isUnlocked) return;
 
-    const storageKey = `unfold_demo_timer_${slug}`;
-    const storedStart = sessionStorage.getItem(storageKey);
+    const storageKey = `unfold_demo_timer_${slug || templateId || "demo"}`;
     const now = Math.floor(Date.now() / 1000);
+    const storedStart = typeof window !== "undefined" ? sessionStorage.getItem(storageKey) : null;
 
-    let startTime = now;
-    if (storedStart) {
-      startTime = parseInt(storedStart, 10);
-    } else {
-      sessionStorage.setItem(storageKey, String(now));
+    let startTime = storedStart ? parseInt(storedStart, 10) : NaN;
+    if (isNaN(startTime) || now - startTime >= expiresInSeconds || startTime > now) {
+      startTime = now;
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem(storageKey, String(now));
+      }
     }
 
-    const elapsed = now - startTime;
-    const remaining = Math.max(0, expiresInSeconds - elapsed);
-    setTimeLeft(remaining);
+    const calculateRemaining = () => {
+      const currentNow = Math.floor(Date.now() / 1000);
+      const elapsed = currentNow - startTime;
+      const remaining = Math.max(0, expiresInSeconds - elapsed);
+      if (remaining <= 0) {
+        startTime = Math.floor(Date.now() / 1000);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem(storageKey, String(startTime));
+        }
+        return expiresInSeconds;
+      }
+      return remaining;
+    };
+
+    setTimeLeft(calculateRemaining());
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft(calculateRemaining());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [slug, isUnlocked, expiresInSeconds]);
+  }, [slug, templateId, isUnlocked, expiresInSeconds]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;

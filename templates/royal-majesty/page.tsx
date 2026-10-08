@@ -372,7 +372,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-black/70 z-[1] pointer-events-none" />
 
         {/* Top Header: Faith Switcher Pill */}
-        <header className="relative z-20 w-full px-4 pt-4 md:pt-6 flex items-center justify-center max-w-7xl mx-auto">
+        <header className="relative z-20 w-full px-4 pt-12 sm:pt-14 md:pt-6 flex items-center justify-center max-w-7xl mx-auto">
           <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/30 shadow-md text-xs font-montserrat">
             <button
               onClick={() => setSelectedReligion("universal")}
