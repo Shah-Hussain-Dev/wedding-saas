@@ -40,7 +40,7 @@ export function HeroPhonePreview() {
       <div className="absolute -inset-10 bg-gradient-to-b from-accent-gold/12 via-primary/4 to-transparent rounded-full blur-3xl -z-10" />
 
       <div className="relative rounded-[2.75rem] border-[5px] border-[#1a1a1a] bg-[#1a1a1a] shadow-[0_25px_80px_rgba(8,47,39,0.22)] p-[3px]">
-        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-[28%] h-[22px] bg-[#1a1a1a] rounded-full z-30" />
+        <div className="absolute top-2.5 left-1/2 -translate-x-1/2 w-[28%] h-[22px] bg-[#1a1a1a] rounded-full z-30 pointer-events-none" />
 
         <div className="relative rounded-[2.4rem] overflow-hidden aspect-[9/19.5] bg-[#082F27]">
           {!videoError && (
