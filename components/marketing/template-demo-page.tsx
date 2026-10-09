@@ -16,6 +16,7 @@ import {
 import {
   Sparkle,
   ArrowUpRight,
+  ArrowRight,
   ArrowLeft,
   Flower,
   Crown,
@@ -173,7 +174,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                 </p>
 
                 {/* Primary Try-Before-You-Buy Action */}
-                <div className="mb-6 p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="mb-6 p-4 sm:p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-1.5 text-amber-800 text-xs font-bold uppercase tracking-wider mb-0.5">
                       <Sparkle size={14} weight="fill" className="text-amber-600" />
@@ -183,18 +184,20 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                       Input your real names, dates &amp; ceremonies to see your live invitation demo right now.
                     </p>
                   </div>
-                  <Link href={`/customize/${normalizedId}`} className="w-full sm:w-auto shrink-0">
-                    <PremiumButton className="w-full justify-center !py-2.5 !px-5 text-xs font-bold shadow-md hover:scale-105">
-                      Enter Details Free
-                    </PremiumButton>
+                  <Link
+                    href={`/customize/${normalizedId}`}
+                    className="group shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans border border-[#C8A45E]/40 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  >
+                    <span>Enter Details Free</span>
+                    <ArrowUpRight size={13} weight="bold" className="text-[#E1C98E] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </Link>
                 </div>
 
                 {/* Single All-Inclusive Admin Updated Price Card */}
                 <div className="rounded-2xl border border-accent-gold/35 bg-gradient-to-br from-[#FCFAF6] via-white to-accent-gold-light/20 p-5 sm:p-6 shadow-sm hover:shadow-md transition-all">
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div className="flex items-start gap-3">
-                      <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/15">
+                  <div className="flex items-start justify-between gap-4 mb-5">
+                    <div className="flex items-start gap-3.5">
+                      <div className="h-11 w-11 rounded-xl bg-[#073D31]/10 text-[#073D31] flex items-center justify-center shrink-0 border border-[#073D31]/15">
                         <Crown size={22} weight="fill" className="text-[#073D31]" />
                       </div>
                       <div>
@@ -215,11 +218,18 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                     </div>
                   </div>
 
-                  <Link href={`/customize/${normalizedId}`} className="block">
-                    <PremiumButton className="w-full justify-center !py-3 text-sm font-semibold shadow-md hover:scale-[1.01] active:scale-[0.99]">
-                      <span>Customize This Design</span>
-                      <ArrowUpRight size={15} weight="bold" />
-                    </PremiumButton>
+                  {/* Luxury Customize Button */}
+                  <Link
+                    href={`/customize/${normalizedId}`}
+                    className="group relative w-full flex items-center justify-center gap-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] py-3.5 px-6 text-xs sm:text-sm font-bold tracking-wider uppercase font-sans border border-[#C8A45E]/40 shadow-[0_8px_20px_rgba(7,61,49,0.22)] hover:shadow-[0_12px_28px_rgba(7,61,49,0.32)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
+                  >
+                    <Sparkle size={15} weight="fill" className="text-[#E1C98E]" />
+                    <span>Customize This Design</span>
+                    <ArrowRight
+                      size={15}
+                      weight="bold"
+                      className="text-[#E1C98E] group-hover:translate-x-1 transition-transform duration-200"
+                    />
                   </Link>
 
                   <div className="mt-4 pt-3.5 border-t border-black/5 flex flex-wrap items-center justify-between gap-2 text-[11px] text-stone-500 font-sans">
