@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion, PanInfo } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion, PanInfo, type Variants } from "motion/react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -182,8 +182,8 @@ export function HeroExperience() {
   const activeTemplate = HERO_INVITATIONS[activeIndex];
 
   // Motion animation presets honoring reduced motion
-  const easeOutCubic = [0.22, 1, 0.36, 1];
-  const fadeUpVariant = {
+  const easeOutCubic = [0.22, 1, 0.36, 1] as const;
+  const fadeUpVariant: Variants = {
     hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 12 },
     visible: (custom: number) => ({
       opacity: 1,
@@ -202,7 +202,7 @@ export function HeroExperience() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       aria-label="Hero Section"
-      className="relative w-full min-h-[100dvh] flex flex-col justify-between items-center bg-[#F7F4ED] text-[#18211E] overflow-x-clip pt-18 sm:pt-20 lg:pt-22 pb-4 sm:pb-6 select-none"
+      className="relative w-full min-h-[100dvh] flex flex-col justify-between items-center bg-[#F7F4ED] text-[#18211E] overflow-x-clip pt-24 sm:pt-28 lg:pt-30 pb-4 sm:pb-6 select-none"
     >
       {/* Restrained Ambient Background Halo */}
       <motion.div

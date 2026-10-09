@@ -22,8 +22,8 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Unfold — Premium Animated Digital Wedding Invitations",
-  description: "Create beautiful, high-interaction, animated wedding invitation webpages with 3D opening reveals, custom background music, and RSVP trackers.",
+  title: "WedInvites — Premium Animated Digital Wedding Invitations",
+  description: "Create beautiful, high-interaction, animated wedding invitation webpages with 3D opening reveals, custom background music, and RSVP trackers on wedinvites.in.",
 };
 
 export default function RootLayout({

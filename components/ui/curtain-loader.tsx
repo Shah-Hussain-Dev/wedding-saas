@@ -132,9 +132,9 @@ function LoaderContent() {
           initial={{ y: 48, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: T.brand, duration: 1.1, ease: EASE }}
-          className="font-serif text-5xl lowercase tracking-tight text-white drop-shadow-[0_25px_60px_rgba(0,0,0,0.9)] md:text-7xl"
+          className="font-serif text-5xl tracking-tight text-white drop-shadow-[0_25px_60px_rgba(0,0,0,0.9)] md:text-7xl"
         >
-          unfold
+          wedinvites
         </motion.p>
 
         <motion.div

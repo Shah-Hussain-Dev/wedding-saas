@@ -81,8 +81,8 @@ export function InfiniteReelsTicker() {
         >
           <InstagramLogo size={16} weight="bold" />
           <span className="roll">
-            <span className="roll__a">Follow @unfold.invites</span>
-            <span className="roll__b" aria-hidden="true">Follow @unfold.invites</span>
+            <span className="roll__a">Follow @wedinvites.in</span>
+            <span className="roll__b" aria-hidden="true">Follow @wedinvites.in</span>
           </span>
           <ArrowUpRight size={14} weight="bold" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>

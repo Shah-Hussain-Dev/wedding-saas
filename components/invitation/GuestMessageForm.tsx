@@ -131,7 +131,7 @@ export function GuestMessageForm({ invitationId, events, onSuccessSubmit }: Gues
         <div className="w-full border-t border-dashed border-stone-200 dark:border-stone-800 pt-6 mt-2 flex flex-col items-center">
           <div className="flex items-center gap-1 text-amber-600 mb-2">
             <Sparkle className="h-4 w-4 animate-spin-slow" weight="fill" />
-            <span className="text-[10px] uppercase font-bold tracking-[0.15em]">Made with Unfold</span>
+            <span className="text-[10px] uppercase font-bold tracking-[0.15em]">Made with WedInvites</span>
           </div>
           
           <p className="text-xs text-stone-600 dark:text-stone-400 font-medium mb-4 max-w-[30ch]">

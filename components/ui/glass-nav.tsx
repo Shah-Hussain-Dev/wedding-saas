@@ -7,10 +7,10 @@ import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/
 import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus } from "@phosphor-icons/react";
 
 const NAV_LINKS = [
-  { href: "/#how-it-works", label: "How It Works" },
   { href: "/templates", label: "Templates", hasMega: true },
-  { href: "/#lookbook", label: "Lookbook" },
+  { href: "/#how-it-works", label: "How It Works" },
   { href: "/#pricing", label: "Pricing" },
+  { href: "/#lookbook", label: "Lookbook" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -94,25 +94,25 @@ export function GlassNav() {
         }}
         transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
         onMouseLeave={() => setMegaOpen(false)}
-        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[94%] max-w-5xl -translate-x-1/2 rounded-full border px-4 sm:px-6 py-2.5 sm:py-3 backdrop-blur-xl transition-colors duration-300 flex items-center justify-between shadow-[0_10px_30px_rgba(7,61,49,0.06)] ${
+        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full border px-5 sm:px-7 py-2.5 sm:py-3 backdrop-blur-xl transition-all duration-300 flex items-center justify-between shadow-[0_10px_30px_rgba(7,61,49,0.06)] ${
           hidden ? "pointer-events-none" : "pointer-events-auto"
         } ${
           scrolled
             ? "bg-[#FCFAF6]/95 border-[#073D31]/15 shadow-[0_15px_35px_rgba(7,61,49,0.12)] py-2 sm:py-2.5"
-            : "bg-[#FCFAF6]/80 border-[#073D31]/10"
+            : "bg-[#FCFAF6]/85 border-[#073D31]/10"
         }`}
       >
         {/* Brand Monogram */}
         <Link
           href="/"
-          className="font-serif text-xl sm:text-2xl font-bold text-[#073D31] lowercase tracking-tight flex items-center gap-1.5 cursor-pointer"
+          className="font-serif text-xl sm:text-2xl font-bold text-[#073D31] tracking-tight flex items-center gap-1.5 cursor-pointer shrink-0 mr-4"
         >
-          <span>unfold</span>
+          <span>wedinvites</span>
           <span className="w-1.5 h-1.5 rounded-full bg-[#C8A45E]" />
         </Link>
 
         {/* Desktop Links with .roll effect */}
-        <div className="hidden lg:flex items-center gap-6">
+        <div className="hidden lg:flex items-center gap-5 xl:gap-6 whitespace-nowrap">
           {NAV_LINKS.map((link) => (
             <div
               key={link.href}
@@ -121,7 +121,7 @@ export function GlassNav() {
             >
               <Link
                 href={link.href}
-                className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans block cursor-pointer"
+                className="group text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans block cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">{link.label}</span>
@@ -132,10 +132,10 @@ export function GlassNav() {
           ))}
 
           {session ? (
-            <>
+            <div className="flex items-center gap-3 pl-3 border-l border-stone-300/80">
               <Link
                 href="/dashboard"
-                className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
+                className="group text-[11px] xl:text-xs font-semibold text-[#073D31] hover:text-[#032A23] transition-colors uppercase tracking-wider font-sans cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">Dashboard</span>
@@ -144,18 +144,18 @@ export function GlassNav() {
               </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
+                className="group text-[11px] xl:text-xs font-semibold text-stone-400 hover:text-rose-600 transition-colors uppercase tracking-wider font-sans cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">Logout</span>
                   <span className="roll__b" aria-hidden="true">Logout</span>
                 </span>
               </button>
-            </>
+            </div>
           ) : (
             <Link
               href="/login"
-              className="group text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
+              className="group text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer pl-3 border-l border-stone-300/80"
             >
               <span className="roll">
                 <span className="roll__a">Login</span>
@@ -166,15 +166,12 @@ export function GlassNav() {
         </div>
 
         {/* Primary CTA */}
-        <div className="hidden lg:block">
+        <div className="hidden lg:flex items-center shrink-0 ml-3">
           <Link
             href="/templates"
-            className="group px-5 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105 flex items-center gap-1.5 cursor-pointer"
+            className="group whitespace-nowrap px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] xl:text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105 flex items-center gap-1.5 cursor-pointer"
           >
-            <span className="roll">
-              <span className="roll__a">Create Invitation</span>
-              <span className="roll__b" aria-hidden="true">Create Invitation</span>
-            </span>
+            <span>Create Invitation</span>
             <ArrowRight size={13} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>

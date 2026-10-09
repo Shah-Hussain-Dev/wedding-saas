@@ -925,7 +925,7 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
               We look forward to celebrating our sacred union in your divine presence.
             </p>
             <div className="mt-8 text-[9px] text-stone-500 uppercase tracking-widest">
-              UnfoldWed • Royal Wedding Experience
+              WedInvites • wedinvites.in
             </div>
           </footer>
         </main>

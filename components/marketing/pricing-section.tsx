@@ -147,7 +147,7 @@ export function PricingSection() {
             <PricingCard
               headerLabel="Classic"
               headerAccent="text-stone-400"
-              title="Unfold Classic"
+              title="WedInvites Classic"
               description="Elegant animated invitations."
               price="₹1,199"
               features={CLASSIC_FEATURES}
@@ -169,7 +169,7 @@ export function PricingSection() {
               featured
               headerLabel="Royal · Premium"
               headerAccent="text-accent-gold"
-              title="Unfold Royal"
+              title="WedInvites Royal"
               description="Cinematic luxury motion experiences."
               price="₹1,499"
               features={ROYAL_FEATURES}

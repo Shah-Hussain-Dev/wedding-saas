@@ -1370,7 +1370,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           </p>
 
           <p className="noor-footer-credits">
-            Crafted with love on Unfold Digital Invitations
+            Crafted with love on WedInvites • wedinvites.in
           </p>
         </div>
       </footer>

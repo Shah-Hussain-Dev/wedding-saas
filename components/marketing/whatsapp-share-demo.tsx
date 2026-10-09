@@ -133,7 +133,7 @@ function InvitePreviewCard({ time }: { time: string }) {
           <p className="text-[11px] font-semibold leading-tight text-stone-900">
             Priya &amp; Arjun, Wedding
           </p>
-          <p className="mt-0.5 text-[10px] text-stone-500">unfoldwed.com/priya-arjun</p>
+          <p className="mt-0.5 text-[10px] text-stone-500">wedinvites.in/priya-arjun</p>
         </div>
       </div>
       <div className="flex justify-end px-1.5 pb-0.5 pt-1">
@@ -299,7 +299,7 @@ export function WhatsappShareDemo() {
 
                 {reached("brand-msg") && (
                   <ChatBubble key="brand" align="right" time="10:44" read>
-                    Made by <span className="font-semibold lowercase">unfold</span> ✨
+                    Made by <span className="font-semibold">wedinvites.in</span> ✨
                   </ChatBubble>
                 )}
               </AnimatePresence>

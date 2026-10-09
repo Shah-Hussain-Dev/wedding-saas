@@ -222,7 +222,7 @@ export function HowItWorksSection() {
                     </div>
                   </div>
                 </div>
-                <span className="text-[7px] font-mono tracking-widest text-accent-gold/60 relative z-10">UNFOLD</span>
+                <span className="text-[7px] font-mono tracking-widest text-accent-gold/60 relative z-10">WEDINVITES</span>
               </div>
             </div>
             <div className="absolute -inset-4 bg-gradient-to-tr from-accent-gold/10 to-transparent rounded-[3rem] blur-2xl -z-10" />

@@ -361,7 +361,7 @@ export function InvitationEditor({ initialData, invitationId, initialTemplateId 
               <label className="block text-xs font-semibold uppercase text-stone-500">Invitation URL Slug</label>
               <div className="flex rounded-xl overflow-hidden border border-stone-200">
                 <span className="bg-stone-100 px-4 py-3 text-xs text-stone-400 select-none flex items-center font-mono">
-                  unfoldwed.com/
+                  wedinvites.in/
                 </span>
                 <input
                   type="text"

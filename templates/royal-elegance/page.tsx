@@ -906,7 +906,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
               We warmly await the honor of your presence at our wedding festivities.
             </p>
             <div className="mt-8 text-[9px] text-stone-500 uppercase tracking-widest">
-              UnfoldWed • Royal Heritage Experience
+              WedInvites • wedinvites.in
             </div>
           </footer>
         </main>

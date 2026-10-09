@@ -70,7 +70,7 @@ export const authOptions: AuthOptions = {
                 pass: process.env.SMTP_PASSWORD || "",
               },
             },
-            from: process.env.EMAIL_FROM || "noreply@unfoldwed.com",
+            from: process.env.EMAIL_FROM || "noreply@wedinvites.in",
             sendVerificationRequest,
           }),
         ]

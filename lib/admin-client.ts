@@ -8,8 +8,9 @@ export function getAdminEmails(): string[] {
     .filter(Boolean);
 
   const defaultAdmins = [
+    "admin@wedinvites.in",
+    "host@wedinvites.in",
     "admin@unfoldwed.com",
-    "host@unfoldwed.com",
   ];
 
   return Array.from(new Set([...defaultAdmins, ...parsed]));

@@ -90,12 +90,12 @@ export function PremiumFooter() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 text-xs font-sans">
           {/* Brand Col (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="font-serif text-2xl font-bold text-white lowercase tracking-tight inline-flex items-center gap-1.5 cursor-pointer">
-              <span>unfold</span>
+            <Link href="/" className="font-serif text-2xl font-bold text-white tracking-tight inline-flex items-center gap-1.5 cursor-pointer">
+              <span>wedinvites</span>
               <span className="w-2 h-2 rounded-full bg-[#C8A45E]" />
             </Link>
             <p className="text-xs text-stone-300 leading-relaxed max-w-sm">
-              The premier interactive digital wedding invitation platform. Replacing static cards with living 3D experiences, orchestral soundscapes, and real-time RSVP portals.
+              The premier interactive digital wedding invitation platform. Replacing static cards with living 3D experiences, orchestral soundscapes, and real-time RSVP portals on wedinvites.in.
             </p>
 
             {/* Newsletter VIP Box */}
@@ -230,7 +230,7 @@ export function PremiumFooter() {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-400 font-sans">
-          <span>© {new Date().getFullYear()} Unfold Wedding Technologies. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} WedInvites Technologies (wedinvites.in). All rights reserved.</span>
           <span className="flex items-center gap-1.5 text-stone-300">
             <span>Crafted with</span>
             <Heart size={13} weight="fill" className="text-rose-400" />

@@ -907,7 +907,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
               We look forward to celebrating our sacred journey with you.
             </p>
             <div className="mt-8 text-[9px] text-stone-400 uppercase tracking-widest">
-              UnfoldWed • Modern Wedding Experience
+              WedInvites • wedinvites.in
             </div>
           </footer>
         </main>

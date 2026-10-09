@@ -187,7 +187,7 @@ export function RazorpayCheckoutButton({
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency || "INR",
-        name: "Unfold Wedding Invitation",
+        name: "WedInvites Digital Invitation",
         description: `Permanent Live Link & RSVPs for ${brideName} & ${groomName}`,
         order_id: orderData.orderId,
         prefill: {

@@ -565,7 +565,7 @@ export function InvitationCustomizerWizard({
                 </div>
                 <div className="flex rounded-xl overflow-hidden border border-stone-200 bg-stone-50/50 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20">
                   <span className="bg-stone-100 px-3.5 py-3 text-xs text-stone-500 select-none flex items-center font-mono border-r border-stone-200">
-                    unfoldwed.com/
+                    wedinvites.in/
                   </span>
                   <input
                     type="text"
@@ -996,7 +996,7 @@ export function InvitationCustomizerWizard({
                 <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Couple</span>
                   <span className="font-serif text-lg font-bold text-stone-900 block">{brideName} & {groomName}</span>
-                  <span className="text-xs font-mono text-amber-700">unfoldwed.com/{slug}</span>
+                  <span className="text-xs font-mono text-amber-700">wedinvites.in/{slug}</span>
                 </div>
 
                 <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80">
