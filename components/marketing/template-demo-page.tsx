@@ -190,28 +190,49 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                   </Link>
                 </div>
 
-                {/* Plan cards */}
-                <div className="space-y-4">
-                  <PlanCard
-                    icon={Flower}
-                    label="Classic"
-                    subtitle="Template personalized to your style"
-                    price={dynamicPriceFormatted}
-                    priceNote="one-time"
-                    href={`/customize/${normalizedId}?plan=classic`}
-                    cta="Customize Classic"
-                  />
-                  <PlanCard
-                    icon={Crown}
-                    label="Royal"
-                    subtitle="Full cinematic motion experience"
-                    price={royalPriceFormatted}
-                    priceNote="one-time"
-                    badge="More personalized"
-                    highlighted
-                    href={`/customize/${normalizedId}?plan=royal`}
-                    cta="Customize Royal"
-                  />
+                {/* Single All-Inclusive Admin Updated Price Card */}
+                <div className="rounded-2xl border border-accent-gold/35 bg-gradient-to-br from-[#FCFAF6] via-white to-accent-gold-light/20 p-5 sm:p-6 shadow-sm hover:shadow-md transition-all">
+                  <div className="flex items-start justify-between gap-4 mb-4">
+                    <div className="flex items-start gap-3">
+                      <div className="h-11 w-11 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 border border-primary/15">
+                        <Crown size={22} weight="fill" className="text-[#073D31]" />
+                      </div>
+                      <div>
+                        <span className="text-[9px] uppercase tracking-wider font-bold text-accent-gold block mb-0.5">
+                          Complete Digital Invitation
+                        </span>
+                        <h3 className="font-serif text-xl font-bold text-[#1A1A1A]">{meta.name}</h3>
+                        <p className="text-xs text-stone-500 mt-0.5">Full animated motion, RSVP, music &amp; map</p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <span className="font-serif text-2xl sm:text-3xl font-bold text-[#073D31] block">
+                        {dynamicPriceFormatted}
+                      </span>
+                      <span className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">
+                        One-Time Payment
+                      </span>
+                    </div>
+                  </div>
+
+                  <Link href={`/customize/${normalizedId}`} className="block">
+                    <PremiumButton className="w-full justify-center !py-3 text-sm font-semibold shadow-md hover:scale-[1.01] active:scale-[0.99]">
+                      <span>Customize This Design</span>
+                      <ArrowUpRight size={15} weight="bold" />
+                    </PremiumButton>
+                  </Link>
+
+                  <div className="mt-4 pt-3.5 border-t border-black/5 flex flex-wrap items-center justify-between gap-2 text-[11px] text-stone-500 font-sans">
+                    <span className="flex items-center gap-1">
+                      <Check size={13} weight="bold" className="text-emerald-600" /> Unlimited Guests
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Check size={13} weight="bold" className="text-emerald-600" /> WhatsApp Ready
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Check size={13} weight="bold" className="text-emerald-600" /> Instant Digital Delivery
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 mt-6">
