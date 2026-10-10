@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
-import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus } from "@phosphor-icons/react";
+import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus, CaretDown } from "@phosphor-icons/react";
 import { siteConfig } from "@/config/site";
 
 const NAV_LINKS = [
@@ -168,11 +168,11 @@ export function GlassNav() {
                 </span>
               </button>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Right Actions: Login + Create Invitation */}
-        <div className="hidden lg:flex items-center gap-2.5 shrink-0 ml-4">
+        <div className="relative z-10 hidden lg:flex items-center gap-2.5 shrink-0 ml-4">
           {!session && (
             <Link
               href="/login"
@@ -182,8 +182,7 @@ export function GlassNav() {
             </Link>
           )}
 
-        {/* Primary CTA */}
-        <div className="relative z-10 hidden lg:flex items-center shrink-0 ml-3">
+          {/* Primary CTA */}
           <Link
             href="/templates"
             className="group whitespace-nowrap px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] xl:text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-[0_4px_16px_rgba(7,61,49,0.22),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_8px_24px_rgba(7,61,49,0.32),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer border border-[#073D31]/20"
