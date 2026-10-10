@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
-import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus } from "@phosphor-icons/react";
+import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus, Heart, CaretDown } from "@phosphor-icons/react";
 
 const NAV_LINKS = [
-  { href: "/templates", label: "Templates", hasMega: true },
+  { href: "/templates", label: "Templates", hasMega: true, hasCaret: true },
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/#lookbook", label: "Lookbook" },
@@ -99,16 +99,19 @@ export function GlassNav() {
         } ${
           scrolled
             ? "bg-[#FCFAF6]/95 border-[#073D31]/15 shadow-[0_15px_35px_rgba(7,61,49,0.12)] py-2 sm:py-2.5"
-            : "bg-[#FCFAF6]/85 border-[#073D31]/10"
+            : "bg-[#FCFAF6]/90 border-[#073D31]/12"
         }`}
       >
-        {/* Brand Monogram */}
+        {/* Brand Monogram with Golden Heart */}
         <Link
           href="/"
-          className="font-serif text-xl sm:text-2xl font-bold text-[#073D31] tracking-tight flex items-center gap-1.5 cursor-pointer shrink-0 mr-4"
+          className="font-serif text-2xl sm:text-[26px] font-bold text-[#073D31] tracking-tight flex items-center cursor-pointer shrink-0 mr-4 group select-none"
         >
-          <span>wedinvites</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#C8A45E]" />
+          <span>wed</span>
+          <span className="inline-flex items-center justify-center mx-[1.5px] text-[#C8A45E] -translate-y-[2px] transition-transform duration-300 group-hover:scale-125">
+            <Heart size={14} weight="fill" className="text-[#C8A45E] fill-[#C8A45E]" />
+          </span>
+          <span>invites</span>
         </Link>
 
         {/* Desktop Links with .roll effect */}
@@ -121,17 +124,20 @@ export function GlassNav() {
             >
               <Link
                 href={link.href}
-                className="group text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans block cursor-pointer"
+                className="group inline-flex items-center gap-1 text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">{link.label}</span>
                   <span className="roll__b" aria-hidden="true">{link.label}</span>
                 </span>
+                {link.hasCaret && (
+                  <CaretDown size={11} weight="bold" className="text-stone-400 group-hover:text-[#073D31] transition-transform duration-200 group-hover:rotate-180" />
+                )}
               </Link>
             </div>
           ))}
 
-          {session ? (
+          {session && (
             <div className="flex items-center gap-3 pl-3 border-l border-stone-300/80">
               <Link
                 href="/dashboard"
@@ -152,24 +158,23 @@ export function GlassNav() {
                 </span>
               </button>
             </div>
-          ) : (
-            <Link
-              href="/login"
-              className="group text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer pl-3 border-l border-stone-300/80"
-            >
-              <span className="roll">
-                <span className="roll__a">Login</span>
-                <span className="roll__b" aria-hidden="true">Login</span>
-              </span>
-            </Link>
           )}
         </div>
 
-        {/* Primary CTA */}
-        <div className="hidden lg:flex items-center shrink-0 ml-3">
+        {/* Right Actions: Login + Create Invitation */}
+        <div className="hidden lg:flex items-center gap-2.5 shrink-0 ml-4">
+          {!session && (
+            <Link
+              href="/login"
+              className="px-4 py-2 rounded-full border border-stone-300/80 bg-white/70 hover:bg-white text-[#18211E] hover:text-[#073D31] text-[11px] xl:text-xs font-semibold tracking-wider uppercase font-sans transition-all shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer"
+            >
+              Login
+            </Link>
+          )}
+
           <Link
             href="/templates"
-            className="group whitespace-nowrap px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] xl:text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105 flex items-center gap-1.5 cursor-pointer"
+            className="group whitespace-nowrap px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] xl:text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-[0_4px_14px_rgba(7,61,49,0.22)] hover:shadow-[0_6px_20px_rgba(7,61,49,0.32)] hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer"
           >
             <span>Create Invitation</span>
             <ArrowRight size={13} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />

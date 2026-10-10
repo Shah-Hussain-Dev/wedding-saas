@@ -34,6 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} ${cormorantGaramond.variable} light h-full antialiased`}
       style={{ colorScheme: "light" }}
     >
