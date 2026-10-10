@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Sparkle, ShieldCheck, Heart, UsersThree, ArrowRight, Crown, DeviceMobile } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 const VALUES = [
   {
@@ -55,7 +56,7 @@ export function AboutPage() {
 
           <div className="inline-flex items-center gap-2 text-xs font-mono uppercase text-[#C8A45E] tracking-widest font-bold">
             <Crown size={15} weight="fill" />
-            <span>The Unfold Manifesto</span>
+            <span>The {siteConfig.name} Manifesto</span>
           </div>
 
           <h2 className="font-serif text-2xl sm:text-4xl font-bold text-[#073D31] leading-snug">
@@ -67,7 +68,7 @@ export function AboutPage() {
               For generations, wedding stationery was confined to paper cards that took months to print, got delayed in courier transit, and ended up discarded after the wedding day. Static PDF cards lacked the music, emotion, and wonder of the actual ceremony.
             </p>
             <p>
-              At <strong className="text-[#073D31]">Unfold</strong>, we craft interactive digital universes. We blend timeless physical craft — embossed ivory envelopes, 24K gold foil, slow-lighting wax seals — with cutting-edge 3D motion, synchronized orchestral audio, and one-touch WhatsApp guest delivery.
+              At <strong className="text-[#073D31]">{siteConfig.name}</strong>, we craft interactive digital universes. We blend timeless physical craft — embossed ivory envelopes, 24K gold foil, slow-lighting wax seals — with cutting-edge 3D motion, synchronized orchestral audio, and one-touch WhatsApp guest delivery.
             </p>
             <p>
               Whether it is a royal palace waltz, a sacred Bismillah Nikah archway, or a zero-gravity starlight terrace, our masterworks are designed to make your guests feel the magic before the ceremony even begins.

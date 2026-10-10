@@ -8,6 +8,7 @@ import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
 import { Check, Lock, Crown, Sparkle } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 const CLASSIC_FEATURES = [
   "6 Premium Animated Templates",
@@ -147,7 +148,7 @@ export function PricingSection() {
             <PricingCard
               headerLabel="Classic"
               headerAccent="text-stone-400"
-              title="WedInvites Classic"
+              title={`${siteConfig.name} Classic`}
               description="Elegant animated invitations."
               price="₹1,199"
               features={CLASSIC_FEATURES}
@@ -169,7 +170,7 @@ export function PricingSection() {
               featured
               headerLabel="Royal · Premium"
               headerAccent="text-accent-gold"
-              title="WedInvites Royal"
+              title={`${siteConfig.name} Royal`}
               description="Cinematic luxury motion experiences."
               price="₹1,499"
               features={ROYAL_FEATURES}

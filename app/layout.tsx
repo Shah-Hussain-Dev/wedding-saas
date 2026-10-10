@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
 import { SessionProvider } from "@/components/providers/SessionProvider";
 import { LenisProvider } from "@/components/providers/LenisProvider";
+import { siteConfig } from "@/config/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,8 +23,18 @@ const cormorantGaramond = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "WedInvites — Premium Animated Digital Wedding Invitations",
-  description: "Create beautiful, high-interaction, animated wedding invitation webpages with 3D opening reveals, custom background music, and RSVP trackers on wedinvites.in.",
+  title: `${siteConfig.name} — ${siteConfig.tagline}`,
+  description: siteConfig.description,
+  icons: {
+    icon: [
+      { url: siteConfig.assets.icon, type: "image/png" },
+      { url: siteConfig.assets.favicon, sizes: "any" },
+    ],
+    shortcut: siteConfig.assets.icon,
+    apple: [
+      { url: siteConfig.assets.icon },
+    ],
+  },
 };
 
 export default function RootLayout({

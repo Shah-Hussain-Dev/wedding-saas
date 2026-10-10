@@ -2,8 +2,10 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { Sparkle, ArrowRight, Heart, ShieldCheck, WhatsappLogo, EnvelopeSimple, PaperPlaneTilt, CheckCircle } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 export function PremiumFooter() {
   const [email, setEmail] = useState("");
@@ -45,19 +47,19 @@ export function PremiumFooter() {
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold tracking-widest uppercase font-sans transition-all duration-300 shadow-[0_15px_40px_rgba(200,164,94,0.35)] hover:scale-105 active:scale-95 cursor-pointer"
             >
               <span className="roll">
-                <span className="roll__a">Start My Invitation · From ₹1,199</span>
-                <span className="roll__b" aria-hidden="true">Start My Invitation · From ₹1,199</span>
+                <span className="roll__a">Start My Invitation · From {siteConfig.startingPrice}</span>
+                <span className="roll__b" aria-hidden="true">Start My Invitation · From {siteConfig.startingPrice}</span>
               </span>
               <ArrowRight size={15} weight="bold" />
             </Link>
 
-            <Link
-              href="/contact"
+            <a
+              href={`mailto:${siteConfig.email.support}`}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer"
             >
-              <WhatsappLogo size={16} weight="fill" className="text-emerald-400" />
-              <span>Talk to Concierge</span>
-            </Link>
+              <EnvelopeSimple size={16} weight="fill" className="text-[#E1C98E]" />
+              <span>Email Concierge</span>
+            </a>
           </div>
         </div>
 
@@ -90,12 +92,21 @@ export function PremiumFooter() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 text-xs font-sans">
           {/* Brand Col (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <Link href="/" className="font-serif text-2xl font-bold text-white tracking-tight inline-flex items-center gap-1.5 cursor-pointer">
-              <span>wedinvites</span>
-              <span className="w-2 h-2 rounded-full bg-[#C8A45E]" />
+            <Link
+              href="/"
+              className="inline-flex items-center cursor-pointer group"
+              aria-label={`${siteConfig.name} Home`}
+            >
+              <Image
+                src={siteConfig.assets.logoWhite}
+                alt={siteConfig.name}
+                width={170}
+                height={56}
+                className="h-8 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+              />
             </Link>
             <p className="text-xs text-stone-300 leading-relaxed max-w-sm">
-              The premier interactive digital wedding invitation platform. Replacing static cards with living 3D experiences, orchestral soundscapes, and real-time RSVP portals on wedinvites.in.
+              {siteConfig.description}
             </p>
 
             {/* Newsletter VIP Box */}
@@ -130,35 +141,30 @@ export function PremiumFooter() {
             </div>
           </div>
 
-          {/* Masterpieces */}
+          {/* Explore */}
           <div className="space-y-3">
             <span className="text-[10.5px] font-bold uppercase tracking-widest text-[#E1C98E] block">
-              Masterpieces
+              Explore
             </span>
             <ul className="space-y-2 text-stone-300">
               <li>
                 <Link href="/templates" className="hover:text-[#E1C98E] transition-colors">
-                  Showroom Collection
+                  All Invitation Templates
                 </Link>
               </li>
               <li>
-                <Link href="/preview/celestial-rose" className="hover:text-[#E1C98E] transition-colors">
-                  Celestial Rose Dreamscape
+                <Link href="/#how-it-works" className="hover:text-[#E1C98E] transition-colors">
+                  How It Works
                 </Link>
               </li>
               <li>
-                <Link href="/preview/imperial-palace" className="hover:text-[#E1C98E] transition-colors">
-                  Imperial Palace Royale
+                <Link href="/#lookbook" className="hover:text-[#E1C98E] transition-colors">
+                  Lookbook Showcase
                 </Link>
               </li>
               <li>
-                <Link href="/preview/noor-e-nikah" className="hover:text-[#E1C98E] transition-colors">
-                  Noor-e-Nikah Ivory
-                </Link>
-              </li>
-              <li>
-                <Link href="/preview/royal-majesty" className="hover:text-[#E1C98E] transition-colors">
-                  Royal Majesty Château
+                <Link href="/#pricing" className="hover:text-[#E1C98E] transition-colors">
+                  Pricing Plans (₹1,199)
                 </Link>
               </li>
             </ul>
@@ -176,23 +182,18 @@ export function PremiumFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-[#E1C98E] transition-colors">
-                  Pricing Plans (₹1,199)
-                </Link>
-              </li>
-              <li>
                 <Link href="/contact" className="hover:text-[#E1C98E] transition-colors">
                   Concierge Support
                 </Link>
               </li>
               <li>
-                <Link href="/affiliate" className="hover:text-[#E1C98E] transition-colors">
-                  Affiliate Partner Program
+                <Link href="/faq" className="hover:text-[#E1C98E] transition-colors">
+                  FAQ &amp; Help Center
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-[#E1C98E] transition-colors">
-                  Couple Dashboard Login
+                <Link href="/dashboard" className="hover:text-[#E1C98E] transition-colors">
+                  Couple Dashboard
                 </Link>
               </li>
             </ul>
@@ -219,18 +220,13 @@ export function PremiumFooter() {
                   Cancellation &amp; Refund
                 </Link>
               </li>
-              <li>
-                <Link href="/shipping" className="hover:text-[#E1C98E] transition-colors">
-                  Instant Digital Delivery
-                </Link>
-              </li>
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-400 font-sans">
-          <span>© {new Date().getFullYear()} WedInvites Technologies (wedinvites.in). All rights reserved.</span>
+          <span>© {new Date().getFullYear()} {siteConfig.legalName} ({siteConfig.domain}). All rights reserved.</span>
           <span className="flex items-center gap-1.5 text-stone-300">
             <span>Crafted with</span>
             <Heart size={13} weight="fill" className="text-rose-400" />

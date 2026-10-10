@@ -14,7 +14,9 @@ import {
   WhatsappLogo,
   ShieldCheck,
   UserCheck,
+  EnvelopeSimple,
 } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 const PERKS = [
   {
@@ -69,7 +71,7 @@ export default function AffiliatePage() {
           </div>
 
           <h1 className="font-serif text-3.5xl sm:text-5xl md:text-6xl font-medium tracking-tight text-[#18211E] leading-[1.08]">
-            Partner with Unfold. <br className="hidden sm:inline" />
+            Partner with {siteConfig.name}. <br className="hidden sm:inline" />
             <span className="italic text-[#073D31] font-normal underline decoration-[#C8A45E]/50 decoration-1 underline-offset-8">Earn 20% on every celebration</span>.
           </h1>
 
@@ -88,7 +90,7 @@ export default function AffiliatePage() {
                 Interactive Income Calculator
               </span>
               <h2 className="font-serif text-2xl sm:text-4xl font-bold leading-tight">
-                How much can you earn with Unfold?
+                How much can you earn with {siteConfig.name}?
               </h2>
               <p className="text-xs sm:text-sm text-stone-300 font-sans leading-relaxed max-w-md">
                 Slide to estimate your monthly earnings based on client referrals. Every couple you introduce gets priority VIP support.
@@ -188,13 +190,11 @@ export default function AffiliatePage() {
               </p>
               <div className="pt-2">
                 <a
-                  href="https://wa.me/919876543210"
-                  target="_blank"
-                  rel="noreferrer"
+                  href={`mailto:${siteConfig.email.support}`}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold font-sans transition-colors"
                 >
-                  <WhatsappLogo size={16} weight="fill" className="text-emerald-600" />
-                  <span>Chat on WhatsApp</span>
+                  <EnvelopeSimple size={16} weight="fill" className="text-emerald-600" />
+                  <span>Email Partner Concierge</span>
                 </a>
               </div>
             </div>
@@ -273,7 +273,7 @@ export default function AffiliatePage() {
                       required
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="+91 98765 43210"
+                      placeholder="e.g. +91 91234 56789"
                       className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl px-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
                     />
                   </div>

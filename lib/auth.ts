@@ -6,6 +6,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { sendVerificationRequest } from "@/lib/email";
+import { siteConfig } from "@/config/site";
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -70,7 +71,7 @@ export const authOptions: AuthOptions = {
                 pass: process.env.SMTP_PASSWORD || "",
               },
             },
-            from: process.env.EMAIL_FROM || "noreply@wedinvites.in",
+            from: process.env.EMAIL_FROM || siteConfig.email.support,
             sendVerificationRequest,
           }),
         ]

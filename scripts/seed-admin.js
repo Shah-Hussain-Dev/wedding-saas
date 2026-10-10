@@ -15,7 +15,7 @@ async function main() {
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });
 
-  const adminEmail = "admin@unfoldwed.com";
+  const adminEmail = "support@wedinvites.in";
   const adminPassword = "AdminPassword@123";
   const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
@@ -34,7 +34,7 @@ async function main() {
 
   console.log("------------------------------------------");
   console.log("Admin account configured successfully!");
-  console.log("Email:    admin@unfoldwed.com");
+  console.log("Email:    support@wedinvites.in");
   console.log("Password: AdminPassword@123");
   console.log("User ID: ", admin.id);
   console.log("------------------------------------------");

@@ -14,6 +14,7 @@ import {
   Microphone,
   Checks,
 } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 const INVITE_IMAGE =
   "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=400&auto=format&fit=crop";
@@ -133,7 +134,7 @@ function InvitePreviewCard({ time }: { time: string }) {
           <p className="text-[11px] font-semibold leading-tight text-stone-900">
             Priya &amp; Arjun, Wedding
           </p>
-          <p className="mt-0.5 text-[10px] text-stone-500">wedinvites.in/priya-arjun</p>
+          <p className="mt-0.5 text-[10px] text-stone-500">{siteConfig.domain}/priya-arjun</p>
         </div>
       </div>
       <div className="flex justify-end px-1.5 pb-0.5 pt-1">
@@ -299,7 +300,7 @@ export function WhatsappShareDemo() {
 
                 {reached("brand-msg") && (
                   <ChatBubble key="brand" align="right" time="10:44" read>
-                    Made by <span className="font-semibold">wedinvites.in</span> ✨
+                    Made by <span className="font-semibold">{siteConfig.domain}</span> ✨
                   </ChatBubble>
                 )}
               </AnimatePresence>

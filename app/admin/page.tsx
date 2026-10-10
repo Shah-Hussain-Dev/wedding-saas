@@ -13,6 +13,7 @@ import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
 import { AdminOrdersTable } from "@/components/admin/AdminOrdersTable";
 import { AdminRsvpsTable } from "@/components/admin/AdminRsvpsTable";
 import { isUserAdmin } from "@/lib/admin-client";
+import { siteConfig } from "@/config/site";
 import {
   Sparkle,
   Crown,
@@ -156,7 +157,7 @@ export default function AdminDashboardPage() {
         {/* Simple top bar for non-admin screen */}
         <header className="bg-white border-b border-stone-200 px-6 py-3.5 flex items-center justify-between">
           <Link href="/" className="text-xl font-serif text-primary font-bold lowercase">
-            unfold
+            {siteConfig.shortName}
           </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
@@ -181,7 +182,7 @@ export default function AdminDashboardPage() {
 
             <div className="p-3 bg-stone-50 rounded-xl border border-stone-200 text-[11px] text-stone-500 mb-6 text-left space-y-1">
               <span className="font-bold text-stone-700 block">Need Admin Access?</span>
-              <span>Please sign in using your designated administrator credentials (`admin@unfoldwed.com`).</span>
+              <span>Please sign in using your designated administrator credentials (`{siteConfig.email.support}`).</span>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center gap-2">
@@ -216,7 +217,7 @@ export default function AdminDashboardPage() {
         {/* Left: Brand + Admin Pill */}
         <div className="flex items-center gap-3">
           <Link href="/admin" className="text-xl font-serif text-primary lowercase tracking-tight font-bold">
-            unfold
+            {siteConfig.shortName}
           </Link>
           <span className="inline-flex items-center gap-1 bg-stone-900 text-amber-400 text-[10px] font-bold uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-xs">
             <ShieldCheck size={12} weight="fill" className="text-amber-400" />

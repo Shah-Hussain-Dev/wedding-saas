@@ -1,4 +1,5 @@
 // Client-safe Admin helpers with zero server dependencies
+import { siteConfig } from "@/config/site";
 
 export function getAdminEmails(): string[] {
   const envAdmins = process.env.NEXT_PUBLIC_ADMIN_EMAILS || "";
@@ -7,11 +8,7 @@ export function getAdminEmails(): string[] {
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 
-  const defaultAdmins = [
-    "admin@wedinvites.in",
-    "host@wedinvites.in",
-    "admin@unfoldwed.com",
-  ];
+  const defaultAdmins = siteConfig.admin.defaultEmails;
 
   return Array.from(new Set([...defaultAdmins, ...parsed]));
 }

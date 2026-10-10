@@ -20,6 +20,7 @@ import {
   Key,
 } from "@phosphor-icons/react";
 import confetti from "canvas-confetti";
+import { siteConfig } from "@/config/site";
 
 interface RazorpayCheckoutButtonProps {
   invitationId: string;
@@ -187,7 +188,7 @@ export function RazorpayCheckoutButton({
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency || "INR",
-        name: "WedInvites Digital Invitation",
+        name: `${siteConfig.name} Digital Invitation`,
         description: `Permanent Live Link & RSVPs for ${brideName} & ${groomName}`,
         order_id: orderData.orderId,
         prefill: {
@@ -425,7 +426,7 @@ export function RazorpayCheckoutButton({
                   type="tel"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="+91 98765 43210"
+                  placeholder="e.g. +91 91234 56789"
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-stone-250 bg-white text-stone-900 text-xs focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600"
                 />
               </div>

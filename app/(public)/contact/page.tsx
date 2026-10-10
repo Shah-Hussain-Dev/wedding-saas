@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Sparkle, EnvelopeOpen, MapPinLine, ChatCircleText, ArrowRight, CheckCircle } from "@phosphor-icons/react";
+import { Sparkle, EnvelopeOpen, Clock, ShieldCheck, ArrowRight, CheckCircle } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 export function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -39,24 +40,23 @@ export function ContactPage() {
           <div className="lg:col-span-5 space-y-4">
             {[
               {
-                icon: ChatCircleText,
-                label: "WhatsApp Concierge (Fastest)",
-                value: "+91 98765 43210",
-                desc: "Instant live chat with our stationery design team",
-                href: "https://wa.me/919876543210",
-              },
-              {
                 icon: EnvelopeOpen,
                 label: "Email Concierge",
-                value: "hello@unfoldwed.com",
+                value: siteConfig.email.support,
                 desc: "Average response time: under 2 hours",
-                href: "mailto:hello@unfoldwed.com",
+                href: `mailto:${siteConfig.email.support}`,
               },
               {
-                icon: MapPinLine,
-                label: "Design Sanctuary",
-                value: "Cyber Plaza, Hitec City, Hyderabad 500081",
-                desc: "Crafted with love for couples worldwide",
+                icon: Clock,
+                label: "Concierge Availability",
+                value: siteConfig.supportHours,
+                desc: "Dedicated white-glove assistance for wedding hosts",
+              },
+              {
+                icon: ShieldCheck,
+                label: "Digital Service Guarantee",
+                value: "Global Instant Access",
+                desc: "100% cloud-hosted interactive stationery for couples worldwide",
               },
             ].map((item) => (
               <div

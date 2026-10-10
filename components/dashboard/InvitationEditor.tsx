@@ -7,6 +7,7 @@ import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { Sparkle, Trash, Plus, ArrowLeft, Image, MusicNotes } from "@phosphor-icons/react";
 import Link from "next/link";
+import { siteConfig } from "@/config/site";
 
 interface EventItem {
   name: string;
@@ -361,7 +362,7 @@ export function InvitationEditor({ initialData, invitationId, initialTemplateId 
               <label className="block text-xs font-semibold uppercase text-stone-500">Invitation URL Slug</label>
               <div className="flex rounded-xl overflow-hidden border border-stone-200">
                 <span className="bg-stone-100 px-4 py-3 text-xs text-stone-400 select-none flex items-center font-mono">
-                  wedinvites.in/
+                  {siteConfig.domain}/
                 </span>
                 <input
                   type="text"

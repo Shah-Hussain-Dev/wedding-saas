@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { DecorSection, HeaderDecor } from "@/components/decor/section-decor";
 import { SectionHeader } from "@/components/ui/section-header";
 import { fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
+import { siteConfig } from "@/config/site";
 
 const ROWS = [
   { name: "Estimated Cost", paper: "₹5,000 – ₹50,000+", digital: "₹1,199 One-Time", highlight: true },
@@ -20,7 +21,7 @@ export function ComparisonSection() {
   return (
     <DecorSection preset="minimal" className="section-padding bg-white border-y border-black/[0.04]">
       <div className="page-container max-w-4xl">
-        <SectionHeader eyebrow="Why go digital?" title="Paper vs WedInvites digital" />
+        <SectionHeader eyebrow="Why go digital?" title={`Paper vs ${siteConfig.name} digital`} />
         <HeaderDecor preset="minimal" />
 
         <motion.div
@@ -36,7 +37,7 @@ export function ComparisonSection() {
                 <tr className="border-b border-stone-100 bg-[#FCFBF7] text-xs uppercase tracking-wider font-bold text-stone-400">
                   <th className="py-3.5 px-5">Feature</th>
                   <th className="py-3.5 px-5">Paper</th>
-                  <th className="py-3.5 px-5 text-accent-gold">WedInvites</th>
+                  <th className="py-3.5 px-5 text-accent-gold">{siteConfig.name}</th>
                 </tr>
               </thead>
               <tbody className="text-sm text-stone-600 divide-y divide-stone-50">
