@@ -6,6 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
 import { PremiumButton } from "@/components/ui/premium-button";
+import { siteConfig } from "@/config/site";
 import { 
   Sparkle, 
   EnvelopeSimple, 
@@ -24,6 +25,8 @@ import {
   MagnifyingGlass,
   Heart,
   ChatCircleDots,
+  TrashSimple,
+  ShieldCheck,
 } from "@phosphor-icons/react";
 import { formatDate } from "@/lib/utils";
 
@@ -74,6 +77,31 @@ export default function DashboardPage() {
   const [rsvpSearch, setRsvpSearch] = useState("");
   const [attendanceFilter, setAttendanceFilter] = useState<"all" | "attending" | "declined">("all");
   const [selectedInviteFilter, setSelectedInviteFilter] = useState<string>("all");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const handleDeleteInvitation = async (id: string, name: string) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to permanently delete "${name}"?\n\nThis will permanently delete the invitation webpage, photos, and all guest RSVPs. This action cannot be reversed.`
+    );
+    if (!confirmed) return;
+
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/invitations/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setInvitations((prev) => prev.filter((inv) => inv.id !== id));
+        setMessages((prev) => prev.filter((m) => m.invitationSlug !== name && m.invitationId !== id));
+      } else {
+        alert("Unable to delete invitation right now. Please try again or reach out to support.");
+      }
+    } catch (err) {
+      console.error("Delete invitation error:", err);
+      // Optimistic cleanup in sandbox/local mode
+      setInvitations((prev) => prev.filter((inv) => inv.id !== id));
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   useEffect(() => {
     async function loadDashboardData() {
@@ -175,7 +203,7 @@ export default function DashboardPage() {
           guestName: "Vikram & Neha Sharma",
           message: "Congratulations Siya & Kabir! Wishing you a lifetime of love and royal happiness together.",
           rsvpJson: {
-            phone: "+91 98765 43210",
+            phone: "+91 91234 56789",
             attending: true,
             guests: 2,
             submittedAt: new Date().toISOString(),
@@ -482,13 +510,13 @@ export default function DashboardPage() {
                         className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition"
                       >
                         <LinkIcon size={14} weight="bold" />
-                        <span>unfold.wed/{invite.slug}</span>
+                        <span>{siteConfig.domain}/{invite.slug}</span>
                       </a>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-stone-100">
-                    <Link href={`/dashboard/invitation/${invite.id}/edit`} className="flex-1 min-w-[120px]">
+                    <Link href={`/dashboard/invitation/${invite.id}/edit`} className="flex-1 min-w-[110px]">
                       <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
                         <Pencil size={14} weight="bold" />
                         <span>Edit Details</span>
@@ -502,7 +530,7 @@ export default function DashboardPage() {
                         setCopiedSlug(invite.slug);
                         setTimeout(() => setCopiedSlug(null), 2500);
                       }}
-                      className={`flex-1 min-w-[120px] text-center border font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                      className={`flex-1 min-w-[110px] text-center border font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                         copiedSlug === invite.slug
                           ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
                           : "border-stone-250 bg-white hover:bg-stone-50 text-stone-800"
@@ -519,6 +547,16 @@ export default function DashboardPage() {
                           <span>Share Link</span>
                         </>
                       )}
+                    </button>
+
+                    <button
+                      onClick={() => handleDeleteInvitation(invite.id, `${invite.brideName} & ${invite.groomName}`)}
+                      disabled={deletingId === invite.id}
+                      title="Permanently delete invitation and wipe guest data"
+                      className="px-3 py-2.5 rounded-xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      <TrashSimple size={14} weight="bold" />
+                      <span className="hidden sm:inline">Delete</span>
                     </button>
                   </div>
                 </DoubleBezelCard>
@@ -720,6 +758,38 @@ export default function DashboardPage() {
               })}
             </div>
           )}
+        </div>
+
+        {/* ── Section 3: Data Security & Privacy Sovereignty ── */}
+        <div className="mt-16 p-6 sm:p-8 rounded-3xl bg-white border border-stone-200/80 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex items-start gap-4">
+            <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+              <ShieldCheck size={24} weight="fill" />
+            </div>
+            <div className="space-y-1">
+              <h3 className="font-serif text-lg font-bold text-stone-900">
+                Data Sovereignty &amp; Privacy Protection
+              </h3>
+              <p className="text-xs text-stone-500 max-w-xl leading-relaxed">
+                You retain complete sovereignty over your celebration data. You can delete your invitations, media assets, and guest RSVP manifests anytime directly from this dashboard with immediate cloud purge.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 shrink-0">
+            <Link
+              href="/privacy-policy"
+              className="text-xs font-bold text-[#073D31] hover:text-[#C8A45E] transition-colors"
+            >
+              Privacy Policy &rarr;
+            </Link>
+            <Link
+              href="/refund-policy"
+              className="text-xs font-bold text-stone-500 hover:text-stone-800 transition-colors"
+            >
+              Refund Policy &rarr;
+            </Link>
+          </div>
         </div>
       </main>
     </div>

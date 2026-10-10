@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { siteConfig } from "@/config/site";
 
 interface SendEmailParams {
   to: string | string[];
@@ -31,10 +32,10 @@ export const getTransporter = () => {
 
 export async function sendEmail({ to, subject, html, text }: SendEmailParams) {
   const transporter = getTransporter();
-  const from = process.env.EMAIL_FROM || "noreply@wedinvites.in";
+  const from = process.env.EMAIL_FROM || siteConfig.email.support;
 
   const emailPayload = {
-    from: `"WedInvites" <${from}>`,
+    from: `"${siteConfig.name}" <${from}>`,
     to: Array.isArray(to) ? to.join(", ") : to,
     subject,
     html,
@@ -68,15 +69,15 @@ export async function sendVerificationRequest({
   url: string;
   provider: { from: string };
 }) {
-  const subject = `Sign in to WedInvites`;
+  const subject = `Sign in to ${siteConfig.name}`;
   
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px; color: #111; background-color: #faf9f6;">
-      <h2 style="font-size: 24px; font-weight: 600; letter-spacing: -0.02em; color: #082F27; margin-bottom: 24px;">wedinvites</h2>
+      <h2 style="font-size: 24px; font-weight: 600; letter-spacing: -0.02em; color: #082F27; margin-bottom: 24px;">${siteConfig.shortName}</h2>
       <p style="font-size: 16px; line-height: 1.5; margin-bottom: 32px;">Click the button below to sign in to your dashboard. This login link will expire in 24 hours.</p>
       
       <a href="${url}" target="_blank" style="display: inline-block; background-color: #082F27; color: #fff; text-decoration: none; padding: 12px 28px; border-radius: 9999px; font-size: 14px; font-weight: 500; margin-bottom: 32px;">
-        Sign In to WedInvites
+        Sign In to ${siteConfig.name}
       </a>
       
       <p style="font-size: 14px; color: #666; line-height: 1.5;">If the button above does not work, copy and paste this URL into your browser:</p>

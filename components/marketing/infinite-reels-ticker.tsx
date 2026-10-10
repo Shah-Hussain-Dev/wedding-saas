@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Play, ArrowUpRight, InstagramLogo } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 interface ReelItem {
   id: string;
@@ -74,15 +75,15 @@ export function InfiniteReelsTicker() {
         </div>
 
         <Link
-          href="https://instagram.com"
+          href={siteConfig.social.instagram}
           target="_blank"
           rel="noopener noreferrer"
           className="group inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#073D31] uppercase tracking-wider font-sans hover:text-[#C8A45E] transition-colors shrink-0"
         >
           <InstagramLogo size={16} weight="bold" />
           <span className="roll">
-            <span className="roll__a">Follow @wedinvites.in</span>
-            <span className="roll__b" aria-hidden="true">Follow @wedinvites.in</span>
+            <span className="roll__a">Follow {siteConfig.social.instagramHandle}</span>
+            <span className="roll__b" aria-hidden="true">Follow {siteConfig.social.instagramHandle}</span>
           </span>
           <ArrowUpRight size={14} weight="bold" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>

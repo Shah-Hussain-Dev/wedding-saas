@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
 import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
 
 const NAV_LINKS = [
   { href: "/templates", label: "Templates", hasMega: true },
@@ -94,25 +96,36 @@ export function GlassNav() {
         }}
         transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
         onMouseLeave={() => setMegaOpen(false)}
-        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full border px-5 sm:px-7 py-2.5 sm:py-3 backdrop-blur-xl transition-all duration-300 flex items-center justify-between shadow-[0_10px_30px_rgba(7,61,49,0.06)] ${
+        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full px-5 sm:px-7 py-2.5 sm:py-3 transition-all duration-300 flex items-center justify-between ${
           hidden ? "pointer-events-none" : "pointer-events-auto"
         } ${
           scrolled
-            ? "bg-[#FCFAF6]/95 border-[#073D31]/15 shadow-[0_15px_35px_rgba(7,61,49,0.12)] py-2 sm:py-2.5"
-            : "bg-[#FCFAF6]/85 border-[#073D31]/10"
+            ? "glass-nav-shell-scrolled py-2 sm:py-2.5"
+            : "glass-nav-shell"
         }`}
       >
-        {/* Brand Monogram */}
+        {/* Specular glass reflection & highlight beam */}
+        <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-85" />
+        <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-b from-white/35 via-transparent to-transparent opacity-60" />
+
+        {/* Brand Logo */}
         <Link
           href="/"
-          className="font-serif text-xl sm:text-2xl font-bold text-[#073D31] tracking-tight flex items-center gap-1.5 cursor-pointer shrink-0 mr-4"
+          className="relative z-10 flex items-center cursor-pointer shrink-0 mr-3 sm:mr-4 group"
+          aria-label={`${siteConfig.name} Home`}
         >
-          <span>wedinvites</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#C8A45E]" />
+          <Image
+            src={siteConfig.assets.logo}
+            alt={siteConfig.name}
+            width={160}
+            height={53}
+            priority
+            className="h-8 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+          />
         </Link>
 
-        {/* Desktop Links with .roll effect */}
-        <div className="hidden lg:flex items-center gap-5 xl:gap-6 whitespace-nowrap">
+        {/* Desktop Links with frosted hover pills & .roll effect */}
+        <div className="relative z-10 hidden lg:flex items-center gap-1.5 xl:gap-2 whitespace-nowrap">
           {NAV_LINKS.map((link) => (
             <div
               key={link.href}
@@ -121,7 +134,7 @@ export function GlassNav() {
             >
               <Link
                 href={link.href}
-                className="group text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans block cursor-pointer"
+                className="group relative px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold text-stone-700 hover:text-[#073D31] hover:bg-white/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all uppercase tracking-wider font-sans block cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">{link.label}</span>
@@ -132,10 +145,10 @@ export function GlassNav() {
           ))}
 
           {session ? (
-            <div className="flex items-center gap-3 pl-3 border-l border-stone-300/80">
+            <div className="flex items-center gap-2 pl-3 border-l border-[#073D31]/12">
               <Link
                 href="/dashboard"
-                className="group text-[11px] xl:text-xs font-semibold text-[#073D31] hover:text-[#032A23] transition-colors uppercase tracking-wider font-sans cursor-pointer"
+                className="group px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold text-[#073D31] hover:bg-white/60 hover:text-[#032A23] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all uppercase tracking-wider font-sans cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">Dashboard</span>
@@ -144,7 +157,7 @@ export function GlassNav() {
               </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/login" })}
-                className="group text-[11px] xl:text-xs font-semibold text-stone-400 hover:text-rose-600 transition-colors uppercase tracking-wider font-sans cursor-pointer"
+                className="group px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold text-stone-500 hover:text-rose-600 hover:bg-rose-50/60 transition-all uppercase tracking-wider font-sans cursor-pointer"
               >
                 <span className="roll">
                   <span className="roll__a">Logout</span>
@@ -155,7 +168,7 @@ export function GlassNav() {
           ) : (
             <Link
               href="/login"
-              className="group text-[11px] xl:text-xs font-semibold text-stone-600 hover:text-[#073D31] transition-colors uppercase tracking-wider font-sans cursor-pointer pl-3 border-l border-stone-300/80"
+              className="group px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold text-stone-700 hover:text-[#073D31] hover:bg-white/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all uppercase tracking-wider font-sans cursor-pointer pl-3 border-l border-[#073D31]/12"
             >
               <span className="roll">
                 <span className="roll__a">Login</span>
@@ -166,10 +179,10 @@ export function GlassNav() {
         </div>
 
         {/* Primary CTA */}
-        <div className="hidden lg:flex items-center shrink-0 ml-3">
+        <div className="relative z-10 hidden lg:flex items-center shrink-0 ml-3">
           <Link
             href="/templates"
-            className="group whitespace-nowrap px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] xl:text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-xs hover:shadow-md hover:scale-105 flex items-center gap-1.5 cursor-pointer"
+            className="group whitespace-nowrap px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] xl:text-xs font-bold font-sans uppercase tracking-wider transition-all shadow-[0_4px_16px_rgba(7,61,49,0.22),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_8px_24px_rgba(7,61,49,0.32),inset_0_1px_1px_rgba(255,255,255,0.4)] hover:scale-105 active:scale-95 flex items-center gap-1.5 cursor-pointer border border-[#073D31]/20"
           >
             <span>Create Invitation</span>
             <ArrowRight size={13} weight="bold" className="group-hover:translate-x-0.5 transition-transform" />
@@ -179,7 +192,7 @@ export function GlassNav() {
         {/* Mobile Hamburger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden w-11 h-11 flex items-center justify-center text-[#073D31] rounded-full hover:bg-black/5 active:scale-95 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#073D31]"
+          className="relative z-10 lg:hidden w-11 h-11 flex items-center justify-center text-[#073D31] rounded-full hover:bg-white/60 active:scale-95 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#073D31]"
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isOpen}
         >
@@ -196,8 +209,9 @@ export function GlassNav() {
               transition={{ duration: 0.25 }}
               onMouseEnter={() => setMegaOpen(true)}
               onMouseLeave={() => setMegaOpen(false)}
-              className="absolute top-14 left-1/2 -translate-x-1/2 w-[720px] rounded-3xl bg-[#FCFAF6] border border-[#073D31]/15 shadow-2xl p-6 grid grid-cols-3 gap-4"
+              className="absolute top-16 left-1/2 -translate-x-1/2 w-[720px] rounded-3xl glass-nav-drawer p-6 grid grid-cols-3 gap-4"
             >
+              <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-90" />
               {FEATURED_MEGA_TEMPLATES.map((item) => (
                 <Link
                   key={item.id}
@@ -245,7 +259,7 @@ export function GlassNav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-40 bg-black/25 backdrop-blur-md lg:hidden"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
@@ -254,14 +268,17 @@ export function GlassNav() {
               exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
               onClick={(e) => e.stopPropagation()}
-              className="absolute top-18 left-4 right-4 rounded-3xl border border-[#073D31]/15 bg-[#FCFAF6] p-6 shadow-2xl flex flex-col gap-1"
+              className="absolute top-20 left-4 right-4 rounded-3xl glass-nav-drawer p-6 flex flex-col gap-1 overflow-hidden"
             >
+              {/* Specular highlight */}
+              <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-90" />
+
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium py-3 border-b border-[#073D31]/8 text-[#18211E] hover:text-[#073D31] flex items-center justify-between transition-colors"
+                  className="text-base font-medium py-3 px-2 border-b border-[#073D31]/8 text-[#18211E] hover:text-[#073D31] hover:bg-white/40 rounded-xl flex items-center justify-between transition-colors"
                 >
                   <span>{link.label}</span>
                   <ArrowRight size={14} className="text-[#C8A45E]" />
@@ -273,7 +290,7 @@ export function GlassNav() {
                   <Link
                     href="/dashboard"
                     onClick={() => setIsOpen(false)}
-                    className="text-base font-medium py-3 border-b border-[#073D31]/8 text-[#18211E]"
+                    className="text-base font-medium py-3 px-2 border-b border-[#073D31]/8 text-[#18211E] hover:text-[#073D31] hover:bg-white/40 rounded-xl transition-colors"
                   >
                     Dashboard
                   </Link>
@@ -282,7 +299,7 @@ export function GlassNav() {
                       signOut({ callbackUrl: "/login" });
                       setIsOpen(false);
                     }}
-                    className="text-left text-base font-medium py-3 text-rose-600"
+                    className="text-left text-base font-medium py-3 px-2 text-rose-600 hover:bg-rose-50/50 rounded-xl transition-colors"
                   >
                     Logout
                   </button>
@@ -291,7 +308,7 @@ export function GlassNav() {
                 <Link
                   href="/login"
                   onClick={() => setIsOpen(false)}
-                  className="text-base font-medium py-3 text-[#18211E]"
+                  className="text-base font-medium py-3 px-2 text-[#18211E] hover:text-[#073D31] hover:bg-white/40 rounded-xl transition-colors"
                 >
                   Login
                 </Link>
@@ -300,7 +317,7 @@ export function GlassNav() {
               <Link
                 href="/templates"
                 onClick={() => setIsOpen(false)}
-                className="mt-4 w-full py-3.5 rounded-full bg-[#073D31] text-[#F7F4ED] text-xs font-bold uppercase tracking-wider font-sans flex items-center justify-center gap-2 shadow-md"
+                className="mt-4 w-full py-3.5 rounded-full bg-[#073D31] text-[#F7F4ED] text-xs font-bold uppercase tracking-wider font-sans flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(7,61,49,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] active:scale-95 transition-transform"
               >
                 <span>Create Invitation</span>
                 <ArrowRight size={14} weight="bold" />

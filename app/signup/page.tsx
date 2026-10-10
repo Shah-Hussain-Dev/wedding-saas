@@ -187,7 +187,7 @@ export default function SignupPage() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+91 98765 43210"
+                    placeholder="e.g. +91 91234 56789"
                     className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
                   />
                 </div>

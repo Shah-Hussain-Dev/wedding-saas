@@ -8,6 +8,8 @@ import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
 import { EnvelopeSimple, Key, ShieldCheck, Sparkle, ArrowRight } from "@phosphor-icons/react";
+import { siteConfig } from "@/config/site";
+import { isUserAdmin } from "@/lib/admin-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -41,7 +43,7 @@ export default function LoginPage() {
         if (typeof window !== "undefined") {
           localStorage.setItem("unfold_user_email", normalized);
         }
-        if (normalized.includes("admin") || normalized === "admin@unfoldwed.com") {
+        if (isUserAdmin(normalized) || normalized.includes("admin")) {
           router.push("/admin");
         } else {
           router.push("/dashboard");
@@ -277,7 +279,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => {
-                  setEmail("admin@unfoldwed.com");
+                  setEmail(siteConfig.email.support);
                   setPassword("AdminPassword@123");
                   setAuthMode("password");
                   setErrorMessage("");
@@ -285,7 +287,7 @@ export default function LoginPage() {
                 className="text-[11px] text-[#073D31] font-bold bg-[#073D31]/8 border border-[#073D31]/15 rounded-xl py-2 px-3 hover:bg-[#073D31]/12 transition flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
-                <span>Auto-fill Demo Credentials (admin@unfoldwed.com)</span>
+                <span>Auto-fill Demo Credentials ({siteConfig.email.support})</span>
               </button>
 
               <button

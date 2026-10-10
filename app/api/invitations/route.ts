@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateUniqueSlug } from "@/lib/slug";
+import { siteConfig } from "@/config/site";
 
 export async function GET(req: NextRequest) {
   try {
@@ -78,7 +79,7 @@ export async function POST(req: NextRequest) {
       userEmail,
     } = body;
 
-    const targetEmail = (userEmail || email || "host@unfoldwed.com").toLowerCase().trim();
+    const targetEmail = (userEmail || email || siteConfig.email.support).toLowerCase().trim();
 
     // Generate collision-free unique slug
     const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`);
