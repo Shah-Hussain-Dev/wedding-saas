@@ -280,12 +280,21 @@ export function HeroExperience() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [nextTemplate, prevTemplate, isPreviewOpen]);
 
-  // Mobile swipe gesture with elastic velocity threshold
+  const isDraggingRef = useRef(false);
+
+  // Swipe gesture with elastic velocity threshold (mobile touch & desktop swipe)
+  const handlePanStart = () => {
+    isDraggingRef.current = true;
+  };
+
   const handlePanEnd = (
     _event: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo
   ) => {
-    if (!isMobile) return;
+    setTimeout(() => {
+      isDraggingRef.current = false;
+    }, 100);
+
     if (info.offset.x < -30 || info.velocity.x < -180) {
       nextTemplate();
     } else if (info.offset.x > 30 || info.velocity.x > 180) {
@@ -512,8 +521,9 @@ export function HeroExperience() {
                 rotateX: isMobile || prefersReducedMotion ? 0 : stageTiltX,
                 rotateY: isMobile || prefersReducedMotion ? 0 : stageTiltY,
               }}
-              onPanEnd={isMobile ? handlePanEnd : undefined}
-              className="relative w-full h-[410px] sm:h-[480px] md:h-[530px] lg:h-[570px] xl:h-[600px] flex items-center justify-center [perspective:1400px] select-none touch-pan-y"
+              onPanStart={handlePanStart}
+              onPanEnd={handlePanEnd}
+              className="relative w-full h-[410px] sm:h-[480px] md:h-[530px] lg:h-[570px] xl:h-[600px] flex items-center justify-center [perspective:1400px] select-none touch-pan-y cursor-grab active:cursor-grabbing"
             >
               {/* Staggered 3D Device Cluster (Left Peek + Monumental Center Frame + Right Peek) */}
               <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
@@ -587,6 +597,7 @@ export function HeroExperience() {
                         mass: 0.8,
                       }}
                       onClick={() => {
+                        if (isDraggingRef.current) return;
                         if (isLeft1) prevTemplate();
                         else if (isRight1) nextTemplate();
                       }}
