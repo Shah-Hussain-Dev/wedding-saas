@@ -32,17 +32,17 @@ export function HeroSection() {
 
           <motion.h1
             variants={fadeUp}
-            className="font-serif text-[2.2rem] sm:text-4xl md:text-5xl lg:text-[3.6rem] font-normal tracking-tight leading-[1.1] text-[#1A1A1A] mb-4"
+            className="font-serif text-[1.85rem] sm:text-3xl md:text-4xl lg:text-[2.9rem] font-medium tracking-tight leading-[1.12] text-[#1A1A1A] mb-4"
           >
-            Your wedding story, cinematically{" "}
-            <span className="italic text-accent-gold">unfolded</span>.
+            <span className="block whitespace-nowrap">Turn Your Special Day</span>
+            <span className="block whitespace-nowrap">Into a <span className="italic font-bold text-accent-gold">Magical Experience</span></span>
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
             className="text-sm md:text-base text-stone-600 max-w-lg mx-auto leading-relaxed mb-5"
           >
-            Replace standard paper with premium, animated invitation pages. Open with 3D double-doors, auto-play romantic scores, and track RSVPs in real-time.
+            Choose from premium templates, personalize every detail, and share instantly with your loved ones — all in one place.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mb-2">

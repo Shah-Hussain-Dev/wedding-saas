@@ -10,6 +10,7 @@ import { InteractiveTemplateGrid } from "@/components/marketing/interactive-temp
 import { CinematicFilmCanvas } from "@/components/marketing/cinematic-film-canvas";
 import { InteractiveCustomizerDemo } from "@/components/marketing/interactive-customizer-demo";
 import { InfiniteReelsTicker } from "@/components/marketing/infinite-reels-ticker";
+import { ComparisonSection } from "@/components/marketing/comparison-section";
 import { PricingEditorial } from "@/components/marketing/pricing-editorial";
 import { ValuePropsMinimal } from "@/components/marketing/value-props-minimal";
 import { FaqEditorial } from "@/components/marketing/faq-editorial";
@@ -47,17 +48,20 @@ export default function Home() {
         {/* Scene 7: Infinite Motion Reels Ticker (Live in Guest Hands) */}
         <InfiniteReelsTicker />
 
-        {/* Scene 8: Transparent Luxury Pricing */}
+        {/* Scene 8: The Honest Comparison (Physical Paper Cards vs. WedInvites Digital) */}
+        <ComparisonSection />
+
+        {/* Scene 9: Transparent Luxury Pricing */}
         <PricingEditorial />
 
-        {/* Scene 9: Minimalist Value Props */}
+        {/* Scene 10: Minimalist Value Props */}
         <ValuePropsMinimal />
 
-        {/* Scene 10: Frequently Asked Questions */}
+        {/* Scene 11: Frequently Asked Questions */}
         <FaqEditorial />
       </main>
 
-      {/* Scene 11: Grand Finale Call to Action & Converging Footer */}
+      {/* Scene 12: Grand Finale Call to Action & Converging Footer */}
       <PremiumFooter />
     </div>
   );

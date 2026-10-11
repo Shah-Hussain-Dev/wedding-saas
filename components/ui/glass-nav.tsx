@@ -11,6 +11,7 @@ import { siteConfig } from "@/config/site";
 const NAV_LINKS = [
   { href: "/templates", label: "Templates", hasMega: true, hasCaret: true },
   { href: "/#how-it-works", label: "How It Works" },
+  { href: "/#comparison", label: "Compare" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/#lookbook", label: "Lookbook" },
   { href: "/about", label: "About" },
@@ -66,11 +67,11 @@ export function GlassNav() {
     // Always keep visible when near the top of the page
     if (latest < 40) {
       setHidden(false);
-    } 
+    }
     // User scrolling down significantly -> hide navbar
     else if (diff > 6 && latest > 70) {
       setHidden(true);
-    } 
+    }
     // User scrolling up even a bit -> reveal navbar smoothly
     else if (diff < -5) {
       setHidden(false);
@@ -96,13 +97,11 @@ export function GlassNav() {
         }}
         transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
         onMouseLeave={() => setMegaOpen(false)}
-        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full px-5 sm:px-7 py-2.5 sm:py-3 transition-all duration-300 flex items-center justify-between ${
-          hidden ? "pointer-events-none" : "pointer-events-auto"
-        } ${
-          scrolled
+        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full px-5 sm:px-7 py-2.5 sm:py-3 transition-all duration-300 flex items-center justify-between ${hidden ? "pointer-events-none" : "pointer-events-auto"
+          } ${scrolled
             ? "glass-nav-shell-scrolled py-2 sm:py-2.5"
             : "glass-nav-shell"
-        }`}
+          }`}
       >
         {/* Specular glass reflection & highlight beam */}
         <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-85" />
@@ -134,7 +133,7 @@ export function GlassNav() {
             >
               <Link
                 href={link.href}
-                className="group relative px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold text-stone-700 hover:text-[#073D31] hover:bg-white/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all uppercase tracking-wider font-sans block cursor-pointer"
+                className={`group relative px-3 py-1.5 rounded-full text-[11px] xl:text-xs font-semibold text-stone-700 hover:text-[#073D31] hover:bg-white/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] transition-all uppercase tracking-wider font-sans block cursor-pointer ${link?.hasCaret ? 'flex items-center gap-1' : ''}`}
               >
                 <span className="roll">
                   <span className="roll__a">{link.label}</span>
