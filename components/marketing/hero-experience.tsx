@@ -406,7 +406,7 @@ export function HeroExperience() {
               </span>
             </motion.h1>
 
-            {/* Description Paragraph */}
+            {/* Description Paragraph — High Conversion Contrast Copy */}
             <motion.p
               custom={2}
               initial="hidden"
@@ -414,7 +414,7 @@ export function HeroExperience() {
               variants={fadeUpVariant}
               className="mt-4 sm:mt-5 text-[15px] sm:text-base lg:text-[16.5px] text-[#716A60] font-sans leading-relaxed max-w-[530px] font-normal"
             >
-              Choose from premium templates, personalize every detail, and share instantly with your loved ones — all in one place.
+              Say goodbye to courier delays and ₹40,000 printing bills. Delight your guests with living 3D palace doors, custom music scores, and real-time WhatsApp RSVPs — all for ₹1,199.
             </motion.p>
 
             {/* Dual CTAs — Generously sized pill buttons */}
@@ -423,32 +423,40 @@ export function HeroExperience() {
               initial="hidden"
               animate="visible"
               variants={fadeUpVariant}
-              className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
+              className="mt-6 sm:mt-7 flex flex-col items-start gap-3 w-full sm:w-auto"
             >
-              {/* Primary: Create Your Invitation */}
-              <Link
-                href="/templates"
-                className="group w-full sm:w-auto min-h-[50px] px-8 sm:px-9 py-3.5 rounded-full bg-[#063F35] hover:bg-[#032A23] text-[#F7F4ED] text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-[0_8px_24px_rgba(6,63,53,0.3)] hover:shadow-[0_12px_32px_rgba(6,63,53,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer"
-              >
-                <span>CREATE YOUR INVITATION</span>
-                <ArrowRight
-                  size={14}
-                  weight="bold"
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+              <div className="flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
+                {/* Primary: Create Your Invitation */}
+                <Link
+                  href="/templates"
+                  className="group w-full sm:w-auto min-h-[50px] px-8 sm:px-9 py-3.5 rounded-full bg-[#063F35] hover:bg-[#032A23] text-[#F7F4ED] text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-[0_8px_24px_rgba(6,63,53,0.3)] hover:shadow-[0_12px_32px_rgba(6,63,53,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer"
+                >
+                  <span>CREATE YOUR INVITATION</span>
+                  <ArrowRight
+                    size={14}
+                    weight="bold"
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
 
-              {/* Secondary: Watch Preview Button */}
-              <button
-                type="button"
-                onClick={() => setIsPreviewOpen(true)}
-                className="group w-full sm:w-auto min-h-[50px] px-7 sm:px-8 py-3.5 rounded-full bg-white/95 hover:bg-white text-[#171614] border border-[#E8D8BB] hover:border-[#C49A5A]/70 text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-2xs hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-md"
-              >
-                <span className="w-5.5 h-5.5 rounded-full bg-[#C49A5A] text-white flex items-center justify-center pl-0.5 shadow-2xs">
-                  <Play size={11} weight="fill" />
-                </span>
-                <span>WATCH PREVIEW</span>
-              </button>
+                {/* Secondary: Watch Preview Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsPreviewOpen(true)}
+                  className="group w-full sm:w-auto min-h-[50px] px-7 sm:px-8 py-3.5 rounded-full bg-white/95 hover:bg-white text-[#171614] border border-[#E8D8BB] hover:border-[#C49A5A]/70 text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-2xs hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-md"
+                >
+                  <span className="w-5.5 h-5.5 rounded-full bg-[#C49A5A] text-white flex items-center justify-center pl-0.5 shadow-2xs">
+                    <Play size={11} weight="fill" />
+                  </span>
+                  <span>WATCH PREVIEW</span>
+                </button>
+              </div>
+
+              {/* Friction-Reducer Microcopy (High-Impact Conversion Trigger) */}
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#7A7366] font-sans font-medium">
+                <span className="text-[#C49A5A]">✦</span>
+                <span>Try any template free · Instant WhatsApp delivery · No credit card required</span>
+              </div>
             </motion.div>
 
             {/* 4 Feature Pillars with Icons & Vertical Dividers (Pixel-Matched to Reference) */}
@@ -807,7 +815,7 @@ export function HeroExperience() {
                   “Made our wedding announcement feel so special and personal!”
                 </p>
                 <span className="text-[10.5px] sm:text-[11px] text-[#786F62] font-sans font-medium mt-0.5">
-                  — Real Couple
+                  — Ananya &amp; Kabir, Mumbai
                 </span>
               </div>
             </div>

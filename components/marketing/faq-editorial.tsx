@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkle, CaretDown } from "@phosphor-icons/react";
 
@@ -86,6 +87,29 @@ export function FaqEditorial() {
               </div>
             );
           })}
+        </div>
+
+        {/* Objection-Handling Concierge Card */}
+        <div className="mt-8 p-6 sm:p-7 rounded-2xl bg-white/80 border border-[#073D31]/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left backdrop-blur-md">
+          <div className="flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-full bg-[#073D31]/10 text-[#073D31] flex items-center justify-center shrink-0">
+              <Sparkle size={20} weight="fill" className="text-[#C8A45E]" />
+            </div>
+            <div>
+              <h4 className="font-serif text-base font-bold text-[#18211E]">
+                Have a unique celebration or custom soundscape request?
+              </h4>
+              <p className="text-xs text-[#76766F] font-sans">
+                Our concierge team assists with date adjustments, custom music tracks, and multi-event schedules.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/contact"
+            className="px-6 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-white text-xs font-bold tracking-wider uppercase font-sans shrink-0 transition-all shadow-xs hover:scale-105"
+          >
+            <span>Ask Concierge</span>
+          </Link>
         </div>
       </div>
     </section>

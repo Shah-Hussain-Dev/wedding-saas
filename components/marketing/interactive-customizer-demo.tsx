@@ -269,18 +269,21 @@ export function InteractiveCustomizerDemo() {
               </div>
             </div>
 
-            {/* Action CTA */}
-            <div className="pt-2">
+            {/* Action CTA with Zero-Risk Framing */}
+            <div className="pt-2 space-y-2 text-center">
               <Link
                 href={`/preview/${selectedPreset.id}`}
-                className="group w-full py-3 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-2 transition-all shadow-[0_10px_25px_rgba(7,61,49,0.25)] hover:shadow-[0_15px_35px_rgba(7,61,49,0.38)] cursor-pointer"
+                className="group w-full py-3.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-2 transition-all shadow-[0_10px_25px_rgba(7,61,49,0.25)] hover:shadow-[0_15px_35px_rgba(7,61,49,0.38)] cursor-pointer"
               >
                 <span className="roll">
-                  <span className="roll__a">Experience This Masterpiece</span>
-                  <span className="roll__b" aria-hidden="true">Experience This Masterpiece</span>
+                  <span className="roll__a">Customize This Design Free</span>
+                  <span className="roll__b" aria-hidden="true">Customize This Design Free</span>
                 </span>
                 <ArrowRight size={13} weight="bold" className="group-hover:translate-x-1 transition-transform" />
               </Link>
+              <p className="text-[10.5px] text-[#76766F] font-sans">
+                ✨ Free live sandbox · Zero payment required to customize
+              </p>
             </div>
           </div>
 

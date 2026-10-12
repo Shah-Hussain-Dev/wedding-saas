@@ -426,7 +426,7 @@ export function ComparisonSection() {
         </div>
 
         {/* Bottom CTA Banner */}
-        <div className="rounded-3xl relative text-[#F7F4ED] p-6 sm:p-10 text-center space-y-5 shadow-[0_20px_50px_rgba(7,61,49,0.25)] border border-[#C8A45E]/35 overflow-hidden">
+        <div className="rounded-3xl relative text-[#F7F4ED] p-6 sm:p-10 text-center  shadow-[0_20px_50px_rgba(7,61,49,0.25)] border border-[#C8A45E]/35 overflow-hidden">
           {/* CTA Background Image Layer */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <Image
@@ -463,19 +463,17 @@ export function ComparisonSection() {
               href="/templates"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold uppercase tracking-wider font-sans shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
             >
-              <span>Explore Templates & Start · ₹1,199</span>
+              <span>Explore Templates · Try Free</span>
               <ArrowRight size={15} weight="bold" />
             </Link>
 
-            <a
-              href="https://wa.me/919876543210"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/contact"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-medium tracking-wide font-sans backdrop-blur-md transition-all cursor-pointer"
             >
-              <WhatsappLogo size={16} weight="fill" className="text-emerald-400" />
-              <span>Ask Questions on WhatsApp</span>
-            </a>
+              <Sparkle size={16} weight="fill" className="text-[#E1C98E]" />
+              <span>Talk to Concierge Team</span>
+            </Link>
           </div>
         </div>
       </div>

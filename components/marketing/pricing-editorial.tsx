@@ -56,12 +56,22 @@ export function PricingEditorial() {
                 </h3>
               </div>
 
-              <div className="flex items-baseline gap-2">
-                <span className="text-stone-400 line-through text-lg font-sans">₹2,999</span>
-                <span className="text-4xl sm:text-5xl font-serif font-bold text-[#073D31]">
-                  ₹1,199
+              <div className="flex flex-col items-start sm:items-end gap-1">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#C8A45E]/20 text-[#073D31] text-[10px] font-bold font-sans tracking-wide uppercase">
+                    Save 60% Today
+                  </span>
+                  <span className="text-stone-400 line-through text-base sm:text-lg font-sans">₹2,999</span>
+                </div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-4xl sm:text-5xl font-serif font-bold text-[#073D31]">
+                    ₹1,199
+                  </span>
+                  <span className="text-xs text-[#76766F] font-sans font-medium">/ complete wedding</span>
+                </div>
+                <span className="text-[11px] text-[#A3753C] font-sans font-medium">
+                  Costs less than courier postage for 10 paper cards
                 </span>
-                <span className="text-xs text-[#76766F] font-sans font-medium">/ wedding</span>
               </div>
             </div>
 
@@ -77,18 +87,35 @@ export function PricingEditorial() {
               ))}
             </div>
 
-            {/* CTA Button */}
-            <div className="pt-6 text-center space-y-3">
+            {/* CTA Button & Trust Badges */}
+            <div className="pt-6 text-center space-y-3.5">
               <Link
                 href="/templates"
-                className="w-full py-4 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs sm:text-sm font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl hover:scale-[1.01]"
+                className="w-full py-4 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs sm:text-sm font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-2 transition-all shadow-lg hover:shadow-xl hover:scale-[1.01] cursor-pointer"
               >
-                <span>Select Your Design · Start for Free</span>
+                <span>Select Your Design · Customize Free</span>
                 <ArrowRight size={15} weight="bold" />
               </Link>
-              <p className="text-[11px] text-[#76766F] font-sans">
-                Customize free first. Pay only when you are completely in love and ready to publish.
-              </p>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] text-[#76766F] font-sans">
+                <span className="flex items-center gap-1 text-emerald-800 font-medium">
+                  <CheckCircle size={13} weight="fill" />
+                  <span>Customize 100% Free First</span>
+                </span>
+                <span>•</span>
+                <span>Pay only when ready to share</span>
+                <span>•</span>
+                <span className="flex items-center gap-1 font-medium text-stone-700">
+                  <ShieldCheck size={14} weight="fill" className="text-[#C8A45E]" />
+                  <span>100% Concierge Support Guarantee</span>
+                </span>
+              </div>
+              <div className="pt-1 text-[10px] text-stone-400 font-sans uppercase tracking-wider flex items-center justify-center gap-2">
+                <span>🔒 Bank-Grade Security</span>
+                <span>·</span>
+                <span>Razorpay UPI / Cards / Netbanking</span>
+                <span>·</span>
+                <span>Instant Activation</span>
+              </div>
             </div>
           </div>
         </div>
