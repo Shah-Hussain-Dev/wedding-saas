@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: `Privacy Policy & Data Security — ${siteConfig.name}`,
   description:
     `Learn how ${siteConfig.name} protects your wedding celebration data, enforces bank-grade security, and provides 1-click self-serve data deletion directly from your couple dashboard.`,
+  alternates: {
+    canonical: "/privacy-policy",
+  },
 };
 
 export default function PrivacyPolicyPage() {

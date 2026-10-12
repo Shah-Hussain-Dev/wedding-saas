@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: `Cancellation & Refund Policy — ${siteConfig.name}`,
   description:
     `${siteConfig.name} digital purchase policy: all sales are final and non-refundable, fully backed by our 100% white-glove Concierge Help and Support Guarantee.`,
+  alternates: {
+    canonical: "/refund-policy",
+  },
 };
 
 export default function RefundPolicyPage() {

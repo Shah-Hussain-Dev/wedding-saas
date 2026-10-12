@@ -1,0 +1,50 @@
+# WedInvites — Digital Wedding Invitations
+
+> WedInvites is India's premier interactive digital wedding invitation platform, creating cinematic 3D animated invitations with royal palace door reveals, custom orchestral soundscapes, Google Maps directions, and real-time WhatsApp RSVP tracking from ₹1,199.
+
+## Core Overview
+
+WedInvites replaces traditional paper wedding cards and static PDF files with living web-based wedding experiences. Guests receive a private, personalized web link via WhatsApp or SMS that opens instantly in any mobile browser with zero app downloads or account logins required.
+
+## Key Capabilities & Features
+
+- **Cinematic 3D Opening Reveals**: Realistic double carved palace doors opening, gold wax seal cracking, and 3D floral envelope animations.
+- **Curated Background Soundscapes**: Royal orchestral waltzes, traditional shehnai, acoustic strings, or personalized couple audio with guest volume controls.
+- **Real-Time Interactive RSVP**: Guests submit attendance, guest counts, and celebratory wishes directly on the page, instantly synchronizing with the couple's private dashboard.
+- **Multi-Event Function Schedules**: Separate dates, timings, dress codes, color palettes, and 1-click Google Maps directions for Haldi, Mehendi, Sangeet, Nikah, Pheras, and Reception.
+- **High-Interaction Reveals**: Gold foil scratch-off Muhurat dates, countdown clocks, photo galleries, and guest wishes walls.
+- **Unlimited Free Edits**: Couples can update timings, venues, and photos at any time until their wedding day without reprinting or re-sharing links.
+- **Lifetime Digital Hosting**: Permanent web link with zero subscription renewals or expiration dates.
+
+## WedInvites vs. Physical Wedding Cards
+
+| Feature | WedInvites Digital Invitation | Traditional Physical Cards |
+|---|---|---|
+| Delivery Speed | Instantaneous via WhatsApp & SMS | 2–4 weeks printing + courier delays |
+| Cost | All-inclusive ₹1,199 flat fee | ₹15,000 – ₹60,000+ printing & shipping |
+| RSVP Logistics | Real-time digital sync & 1-click CSV export | Manual follow-up phone calls & uncertainty |
+| Changes & Typos | Instant free updates from couple dashboard | Costly reprinting & delayed reprint cycles |
+| Media & Sound | 3D animations, music scores & video intros | Flat static print on cardboard |
+| Environmental Impact | 100% paperless & eco-friendly | Significant tree felling & paper waste |
+
+## Pricing & Licensing
+
+- **Price**: ₹1,199 (INR) all-inclusive flat fee.
+- **Includes**: Choice of any 3D template, unlimited guests, unlimited edits until wedding day, WhatsApp distribution support, and lifetime hosting.
+- **Guarantee**: 100% white-glove Concierge engineering support.
+
+## Template Collections
+
+1. **Universal & Modern**: Celestial Rose Dreamscape, Modern Minimal, Rose Gold Blush.
+2. **Royal Heritage & Palace**: Imperial Palace (3D carved double doors), Royal Majesty (French Château waltz), Royal Elegance, Royal Heritage.
+3. **Sacred Islamic (Nikah)**: Noor-e-Nikah (3D gold embossed envelope), Emerald Qasr (Mughal jaali arches), Gul-e-Noor, Azure Nikah, Kitab-e-Nikah.
+4. **Vedic & Hindu Royale**: Crimson Royale (Saat Phere procession), Royal Lotus (floating lotus & temple bells).
+
+## Essential Links
+
+- Homepage: https://wedinvites.in
+- Templates Catalogue: https://wedinvites.in/templates
+- Pricing Details: https://wedinvites.in/#pricing
+- Frequently Asked Questions: https://wedinvites.in/faq
+- About WedInvites: https://wedinvites.in/about
+- Concierge Support: https://wedinvites.in/contact (support@wedinvites.in)

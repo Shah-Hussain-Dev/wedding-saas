@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: `Terms of Service & Conditions — ${siteConfig.name}`,
   description:
     `Read the terms governing the use of ${siteConfig.name} interactive digital wedding stationery platform, digital licenses, no-refund policies, and couple data rights.`,
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {
