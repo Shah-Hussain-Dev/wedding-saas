@@ -13,6 +13,12 @@
       "skillPath": "skills/brand-copywriter/SKILL.md",
       "computedHash": "bfd41574a7398ed931604760a5858649d8b4a0b2003994f7f800c0f4810f270d"
     },
+    "brandkit": {
+      "source": "leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/brandkit/SKILL.md",
+      "computedHash": "4bf33908992cde092395205122fad7a59e117190292bc8847cdba324b6f1c5b2"
+    },
     "canvas-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
