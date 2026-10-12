@@ -6,7 +6,7 @@
 export const siteConfig = {
   name: "WedInvites",
   shortName: "wedinvites",
-  legalName: "WedInvites Technologies",
+  legalName: "WedInvites",
   domain: "wedinvites.in",
   url: process.env.NEXT_PUBLIC_APP_URL || "https://wedinvites.in",
   tagline: "Premium Animated Digital Wedding Invitations",
