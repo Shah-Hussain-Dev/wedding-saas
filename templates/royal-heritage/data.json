@@ -31,20 +31,20 @@
     "mapUrl": "https://maps.google.com/?q=Lake+Como+Villa+Waterfront+Estate"
   },
   "dressCode": {
-    "title": "Mediterranean Chic & Riviera Royal Elegance",
-    "description": "We invite our gracious guests to celebrate in soft powder blues, sun-washed ivory, coral accents, linen suits, or traditional regal couture."
+    "title": "Coastal Chic & Royal Elegance",
+    "description": "We invite our gracious guests to celebrate in soft powder blues, sun-washed ivory, coral accents, linen suits, or traditional regal attire."
   },
   "events": [
     {
-      "name": "Welcome Mehendi & Riviera Soirée",
+      "name": "Welcome Mehendi & Waterfront Celebration",
       "date": "November 23, 2027",
       "time": "04:00 PM",
       "venue": "The Bougainvillea Terrace",
-      "description": "An enchanting afternoon of artisanal henna, live acoustic mediterranean folk & sufi harmonies, handcrafted gelato, and floral cocktails.",
+      "description": "An enchanting afternoon of artisanal henna, live acoustic folk & sufi harmonies, handcrafted refreshments, and floral elegance.",
       "dress": "Powder Blue & Coral Floral Chic"
     },
     {
-      "name": "Sun-Kissed Haldi & Citrus Fiesta",
+      "name": "Sun-Kissed Haldi & Golden Celebration",
       "date": "November 24, 2027",
       "time": "10:30 AM",
       "venue": "The Sunken Olive Grove & Poolside",
@@ -65,7 +65,7 @@
       "time": "06:30 PM",
       "venue": "Lakeside Starlight Arch Mandap",
       "description": "The sacred eternal covenant under a cascading arch of coral bougainvillea and olive vines overlooking tranquil twilight waters.",
-      "dress": "Regal Heritage Couture"
+      "dress": "Regal Heritage Attire"
     },
     {
       "name": "The Grand Waterfront Banquet",

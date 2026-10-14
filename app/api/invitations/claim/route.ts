@@ -79,6 +79,13 @@ export async function POST(req: NextRequest) {
             musicTrack: draft.musicTrack || "track1",
             eventsJson: draft.eventsJson || draft.events || [],
             isPublished: false,
+            translations: {
+              ...(draft.translations || {}),
+              religion: draft.religion || "universal",
+              sacredInvocation: draft.sacredInvocation || null,
+              sacredVerse: draft.sacredVerse || null,
+              sacredTranslation: draft.sacredTranslation || null,
+            },
           },
         });
       }
@@ -95,11 +102,22 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    const enrichedInvitations = userInvitations.map((inv) => {
+      const trans = (inv.translations as any) || {};
+      return {
+        ...inv,
+        religion: trans.religion || "universal",
+        sacredInvocation: trans.sacredInvocation || null,
+        sacredVerse: trans.sacredVerse || null,
+        sacredTranslation: trans.sacredTranslation || null,
+      };
+    });
+
     const allMessages = userInvitations.flatMap((inv) => inv.guestMessages);
 
     return NextResponse.json({
       success: true,
-      invitations: userInvitations,
+      invitations: enrichedInvitations,
       messages: allMessages,
     });
   } catch (err: any) {

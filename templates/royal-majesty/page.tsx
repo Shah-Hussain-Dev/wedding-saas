@@ -80,6 +80,21 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
     initialReligion === "hindu" || initialReligion === "muslim" ? initialReligion : "universal"
   );
 
+  useEffect(() => {
+    if (
+      data?.religion &&
+      (data.religion === "muslim" || data.religion === "hindu" || data.religion === "universal")
+    ) {
+      setSelectedReligion(data.religion);
+    }
+  }, [data?.religion]);
+
+  const hideReligionSwitcher = Boolean(
+    data?.hideReligionSwitcher ||
+    data?.isLive ||
+    data?.isOwned
+  );
+
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
@@ -284,23 +299,23 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
     switch (selectedReligion) {
       case "hindu":
         return {
-          title: "॥ श्री गणेशाय नमः ॥",
-          arabicOrSanskrit: "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
-          english: "With the divine grace of the Almighty, cherished ancestors, and beloved elders, we solicit the pleasure of your company.",
+          title: data?.sacredInvocation || "॥ श्री गणेशाय नमः ॥",
+          arabicOrSanskrit: data?.sacredVerse || "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
+          english: data?.sacredTranslation || "With the divine grace of the Almighty, cherished ancestors, and beloved elders, we solicit the pleasure of your company.",
           tag: "Vedic Hindu Blessing",
         };
       case "muslim":
         return {
-          title: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-          arabicOrSanskrit: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
-          english: "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them.” (Surah Ar-Rum 30:21)",
+          title: data?.sacredInvocation || "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+          arabicOrSanskrit: data?.sacredVerse || "وَمِنْ आيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+          english: data?.sacredTranslation || "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them.” (Surah Ar-Rum 30:21)",
           tag: "Sacred Nikah Blessing",
         };
       default:
         return {
-          title: "Two Hearts · One Royal Destiny",
-          arabicOrSanskrit: "“Where there is great love, there are always miracles under starlit skies.”",
-          english: defaultData.quote,
+          title: data?.sacredInvocation || "Two Hearts · One Royal Destiny",
+          arabicOrSanskrit: data?.sacredVerse || "“Where there is great love, there are always miracles under starlit skies.”",
+          english: data?.sacredTranslation || defaultData.quote,
           tag: "Universal Royal Proclamation",
         };
     }
@@ -352,7 +367,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
       </motion.button>
 
       {/* ----------------------------------------------------
-          1. CINEMATIC HERO SECTION (CHÂTEAU BALLROOM REVEAL)
+          1. CINEMATIC HERO SECTION (REGENCY BALLROOM REVEAL)
           ---------------------------------------------------- */}
       <section className="relative w-full h-screen min-h-[100dvh] overflow-hidden flex flex-col justify-between items-center text-center select-none bg-[#EBECE8]">
         {/* Full-Screen Hero Background Video */}
@@ -371,44 +386,46 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
         {/* Ambient Subtle Vignette */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-black/70 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher Pill */}
-        <header className="relative z-20 w-full px-4 pt-12 sm:pt-14 md:pt-6 flex items-center justify-center max-w-7xl mx-auto">
-          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/30 shadow-md text-xs font-montserrat">
-            <button
-              onClick={() => setSelectedReligion("universal")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "universal"
-                  ? "bg-[#A9C1D0] text-[#1D2C36] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <GlobeHemisphereWest size={12} weight="bold" />
-              Universal
-            </button>
-            <button
-              onClick={() => setSelectedReligion("hindu")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "hindu"
-                  ? "bg-[#A9C1D0] text-[#1D2C36] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <FlowerLotus size={12} weight="bold" />
-              Hindu
-            </button>
-            <button
-              onClick={() => setSelectedReligion("muslim")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "muslim"
-                  ? "bg-[#A9C1D0] text-[#1D2C36] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <MoonStars size={12} weight="bold" />
-              Muslim
-            </button>
-          </div>
-        </header>
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
+        {!hideReligionSwitcher && (
+          <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
+            <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/30 shadow-md text-xs font-montserrat">
+              <button
+                onClick={() => setSelectedReligion("universal")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "universal"
+                    ? "bg-[#A9C1D0] text-[#1D2C36] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <GlobeHemisphereWest size={12} weight="bold" />
+                Universal
+              </button>
+              <button
+                onClick={() => setSelectedReligion("hindu")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "hindu"
+                    ? "bg-[#A9C1D0] text-[#1D2C36] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <FlowerLotus size={12} weight="bold" />
+                Hindu
+              </button>
+              <button
+                onClick={() => setSelectedReligion("muslim")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "muslim"
+                    ? "bg-[#A9C1D0] text-[#1D2C36] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <MoonStars size={12} weight="bold" />
+                Muslim
+              </button>
+            </div>
+          </header>
+        )}
 
         {/* Transparent Clickable Trigger Over Full Screen */}
         {!isVideoStarted && (
@@ -520,7 +537,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
       </section>
 
       {/* ----------------------------------------------------
-          2. CONTINUOUS CHÂTEAU STORYTELLING CHAPTERS
+          2. CONTINUOUS REGENCY STORYTELLING CHAPTERS
           ---------------------------------------------------- */}
       <main ref={contentSectionRef} className="relative z-10 overflow-hidden bg-[#EBECE8]">
         {/* SCENE I: THE REGENCY GRAND SALON PROCLAMATION */}
@@ -620,16 +637,16 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
         </section>
 
         {/* SCENE III: CINEMATIC SPLIT PANORAMA COUNTDOWN */}
-        <ChateauParallaxCountdownSection
+        <BallroomParallaxCountdownSection
           targetDate={rawDate}
           dayStr={dayStr}
           dateStr={dateStr}
           yearStr={yearStr}
         />
 
-        {/* SCENE IV: 4-CHAPTER CHÂTEAU GRAND ITINERARY STAGE */}
+        {/* SCENE IV: 4-CHAPTER REGENCY GRAND ITINERARY STAGE */}
         <section className="py-16 sm:py-24 md:py-32 px-4 bg-majesty-ivory relative z-10">
-          <CeremonyChateauStage
+          <CeremonyRegencyStage
             events={events}
             venueName={venueName}
             venueMapUrl={venueMapUrl}
@@ -646,7 +663,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
           />
         </section>
 
-        {/* SCENE VI: CHÂTEAU ESTATE & VERSAILLES GUEST REGISTRY */}
+        {/* SCENE VI: REGENCY ESTATE & PALACE GUEST REGISTRY */}
         <section className="py-16 sm:py-24 md:py-32 px-4 bg-majesty-ivory relative z-10 text-center">
           <div className="max-w-4xl mx-auto space-y-12">
             {/* Estate Card */}
@@ -663,7 +680,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
 
               <div className="space-y-2">
                 <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#9B875D] font-bold font-montserrat">
-                  Château Estate &amp; Pavilion
+                  Regency Estate &amp; Pavilion
                 </span>
                 <h2 className="text-2xl sm:text-3xl md:text-5xl font-playfair font-bold text-[#4E687A]">
                   {venueName}
@@ -1000,8 +1017,8 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
   );
 }
 
-// Sub-Component: Château Parallax Countdown Section
-function ChateauParallaxCountdownSection({
+// Sub-Component: Regency Parallax Countdown Section
+function BallroomParallaxCountdownSection({
   targetDate,
   dayStr,
   dateStr,
@@ -1052,7 +1069,7 @@ function ChateauParallaxCountdownSection({
       ref={containerRef}
       className="relative w-full min-h-[90vh] overflow-hidden flex items-center justify-center py-20 px-4 select-none my-0"
     >
-      {/* Parallax Background Château Ballroom Terrace */}
+      {/* Parallax Background Regency Ballroom Terrace */}
       <motion.div
         style={{
           y: bgY,
@@ -1062,7 +1079,7 @@ function ChateauParallaxCountdownSection({
       >
         <img
           src="/templates/royal-majesty/ballroom-terrace.jpg"
-          alt="Royal French Château Ballroom Terrace"
+          alt="Royal Regency Ballroom Terrace"
           className="w-full h-full object-cover object-center filter brightness-[0.8] contrast-[1.15]"
         />
       </motion.div>
@@ -1129,8 +1146,8 @@ function ChateauParallaxCountdownSection({
   );
 }
 
-// Sub-Component: 4-Chapter Château Grand Itinerary Stage
-function CeremonyChateauStage({
+// Sub-Component: 4-Chapter Regency Grand Itinerary Stage
+function CeremonyRegencyStage({
   events,
   venueName,
   venueMapUrl,
@@ -1156,7 +1173,7 @@ function CeremonyChateauStage({
         </h2>
 
         <p className="text-xs sm:text-base text-[#708FA8] max-w-md mx-auto font-cormorant font-medium">
-          Step through each grand salon chamber of music, soirees, and matrimonial vows
+          Step through each grand salon chamber of music, celebrations, and matrimonial vows
         </p>
       </div>
 
@@ -1464,7 +1481,7 @@ function SpatialMemoryUniverse({
 
   const chapters = [
     { title: "The Beginning", subtitle: "Solemn Union", tag: "Memory Portal" },
-    { title: "Royal Elegance", subtitle: "Editorial Portrait", tag: "Haute Split" },
+    { title: "Royal Elegance", subtitle: "Editorial Portrait", tag: "Regal Split" },
     { title: "Starlit Moments", subtitle: "Constellation", tag: "Triptych Shards" },
     { title: "Forever Together", subtitle: "Eternal Vows", tag: "Memory Freeze" },
   ];
@@ -1690,7 +1707,7 @@ function SpatialMemoryUniverse({
                       <img
                         src={memoryPhotos[2]}
                         onError={handleImgError}
-                        alt="Couture Detail"
+                        alt="Bridal Attire Detail"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 pointer-events-none"
                       />
                       <div className="absolute inset-0 bg-black/20 pointer-events-none" />

@@ -16,7 +16,7 @@ interface ReelItem {
 const REELS_DATA: ReelItem[] = [
   {
     id: "r1",
-    title: "Château Ballroom Waltz",
+    title: "Regency Ballroom Waltz",
     templateId: "royal-majesty",
     video: "/videos/royal-majesty.mp4",
   },

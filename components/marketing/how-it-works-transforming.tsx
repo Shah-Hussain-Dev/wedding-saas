@@ -10,7 +10,7 @@ const STEPS = [
     step: "01",
     title: "Choose Your World",
     subtitle: "Select from 16 curated architectural & celestial masterworks",
-    description: "Whether an imperial Rajasthani palace, Ottoman qasr, French château ballroom, or celestial rose terrace — find the exact ambiance that echoes your love story.",
+    description: "Whether an imperial Rajasthani palace, Ottoman qasr, regal ballroom, or celestial rose terrace — find the exact ambiance that echoes your love story.",
     icon: Compass,
     screenTag: "Step 01 · Template Portal",
     previewTitle: "Celestial Rose & Imperial Palaces",

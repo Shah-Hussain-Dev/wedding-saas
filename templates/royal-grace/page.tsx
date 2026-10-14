@@ -79,6 +79,21 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
     initialReligion === "hindu" || initialReligion === "muslim" ? initialReligion : "universal"
   );
 
+  useEffect(() => {
+    if (
+      data?.religion &&
+      (data.religion === "muslim" || data.religion === "hindu" || data.religion === "universal")
+    ) {
+      setSelectedReligion(data.religion);
+    }
+  }, [data?.religion]);
+
+  const hideReligionSwitcher = Boolean(
+    data?.hideReligionSwitcher ||
+    data?.isLive ||
+    data?.isOwned
+  );
+
   // Video Gate Timing & Content Reveal State (opens at ~6.0s)
   const [isVideoStarted, setIsVideoStarted] = useState(false);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
@@ -268,23 +283,23 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
     switch (selectedReligion) {
       case "hindu":
         return {
-          title: "॥ श्री गणेशाय नमः ॥",
-          arabicOrSanskrit: "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
-          english: "With the divine blessings of Lord Ganesha and our elders, we joyfully solicit your gracious presence at our sacred wedding celebration.",
+          title: data?.sacredInvocation || "॥ श्री गणेशाय नमः ॥",
+          arabicOrSanskrit: data?.sacredVerse || "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
+          english: data?.sacredTranslation || "With the divine blessings of Lord Ganesha and our elders, we joyfully solicit your gracious presence at our sacred wedding celebration.",
           tag: "Vedic Hindu Blessing",
         };
       case "muslim":
         return {
-          title: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-          arabicOrSanskrit: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
-          english: "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He has put love and mercy between your hearts.” (Surah Ar-Rum 30:21)",
+          title: data?.sacredInvocation || "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+          arabicOrSanskrit: data?.sacredVerse || "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+          english: data?.sacredTranslation || "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He has put love and mercy between your hearts.” (Surah Ar-Rum 30:21)",
           tag: "Sacred Nikah Blessing",
         };
       default:
         return {
-          title: "Two Souls · Bound by Grace",
-          arabicOrSanskrit: "“Where there is profound love, there is eternal grace.”",
-          english: defaultData.quote,
+          title: data?.sacredInvocation || "Two Souls · Bound by Grace",
+          arabicOrSanskrit: data?.sacredVerse || "“Where there is profound love, there is eternal grace.”",
+          english: data?.sacredTranslation || defaultData.quote,
           tag: "Universal Celebration",
         };
     }
@@ -358,44 +373,46 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
         {/* Ambient Twilight Vignette */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-black/80 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher Pill */}
-        <header className="relative z-20 w-full px-4 pt-4 md:pt-6 flex items-center justify-center max-w-7xl mx-auto">
-          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/55 backdrop-blur-md border border-[#d4af37]/35 shadow-lg text-xs font-jakarta">
-            <button
-              onClick={() => setSelectedReligion("universal")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "universal"
-                  ? "bg-[#d4af37] text-[#0e1713] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <GlobeHemisphereWest size={12} weight="bold" />
-              Universal
-            </button>
-            <button
-              onClick={() => setSelectedReligion("hindu")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "hindu"
-                  ? "bg-[#d4af37] text-[#0e1713] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <FlowerLotus size={12} weight="bold" />
-              Hindu
-            </button>
-            <button
-              onClick={() => setSelectedReligion("muslim")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "muslim"
-                  ? "bg-[#d4af37] text-[#0e1713] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <MoonStars size={12} weight="bold" />
-              Muslim
-            </button>
-          </div>
-        </header>
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
+        {!hideReligionSwitcher && (
+          <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
+            <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/55 backdrop-blur-md border border-[#d4af37]/35 shadow-lg text-xs font-jakarta">
+              <button
+                onClick={() => setSelectedReligion("universal")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "universal"
+                    ? "bg-[#d4af37] text-[#0e1713] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <GlobeHemisphereWest size={12} weight="bold" />
+                Universal
+              </button>
+              <button
+                onClick={() => setSelectedReligion("hindu")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "hindu"
+                    ? "bg-[#d4af37] text-[#0e1713] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <FlowerLotus size={12} weight="bold" />
+                Hindu
+              </button>
+              <button
+                onClick={() => setSelectedReligion("muslim")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "muslim"
+                    ? "bg-[#d4af37] text-[#0e1713] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <MoonStars size={12} weight="bold" />
+                Muslim
+              </button>
+            </div>
+          </header>
+        )}
 
         {/* ----------------------------------------------------
             FULL-SCREEN TAP TRIGGER (Clean unobstructed view for the video's built-in "TAP TO OPEN" placard)
@@ -1092,7 +1109,7 @@ function getGraceEventTheme(name: string = "", index: number) {
       accentColor: "#10b981",
       gradient: "radial-gradient(ellipse at 50% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
       swatches: ["#8da48f", "#fae4a8", "#10b981", "#d4af37"],
-      motif: "✦ Botanical Garden Soirée ✦",
+      motif: "✦ Botanical Garden Celebration ✦",
     };
   }
   if (lower.includes("haldi") || lower.includes("pithi") || lower.includes("holi")) {

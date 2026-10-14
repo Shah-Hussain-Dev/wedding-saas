@@ -28,6 +28,7 @@ import {
   X,
   SpeakerHigh,
   SpeakerSlash,
+  FilePdf,
 } from "@phosphor-icons/react";
 
 export interface HeroInvitation {
@@ -94,7 +95,7 @@ export const HERO_INVITATIONS: HeroInvitation[] = [
     id: "royal-majesty",
     name: "Royal Majesty",
     shortName: "Majesty",
-    category: "Château Ballroom",
+    category: "Regency Ballroom",
     style: "Ballroom Waltz & Lake Terrace",
     video: "/videos/royal-majesty.mp4",
     image: "/templates/royal-majesty/ballroom-terrace.jpg",
@@ -399,13 +400,25 @@ export function HeroExperience() {
               special day with family and friends in the most beautiful, modern and meaningful way.
             </motion.p>
 
+            {/* Complimentary Printable PDFs Value Pill */}
+            <motion.div
+              custom={2.5}
+              initial="hidden"
+              animate="visible"
+              variants={fadeUpVariant}
+              className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#C49A5A]/15 border border-[#C49A5A]/40 text-[#6E4913] text-[11px] sm:text-xs font-semibold font-sans backdrop-blur-sm shadow-2xs"
+            >
+              <FilePdf size={15} weight="bold" className="text-[#A87535]" />
+              <span><strong>Free Bonus:</strong> Includes 2 Matching Print-Ready PDFs (Barat &amp; Reception)</span>
+            </motion.div>
+
             {/* Dual CTAs — Generously sized pill buttons */}
             <motion.div
               custom={3}
               initial="hidden"
               animate="visible"
               variants={fadeUpVariant}
-              className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
+              className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
             >
               {/* Primary: Create Your Invitation */}
               <Link
@@ -641,7 +654,7 @@ export function HeroExperience() {
                         {isCenter && (
                           <div className="relative z-30 pb-4 sm:pb-5 px-4 flex justify-center">
                             <Link
-                              href={`/templates/${inv.slug}`}
+                              href={`/preview/${inv.id || inv.slug}`}
                               className="px-6 sm:px-7 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#DFB873] via-[#ECC985] to-[#D4A759] text-[#2C210E] font-bold text-[9px] sm:text-[10px] tracking-wider uppercase shadow-[0_8px_20px_rgba(212,167,89,0.35)] flex items-center justify-center gap-1.5 hover:brightness-105 active:scale-95 transition-all cursor-pointer"
                             >
                               <span>VIEW INVITATION</span>
@@ -874,7 +887,7 @@ export function HeroExperience() {
                   </span>
                 </div>
                 <Link
-                  href={`/templates/${activeTemplate.slug}`}
+                  href={`/preview/${activeTemplate.id || activeTemplate.slug}`}
                   onClick={() => setIsPreviewOpen(false)}
                   className="w-full py-2.5 rounded-full bg-[#063F35] hover:bg-[#032A23] text-white text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
                 >

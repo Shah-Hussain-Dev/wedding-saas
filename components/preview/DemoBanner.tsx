@@ -101,7 +101,7 @@ export function DemoBanner({
   // If already unlocked / published, render sleek top live status bar and NEVER show payment button again
   if (isUnlocked) {
     return (
-      <div className="fixed top-2.5 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-[999] flex items-center justify-between sm:justify-center gap-3 bg-stone-950/85 text-white backdrop-blur-xl border border-emerald-400/40 px-4 py-1.5 rounded-full shadow-2xl animate-fade-in pointer-events-auto">
+      <div className="fixed top-2.5 inset-x-3 sm:inset-x-auto sm:left-6 sm:top-4 sm:translate-x-0 z-[999] flex items-center justify-between sm:justify-start gap-3 bg-stone-950/85 text-white backdrop-blur-xl border border-emerald-400/40 px-4 py-1.5 rounded-full shadow-2xl animate-fade-in pointer-events-auto">
         <div className="flex items-center gap-1.5">
           <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" weight="fill" />
           <span className="text-[11px] font-semibold text-emerald-200">Live Website Active</span>
@@ -132,8 +132,8 @@ export function DemoBanner({
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[999] overflow-hidden">
-      {/* ── Top Ultra-Compact Demo Badge & Timer (Non-blocking) ── */}
-      <div className="absolute top-2 inset-x-2 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 flex items-center justify-center">
+      {/* ── Top Ultra-Compact Demo Badge & Timer (Left on desktop, Centered on mobile) ── */}
+      <div className="absolute top-2.5 inset-x-2 sm:inset-x-auto sm:left-6 sm:top-4 sm:translate-x-0 flex items-center justify-center sm:justify-start">
         <div className="pointer-events-auto flex items-center gap-2 bg-stone-950/80 hover:bg-stone-950 text-white backdrop-blur-md border border-amber-400/30 px-3 py-1 rounded-full shadow-lg transition-all">
           <span className="flex h-1.5 w-1.5 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>

@@ -23,7 +23,7 @@
   "musicTrack": "/templates/crimson-royale/music.mp3",
   "dressCode": {
     "title": "Minimalist Indian Chic & Pastel Formal",
-    "description": "Contemporary Indian couture in warm champagnes, pastel blushes, soft sage, or tailored modern neutrals."
+    "description": "Contemporary Indian attire in warm champagnes, pastel blushes, soft sage, or tailored modern neutrals."
   },
   "events": [
     {
@@ -35,7 +35,7 @@
       "dress": "Traditional Festive Florals"
     },
     {
-      "name": "Haldi & Mehendi Soirée",
+      "name": "Haldi & Mehendi Celebration",
       "date": "April 09, 2027",
       "time": "03:30 PM",
       "venue": "Sunken Pool Lawn",
@@ -64,7 +64,7 @@
       "time": "06:30 PM",
       "venue": "The Glass Mandap (By the Shore)",
       "description": "Sacred Vedic rituals, Mangal Pheras around the sacred Agni, and eternal wedding vows at twilight.",
-      "dress": "Regal Indian Coutures"
+      "dress": "Regal Indian Attire"
     },
     {
       "name": "The Grand Reception Gala",

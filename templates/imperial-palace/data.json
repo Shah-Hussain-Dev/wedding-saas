@@ -18,9 +18,9 @@
   "videoUrl": "/videos/royal-elegance-royal.mp4",
   "musicTrack": "/templates/imperial-palace/music.mp3",
   "venue": {
-    "name": "Palais Impérial de Grand-Lieu",
-    "address": "42 Avenue des Monarques, Domaine de Versailles, France",
-    "mapUrl": "https://maps.google.com/?q=Palace+of+Versailles+France"
+    "name": "The Grand Imperial Palace & Sovereign Estate",
+    "address": "Imperial Estate Gardens & Sovereign Palace, London, UK",
+    "mapUrl": "https://maps.google.com/?q=Imperial+Palace+London"
   },
   "events": [
     {
@@ -57,7 +57,7 @@
       "chamber": "Grand Burgundy Ballroom",
       "description": "A magnificent royal banquet with crystal chandeliers, grand waltzes, ceremonial toasts, and midnight fireworks over the lake.",
       "venue": "The Sovereign Hall of Mirrors",
-      "dress": "Imperial White Tie & Haute Couture"
+      "dress": "Imperial White Tie & Royal Evening Gowns"
     }
   ],
   "gallery": [
@@ -76,8 +76,8 @@
     },
     {
       "year": "MMXXI",
-      "title": "Starlit Promises in Seville",
-      "description": "Beneath the illuminated arches of the Alcázar courtyards, quiet admiration blossomed into an unbreakable promise of lifelong devotion."
+      "title": "Starlit Promises by the Lake",
+      "description": "Beneath the illuminated arches of the palace courtyards, quiet admiration blossomed into an unbreakable promise of lifelong devotion."
     },
     {
       "year": "MMXXV",

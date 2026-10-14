@@ -187,12 +187,12 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
   "royal-majesty": {
     id: "royal-majesty",
     name: "Royal Majesty",
-    style: "French Château & Regency Ballroom",
+    style: "Grand Palace & Regency Ballroom",
     tag: "Imperial Royale",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal Regency",
     description:
-      "An enchanted French Château ballroom & starlit lakeside video reveal with shimmering crystal chandeliers, powder-blue hydrangea garlands, muted champagne gold accents, and 3D Rococo horizon gallery.",
+      "An enchanted grand palace ballroom & starlit lakeside video reveal with shimmering crystal chandeliers, powder-blue hydrangea garlands, muted champagne gold accents, and 3D Rococo horizon gallery.",
     gradient: "from-[#A9C1D0] via-[#EBECE8] to-[#B7A16E]",
   },
   "imperial-palace": {

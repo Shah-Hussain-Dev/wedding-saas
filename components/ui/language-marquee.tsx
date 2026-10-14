@@ -9,8 +9,8 @@ const PHRASES = [
   { text: "हो, मी तयार आहे", lang: "Marathi" },
   { text: "હા, હું તૈયાર છું", lang: "Gujarati" },
   { text: "نعم، أقبل", lang: "Arabic" },
-  { text: "是的，我愿意", lang: "Mandarin" },
-  { text: "Oui, je le veux", lang: "French" },
+  { text: "ਹਾਂ, ਮੈਂ ਤਿਆਰ ਹਾਂ", lang: "Punjabi" },
+  { text: "అవును, నేను సిద్ధంగా ఉన్నాను", lang: "Telugu" },
   { text: "Sim, aceito", lang: "Portuguese" },
   { text: "Ja, ich will", lang: "German" },
 ];

@@ -47,7 +47,16 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
         const res = await fetch(`/api/invitations/public?slug=${slug}`);
         if (res.ok) {
           const data = await res.json();
-          setInvitation(data);
+          const trans = (data?.translations as any) || {};
+          const resolvedReligion = data?.religion || trans.religion || localItem?.religion || "universal";
+          setInvitation({
+            ...localItem,
+            ...data,
+            religion: resolvedReligion,
+            sacredInvocation: data?.sacredInvocation || trans.sacredInvocation || localItem?.sacredInvocation,
+            sacredVerse: data?.sacredVerse || trans.sacredVerse || localItem?.sacredVerse,
+            sacredTranslation: data?.sacredTranslation || trans.sacredTranslation || localItem?.sacredTranslation,
+          });
           setLoading(false);
           return;
         }
@@ -101,9 +110,19 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
   }
 
   const templateDefault = getTemplateDefaultData(invitation.templateId || "noor-e-nikah");
+  const transObj = (invitation.translations as any) || {};
+  const selectedReligion = invitation.religion || transObj.religion || templateDefault.religion || "universal";
+
   const mergedInvitation = {
     ...templateDefault,
     ...invitation,
+    religion: selectedReligion,
+    sacredInvocation: invitation.sacredInvocation || transObj.sacredInvocation,
+    sacredVerse: invitation.sacredVerse || transObj.sacredVerse,
+    sacredTranslation: invitation.sacredTranslation || transObj.sacredTranslation,
+    hideReligionSwitcher: true,
+    isLive: true,
+    isOwned: true,
     events: invitation.events && invitation.events.length > 0 ? invitation.events : templateDefault.events,
   };
   const SelectedTemplate = TEMPLATES_MAP[invitation.templateId] || NoorNikah;
@@ -115,7 +134,7 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
   const isUnpublished = invitation.isPublished === false;
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {/* If unpublished (free demo preview mode), display Demo Banner */}
       {isUnpublished && (
         <DemoBanner

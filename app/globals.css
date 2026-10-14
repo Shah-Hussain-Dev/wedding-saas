@@ -69,6 +69,8 @@ html {
   color-scheme: light only;
   background-color: #FCFBF7;
   overflow-x: clip;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 body {
@@ -77,6 +79,29 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   GLOBAL SCROLLBAR REMOVAL ACROSS ALL TEMPLATES & PREVIEWS
+   ───────────────────────────────────────────────────────────── */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+[class*="tmpl-"],
+[class*="tmpl-"] *,
+iframe,
+iframe *,
+.no-scrollbar,
+.no-scrollbar * {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
 .paper-texture {

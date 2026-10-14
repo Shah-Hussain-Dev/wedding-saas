@@ -65,15 +65,15 @@ const TEMPLATES = [
   {
     id: "royal-majesty",
     name: "Royal Majesty",
-    style: "French Château & Regency Ballroom",
+    style: "Grand Palace & Regency Ballroom",
     tag: "New",
     religion: ["hindu", "muslim", "universal"],
     religionLabel: "Universal",
     price: "₹1,199",
-    desc: "Enchanted French Château ballroom & starlit lake video reveal with crystal chandeliers, powder-blue hydrangea garlands, and live guestbook flights.",
+    desc: "Enchanted grand palace ballroom & starlit lake video reveal with crystal chandeliers, powder-blue hydrangea garlands, and live guestbook flights.",
     video: "/videos/royal-majesty.mp4",
     scenes: [
-      { title: "Château Ballroom Waltz", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Regency Ballroom Waltz", image: "/templates/imperial-palace/ballroom.jpg" },
       { title: "Crystal Chandeliers", image: "/templates/imperial-palace/ballroom.jpg" },
       { title: "Guestbook Flight", image: "/templates/imperial-palace/ballroom.jpg" },
       { title: "Dress Code Visualizer", image: "/templates/imperial-palace/ballroom.jpg" },

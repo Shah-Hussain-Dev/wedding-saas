@@ -16,6 +16,7 @@ import {
   ShareNetwork, 
   DownloadSimple, 
   Clock, 
+  Calendar,
   CheckCircle,
   XCircle,
   Plus,
@@ -27,8 +28,27 @@ import {
   ChatCircleDots,
   TrashSimple,
   ShieldCheck,
+  FilePdf,
 } from "@phosphor-icons/react";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatDateTime } from "@/lib/utils";
+import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
+
+// Helper to robustly extract and format invitation created_at timestamp
+function getInviteCreatedAt(invite: any): string {
+  if (!invite) return "";
+  const raw = invite.createdAt || invite.created_at || invite.updatedAt || invite.updated_at;
+  if (raw) {
+    const formatted = formatDateTime(raw);
+    if (formatted) return formatted;
+  }
+  if (typeof invite.id === "string" && invite.id.startsWith("demo-")) {
+    const ts = parseInt(invite.id.replace("demo-", ""), 10);
+    if (!isNaN(ts) && ts > 1000000000000) {
+      return formatDateTime(new Date(ts));
+    }
+  }
+  return "";
+}
 
 // Helper to robustly extract RSVP attendance & guest count from flat or multi-event json
 function parseRsvpData(rsvpJson: any) {
@@ -78,6 +98,7 @@ export default function DashboardPage() {
   const [attendanceFilter, setAttendanceFilter] = useState<"all" | "attending" | "declined">("all");
   const [selectedInviteFilter, setSelectedInviteFilter] = useState<string>("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedPdfInvite, setSelectedPdfInvite] = useState<any | null>(null);
 
   const handleDeleteInvitation = async (id: string, name: string) => {
     const confirmed = window.confirm(
@@ -480,48 +501,72 @@ export default function DashboardPage() {
             </DoubleBezelCard>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {invitations.map((invite) => (
-                <DoubleBezelCard key={invite.id} className="bg-white border-stone-200 p-6 flex flex-col justify-between gap-5 shadow-xs">
-                  <div>
-                    <div className="flex items-center justify-between gap-2 mb-2">
-                      <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/60 rounded-full px-2.5 py-0.5 uppercase tracking-wider">
-                        {invite.templateId?.replace(/-/g, " ") || "Royal Lotus"}
-                      </span>
-                      <span className="text-[11px] text-stone-400 font-mono">
-                        {formatDate(invite.weddingDate)}
-                      </span>
+              {invitations.map((invite) => {
+                const createdAtStr = getInviteCreatedAt(invite);
+
+                return (
+                  <DoubleBezelCard key={invite.id} className="bg-white border-stone-200 p-6 flex flex-col justify-between gap-5 shadow-xs">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/60 rounded-full px-2.5 py-0.5 uppercase tracking-wider">
+                          {invite.templateId?.replace(/-/g, " ") || "Royal Lotus"}
+                        </span>
+                        <span className="text-[11px] text-stone-400 font-mono flex items-center gap-1">
+                          <Calendar size={12} className="text-stone-400" />
+                          <span>{formatDate(invite.weddingDate)}</span>
+                        </span>
+                      </div>
+
+                      <h3 className="text-2xl font-serif font-bold text-stone-950">
+                        {invite.brideName} &amp; {invite.groomName}
+                      </h3>
+                      
+                      {invite.venueName && (
+                        <p className="text-xs text-stone-500 mt-1 line-clamp-1">
+                          📍 {invite.venueName}
+                        </p>
+                      )}
+
+                      {createdAtStr && (
+                        <div className="flex items-center gap-1.5 text-[11px] text-stone-500 mt-2 font-mono">
+                          <Clock size={13} weight="bold" className="text-amber-700/80 shrink-0" />
+                          <span>Created: <strong className="font-semibold text-stone-700">{createdAtStr}</strong></span>
+                        </div>
+                      )}
+
+                      <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
+                        <a
+                          href={`/${invite.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition"
+                        >
+                          <LinkIcon size={14} weight="bold" />
+                          <span>{siteConfig.domain}/{invite.slug}</span>
+                        </a>
+                      </div>
                     </div>
 
-                    <h3 className="text-2xl font-serif font-bold text-stone-950">
-                      {invite.brideName} &amp; {invite.groomName}
-                    </h3>
-                    
-                    {invite.venueName && (
-                      <p className="text-xs text-stone-500 mt-1 line-clamp-1">
-                        📍 {invite.venueName}
-                      </p>
-                    )}
+                  <div className="flex flex-col gap-2 pt-2 border-t border-stone-100">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedPdfInvite(invite)}
+                      className="w-full text-center border border-amber-300/90 bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/60 text-amber-950 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-2xs cursor-pointer"
+                    >
+                      <FilePdf size={15} weight="bold" className="text-amber-700" />
+                      <span>Download 2 Matching PDFs</span>
+                      <span className="text-[9px] bg-amber-200/90 text-amber-900 px-1.5 py-0.5 rounded-full uppercase font-bold tracking-wider ml-1">
+                        Free Included
+                      </span>
+                    </button>
 
-                    <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
-                      <a
-                        href={`/${invite.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition"
-                      >
-                        <LinkIcon size={14} weight="bold" />
-                        <span>{siteConfig.domain}/{invite.slug}</span>
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-stone-100">
-                    <Link href={`/dashboard/invitation/${invite.id}/edit`} className="flex-1 min-w-[110px]">
-                      <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
-                        <Pencil size={14} weight="bold" />
-                        <span>Edit Details</span>
-                      </button>
-                    </Link>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link href={`/dashboard/invitation/${invite.id}/edit`} className="flex-1 min-w-[100px]">
+                        <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                          <Pencil size={14} weight="bold" />
+                          <span>Edit Details</span>
+                        </button>
+                      </Link>
 
                     <button
                       onClick={() => {
@@ -559,8 +604,10 @@ export default function DashboardPage() {
                       <span className="hidden sm:inline">Delete</span>
                     </button>
                   </div>
-                </DoubleBezelCard>
-              ))}
+                </div>
+              </DoubleBezelCard>
+            );
+          })}
             </div>
           )}
         </div>
@@ -792,6 +839,24 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* ── Complimentary PDF Preview Modal ── */}
+      {selectedPdfInvite && (
+        <PdfPreviewModal
+          isOpen={Boolean(selectedPdfInvite)}
+          onClose={() => setSelectedPdfInvite(null)}
+          templateId={selectedPdfInvite.templateId || "noor-e-nikah"}
+          initialData={{
+            brideName: selectedPdfInvite.brideName,
+            groomName: selectedPdfInvite.groomName,
+            weddingDate: selectedPdfInvite.weddingDate,
+            weddingTime: selectedPdfInvite.weddingTime,
+            venueName: selectedPdfInvite.venueName,
+            venueAddress: selectedPdfInvite.venueAddress,
+            events: selectedPdfInvite.eventsJson || selectedPdfInvite.events || [],
+          }}
+        />
+      )}
     </div>
   );
 }

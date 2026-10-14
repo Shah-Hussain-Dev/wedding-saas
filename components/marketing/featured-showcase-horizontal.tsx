@@ -35,11 +35,11 @@ const SHOWCASE_TEMPLATES = [
   {
     id: "royal-majesty",
     name: "Royal Majesty",
-    category: "French Château & Regency Ballroom",
+    category: "Grand Palace & Regency Ballroom",
     opening: "Regency Ballroom Video Reveal",
     tag: "New",
     colors: "Powder Blue + Pearl Ivory + Gold",
-    description: "Enchanted French Château ballroom & starlit lake video reveal with crystal chandeliers, powder-blue hydrangea garlands, and 3D Rococo horizon gallery.",
+    description: "Enchanted grand palace ballroom & starlit lake video reveal with crystal chandeliers, powder-blue hydrangea garlands, and 3D Rococo horizon gallery.",
     video: "/videos/royal-majesty.mp4",
     bleedGlow: "rgba(169, 193, 208, 0.3)",
     ambientClass: "from-[#F7F4ED] via-[#A9C1D0]/18 to-[#F7F4ED]",

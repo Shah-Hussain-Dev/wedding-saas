@@ -131,7 +131,7 @@ function PreviewContent({ templateId }: { templateId: string }) {
       };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {/* Demo Banner with Timer & Razorpay Checkout */}
       <DemoBanner
         invitationId={invitationData.id}

@@ -26,7 +26,7 @@ const TEMPLATES_LIST = [
   { id: "rose-gold-blush", name: "Rose Gold Blush (Dual Faith & Universal)" },
   { id: "royal-grace", name: "Royal Grace (Botanical Velvet & Gold)" },
   { id: "royal-heritage", name: "Royal Heritage (Powder Blue & Coral Mediterranean)" },
-  { id: "royal-majesty", name: "Royal Majesty (French Château & Regency Ballroom)" },
+  { id: "royal-majesty", name: "Royal Majesty (Grand Palace & Regency Ballroom)" },
   { id: "celestial-rose", name: "Celestial Rose Dreamscape (Awwwards 3D & Ethereal Parallax)" },
   { id: "imperial-palace", name: "Imperial Palace (Grand European & Royal Indian Palace)" },
 ];

@@ -79,6 +79,21 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
     initialReligion === "hindu" || initialReligion === "muslim" ? initialReligion : "universal"
   );
 
+  useEffect(() => {
+    if (
+      data?.religion &&
+      (data.religion === "muslim" || data.religion === "hindu" || data.religion === "universal")
+    ) {
+      setSelectedReligion(data.religion);
+    }
+  }, [data?.religion]);
+
+  const hideReligionSwitcher = Boolean(
+    data?.hideReligionSwitcher ||
+    data?.isLive ||
+    data?.isOwned
+  );
+
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
@@ -268,23 +283,23 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
     switch (selectedReligion) {
       case "hindu":
         return {
-          title: "॥ श्री गणेशाय नमः ॥",
-          arabicOrSanskrit: "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
-          english: "With the divine grace of Almighty God, ancestors, and beloved elders, we solicit your gracious presence.",
+          title: data?.sacredInvocation || "॥ श्री गणेशाय नमः ॥",
+          arabicOrSanskrit: data?.sacredVerse || "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
+          english: data?.sacredTranslation || "With the divine grace of Almighty God, ancestors, and beloved elders, we solicit your gracious presence.",
           tag: "Vedic Hindu Blessing",
         };
       case "muslim":
         return {
-          title: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
-          arabicOrSanskrit: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
-          english: "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them.” (Surah Ar-Rum 30:21)",
+          title: data?.sacredInvocation || "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+          arabicOrSanskrit: data?.sacredVerse || "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+          english: data?.sacredTranslation || "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them.” (Surah Ar-Rum 30:21)",
           tag: "Sacred Nikah Blessing",
         };
       default:
         return {
-          title: "Two Souls · One Sacred Journey",
-          arabicOrSanskrit: "“Where there is love, there is life.”",
-          english: defaultData.quote,
+          title: data?.sacredInvocation || "Two Souls · One Sacred Journey",
+          arabicOrSanskrit: data?.sacredVerse || "“Where there is love, there is life.”",
+          english: data?.sacredTranslation || defaultData.quote,
           tag: "Universal Celebration",
         };
     }
@@ -356,44 +371,46 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
         {/* Ambient Twilight Vignette */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-black/80 z-[1] pointer-events-none" />
 
-        {/* Top Header: Discreet Faith Switcher Pill */}
-        <header className="relative z-20 w-full px-4 pt-4 md:pt-6 flex items-center justify-center max-w-7xl mx-auto">
-          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/60 backdrop-blur-md border border-[#B78C4E]/40 shadow-lg text-xs font-montserrat">
-            <button
-              onClick={() => setSelectedReligion("universal")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "universal"
-                  ? "bg-[#C5A46A] text-[#102A43] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <GlobeHemisphereWest size={12} weight="bold" />
-              Universal
-            </button>
-            <button
-              onClick={() => setSelectedReligion("hindu")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "hindu"
-                  ? "bg-[#C5A46A] text-[#102A43] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <FlowerLotus size={12} weight="bold" />
-              Hindu
-            </button>
-            <button
-              onClick={() => setSelectedReligion("muslim")}
-              className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "muslim"
-                  ? "bg-[#C5A46A] text-[#102A43] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <MoonStars size={12} weight="bold" />
-              Muslim
-            </button>
-          </div>
-        </header>
+        {/* Top Header: Discreet Faith Switcher Pill (Right on desktop, Centered on mobile) */}
+        {!hideReligionSwitcher && (
+          <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
+            <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/60 backdrop-blur-md border border-[#B78C4E]/40 shadow-lg text-xs font-montserrat">
+              <button
+                onClick={() => setSelectedReligion("universal")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "universal"
+                    ? "bg-[#C5A46A] text-[#102A43] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <GlobeHemisphereWest size={12} weight="bold" />
+                Universal
+              </button>
+              <button
+                onClick={() => setSelectedReligion("hindu")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "hindu"
+                    ? "bg-[#C5A46A] text-[#102A43] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <FlowerLotus size={12} weight="bold" />
+                Hindu
+              </button>
+              <button
+                onClick={() => setSelectedReligion("muslim")}
+                className={`px-3 py-1 rounded-full transition-all text-[10px] md:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "muslim"
+                    ? "bg-[#C5A46A] text-[#102A43] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <MoonStars size={12} weight="bold" />
+                Muslim
+              </button>
+            </div>
+          </header>
+        )}
 
         {/* ----------------------------------------------------
             GATE OPENING INVITATION PROMPT (Shown ONLY BEFORE user clicks)

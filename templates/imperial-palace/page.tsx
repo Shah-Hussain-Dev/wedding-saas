@@ -445,6 +445,21 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
       : "universal"
   );
 
+  useEffect(() => {
+    if (
+      data?.religion &&
+      (data.religion === "muslim" || data.religion === "hindu" || data.religion === "universal")
+    ) {
+      setSelectedReligion(data.religion);
+    }
+  }, [data?.religion]);
+
+  const hideReligionSwitcher = Boolean(
+    data?.hideReligionSwitcher ||
+    data?.isLive ||
+    data?.isOwned
+  );
+
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
   const [isContentRevealed, setIsContentRevealed] = useState(false);
@@ -604,28 +619,28 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     switch (selectedReligion) {
       case "hindu":
         return {
-          title: "॥ श्री गणेशाय नमः ॥",
+          title: data?.sacredInvocation || "॥ श्री गणेशाय नमः ॥",
           arabicOrSanskrit:
-            "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
+            data?.sacredVerse || "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
           english:
-            "With the divine grace of the Almighty and cherished ancestors, we solicit the honour of your esteemed presence.",
+            data?.sacredTranslation || "With the divine grace of the Almighty and cherished ancestors, we solicit the honour of your esteemed presence.",
           tag: "Vedic Auspicious Blessing",
         };
       case "muslim":
         return {
-          title: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+          title: data?.sacredInvocation || "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
           arabicOrSanskrit:
-            "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+            data?.sacredVerse || "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
           english:
-            "“And among His signs is that He created for you mates from among yourselves, that you may dwell in peace and tranquility.” (Surah Ar-Rum 30:21)",
+            data?.sacredTranslation || "“And among His signs is that He created for you mates from among yourselves, that you may dwell in peace and tranquility.” (Surah Ar-Rum 30:21)",
           tag: "Sacred Nikah Blessing",
         };
       default:
         return {
-          title: "Two Hearts · One Imperial Destiny",
+          title: data?.sacredInvocation || "Two Hearts · One Imperial Destiny",
           arabicOrSanskrit:
-            "“Where there is profound love and sacred honour, miracles illuminate the palace skies.”",
-          english: quote,
+            data?.sacredVerse || "“Where there is profound love and sacred honour, miracles illuminate the palace skies.”",
+          english: data?.sacredTranslation || quote,
           tag: "Universal Imperial Proclamation",
         };
     }
@@ -757,49 +772,46 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
         {/* Subtle Ambient Vignette & Warm Royal Tint */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/75 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher & Crest (Fluid Mobile Layout) */}
-        <header className="relative z-20 w-full px-3 pt-3 sm:px-4 sm:pt-6 flex flex-wrap items-center justify-between gap-2 max-w-6xl mx-auto">
-          <div className="flex items-center gap-1.5 text-[#D5BA97] font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-            <Crown size={15} weight="fill" className="flex-shrink-0" />
-            <span>PALAIS IMPÉRIAL</span>
-          </div>
-
-          <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/65 backdrop-blur-md border border-[#B89773]/40 shadow-md text-xs font-montserrat">
-            <button
-              onClick={() => setSelectedReligion("universal")}
-              className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "universal"
-                  ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <GlobeHemisphereWest size={11} weight="bold" />
-              Universal
-            </button>
-            <button
-              onClick={() => setSelectedReligion("hindu")}
-              className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "hindu"
-                  ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <FlowerLotus size={11} weight="bold" />
-              Hindu
-            </button>
-            <button
-              onClick={() => setSelectedReligion("muslim")}
-              className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "muslim"
-                  ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <MoonStars size={11} weight="bold" />
-              Muslim
-            </button>
-          </div>
-        </header>
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
+        {!hideReligionSwitcher && (
+          <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
+            <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/65 backdrop-blur-md border border-[#B89773]/40 shadow-md text-xs font-montserrat">
+              <button
+                onClick={() => setSelectedReligion("universal")}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "universal"
+                    ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <GlobeHemisphereWest size={11} weight="bold" />
+                Universal
+              </button>
+              <button
+                onClick={() => setSelectedReligion("hindu")}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "hindu"
+                    ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <FlowerLotus size={11} weight="bold" />
+                Hindu
+              </button>
+              <button
+                onClick={() => setSelectedReligion("muslim")}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "muslim"
+                    ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <MoonStars size={11} weight="bold" />
+                Muslim
+              </button>
+            </div>
+          </header>
+        )}
 
         {/* Full-Screen Tap Area When Video Has Not Started */}
         {!isVideoStarted && (
@@ -1698,7 +1710,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
               <div className="p-4 sm:p-6 pb-3 sm:pb-4 border-b border-[#B89773]/30 flex items-center justify-between bg-[#E5D8C4]/90 sticky top-0 z-10">
                 <div>
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#986E47] font-bold block">
-                    ✦ PALAIS IMPÉRIAL REGISTER ✦
+                    ✦ IMPERIAL PALACE REGISTER ✦
                   </span>
                   <h3 className="text-xl sm:text-2xl font-playfair font-bold text-[#551618] leading-tight">
                     Confirm Your Presence

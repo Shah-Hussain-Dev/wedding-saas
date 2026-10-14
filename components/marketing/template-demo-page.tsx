@@ -353,7 +353,8 @@ function DemoPhoneFrame({ src, templateName }: { src: string; templateName: stri
             src={src}
             title={`${templateName} interactive demo`}
             onLoad={() => setLoaded(true)}
-            className="absolute inset-0 w-full h-full border-0 bg-white"
+            className="absolute inset-0 w-full h-full border-0 bg-white no-scrollbar"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             allow="autoplay"
           />
         </div>

@@ -58,7 +58,7 @@ The WedInvites design system is rooted in royal South Asian courts (Rajputana ha
 * **Crimson Velvet (`#7C2C3B` / `#420F18`):** For Hindu royal court invitations (*Crimson Royale, Royal Lotus*).
 * **Midnight Sapphire (`#0A1628` / `#0F2342`):** For celestial Nikah invitations (*Azure Nikah*).
 * **Blush Rose (`#E8B8B8` / `#FCE8ED`):** For modern romantic dreamscapes (*Gul-e-Noor, Rose Gold Blush*).
-* **Sage Olive (`#1B2D24` / `#5C7A3A`):** For botanical garden châteaux (*Royal Grace*).
+* **Sage Olive (`#1B2D24` / `#5C7A3A`):** For botanical garden estates (*Royal Grace*).
 
 ### 2.3 Typography Matrix
 * **Primary Display & Headings:** `Cormorant Garamond` (Google Font) — Light/Regular/SemiBold/Italic. Ethereal, haute-couture serif with delicate serifs and high contrast.

@@ -7,6 +7,7 @@ import { Sparkle, CheckCircle, ShieldCheck, ArrowRight, Star } from "@phosphor-i
 
 const INCLUDED_PERKS = [
   "Choice of any luxury masterwork template",
+  "2 Matching Print-Ready PDF Invitations (Barat & Reception) Included Free",
   "3D animated door reveals & live video openings",
   "High-interaction scratch-off Muhurat reveal",
   "Background music score with user audio toggle",

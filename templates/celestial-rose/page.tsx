@@ -650,6 +650,21 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
       : "universal"
   );
 
+  useEffect(() => {
+    if (
+      data?.religion &&
+      (data.religion === "muslim" || data.religion === "hindu" || data.religion === "universal")
+    ) {
+      setSelectedReligion(data.religion);
+    }
+  }, [data?.religion]);
+
+  const hideReligionSwitcher = Boolean(
+    data?.hideReligionSwitcher ||
+    data?.isLive ||
+    data?.isOwned
+  );
+
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
   const [selectedEventIdx, setSelectedEventIdx] = useState(0);
@@ -814,28 +829,28 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
     switch (selectedReligion) {
       case "hindu":
         return {
-          title: "॥ ॐ श्री गणेशाय नमः ॥",
+          title: data?.sacredInvocation || "॥ ॐ श्री गणेशाय नमः ॥",
           arabicOrSanskrit:
-            "मांगल्यं तनोतु मे । कल्याणानां निधानं सकलजगदिदं संपदामेकहेतुः ॥",
+            data?.sacredVerse || "मांगल्यं तनोतु मे । कल्याणानां निधानं सकलजगदिदं संपदामेकहेतुः ॥",
           english:
-            "With the divine grace of the Almighty and cherished ancestors, we invite you to share our sacred wedding vows.",
+            data?.sacredTranslation || "With the divine grace of the Almighty and cherished ancestors, we invite you to share our sacred wedding vows.",
           tag: "Vedic Auspicious Blessing",
         };
       case "muslim":
         return {
-          title: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+          title: data?.sacredInvocation || "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
           arabicOrSanskrit:
-            "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+            data?.sacredVerse || "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
           english:
-            "“And among His signs is that He created for you mates from among yourselves, that you may dwell in peace and tranquility.” (Surah Ar-Rum 30:21)",
+            data?.sacredTranslation || "“And among His signs is that He created for you mates from among yourselves, that you may dwell in peace and tranquility.” (Surah Ar-Rum 30:21)",
           tag: "Sacred Nikah Blessing",
         };
       default:
         return {
-          title: "Two Destinies · One Infinite Sky",
+          title: data?.sacredInvocation || "Two Destinies · One Infinite Sky",
           arabicOrSanskrit:
-            "“Under the quiet blessing of the crescent moon and starlit skies, two souls intertwine into an infinite dream.”",
-          english: quote,
+            data?.sacredVerse || "“Under the quiet blessing of the crescent moon and starlit skies, two souls intertwine into an infinite dream.”",
+          english: data?.sacredTranslation || quote,
           tag: "Celestial Proclamation",
         };
     }
@@ -922,58 +937,55 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* Layer 1: Atmospheric Light Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/65 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher & Celestial Crest */}
-        <header className="relative z-20 w-full px-3 pt-3 sm:px-6 sm:pt-6 flex flex-wrap items-center justify-between gap-2 max-w-6xl mx-auto">
-          <div className="flex items-center gap-1.5 text-[#E2B993] font-cinzel text-[10px] sm:text-xs font-bold tracking-widest uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]">
-            <MoonStars size={16} weight="fill" className="text-[#C9A46E]" />
-            <span>CELESTIAL ROSE DREAMSCAPE</span>
-          </div>
-
-          <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/60 backdrop-blur-md border border-[#E2B993]/40 shadow-md text-xs font-montserrat">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedReligion("universal");
-              }}
-              className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "universal"
-                  ? "bg-[#C9A46E] text-[#36281D] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <GlobeHemisphereWest size={11} weight="bold" />
-              Universal
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedReligion("hindu");
-              }}
-              className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "hindu"
-                  ? "bg-[#C9A46E] text-[#36281D] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <FlowerLotus size={11} weight="bold" />
-              Hindu
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedReligion("muslim");
-              }}
-              className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                selectedReligion === "muslim"
-                  ? "bg-[#C9A46E] text-[#36281D] shadow-sm font-bold"
-                  : "text-stone-300 hover:text-white"
-              }`}
-            >
-              <MoonStars size={11} weight="bold" />
-              Muslim
-            </button>
-          </div>
-        </header>
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
+        {!hideReligionSwitcher && (
+          <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
+            <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/60 backdrop-blur-md border border-[#E2B993]/40 shadow-md text-xs font-montserrat">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedReligion("universal");
+                }}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "universal"
+                    ? "bg-[#C9A46E] text-[#36281D] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <GlobeHemisphereWest size={11} weight="bold" />
+                Universal
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedReligion("hindu");
+                }}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "hindu"
+                    ? "bg-[#C9A46E] text-[#36281D] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <FlowerLotus size={11} weight="bold" />
+                Hindu
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedReligion("muslim");
+                }}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
+                  selectedReligion === "muslim"
+                    ? "bg-[#C9A46E] text-[#36281D] shadow-sm font-bold"
+                    : "text-stone-300 hover:text-white"
+                }`}
+              >
+                <MoonStars size={11} weight="bold" />
+                Muslim
+              </button>
+            </div>
+          </header>
+        )}
 
         {/* AnimatePresence for Unveiled Invitation Content After 5.5s */}
         <AnimatePresence>

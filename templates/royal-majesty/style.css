@@ -1,10 +1,10 @@
 /* ==========================================================================
-   ROYAL MAJESTY — FRENCH CHÂTEAU & REGENCY LAKESIDE BALLROOM
+   ROYAL MAJESTY — REGAL PALACE & REGENCY LAKESIDE BALLROOM
    LOCKED COLOR SOURCE OF TRUTH:
    - Powder Blue: #A9C1D0
    - Soft Baby Blue: #BCD0DA
    - Dusty Blue: #8FAABD
-   - French Blue: #708FA8
+   - Regal Blue: #708FA8
    - Slate Blue: #607C91
    - Deep Blue Grey: #4E687A
    - Pearl Ivory: #EBECE8
@@ -23,7 +23,7 @@
   --majesty-powder-blue: #A9C1D0;
   --majesty-baby-blue: #BCD0DA;
   --majesty-dusty-blue: #8FAABD;
-  --majesty-french-blue: #708FA8;
+  --majesty-regal-blue: #708FA8;
   --majesty-slate-blue: #607C91;
   --majesty-deep-blue: #4E687A;
 
@@ -166,7 +166,7 @@
 }
 
 /* ====================================================
-   CHÂTEAU SALON ITINERARY STAGE
+   REGENCY SALON ITINERARY STAGE
    ==================================================== */
 .majesty-itinerary-tab {
   padding: 14px 18px;

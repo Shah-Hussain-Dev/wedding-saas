@@ -64,7 +64,22 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   };
 
   return (
-    <div className={`relative min-h-[100dvh] bg-[#380D17] overflow-x-hidden ${isEmbed ? "overflow-y-auto" : ""}`}>
+    <div
+      className={`relative min-h-[100dvh] bg-[#380D17] overflow-x-hidden no-scrollbar ${isEmbed ? "overflow-y-auto" : ""}`}
+      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+    >
+      <style>{`
+        html, body, div, * {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        ::-webkit-scrollbar, *::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+      `}</style>
+
       {/* Self-contained template render */}
       <SelectedTemplate data={sampleData} />
 

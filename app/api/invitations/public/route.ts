@@ -25,7 +25,16 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: "Invitation not found." }, { status: 404 });
       }
 
-      return NextResponse.json(invitation, { status: 200 });
+      const transObj = (invitation.translations as any) || {};
+      const enrichedInvitation = {
+        ...invitation,
+        religion: transObj.religion || "universal",
+        sacredInvocation: transObj.sacredInvocation || null,
+        sacredVerse: transObj.sacredVerse || null,
+        sacredTranslation: transObj.sacredTranslation || null,
+      };
+
+      return NextResponse.json(enrichedInvitation, { status: 200 });
     } catch (dbError) {
       console.warn("Public Invitation DB fetch failed. Relying on client-side demo fallback.", dbError);
       return NextResponse.json({ error: "Database offline" }, { status: 503 });

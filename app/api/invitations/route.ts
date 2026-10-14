@@ -38,8 +38,19 @@ export async function GET(req: NextRequest) {
         }))
       );
 
+      const enrichedInvitations = invitations.map((inv) => {
+        const trans = (inv.translations as any) || {};
+        return {
+          ...inv,
+          religion: trans.religion || "universal",
+          sacredInvocation: trans.sacredInvocation || null,
+          sacredVerse: trans.sacredVerse || null,
+          sacredTranslation: trans.sacredTranslation || null,
+        };
+      });
+
       return NextResponse.json({
-        invitations,
+        invitations: enrichedInvitations,
         messages: allMessages,
       });
     } catch (dbError) {
@@ -77,12 +88,25 @@ export async function POST(req: NextRequest) {
       templateId,
       email,
       userEmail,
+      religion,
+      sacredInvocation,
+      sacredVerse,
+      sacredTranslation,
     } = body;
 
     const targetEmail = (userEmail || email || siteConfig.email.support).toLowerCase().trim();
 
     // Generate collision-free unique slug
     const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`);
+
+    const resolvedReligion = religion || "universal";
+    const translationsData = {
+      ...(body.translations || {}),
+      religion: resolvedReligion,
+      sacredInvocation: sacredInvocation || null,
+      sacredVerse: sacredVerse || null,
+      sacredTranslation: sacredTranslation || null,
+    };
 
     try {
       // Find or create user account to link ownership
@@ -137,10 +161,19 @@ export async function POST(req: NextRequest) {
           showTransport: Boolean(showTransport),
           transportText: transportText || null,
           eventsJson: eventsJson || [],
+          translations: translationsData,
         },
       });
 
-      return NextResponse.json(invitation, { status: 201 });
+      const enrichedCreated = {
+        ...invitation,
+        religion: resolvedReligion,
+        sacredInvocation: sacredInvocation || null,
+        sacredVerse: sacredVerse || null,
+        sacredTranslation: sacredTranslation || null,
+      };
+
+      return NextResponse.json(enrichedCreated, { status: 201 });
     } catch (dbError) {
       console.warn("Prisma create failed. Returning mock response for frontend.", dbError);
       return NextResponse.json(
@@ -156,6 +189,11 @@ export async function POST(req: NextRequest) {
           venueAddress,
           eventsJson,
           slideshowImages,
+          religion: resolvedReligion,
+          sacredInvocation: sacredInvocation || null,
+          sacredVerse: sacredVerse || null,
+          sacredTranslation: sacredTranslation || null,
+          translations: translationsData,
         },
         { status: 200 }
       );

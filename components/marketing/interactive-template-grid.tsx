@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowRight, Eye, Heart, Sparkle, Play, CaretRight } from "@phosphor-icons/react";
+import { ArrowRight, Eye, Heart, Sparkle, Play, CaretRight, FilePdf } from "@phosphor-icons/react";
 import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 
 interface TemplateItem {
@@ -73,12 +73,12 @@ const CATALOGUE_TEMPLATES: TemplateItem[] = [
     name: "Royal Majesty",
     category: "royal",
     categoryLabel: "Regency & Heritage",
-    style: "French Château Ballroom & Chandeliers",
+    style: "Grand Palace Ballroom & Chandeliers",
     price: "₹1,199",
     tag: "Luxury Heritage",
     video: "/videos/royal-majesty.mp4",
     scenes: [
-      { title: "Château Ballroom Parallax", image: "/templates/imperial-palace/ballroom.jpg" },
+      { title: "Regency Ballroom Parallax", image: "/templates/imperial-palace/ballroom.jpg" },
       { title: "Crystal Chandeliers", image: "/templates/imperial-palace/ballroom.jpg" },
       { title: "Live Guestbook Flight", image: "/templates/imperial-palace/ballroom.jpg" },
       { title: "Dress Code Visualizer", image: "/templates/imperial-palace/ballroom.jpg" },
@@ -165,7 +165,7 @@ export function InteractiveTemplateGrid() {
               Select your wedding world.
             </h2>
             <p className="text-xs sm:text-sm text-[#76766F] font-sans mt-2 max-w-lg">
-              Hover across any card to scrub through its opening sequence, ceremony chapters, and guest interactions.
+              Hover across any card to scrub through its opening sequence. Every template includes <strong>2 complimentary matching printable PDFs</strong> (Barat &amp; Reception).
             </p>
           </div>
 
@@ -300,8 +300,14 @@ export function InteractiveTemplateGrid() {
                       {item.style}
                     </p>
 
+                    {/* Complimentary Matching PDFs Badge */}
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#C8A45E]/10 border border-[#C8A45E]/25 text-[10px] font-sans font-semibold text-[#8C6D23] mt-0.5">
+                      <FilePdf size={13} weight="bold" className="text-[#C8A45E] shrink-0" />
+                      <span className="truncate">Includes 2 Matching PDFs (Barat &amp; Reception)</span>
+                    </div>
+
                     {/* Direct Action Bar with Roll */}
-                    <div className="flex items-center gap-2 pt-3 mt-1 border-t border-[#073D31]/8">
+                    <div className="flex items-center gap-2 pt-2.5 mt-0.5 border-t border-[#073D31]/8">
                       <Link
                         href={`/preview/${item.id}`}
                         className="flex-1 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-all shadow-xs group-hover:shadow-md cursor-pointer"

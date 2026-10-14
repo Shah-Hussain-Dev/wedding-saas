@@ -33,7 +33,10 @@ import {
   Eye,
   Lock,
   ArrowsClockwise,
+  FilePdf,
 } from "@phosphor-icons/react";
+import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
+import { CulturalTradition } from "@/lib/pdf-theme-tokens";
 
 export interface EventItem {
   name: string;
@@ -43,6 +46,54 @@ export interface EventItem {
   time: string;
 }
 
+export interface ReligionPreset {
+  id: CulturalTradition;
+  name: string;
+  badge: string;
+  icon: string;
+  sacredInvocation: string;
+  sacredVerse: string;
+  sacredTranslation: string;
+  baratEventTitle: string;
+  receptionEventTitle: string;
+}
+
+export const RELIGION_PRESETS: Record<CulturalTradition, ReligionPreset> = {
+  muslim: {
+    id: "muslim",
+    name: "Muslim Tradition",
+    badge: "Sacred Nikah & Duas",
+    icon: "☪️",
+    sacredInvocation: "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ",
+    sacredVerse: "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+    sacredTranslation: "“And among His signs is that He created for you mates from among yourselves, that you may dwell in tranquility with them, and He placed between you love and mercy.” (Surah Ar-Rum 30:21)",
+    baratEventTitle: "The Sacred Nikah & Barat",
+    receptionEventTitle: "Dawat-e-Walima",
+  },
+  hindu: {
+    id: "hindu",
+    name: "Hindu Vedic Tradition",
+    badge: "Vedic Mantras & Vivah",
+    icon: "🕉️",
+    sacredInvocation: "॥ श्री गणेशाय नमः ॥",
+    sacredVerse: "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
+    sacredTranslation: "May Lord Ganesha and the Divine Trinity bless this sacred matrimonial union with eternal joy, harmony, and prosperity.",
+    baratEventTitle: "Shubh Vivah & Barat Procession",
+    receptionEventTitle: "Preetibhoj & Grand Reception",
+  },
+  universal: {
+    id: "universal",
+    name: "Universal & Contemporary",
+    badge: "Love Quotes & Nuptials",
+    icon: "💫",
+    sacredInvocation: "✦ Two Hearts · One Journey ✦",
+    sacredVerse: "“In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine.”",
+    sacredTranslation: "Together with our families, we joyfully invite you to celebrate the beginning of our forever.",
+    baratEventTitle: "Wedding Procession & Ceremony",
+    receptionEventTitle: "Grand Gala Dinner & Reception",
+  },
+};
+
 export interface InvitationCustomizerWizardProps {
   templateId: string;
   invitationId?: string | null;
@@ -51,7 +102,7 @@ export interface InvitationCustomizerWizardProps {
 }
 
 const STEPS = [
-  { id: 1, title: "The Couple", subtitle: "Names & Custom Link", icon: Heart },
+  { id: 1, title: "The Couple", subtitle: "Names, Faith & Link", icon: Heart },
   { id: 2, title: "Date & Venue", subtitle: "Time & Location", icon: Calendar },
   { id: 3, title: "Ceremonies", subtitle: "Event Timeline", icon: Clock },
   { id: 4, title: "Photo & Audio", subtitle: "Portrait & Music", icon: ImageIcon },
@@ -125,6 +176,35 @@ export function InvitationCustomizerWizard({
     { name: "Grand Reception & Feast", enabled: true, venue: "The Grand Ballroom", date: "Dec 22, 2026", time: "08:00 PM" },
   ];
 
+  const initialReligion: CulturalTradition =
+    initialData?.religion === "muslim" || initialData?.religion === "hindu" || initialData?.religion === "universal"
+      ? initialData.religion
+      : templateId.includes("nikah") || templateId.includes("emerald") || templateId.includes("gul")
+      ? "muslim"
+      : templateId.includes("lotus") || templateId.includes("royale") || templateId.includes("haveli") || templateId.includes("elegance")
+      ? "hindu"
+      : "universal";
+
+  const [religion, setReligion] = useState<CulturalTradition>(initialReligion);
+  const [sacredInvocation, setSacredInvocation] = useState(
+    initialData?.sacredInvocation || RELIGION_PRESETS[initialReligion]?.sacredInvocation || ""
+  );
+  const [sacredVerse, setSacredVerse] = useState(
+    initialData?.sacredVerse || RELIGION_PRESETS[initialReligion]?.sacredVerse || ""
+  );
+  const [sacredTranslation, setSacredTranslation] = useState(
+    initialData?.sacredTranslation || RELIGION_PRESETS[initialReligion]?.sacredTranslation || ""
+  );
+  const [isCustomizingInvocation, setIsCustomizingInvocation] = useState(false);
+
+  const handleSelectReligion = (rel: CulturalTradition) => {
+    setReligion(rel);
+    const preset = RELIGION_PRESETS[rel];
+    setSacredInvocation(preset.sacredInvocation);
+    setSacredVerse(preset.sacredVerse);
+    setSacredTranslation(preset.sacredTranslation);
+  };
+
   const [events, setEvents] = useState<EventItem[]>(
     Array.isArray(initialData?.eventsJson) && initialData.eventsJson.length > 0
       ? initialData.eventsJson
@@ -136,6 +216,7 @@ export function InvitationCustomizerWizard({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   // Sync initialData changes if loaded asynchronously
   useEffect(() => {
@@ -149,6 +230,12 @@ export function InvitationCustomizerWizard({
       if (initialData.slug) {
         setSlug(initialData.slug);
         if (isEdit) setIsSlugManuallyEdited(true);
+      }
+      if (initialData.religion) {
+        setReligion(initialData.religion);
+        if (initialData.sacredInvocation) setSacredInvocation(initialData.sacredInvocation);
+        if (initialData.sacredVerse) setSacredVerse(initialData.sacredVerse);
+        if (initialData.sacredTranslation) setSacredTranslation(initialData.sacredTranslation);
       }
       if (initialData.heroImageUrl) {
         setHeroImageUrl(initialData.heroImageUrl);
@@ -266,6 +353,10 @@ export function InvitationCustomizerWizard({
       weddingTime,
       venueName,
       venueAddress,
+      religion,
+      sacredInvocation,
+      sacredVerse,
+      sacredTranslation,
       heroImageUrl: heroBgChoice === "custom" ? heroImageUrl : "",
       slideshowImages,
       gallery: slideshowImages.length > 0 ? slideshowImages : (heroImageUrl ? [heroImageUrl] : []),
@@ -276,6 +367,7 @@ export function InvitationCustomizerWizard({
       isPublished: Boolean(initialData?.isPublished ?? false),
       userEmail: targetEmail,
       email: targetEmail,
+      createdAt: initialData?.createdAt || initialData?.created_at || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
@@ -588,6 +680,138 @@ export function InvitationCustomizerWizard({
                 <p className="text-[11px] text-stone-400 mt-1.5">
                   This will be your shareable URL slug for WhatsApp and guest invitations.
                 </p>
+              </div>
+
+              {/* Religious & Cultural Tradition Selection */}
+              <div className="pt-5 border-t border-stone-200/80 space-y-3.5">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                    Religious &amp; Cultural Tradition *
+                  </label>
+                  <p className="text-xs text-stone-500">
+                    Select your faith tradition to dynamically tailor sacred invocations (Arabic Duas, Vedic Mantras, or Romantic Love Quotes) across both your live website template and complimentary printable PDFs.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {(["muslim", "hindu", "universal"] as CulturalTradition[]).map((relKey) => {
+                    const preset = RELIGION_PRESETS[relKey];
+                    const isSelected = religion === relKey;
+                    return (
+                      <button
+                        key={relKey}
+                        type="button"
+                        onClick={() => handleSelectReligion(relKey)}
+                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer relative flex flex-col justify-between ${
+                          isSelected
+                            ? "border-amber-500 bg-amber-500/10 shadow-sm ring-2 ring-amber-500/20"
+                            : "border-stone-200 bg-stone-50/60 hover:bg-stone-100 hover:border-stone-300"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between w-full mb-1.5">
+                          <span className="text-xl">{preset.icon}</span>
+                          {isSelected ? (
+                            <span className="h-5 w-5 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center">
+                              <Check size={12} weight="bold" />
+                            </span>
+                          ) : (
+                            <span className="h-5 w-5 rounded-full border border-stone-300" />
+                          )}
+                        </div>
+                        <div>
+                          <div className="font-bold text-xs text-stone-900">{preset.name}</div>
+                          <div className="text-[11px] text-amber-800 font-medium">{preset.badge}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Active Tradition Blessing Showcase Card */}
+                <div className="p-4 rounded-xl bg-gradient-to-br from-amber-500/5 via-stone-50 to-stone-100/80 border border-amber-500/30 space-y-2.5">
+                  <div className="flex flex-wrap items-center justify-between gap-1">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-amber-900 flex items-center gap-1.5 font-mono">
+                      <Sparkle size={12} weight="fill" className="text-amber-600" />
+                      Sacred Invocations &amp; Blessings ({RELIGION_PRESETS[religion].name})
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsCustomizingInvocation(!isCustomizingInvocation)}
+                      className="text-[11px] font-semibold text-amber-800 hover:text-amber-950 underline underline-offset-2 cursor-pointer"
+                    >
+                      {isCustomizingInvocation ? "Close Wording Editor" : "Customize Blessing Wording"}
+                    </button>
+                  </div>
+
+                  <div className="text-center py-3 px-4 bg-white/90 rounded-lg border border-stone-200/80 shadow-xs space-y-1.5">
+                    <div className="font-serif text-base sm:text-lg font-bold text-stone-900 leading-snug">
+                      {sacredInvocation}
+                    </div>
+                    {sacredVerse && (
+                      <div className="text-xs text-stone-700 italic font-serif leading-relaxed max-w-xl mx-auto">
+                        {sacredVerse}
+                      </div>
+                    )}
+                    {sacredTranslation && (
+                      <div className="text-[11px] text-stone-500 font-sans max-w-xl mx-auto">
+                        {sacredTranslation}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Optional Customizer Drawer */}
+                  {isCustomizingInvocation && (
+                    <div className="pt-3 border-t border-stone-200 space-y-3 mt-2 text-xs">
+                      <div>
+                        <label className="block text-[11px] font-bold text-stone-700 uppercase tracking-wider mb-1">
+                          Sacred Header / Invocatory Title
+                        </label>
+                        <input
+                          type="text"
+                          value={sacredInvocation}
+                          onChange={(e) => setSacredInvocation(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-stone-900 text-xs focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-stone-700 uppercase tracking-wider mb-1">
+                          Holy Verse / Romantic Quote
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={sacredVerse}
+                          onChange={(e) => setSacredVerse(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-stone-900 text-xs focus:outline-none focus:border-amber-500 resize-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-stone-700 uppercase tracking-wider mb-1">
+                          Translation / Meaning Line
+                        </label>
+                        <input
+                          type="text"
+                          value={sacredTranslation}
+                          onChange={(e) => setSacredTranslation(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg border border-stone-200 bg-white text-stone-900 text-xs focus:outline-none focus:border-amber-500"
+                        />
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const preset = RELIGION_PRESETS[religion];
+                            setSacredInvocation(preset.sacredInvocation);
+                            setSacredVerse(preset.sacredVerse);
+                            setSacredTranslation(preset.sacredTranslation);
+                          }}
+                          className="text-[11px] text-stone-500 hover:text-stone-800 underline"
+                        >
+                          Reset to preset wording
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </DoubleBezelCard>
           </motion.div>
@@ -1001,6 +1225,15 @@ export function InvitationCustomizerWizard({
                 </div>
 
                 <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+                  <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Tradition &amp; Blessings</span>
+                  <span className="font-serif text-base font-bold text-stone-900 flex items-center gap-1.5">
+                    <span>{RELIGION_PRESETS[religion].icon}</span>
+                    <span>{RELIGION_PRESETS[religion].name}</span>
+                  </span>
+                  <span className="text-xs text-amber-800 truncate block mt-0.5">{sacredInvocation}</span>
+                </div>
+
+                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 sm:col-span-2">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Date & Time</span>
                   <span className="font-serif text-lg font-bold text-stone-900 block">{weddingDate}</span>
                   <span className="text-xs text-stone-600">{weddingTime}</span>
@@ -1036,8 +1269,35 @@ export function InvitationCustomizerWizard({
                 </div>
               </div>
 
-              {/* Status Note */}
-              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 flex items-center gap-3">
+                {/* ── Complimentary PDF Benefit Showcase Card ── */}
+                <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-[#073D31]/5 to-transparent border-2 border-[#C8A45E]/40 sm:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[#C8A45E]" />
+                      <span className="text-[10px] uppercase font-bold text-[#8C6D23] tracking-widest font-sans">
+                        Complimentary Stationery Included
+                      </span>
+                    </div>
+                    <h3 className="font-serif text-lg font-bold text-stone-900">
+                      Two Matching Printable PDF Invitations
+                    </h3>
+                    <p className="text-xs text-stone-600 max-w-md leading-relaxed">
+                      Included free with your website: <strong>Barat / Ceremony</strong> and <strong>Reception / Walima</strong> invitations matching {meta.name}&apos;s gold foil styling.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsPdfModalOpen(true)}
+                    className="px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] font-bold text-xs uppercase tracking-wider font-sans transition-all shadow-md hover:scale-105 active:scale-98 flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                  >
+                    <FilePdf size={16} weight="bold" className="text-[#C8A45E]" />
+                    <span>Preview &amp; Download PDFs</span>
+                  </button>
+                </div>
+
+                {/* Status Note */}
+                <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200/80 flex items-center gap-3">
                 <CheckCircle className="h-6 w-6 text-emerald-600 shrink-0" weight="fill" />
                 <div className="text-xs text-emerald-900">
                   <span className="font-bold block">
@@ -1102,6 +1362,26 @@ export function InvitationCustomizerWizard({
           </PremiumButton>
         )}
       </div>
+
+      {/* ── Complimentary PDF Preview Modal ── */}
+      <PdfPreviewModal
+        isOpen={isPdfModalOpen}
+        onClose={() => setIsPdfModalOpen(false)}
+        templateId={templateId}
+        initialData={{
+          brideName,
+          groomName,
+          weddingDate,
+          weddingTime,
+          venueName,
+          venueAddress,
+          events,
+          religion,
+          sacredInvocation,
+          sacredVerse,
+          sacredTranslation,
+        }}
+      />
     </div>
   );
 }

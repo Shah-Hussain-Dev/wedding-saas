@@ -23,7 +23,16 @@ export async function GET(
         return NextResponse.json({ error: "Invitation not found." }, { status: 404 });
       }
 
-      return NextResponse.json(invitation, { status: 200 });
+      const trans = (invitation.translations as any) || {};
+      const enriched = {
+        ...invitation,
+        religion: trans.religion || "universal",
+        sacredInvocation: trans.sacredInvocation || null,
+        sacredVerse: trans.sacredVerse || null,
+        sacredTranslation: trans.sacredTranslation || null,
+      };
+
+      return NextResponse.json(enriched, { status: 200 });
     } catch (dbError) {
       console.warn("DB offline for GET /api/invitations/[id]", dbError);
       return NextResponse.json({ error: "Database offline" }, { status: 503 });
@@ -61,9 +70,22 @@ export async function PUT(
       transportText,
       eventsJson,
       templateId,
+      religion,
+      sacredInvocation,
+      sacredVerse,
+      sacredTranslation,
     } = body;
 
     const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`, id);
+
+    const resolvedReligion = religion || "universal";
+    const translationsData = {
+      ...(body.translations || {}),
+      religion: resolvedReligion,
+      sacredInvocation: sacredInvocation || null,
+      sacredVerse: sacredVerse || null,
+      sacredTranslation: sacredTranslation || null,
+    };
 
     try {
       const updated = await prisma.invitation.update({
@@ -87,10 +109,19 @@ export async function PUT(
           showTransport: Boolean(showTransport),
           transportText: transportText || null,
           eventsJson: eventsJson || [],
+          translations: translationsData,
         },
       });
 
-      return NextResponse.json(updated, { status: 200 });
+      const enrichedUpdated = {
+        ...updated,
+        religion: resolvedReligion,
+        sacredInvocation: sacredInvocation || null,
+        sacredVerse: sacredVerse || null,
+        sacredTranslation: sacredTranslation || null,
+      };
+
+      return NextResponse.json(enrichedUpdated, { status: 200 });
     } catch (dbError) {
       console.warn("Prisma update failed. Returning updated mock payload.", dbError);
       return NextResponse.json(
@@ -106,6 +137,11 @@ export async function PUT(
           venueAddress,
           eventsJson,
           slideshowImages,
+          religion: resolvedReligion,
+          sacredInvocation: sacredInvocation || null,
+          sacredVerse: sacredVerse || null,
+          sacredTranslation: sacredTranslation || null,
+          translations: translationsData,
         },
         { status: 200 }
       );
