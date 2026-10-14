@@ -19,47 +19,82 @@ export function PremiumFooter() {
 
   return (
     <footer className="relative bg-[#032A23] text-[#F7F4ED] overflow-hidden pt-20 sm:pt-28 pb-12 select-none border-t border-[#C8A45E]/30 selection:bg-[#C8A45E]/40 selection:text-white">
+      {/* Background Image Layer (Footer) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <Image
+          src="/images/cta-bg.png"
+          alt=""
+          fill
+          priority={false}
+          sizes="100vw"
+          className="object-cover object-center opacity-30 mix-blend-luminosity"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#032A23]/85 via-[#032A23]/80 to-[#021A15]/95" />
+      </div>
+
       {/* Ambient Radial Aura */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-[radial-gradient(ellipse_at_top,rgba(200,164,94,0.18)_0%,transparent_70%)] pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[500px] h-[300px] bg-[radial-gradient(circle,rgba(7,61,49,0.4)_0%,transparent_70%)] pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10 space-y-16 sm:space-y-20">
-        {/* Grand Finale Call to Action */}
-        <div className="text-center space-y-6 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#C8A45E]/40 text-[#E1C98E] text-[10px] sm:text-[11px] font-bold tracking-[0.25em] uppercase font-sans backdrop-blur-md">
-            <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
-            Your Celebration Begins Now
-            <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
+        {/* Grand Finale Call to Action with Dedicated cta-bg.png Layer */}
+        <div className="relative rounded-[2.25rem] p-8 sm:p-12 md:p-14 overflow-hidden border border-[#C8A45E]/35 shadow-[0_25px_60px_rgba(0,0,0,0.35)] text-center  max-w-4xl mx-auto">
+          {/* Dedicated CTA Background Image */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <Image
+              src="/images/cta-bg.png"
+              alt=""
+              fill
+              priority={false}
+              sizes="(max-width: 1024px) 100vw, 896px"
+              className="object-cover object-center opacity-55 scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#073D31]/80 via-[#032A23]/75 to-[#021A15]/90" />
+            <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#E1C98E] to-transparent opacity-80" />
           </div>
 
-          <h2 className="font-serif text-3.5xl sm:text-5xl md:text-6xl font-normal leading-[1.12] tracking-tight text-[#F7F4ED]">
-            Make the invitation as <br />
-            <span className="italic font-normal text-[#E1C98E]">unforgettable</span> as the day.
-          </h2>
+          <div className="relative z-10 space-y-6">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#C8A45E]/40 text-[#E1C98E] text-[10px] sm:text-[11px] font-bold tracking-[0.25em] uppercase font-sans backdrop-blur-md">
+              <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
+              Your Celebration Begins Now
+              <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
+            </div>
 
-          <p className="text-xs sm:text-sm md:text-base text-stone-300 font-sans max-w-xl mx-auto leading-relaxed">
-            Join hundreds of modern couples who turned their wedding stationery into an interactive 3D digital masterpiece.
-          </p>
+            <h2 className="font-serif text-3.5xl sm:text-5xl md:text-6xl font-normal leading-[1.12] tracking-tight text-[#F7F4ED]">
+              Make the invitation as <br />
+              <span className="italic font-normal text-[#E1C98E]">unforgettable</span> as the day.
+            </h2>
 
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/templates"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold tracking-widest uppercase font-sans transition-all duration-300 shadow-[0_15px_40px_rgba(200,164,94,0.35)] hover:scale-105 active:scale-95 cursor-pointer"
-            >
-              <span className="roll">
-                <span className="roll__a">Start My Invitation · From {siteConfig.startingPrice}</span>
-                <span className="roll__b" aria-hidden="true">Start My Invitation · From {siteConfig.startingPrice}</span>
-              </span>
-              <ArrowRight size={15} weight="bold" />
-            </Link>
+            <p className="text-xs sm:text-sm md:text-base text-stone-300 font-sans max-w-xl mx-auto leading-relaxed">
+              Join hundreds of modern couples who turned their wedding stationery into an interactive 3D digital masterpiece.
+            </p>
 
-            <a
-              href={`mailto:${siteConfig.email.support}`}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer"
-            >
-              <EnvelopeSimple size={16} weight="fill" className="text-[#E1C98E]" />
-              <span>Email Concierge</span>
-            </a>
+            <div className="pt-2 flex flex-col items-center justify-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+                <Link
+                  href="/templates"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold tracking-widest uppercase font-sans transition-all duration-300 shadow-[0_15px_40px_rgba(200,164,94,0.35)] hover:scale-105 active:scale-95 cursor-pointer"
+                >
+                  <span className="roll">
+                    <span className="roll__a">Start My Invitation · From {siteConfig.startingPrice}</span>
+                    <span className="roll__b" aria-hidden="true">Start My Invitation · From {siteConfig.startingPrice}</span>
+                  </span>
+                  <ArrowRight size={15} weight="bold" />
+                </Link>
+
+                <a
+                  href={`mailto:${siteConfig.email.support}`}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer"
+                >
+                  <EnvelopeSimple size={16} weight="fill" className="text-[#E1C98E]" />
+                  <span>Email Concierge</span>
+                </a>
+              </div>
+
+              <p className="text-[11px] sm:text-xs text-[#E1C98E]/80 font-sans tracking-wide">
+                ✦ Customize 100% free first · Instant WhatsApp delivery · Lifetime hosting
+              </p>
+            </div>
           </div>
         </div>
 
@@ -160,6 +195,11 @@ export function PremiumFooter() {
               <li>
                 <Link href="/#lookbook" className="hover:text-[#E1C98E] transition-colors">
                   Lookbook Showcase
+                </Link>
+              </li>
+              <li>
+                <Link href="/#comparison" className="hover:text-[#E1C98E] transition-colors">
+                  Paper vs. Digital Comparison
                 </Link>
               </li>
               <li>

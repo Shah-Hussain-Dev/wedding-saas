@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: `Instant Digital Delivery Policy — ${siteConfig.name}`,
   description:
     `Learn about ${siteConfig.name} 100% digital fulfillment architecture: zero shipping delays, zero paper waste, and instant live invitation link delivery within seconds of checkout.`,
+  alternates: {
+    canonical: "/shipping",
+  },
 };
 
 export default function ShippingPage() {

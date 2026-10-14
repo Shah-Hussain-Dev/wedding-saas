@@ -326,7 +326,7 @@ export function HeroExperience() {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       aria-label="WedInvites Hero"
-      className="relative w-full min-h-[100dvh] flex flex-col justify-between items-center bg-[#FFF8EC] text-[#171614] overflow-x-clip pt-24 sm:pt-28 lg:pt-30 pb-6 sm:pb-10 select-none"
+      className="relative w-full min-h-[100dvh] flex flex-col justify-between lg:justify-center items-center bg-[#FFF8EC] text-[#171614] overflow-x-clip pt-24 sm:pt-28 lg:pt-24 lg:pb-8 pb-6 select-none"
     >
       {/* 1. PALACE ARCHITECTURAL BACKGROUND WITH RICH SUNLIGHT WASH */}
       <div
@@ -354,13 +354,13 @@ export function HeroExperience() {
         aria-hidden="true"
       />
 
-      {/* 3. MAIN HERO GRID (SPLIT 2-COLUMN DESKTOP / MOBILE STACK) */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4">
+      {/* 3. MAIN HERO GRID (SPLIT 2-COLUMN DESKTOP / MOBILE STACK — VERTICALLY CENTERED ON LAPTOP/DESKTOP) */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 lg:my-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-center">
           {/* ========================================================= */}
           {/* LEFT COLUMN: EDITORIAL HEADLINE, CTAs & 4 PILLARS */}
           {/* ========================================================= */}
-          <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-start text-left xl:pr-2">
+          <div className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left xl:pr-4">
             {/* Eyebrow Pill */}
             <motion.div
               custom={0}
@@ -373,31 +373,49 @@ export function HeroExperience() {
               <span>DIGITAL WEDDING INVITATIONS</span>
             </motion.div>
 
-            {/* Main Headline — Exact 3-line layout matching reference */}
+            {/* Main Headline — Strictly 2-line layout */}
             <motion.h1
               custom={1}
               initial="hidden"
               animate="visible"
               variants={fadeUpVariant}
-              className="mt-4 sm:mt-5 font-serif text-[2.75rem] sm:text-[3.35rem] md:text-[3.75rem] lg:text-[4.1rem] xl:text-[4.5rem] font-bold text-[#171614] leading-[1.05] tracking-tight"
+              className="mt-4 sm:mt-5 font-serif text-[1.75rem] xs:text-[2rem] sm:text-[2.4rem] md:text-[2.75rem] lg:text-[2.95rem] xl:text-[3.35rem] font-medium text-[#171614] leading-[1.12] sm:leading-[1.14] tracking-tight"
             >
-              More than <br />
-              an Invitation. <br />
-              <span className="font-serif italic font-normal text-[#A87535] whitespace-nowrap block sm:inline">
-                A Beautiful · Beginning.
+              <span className="block whitespace-nowrap">
+                Turn Your Special Day
+              </span>
+              <span className="block whitespace-nowrap mt-0.5 sm:mt-1">
+                Into a{" "}
+                <span className="relative inline-block font-serif italic font-bold sm:font-extrabold text-[#C49A5A]">
+                  <span>Magical Experience</span>
+                  {/* Handcrafted Golden Flourish with Ribbon Loop */}
+                  <svg
+                    className="absolute -bottom-2 sm:-bottom-2.5 left-0 w-[102%] h-3.5 sm:h-4.5 text-[#C49A5A] overflow-visible pointer-events-none"
+                    viewBox="0 0 340 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 2 6 C 75 11, 185 10, 265 6.5 C 282 6, 294 5.5, 300 6.5 C 303 7.2, 306 9.5, 303.5 12 C 301 14.5, 297.5 13, 299 10 C 301 7, 307 7.5, 310.5 10 C 313.5 12.5, 311.5 15.5, 307.5 15.5 C 304 15.5, 304.5 12, 308 9.5"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               </span>
             </motion.h1>
 
-            {/* Description Paragraph */}
+            {/* Description Paragraph — High Conversion Contrast Copy */}
             <motion.p
               custom={2}
               initial="hidden"
               animate="visible"
               variants={fadeUpVariant}
-              className="mt-3.5 sm:mt-4 text-[15px] sm:text-base lg:text-[16.5px] text-[#716A60] font-sans leading-relaxed max-w-[530px] font-normal"
+              className="mt-4 sm:mt-5 text-[15px] sm:text-base lg:text-[16.5px] text-[#716A60] font-sans leading-relaxed max-w-[530px] font-normal"
             >
-              Turn your love story into a stunning digital wedding invitation. Share your
-              special day with family and friends in the most beautiful, modern and meaningful way.
+              Say goodbye to courier delays and ₹40,000 printing bills. Delight your guests with living 3D palace doors, custom music scores, and real-time WhatsApp RSVPs — all for ₹1,199.
             </motion.p>
 
             {/* Complimentary Printable PDFs Value Pill */}
@@ -420,30 +438,38 @@ export function HeroExperience() {
               variants={fadeUpVariant}
               className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
             >
-              {/* Primary: Create Your Invitation */}
-              <Link
-                href="/templates"
-                className="group w-full sm:w-auto min-h-[50px] px-8 sm:px-9 py-3.5 rounded-full bg-[#063F35] hover:bg-[#032A23] text-[#F7F4ED] text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-[0_8px_24px_rgba(6,63,53,0.3)] hover:shadow-[0_12px_32px_rgba(6,63,53,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer"
-              >
-                <span>CREATE YOUR INVITATION</span>
-                <ArrowRight
-                  size={14}
-                  weight="bold"
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
+              <div className="flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
+                {/* Primary: Create Your Invitation */}
+                <Link
+                  href="/templates"
+                  className="group w-full sm:w-auto min-h-[50px] px-8 sm:px-9 py-3.5 rounded-full bg-[#063F35] hover:bg-[#032A23] text-[#F7F4ED] text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-[0_8px_24px_rgba(6,63,53,0.3)] hover:shadow-[0_12px_32px_rgba(6,63,53,0.4)] hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer"
+                >
+                  <span>CREATE YOUR INVITATION</span>
+                  <ArrowRight
+                    size={14}
+                    weight="bold"
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
 
-              {/* Secondary: Watch Preview Button */}
-              <button
-                type="button"
-                onClick={() => setIsPreviewOpen(true)}
-                className="group w-full sm:w-auto min-h-[50px] px-7 sm:px-8 py-3.5 rounded-full bg-white/95 hover:bg-white text-[#171614] border border-[#E8D8BB] hover:border-[#C49A5A]/70 text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-2xs hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-md"
-              >
-                <span className="w-5.5 h-5.5 rounded-full bg-[#C49A5A] text-white flex items-center justify-center pl-0.5 shadow-2xs">
-                  <Play size={11} weight="fill" />
-                </span>
-                <span>WATCH PREVIEW</span>
-              </button>
+                {/* Secondary: Watch Preview Button */}
+                <button
+                  type="button"
+                  onClick={() => setIsPreviewOpen(true)}
+                  className="group w-full sm:w-auto min-h-[50px] px-7 sm:px-8 py-3.5 rounded-full bg-white/95 hover:bg-white text-[#171614] border border-[#E8D8BB] hover:border-[#C49A5A]/70 text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-2xs hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-md"
+                >
+                  <span className="w-5.5 h-5.5 rounded-full bg-[#C49A5A] text-white flex items-center justify-center pl-0.5 shadow-2xs">
+                    <Play size={11} weight="fill" />
+                  </span>
+                  <span>WATCH PREVIEW</span>
+                </button>
+              </div>
+
+              {/* Friction-Reducer Microcopy (High-Impact Conversion Trigger) */}
+              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#7A7366] font-sans font-medium">
+                <span className="text-[#C49A5A]">✦</span>
+                <span>Try any template free · Instant WhatsApp delivery · No credit card required</span>
+              </div>
             </motion.div>
 
             {/* 4 Feature Pillars with Icons & Vertical Dividers (Pixel-Matched to Reference) */}
@@ -501,7 +527,7 @@ export function HeroExperience() {
             id="hero-showcase"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="lg:col-span-6 xl:col-span-6 flex items-center justify-center relative mt-6 lg:mt-0"
+            className="lg:col-span-5 xl:col-span-5 flex items-center justify-center relative mt-6 lg:mt-0"
           >
             {/* Flanking Side Carets for Instant Intuitive Control (Visible & Elevated) */}
             <button
@@ -654,7 +680,7 @@ export function HeroExperience() {
                         {isCenter && (
                           <div className="relative z-30 pb-4 sm:pb-5 px-4 flex justify-center">
                             <Link
-                              href={`/preview/${inv.id || inv.slug}`}
+                              href={`/preview/${inv.slug}`}
                               className="px-6 sm:px-7 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#DFB873] via-[#ECC985] to-[#D4A759] text-[#2C210E] font-bold text-[9px] sm:text-[10px] tracking-wider uppercase shadow-[0_8px_20px_rgba(212,167,89,0.35)] flex items-center justify-center gap-1.5 hover:brightness-105 active:scale-95 transition-all cursor-pointer"
                             >
                               <span>VIEW INVITATION</span>
@@ -675,7 +701,7 @@ export function HeroExperience() {
       {/* ========================================================= */}
       {/* 4. BOTTOM ROYAL SCALLOPED TRUST BAR (PIXEL PERFECT MOCKUP) */}
       {/* ========================================================= */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto mt-10 lg:mt-14 px-3 sm:px-6">
+      <div className="relative z-20 w-full max-w-6xl mx-auto mt-8 lg:mt-4 lg:mb-2 px-3 sm:px-6">
         <div className="relative filter drop-shadow-[0_12px_36px_rgba(40,30,15,0.08)]">
           {/* Authentic Royal Scalloped Cartouche Frame (Left Scallop + Center Fill + Right Scallop) */}
           <div className="absolute inset-0 flex items-stretch pointer-events-none z-0">
@@ -802,7 +828,7 @@ export function HeroExperience() {
                   “Made our wedding announcement feel so special and personal!”
                 </p>
                 <span className="text-[10.5px] sm:text-[11px] text-[#786F62] font-sans font-medium mt-0.5">
-                  — Real Couple
+                  — Ananya &amp; Kabir, Mumbai
                 </span>
               </div>
             </div>
