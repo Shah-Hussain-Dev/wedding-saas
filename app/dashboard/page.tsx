@@ -29,9 +29,11 @@ import {
   TrashSimple,
   ShieldCheck,
   FilePdf,
+  Copy,
 } from "@phosphor-icons/react";
 import { formatDate, formatDateTime } from "@/lib/utils";
 import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
+import { ShareInvitationModal } from "@/components/sharing/ShareInvitationModal";
 
 // Helper to robustly extract and format invitation created_at timestamp
 function getInviteCreatedAt(invite: any): string {
@@ -99,6 +101,19 @@ export default function DashboardPage() {
   const [selectedInviteFilter, setSelectedInviteFilter] = useState<string>("all");
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedPdfInvite, setSelectedPdfInvite] = useState<any | null>(null);
+  const [selectedShareInvite, setSelectedShareInvite] = useState<any | null>(null);
+
+  const handleCopyLink = (slug: string) => {
+    try {
+      const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : siteConfig.url;
+      const url = `${origin}/${slug}`;
+      navigator.clipboard.writeText(url);
+      setCopiedSlug(slug);
+      setTimeout(() => setCopiedSlug(null), 2500);
+    } catch (err) {
+      console.error("Failed to copy link:", err);
+    }
+  };
 
   const handleDeleteInvitation = async (id: string, name: string) => {
     const confirmed = window.confirm(
@@ -534,16 +549,40 @@ export default function DashboardPage() {
                         </div>
                       )}
 
-                      <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between">
+                      <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
                         <a
                           href={`/${invite.slug}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition"
+                          className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition truncate max-w-[calc(100%-85px)]"
+                          title="Open invitation in new tab"
                         >
-                          <LinkIcon size={14} weight="bold" />
-                          <span>{siteConfig.domain}/{invite.slug}</span>
+                          <LinkIcon size={14} weight="bold" className="shrink-0" />
+                          <span className="truncate">{siteConfig.domain}/{invite.slug}</span>
                         </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleCopyLink(invite.slug)}
+                          className={`shrink-0 inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border transition cursor-pointer min-h-[34px] ${
+                            copiedSlug === invite.slug
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-300 font-bold"
+                              : "bg-stone-50 hover:bg-stone-100 text-stone-700 border-stone-200"
+                          }`}
+                          title="Copy invitation link to clipboard"
+                        >
+                          {copiedSlug === invite.slug ? (
+                            <>
+                              <CheckCircle size={13} weight="fill" className="text-emerald-600" />
+                              <span>Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy size={13} weight="bold" className="text-stone-500" />
+                              <span>Copy</span>
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
 
@@ -551,7 +590,7 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => setSelectedPdfInvite(invite)}
-                      className="w-full text-center border border-amber-300/90 bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/60 text-amber-950 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-2xs cursor-pointer"
+                      className="w-full text-center border border-amber-300/90 bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/60 text-amber-950 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-2xs cursor-pointer min-h-[40px]"
                     >
                       <FilePdf size={15} weight="bold" className="text-amber-700" />
                       <span>Download 2 Matching PDFs</span>
@@ -560,51 +599,60 @@ export default function DashboardPage() {
                       </span>
                     </button>
 
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Link href={`/dashboard/invitation/${invite.id}/edit`} className="flex-1 min-w-[100px]">
-                        <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+                    <div className="grid grid-cols-2 sm:flex sm:items-center gap-2">
+                      <Link href={`/dashboard/invitation/${invite.id}/edit`} className="w-full sm:flex-1">
+                        <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[44px]">
                           <Pencil size={14} weight="bold" />
                           <span>Edit Details</span>
                         </button>
                       </Link>
 
-                    <button
-                      onClick={() => {
-                        const url = `${window.location.origin}/${invite.slug}`;
-                        navigator.clipboard.writeText(url);
-                        setCopiedSlug(invite.slug);
-                        setTimeout(() => setCopiedSlug(null), 2500);
-                      }}
-                      className={`flex-1 min-w-[110px] text-center border font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
-                        copiedSlug === invite.slug
-                          ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                          : "border-stone-250 bg-white hover:bg-stone-50 text-stone-800"
-                      }`}
-                    >
-                      {copiedSlug === invite.slug ? (
-                        <>
-                          <CheckCircle size={15} weight="fill" />
-                          <span>Link Copied!</span>
-                        </>
-                      ) : (
-                        <>
-                          <ShareNetwork size={15} weight="bold" />
-                          <span>Share Link</span>
-                        </>
-                      )}
-                    </button>
+                      {/* Dedicated Copy Link Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleCopyLink(invite.slug)}
+                        className={`w-full sm:flex-1 text-center border font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[44px] ${
+                          copiedSlug === invite.slug
+                            ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                            : "border-stone-250 bg-white hover:bg-stone-50 text-stone-800"
+                        }`}
+                      >
+                        {copiedSlug === invite.slug ? (
+                          <>
+                            <CheckCircle size={15} weight="fill" />
+                            <span>Link Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={15} weight="bold" />
+                            <span>Copy Link</span>
+                          </>
+                        )}
+                      </button>
 
-                    <button
-                      onClick={() => handleDeleteInvitation(invite.id, `${invite.brideName} & ${invite.groomName}`)}
-                      disabled={deletingId === invite.id}
-                      title="Permanently delete invitation and wipe guest data"
-                      className="px-3 py-2.5 rounded-xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50"
-                    >
-                      <TrashSimple size={14} weight="bold" />
-                      <span className="hidden sm:inline">Delete</span>
-                    </button>
+                      {/* Dedicated Share Link Button (Opens Share Modal) */}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedShareInvite(invite)}
+                        className="w-full sm:flex-1 text-center border border-amber-300/80 bg-gradient-to-r from-amber-50 to-amber-100/70 hover:from-amber-100 hover:to-amber-200/70 text-amber-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs min-h-[44px]"
+                      >
+                        <ShareNetwork size={15} weight="bold" className="text-amber-700" />
+                        <span>Share Link</span>
+                      </button>
+
+                      {/* Delete Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteInvitation(invite.id, `${invite.brideName} & ${invite.groomName}`)}
+                        disabled={deletingId === invite.id}
+                        title="Permanently delete invitation and wipe guest data"
+                        className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
+                      >
+                        <TrashSimple size={14} weight="bold" />
+                        <span>Delete</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
               </DoubleBezelCard>
             );
           })}
@@ -854,6 +902,25 @@ export default function DashboardPage() {
             venueName: selectedPdfInvite.venueName,
             venueAddress: selectedPdfInvite.venueAddress,
             events: selectedPdfInvite.eventsJson || selectedPdfInvite.events || [],
+          }}
+        />
+      )}
+
+      {/* ── Social & Multi-Channel Share Invitation Modal ── */}
+      {selectedShareInvite && (
+        <ShareInvitationModal
+          isOpen={Boolean(selectedShareInvite)}
+          onClose={() => setSelectedShareInvite(null)}
+          invite={{
+            id: selectedShareInvite.id,
+            slug: selectedShareInvite.slug,
+            brideName: selectedShareInvite.brideName,
+            groomName: selectedShareInvite.groomName,
+            weddingDate: selectedShareInvite.weddingDate,
+            weddingTime: selectedShareInvite.weddingTime,
+            venueName: selectedShareInvite.venueName,
+            venueAddress: selectedShareInvite.venueAddress,
+            templateId: selectedShareInvite.templateId,
           }}
         />
       )}

@@ -17,6 +17,10 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
     });
 
     lenisRef.current = lenis;
+    if (typeof window !== "undefined") {
+      (window as any).__lenis = lenis;
+      (window as any).lenis = lenis;
+    }
 
     function raf(time: number) {
       lenis.raf(time);
@@ -26,6 +30,10 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
     requestAnimationFrame(raf);
 
     return () => {
+      if (typeof window !== "undefined") {
+        delete (window as any).__lenis;
+        delete (window as any).lenis;
+      }
       lenis.destroy();
     };
   }, []);
