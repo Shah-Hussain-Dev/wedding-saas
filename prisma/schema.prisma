@@ -149,3 +149,15 @@ model GuestMessage {
 
   @@map("guest_messages")
 }
+
+// Dynamic Template Pricing & Configuration
+model TemplateConfig {
+  id        String   @id
+  priceInr  Int      @default(1199) @map("price_inr")
+  isActive  Boolean  @default(true) @map("is_active")
+  isPopular Boolean  @default(false) @map("is_popular")
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  @@map("template_configs")
+}
+

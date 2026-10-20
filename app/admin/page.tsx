@@ -71,12 +71,12 @@ export default function AdminDashboardPage() {
     setLoading(true);
     try {
       const [statsRes, invRes, templatesRes, usersRes, ordersRes, rsvpsRes] = await Promise.all([
-        fetch("/api/admin/stats"),
-        fetch("/api/admin/invitations"),
-        fetch("/api/admin/templates"),
-        fetch("/api/admin/users"),
-        fetch("/api/admin/orders"),
-        fetch("/api/admin/rsvps"),
+        fetch("/api/admin/stats", { cache: "no-store" }),
+        fetch("/api/admin/invitations", { cache: "no-store" }),
+        fetch("/api/admin/templates", { cache: "no-store" }),
+        fetch("/api/admin/users", { cache: "no-store" }),
+        fetch("/api/admin/orders", { cache: "no-store" }),
+        fetch("/api/admin/rsvps", { cache: "no-store" }),
       ]);
 
       if (statsRes.ok) {

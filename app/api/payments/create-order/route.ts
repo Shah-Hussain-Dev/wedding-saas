@@ -12,9 +12,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing invitationId" }, { status: 400 });
     }
 
-    // Dynamic price lookup from admin configuration or body override
-    const configuredPrice = templateId ? await getTemplatePriceInr(templateId) : 1199;
-    const resolvedAmount = body.amount !== undefined ? Number(body.amount) : configuredPrice;
+    let activeTemplateId = templateId;
+    if (!activeTemplateId && invitationId) {
+      try {
+        const inv = await prisma.invitation.findUnique({
+          where: { id: invitationId },
+          select: { templateId: true },
+        });
+        if (inv?.templateId) activeTemplateId = inv.templateId;
+      } catch (_) {}
+    }
+
+    // Dynamic price lookup from admin configuration
+    const configuredPrice = activeTemplateId ? await getTemplatePriceInr(activeTemplateId) : 1199;
+    const resolvedAmount = configuredPrice !== undefined ? configuredPrice : (body.amount !== undefined ? Number(body.amount) : 1199);
 
     const amountPaise = resolvedAmount * 100;
     const receipt = `rcpt_${invitationId.slice(0, 10)}_${Date.now().toString().slice(-6)}`;

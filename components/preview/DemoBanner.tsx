@@ -39,10 +39,8 @@ export function DemoBanner({
   const { getPriceFormatted, getPriceNumber } = useTemplatePricing();
   
   const dynamicPriceInr = getPriceNumber(templateId, 1199);
-  const dynamicPriceFormatted = getPriceFormatted(templateId, "₹1,199");
-  const effectiveAmountPaise = amountPaise !== undefined && amountPaise !== 149900
-    ? amountPaise
-    : dynamicPriceInr * 100;
+  const dynamicPriceFormatted = getPriceFormatted(templateId, `₹${dynamicPriceInr.toLocaleString("en-IN")}`);
+  const effectiveAmountPaise = dynamicPriceInr * 100;
 
   const [timeLeft, setTimeLeft] = useState(expiresInSeconds);
   const [isUnlocked, setIsUnlocked] = useState(isPublished);
@@ -204,6 +202,7 @@ export function DemoBanner({
               invitationId={invitationId}
               slug={slug}
               templateId={templateId}
+              amount={dynamicPriceInr}
               amountPaise={effectiveAmountPaise}
               buttonText={`Unlock Website (${dynamicPriceFormatted})`}
               className="!py-1.5 !px-3.5 !text-[11px] !rounded-full !shadow-md"
@@ -248,6 +247,7 @@ export function DemoBanner({
                 invitationId={invitationId}
                 slug={slug}
                 templateId={templateId}
+                amount={dynamicPriceInr}
                 amountPaise={effectiveAmountPaise}
                 buttonText={`Unlock Website Now (${dynamicPriceFormatted})`}
                 className="!py-2 !px-4 !text-xs !rounded-xl !shadow-lg"

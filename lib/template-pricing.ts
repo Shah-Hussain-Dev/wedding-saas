@@ -55,37 +55,40 @@ function savePricesToFile(data: Record<string, { priceInr: number; isActive: boo
 }
 
 export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfig[]> {
-  // 1. Try to load from database or file
-  if (!isCacheLoaded) {
-    const fileData = loadPricesFromFile();
-    memoryPriceCache = { ...fileData };
+  // 1. Load from file backup first
+  const fileData = loadPricesFromFile();
+  memoryPriceCache = { ...fileData, ...memoryPriceCache };
 
-    try {
-      if ((prisma as any).templateConfig) {
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("DB query timed out")), 2000)
-        );
-        const dbConfigs = (await Promise.race([
-          (prisma as any).templateConfig.findMany(),
-          timeoutPromise,
-        ]).catch(() => null)) as any[];
+  // 2. Query database for live persistent pricing (e.g. Supabase)
+  try {
+    if ((prisma as any).templateConfig) {
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("DB query timed out")), 2500)
+      );
+      const dbConfigs = (await Promise.race([
+        (prisma as any).templateConfig.findMany(),
+        timeoutPromise,
+      ]).catch(() => null)) as any[];
 
-        if (Array.isArray(dbConfigs)) {
-          dbConfigs.forEach((cfg: any) => {
-            memoryPriceCache[cfg.id] = {
-              priceInr: cfg.priceInr || DEFAULT_PRICE_INR,
-              isActive: cfg.isActive !== false,
-              isPopular: cfg.isPopular || false,
-            };
-          });
-        }
+      if (Array.isArray(dbConfigs) && dbConfigs.length > 0) {
+        dbConfigs.forEach((cfg: any) => {
+          memoryPriceCache[cfg.id] = {
+            priceInr: cfg.priceInr ?? DEFAULT_PRICE_INR,
+            isActive: cfg.isActive !== false,
+            isPopular: cfg.isPopular || false,
+          };
+        });
+        // Keep file backup in sync with database
+        savePricesToFile(memoryPriceCache);
       }
-    } catch (_) {}
-
-    isCacheLoaded = true;
+    }
+  } catch (err) {
+    console.warn("Could not query templateConfig from DB, using file cache:", err);
   }
 
-  // 2. Map all templates from TEMPLATE_META
+  isCacheLoaded = true;
+
+  // 3. Map all templates from TEMPLATE_META
   const templateIds = Object.keys(TEMPLATE_META) as TemplateId[];
 
   return templateIds.map((id) => {
@@ -113,8 +116,31 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
 export async function getTemplatePriceInr(templateId: string): Promise<number> {
   const normalizedId = templateId.replace(/_/g, "-").toLowerCase();
   
-  if (memoryPriceCache[normalizedId]?.priceInr) {
+  // Try database lookup first for freshest price
+  try {
+    if ((prisma as any).templateConfig) {
+      const cfg = await (prisma as any).templateConfig.findUnique({
+        where: { id: normalizedId },
+      });
+      if (cfg && cfg.priceInr !== undefined && cfg.priceInr !== null) {
+        memoryPriceCache[normalizedId] = {
+          priceInr: cfg.priceInr,
+          isActive: cfg.isActive !== false,
+          isPopular: cfg.isPopular || false,
+        };
+        return cfg.priceInr;
+      }
+    }
+  } catch (_) {}
+
+  if (memoryPriceCache[normalizedId]?.priceInr !== undefined) {
     return memoryPriceCache[normalizedId].priceInr;
+  }
+
+  const fileData = loadPricesFromFile();
+  if (fileData[normalizedId]?.priceInr !== undefined) {
+    memoryPriceCache[normalizedId] = fileData[normalizedId];
+    return fileData[normalizedId].priceInr;
   }
 
   const all = await getAllTemplatesWithPricing();
@@ -128,7 +154,7 @@ export async function updateTemplatePrice(
   options?: { isActive?: boolean; isPopular?: boolean }
 ): Promise<TemplatePricingConfig> {
   const normalizedId = templateId.replace(/_/g, "-").toLowerCase();
-  const safePrice = Math.max(0, Math.round(Number(priceInr) || DEFAULT_PRICE_INR));
+  const safePrice = Math.max(0, Math.round(Number(priceInr) ?? DEFAULT_PRICE_INR));
 
   const existing = memoryPriceCache[normalizedId] || {
     priceInr: DEFAULT_PRICE_INR,
@@ -144,35 +170,30 @@ export async function updateTemplatePrice(
   // Update in-memory cache
   memoryPriceCache[normalizedId] = updated;
 
-  // Save to file for persistence across server restarts
+  // Save to file backup immediately
   savePricesToFile(memoryPriceCache);
 
-  // Try to update database if table exists with safety timeout
+  // Save to Supabase PostgreSQL database table
   try {
     if ((prisma as any).templateConfig) {
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("DB save timed out")), 2000)
-      );
-      await Promise.race([
-        (prisma as any).templateConfig.upsert({
-          where: { id: normalizedId },
-          update: {
-            priceInr: safePrice,
-            isActive: updated.isActive,
-            isPopular: updated.isPopular,
-          },
-          create: {
-            id: normalizedId,
-            priceInr: safePrice,
-            isActive: updated.isActive,
-            isPopular: updated.isPopular,
-          },
-        }),
-        timeoutPromise,
-      ]).catch(() => null);
+      await (prisma as any).templateConfig.upsert({
+        where: { id: normalizedId },
+        update: {
+          priceInr: safePrice,
+          isActive: updated.isActive,
+          isPopular: updated.isPopular,
+        },
+        create: {
+          id: normalizedId,
+          priceInr: safePrice,
+          isActive: updated.isActive,
+          isPopular: updated.isPopular,
+        },
+      });
+      console.log(`[Pricing] Successfully persisted template ${normalizedId} price = ₹${safePrice} to Supabase DB`);
     }
   } catch (dbErr) {
-    console.warn("Could not save price to DB table (using file backup):", dbErr);
+    console.error("Could not save price to DB table:", dbErr);
   }
 
   const meta = TEMPLATE_META[normalizedId as TemplateId] || {

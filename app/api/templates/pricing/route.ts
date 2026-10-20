@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getAllTemplatesWithPricing } from "@/lib/template-pricing";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const templates = await getAllTemplatesWithPricing();
@@ -19,7 +22,7 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=30, stale-while-revalidate=60",
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
         },
       }
     );

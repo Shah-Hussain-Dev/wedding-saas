@@ -5,6 +5,9 @@ import {
   updateTemplatePrice,
 } from "@/lib/template-pricing";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const { isAdmin } = await verifyAdminSession();
@@ -13,7 +16,14 @@ export async function GET() {
     }
 
     const templates = await getAllTemplatesWithPricing();
-    return NextResponse.json({ success: true, templates });
+    return NextResponse.json(
+      { success: true, templates },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Admin get templates error:", error);
     return NextResponse.json(

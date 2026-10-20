@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   CurrencyInr,
@@ -38,6 +38,7 @@ interface AdminTemplatesTableProps {
 }
 
 export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplatesTableProps) {
+  const [items, setItems] = useState<TemplateItem[]>(templates);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -45,8 +46,15 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
   const [isSaving, setIsSaving] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Sync with incoming props
+  useEffect(() => {
+    if (templates && templates.length > 0) {
+      setItems(templates);
+    }
+  }, [templates]);
+
   // Quick Price Presets
-  const PRICE_PRESETS = [999, 1199, 1499, 1999, 2499];
+  const PRICE_PRESETS = [1, 999, 1199, 1499, 1999, 2499];
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -55,7 +63,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
     }, 4000);
   };
 
-  const filteredTemplates = templates.filter((t) => {
+  const filteredTemplates = items.filter((t) => {
     const matchesSearch =
       t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       t.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -92,6 +100,24 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
         const data = await res.json();
         showToast(data.message || `Price updated to ₹${priceToSave.toLocaleString("en-IN")}`);
         setEditingId(null);
+        // Optimistically update local items state immediately
+        setItems((prev) =>
+          prev.map((t) =>
+            t.id === templateId
+              ? {
+                  ...t,
+                  priceInr: priceToSave,
+                  priceFormatted: `₹${priceToSave.toLocaleString("en-IN")}`,
+                }
+              : t
+          )
+        );
+        try {
+          const stored = localStorage.getItem("unfold_template_pricing");
+          const map = stored ? JSON.parse(stored) : {};
+          map[templateId] = priceToSave;
+          localStorage.setItem("unfold_template_pricing", JSON.stringify(map));
+        } catch (_) {}
         onRefresh();
       } else {
         const errData = await res.json();
@@ -118,6 +144,11 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
 
       if (res.ok) {
         showToast(`Template ${template.name} is now ${!template.isActive ? "Active" : "Paused"}`);
+        setItems((prev) =>
+          prev.map((t) =>
+            t.id === template.id ? { ...t, isActive: !template.isActive } : t
+          )
+        );
         onRefresh();
       }
     } catch (_) {
@@ -127,9 +158,9 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
   };
 
   // Stats calculation
-  const totalCount = templates.length;
-  const activeCount = templates.filter((t) => t.isActive).length;
-  const prices = templates.map((t) => t.priceInr);
+  const totalCount = items.length;
+  const activeCount = items.filter((t) => t.isActive).length;
+  const prices = items.map((t) => t.priceInr);
   const minPrice = prices.length ? Math.min(...prices) : 0;
   const maxPrice = prices.length ? Math.max(...prices) : 0;
   const avgPrice = prices.length ? Math.round(prices.reduce((a, b) => a + b, 0) / prices.length) : 0;

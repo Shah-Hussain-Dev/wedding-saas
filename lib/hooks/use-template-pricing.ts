@@ -3,7 +3,15 @@
 import { useState, useEffect } from "react";
 
 export function useTemplatePricing() {
-  const [pricingMap, setPricingMap] = useState<Record<string, number>>({});
+  const [pricingMap, setPricingMap] = useState<Record<string, number>>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("unfold_template_pricing");
+        if (stored) return JSON.parse(stored);
+      } catch (_) {}
+    }
+    return {};
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -11,13 +19,16 @@ export function useTemplatePricing() {
 
     async function fetchPricing() {
       try {
-        const res = await fetch("/api/templates/pricing", {
+        const res = await fetch(`/api/templates/pricing?_t=${Date.now()}`, {
           cache: "no-store",
         });
         if (res.ok) {
           const data = await res.json();
           if (isMounted && data.pricingMap) {
             setPricingMap(data.pricingMap);
+            try {
+              localStorage.setItem("unfold_template_pricing", JSON.stringify(data.pricingMap));
+            } catch (_) {}
           }
         }
       } catch (err) {

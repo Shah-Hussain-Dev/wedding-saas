@@ -1306,7 +1306,7 @@ export function InvitationCustomizerWizard({
                   <span>
                     {isEdit
                       ? "Your changes will be saved to your dashboard and live link immediately."
-                      : "You will be able to test all animations, music, and the scratch reveal card. If you like it, unlock your permanent live website for ₹1,499."}
+                      : "You will be able to test all animations, music, and the scratch reveal card. If you like it, unlock your permanent live website with one-time payment."}
                   </span>
                 </div>
               </div>

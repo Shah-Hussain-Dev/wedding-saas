@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { Sparkle, CheckCircle, ShieldCheck, ArrowRight, Star } from "@phosphor-icons/react";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 
 const INCLUDED_PERKS = [
   "Choice of any luxury masterwork template",
@@ -19,6 +20,11 @@ const INCLUDED_PERKS = [
 ];
 
 export function PricingEditorial() {
+  const { pricingMap } = useTemplatePricing();
+  const validPrices = Object.values(pricingMap).filter((p) => p > 0);
+  const startingPrice = validPrices.length > 0 ? Math.min(...validPrices) : 1199;
+  const startingPriceFormatted = `₹${startingPrice.toLocaleString("en-IN")}`;
+
   return (
     <section id="pricing" className="py-24 md:py-32 bg-[#F7F4ED] text-[#18211E] relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 space-y-16">
@@ -66,7 +72,7 @@ export function PricingEditorial() {
                 </div>
                 <div className="flex items-baseline gap-1.5">
                   <span className="text-4xl sm:text-5xl font-serif font-bold text-[#073D31]">
-                    ₹1,199
+                    {startingPriceFormatted}
                   </span>
                   <span className="text-xs text-[#76766F] font-sans font-medium">/ complete wedding</span>
                 </div>

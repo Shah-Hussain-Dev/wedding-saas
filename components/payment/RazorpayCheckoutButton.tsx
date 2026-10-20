@@ -51,7 +51,7 @@ export function RazorpayCheckoutButton({
   groomName = "Groom",
   onSuccess,
   className = "",
-  buttonText = "Unlock Permanent Live Website · ₹1,499",
+  buttonText,
 }: RazorpayCheckoutButtonProps) {
   const { data: session } = useSession();
   const [mounted, setMounted] = useState(false);
@@ -71,7 +71,13 @@ export function RazorpayCheckoutButton({
     slug?: string;
   } | null>(null);
 
-  const finalAmount = amount || (amountPaise ? Math.floor(amountPaise / 100) : 1499);
+  const finalAmount = amount !== undefined
+    ? Math.max(0, Math.round(Number(amount)))
+    : amountPaise !== undefined
+    ? Math.max(0, Math.floor(amountPaise / 100))
+    : 1199;
+
+  const effectiveButtonText = buttonText || `Unlock Permanent Live Website · ₹${finalAmount.toLocaleString("en-IN")}`;
 
   useEffect(() => {
     setMounted(true);
@@ -564,7 +570,7 @@ export function RazorpayCheckoutButton({
         ) : (
           <>
             <LockOpen size={18} weight="bold" />
-            <span>{buttonText}</span>
+            <span>{effectiveButtonText}</span>
             <Sparkle size={16} weight="fill" />
           </>
         )}

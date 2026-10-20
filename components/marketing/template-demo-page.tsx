@@ -36,8 +36,8 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
   const normalizedId = (templateId || "").trim().replace(/_/g, "-").toLowerCase();
   const meta = getTemplateMeta(normalizedId);
   const interactiveUrl = `/preview/${normalizedId}/interactive?embed=1`;
-  const dynamicPriceFormatted = getPriceFormatted(normalizedId, "₹1,199");
   const dynamicPriceNum = getPriceNumber(normalizedId, 1199);
+  const dynamicPriceFormatted = getPriceFormatted(normalizedId, `₹${dynamicPriceNum.toLocaleString("en-IN")}`);
   const royalPriceFormatted = `₹${(dynamicPriceNum + 300).toLocaleString("en-IN")}`;
 
   // Direct template rendering data for mobile view
