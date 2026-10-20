@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "motion/react";
-import { Sparkle, EnvelopeOpen, Clock, ShieldCheck, ArrowRight, CheckCircle } from "@phosphor-icons/react";
+import { Sparkle, EnvelopeOpen, Clock, ShieldCheck, ArrowRight, CheckCircle, WhatsappLogo, PhoneCall } from "@phosphor-icons/react";
 import { siteConfig } from "@/config/site";
 
 export function ContactPage() {
@@ -21,7 +20,7 @@ export function ContactPage() {
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#073D31]/12 shadow-xs text-[10px] sm:text-[11px] font-bold tracking-[0.25em] text-[#073D31] uppercase font-sans backdrop-blur-md">
             <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
-            <span>Concierge Service</span>
+            <span>Customer Support</span>
             <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
           </div>
 
@@ -30,27 +29,35 @@ export function ContactPage() {
           </h1>
 
           <p className="text-sm sm:text-base md:text-lg text-[#76766F] font-sans leading-relaxed max-w-xl mx-auto">
-            Questions about templates, custom soundscapes, or creating your invitation? Our concierge team is at your service.
+            Questions about templates, custom soundscapes, or creating your invitation? Our support team is at your service.
           </p>
         </div>
 
-        {/* MAIN CONCIERGE GRID */}
+        {/* MAIN SUPPORT GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Contact Details (Left 5 Cols) */}
           <div className="lg:col-span-5 space-y-4">
             {[
               {
+                icon: WhatsappLogo,
+                label: "Call & WhatsApp Support",
+                value: siteConfig.phone,
+                desc: "Direct support for wedding inquiries & customization",
+                href: siteConfig.getWhatsAppSupportUrl(),
+                telHref: siteConfig.telUrl,
+              },
+              {
                 icon: EnvelopeOpen,
-                label: "Email Concierge",
+                label: "Email Support",
                 value: siteConfig.email.support,
                 desc: "Average response time: under 2 hours",
                 href: `mailto:${siteConfig.email.support}`,
               },
               {
                 icon: Clock,
-                label: "Concierge Availability",
+                label: "Support Hours",
                 value: siteConfig.supportHours,
-                desc: "Dedicated white-glove assistance for wedding hosts",
+                desc: "Dedicated assistance for wedding hosts (7 days a week)",
               },
               {
                 icon: ShieldCheck,
@@ -66,12 +73,33 @@ export function ContactPage() {
                 <div className="h-11 w-11 rounded-2xl bg-[#073D31]/8 flex items-center justify-center text-[#073D31] shrink-0 mt-0.5">
                   <item.icon size={22} weight="fill" className="text-[#073D31]" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <span className="text-[10px] uppercase font-bold tracking-wider text-[#C8A45E] font-sans block">
                     {item.label}
                   </span>
                   <p className="text-sm font-bold text-[#18211E] mt-0.5">{item.value}</p>
                   <p className="text-xs text-[#76766F] font-sans mt-0.5">{item.desc}</p>
+                  {"telHref" in item && item.telHref && (
+                    <div className="flex items-center gap-3 mt-2 text-xs font-semibold">
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-700 hover:text-emerald-800 underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <WhatsappLogo size={14} weight="fill" />
+                        Chat on WhatsApp
+                      </a>
+                      <span className="text-stone-300">·</span>
+                      <a
+                        href={item.telHref}
+                        className="text-[#073D31] hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <PhoneCall size={14} weight="fill" />
+                        Call Now
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -90,7 +118,7 @@ export function ContactPage() {
                   Thank you for reaching out!
                 </h4>
                 <p className="text-xs sm:text-sm text-[#76766F] font-sans">
-                  Our concierge team has received your note and will respond within 2 hours.
+                  Our support team has received your note and will respond within 2 hours.
                 </p>
               </div>
             ) : (
@@ -156,8 +184,8 @@ export function ContactPage() {
                   className="w-full py-4 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans transition-all shadow-md hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <span className="roll">
-                    <span className="roll__a">Send Note to Concierge</span>
-                    <span className="roll__b" aria-hidden="true">Send Note to Concierge</span>
+                    <span className="roll__a">Send Message to Support</span>
+                    <span className="roll__b" aria-hidden="true">Send Message to Support</span>
                   </span>
                   <ArrowRight size={14} weight="bold" />
                 </button>

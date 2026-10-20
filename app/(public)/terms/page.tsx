@@ -58,7 +58,7 @@ export default function TermsPage() {
               2. No-Refund &amp; Full Support
             </span>
             <p className="text-stone-600">
-              Digital goods are non-refundable once unlocked. Backed by dedicated 100% white-glove Concierge Support.
+              Digital goods are non-refundable once unlocked. Backed by dedicated 100% Customer Support.
             </p>
           </div>
           <div className="space-y-1">
@@ -105,7 +105,7 @@ export default function TermsPage() {
                 <strong>Strict No-Refund Policy:</strong> Because custom software codes, server allocations, and digital web assets are deployed instantaneously, all sales and purchases are strictly non-refundable and final once completed. Please read our full <Link href="/refund-policy" className="text-[#073D31] font-bold underline">Cancellation &amp; Refund Policy</Link>.
               </li>
               <li>
-                <strong>Support Guarantee:</strong> While fees are non-refundable, {siteConfig.name} provides dedicated Concierge &amp; Engineering Support to resolve any technical hurdle, audio sync, or itinerary formatting concern until you are delighted.
+                <strong>Support Guarantee:</strong> While fees are non-refundable, {siteConfig.name} provides dedicated Customer &amp; Technical Support to resolve any technical hurdle, audio sync, or itinerary formatting concern until you are delighted.
               </li>
             </ul>
           </div>
@@ -170,11 +170,11 @@ export default function TermsPage() {
             <div className="flex items-center gap-2.5 text-[#073D31]">
               <ShieldCheck size={20} weight="fill" className="text-[#C8A45E]" />
               <h2 className="font-serif text-lg sm:text-xl font-bold text-[#18211E]">
-                7. Legal Notices &amp; Concierge Contact
+                7. Legal Notices &amp; Support Contact
               </h2>
             </div>
             <p>
-              For legal inquiries, terms clarifications, or enterprise partnerships, reach out to our legal and concierge team:
+              For legal inquiries, terms clarifications, or enterprise partnerships, reach out to our legal and support team:
             </p>
             <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-stone-200/80 space-y-1 text-xs">
               <p><strong>WedInvites Technologies Legal Desk</strong></p>

@@ -21,6 +21,7 @@ import {
   WhatsappLogo
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Theme-tailored Lottie Animations
@@ -912,9 +913,9 @@ export default function CrimsonRoyale({
         </section>
 
         {/* SECTION 9 (EVEN): Closing Footer (Deep Midnight Crimson Heartbeat Gradient) */}
-        <section className="section section--closing">
+        <section className="section section--closing pb-0">
           <motion.div 
-            className="section-inner"
+            className="section-inner pb-10"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.5 }}
@@ -924,6 +925,16 @@ export default function CrimsonRoyale({
             <h2 className="closing__title script">We can't wait to celebrate with you</h2>
             <p className="closing__names eyebrow">{brideName} & {groomName}</p>
           </motion.div>
+
+          {/* ── Marketing Content At End of Template Footer ── */}
+          <div className="w-full text-left">
+            <TemplateMarketingFooter
+              templateId="crimson-royale"
+              templateName="Crimson Royale"
+              brideName={brideName}
+              groomName={groomName}
+            />
+          </div>
         </section>
       </main>
 

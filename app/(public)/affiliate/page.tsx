@@ -180,7 +180,7 @@ export default function AffiliatePage() {
           <div className="lg:col-span-5 space-y-4">
             <div className="p-8 rounded-3xl bg-white border border-[#073D31]/10 shadow-xs space-y-4">
               <span className="text-[10px] uppercase font-bold tracking-widest text-[#C8A45E] block">
-                Partner Concierge
+                Partner Support
               </span>
               <h3 className="font-serif text-2xl font-bold text-[#18211E]">
                 Have questions before joining?
@@ -194,7 +194,7 @@ export default function AffiliatePage() {
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold font-sans transition-colors"
                 >
                   <EnvelopeSimple size={16} weight="fill" className="text-emerald-600" />
-                  <span>Email Partner Concierge</span>
+                  <span>Email Partner Support</span>
                 </a>
               </div>
             </div>

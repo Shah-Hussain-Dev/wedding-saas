@@ -27,6 +27,7 @@ import {
   WhatsappLogo,
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface EventItem {
@@ -1084,8 +1085,8 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                       icon: <Compass size={24} weight="fill" />,
                     },
                     {
-                      title: "Palace Concierge & Stay",
-                      desc: "Curated royal suites reserved at The Emerald Palace. Please contact our hospitality concierge for bookings.",
+                      title: "Palace Guest Guide & Stay",
+                      desc: "Curated royal suites reserved at The Emerald Palace. Please contact our hospitality team for bookings.",
                       icon: <MapPin size={24} weight="fill" />,
                     },
                     {
@@ -1218,6 +1219,16 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 <p className="eq-footer-quote">
                   United in Sacred Covenant · Guided by Divine Mercy · Insha&apos;Allah Forever
                 </p>
+
+                {/* ── Marketing Content At End of Template Footer ── */}
+                <div className="mt-8 text-left">
+                  <TemplateMarketingFooter
+                    templateId="emerald-qasr"
+                    templateName="Emerald Qasr"
+                    brideName={brideName}
+                    groomName={groomName}
+                  />
+                </div>
               </motion.footer>
             </motion.div>
           )}

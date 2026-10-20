@@ -121,7 +121,7 @@ export default function ShippingPage() {
               4. Delivery Inquiries &amp; Support Assistance
             </h2>
             <p>
-              Did not receive your confirmation email or cannot access your dashboard after payment? Contact our concierge team for immediate activation:
+              Did not receive your confirmation email or cannot access your dashboard after payment? Contact our support team for immediate activation:
             </p>
             <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-stone-200/80 space-y-1 text-xs">
               <p>Email: <a href={`mailto:${siteConfig.email.support}`} className="text-[#073D31] font-bold underline">{siteConfig.email.support}</a></p>

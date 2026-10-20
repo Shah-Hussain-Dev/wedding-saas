@@ -29,6 +29,7 @@ import {
 import noorEnvelopeSeal from "@/public/lottie-icons/noor-envelope-seal.json";
 import noorCrescentLantern from "@/public/lottie-icons/noor-crescent-lantern.json";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface EventItem {
@@ -144,11 +145,22 @@ export default function NoorNikah({ data }: NoorNikahProps) {
     ? [data.heroImageUrl]
     : resolvedData.gallery;
 
-  const galleryImages: string[] = Array.isArray(rawGallery)
+  const fallbackGallery = [
+    "/templates/noor-e-nikah/hero-couple-mobile.jpg",
+    "/templates/crimson-royale/gallery-1.webp",
+    "/templates/crimson-royale/gallery-2.webp",
+    "/templates/crimson-royale/gallery-3.webp",
+    "/templates/crimson-royale/gallery-4.webp",
+    "/templates/crimson-royale/gallery-5.webp",
+  ];
+
+  const parsedGalleryImages: string[] = (Array.isArray(rawGallery) && rawGallery.length > 0)
     ? rawGallery
         .map((g: any) => (typeof g === "string" ? g : g?.url || g?.src || ""))
         .filter(Boolean)
     : [];
+
+  const galleryImages: string[] = parsedGalleryImages.length > 0 ? parsedGalleryImages : fallbackGallery;
 
   // Gallery captions metadata for bento
   const defaultGalleryCaptions = [
@@ -160,15 +172,15 @@ export default function NoorNikah({ data }: NoorNikahProps) {
     { title: "Eternal Duas & Blessings", subtitle: "United by Destiny" },
   ];
 
-  const galleryCaptions = Array.isArray(rawGallery)
+  const galleryCaptions = (Array.isArray(rawGallery) && rawGallery.length > 0)
     ? rawGallery.map((g: any, i: number) => {
         if (typeof g === "object" && g && (g.title || g.caption)) {
           return {
-            title: g.title || g.caption || defaultGalleryCaptions[i % defaultGalleryCaptions.length].title,
-            subtitle: g.subtitle || defaultGalleryCaptions[i % defaultGalleryCaptions.length].subtitle,
+            title: g.title || g.caption || defaultGalleryCaptions[i % defaultGalleryCaptions.length]?.title || "Cherished Moments",
+            subtitle: g.subtitle || defaultGalleryCaptions[i % defaultGalleryCaptions.length]?.subtitle || `${brideName} & ${groomName}`,
           };
         }
-        return defaultGalleryCaptions[i % defaultGalleryCaptions.length];
+        return defaultGalleryCaptions[i % defaultGalleryCaptions.length] || defaultGalleryCaptions[0];
       })
     : defaultGalleryCaptions;
 
@@ -201,10 +213,12 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
   // Slider navigation
   const nextSlide = () => {
+    if (galleryImages.length === 0) return;
     setActiveSlideIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
   const prevSlide = () => {
+    if (galleryImages.length === 0) return;
     setActiveSlideIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
   };
 
@@ -959,9 +973,13 @@ export default function NoorNikah({ data }: NoorNikahProps) {
             transition={{ duration: 0.5 }}
           >
             {galleryImages.map((imgUrl, i) => {
-              const meta = galleryCaptions[i % galleryCaptions.length];
+              const meta = (galleryCaptions && galleryCaptions.length > 0)
+                ? galleryCaptions[i % galleryCaptions.length]
+                : defaultGalleryCaptions[i % defaultGalleryCaptions.length] || defaultGalleryCaptions[0];
               const isLarge = galleryImages.length >= 3 && i === 0;
               const isWide = galleryImages.length >= 4 && i === 3;
+              const metaTitle = meta?.title || (galleryImages.length === 1 ? `${brideName} & ${groomName}` : "Cherished Moments");
+              const metaSub = meta?.subtitle || (galleryImages.length === 1 ? "Cherished Wedding Moment" : "Sacred Memories");
               return (
                 <motion.div
                   key={i}
@@ -975,17 +993,17 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                 >
                   <img
                     src={imgUrl}
-                    alt={meta.title}
+                    alt={metaTitle}
                     className="noor-bento-img"
                     loading="lazy"
                   />
                   <div className="noor-bento-glass-overlay">
                     <div className="noor-bento-caption">
                       <p className="noor-bento-title">
-                        {galleryImages.length === 1 ? `${brideName} & ${groomName}` : meta.title}
+                        {metaTitle}
                       </p>
                       <p className="noor-bento-sub">
-                        {galleryImages.length === 1 ? "Cherished Wedding Moment" : meta.subtitle}
+                        {metaSub}
                       </p>
                     </div>
                     <span className="noor-bento-tap-icon">
@@ -1018,16 +1036,24 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                   onClick={() => setSelectedPhoto(galleryImages[activeSlideIndex])}
                 >
                   <img
-                    src={galleryImages[activeSlideIndex]}
-                    alt={galleryCaptions[activeSlideIndex % galleryCaptions.length].title}
+                    src={galleryImages[activeSlideIndex] || galleryImages[0]}
+                    alt={
+                      (galleryCaptions && galleryCaptions.length > 0
+                        ? galleryCaptions[activeSlideIndex % galleryCaptions.length]?.title
+                        : null) || `${brideName} & ${groomName}`
+                    }
                     className="noor-slider-img"
                   />
                   <div className="noor-slider-caption-badge">
                     <p className="noor-slider-title">
-                      {galleryCaptions[activeSlideIndex % galleryCaptions.length].title}
+                      {(galleryCaptions && galleryCaptions.length > 0
+                        ? galleryCaptions[activeSlideIndex % galleryCaptions.length]?.title
+                        : null) || `${brideName} & ${groomName}`}
                     </p>
                     <p className="noor-slider-sub">
-                      {galleryCaptions[activeSlideIndex % galleryCaptions.length].subtitle}
+                      {(galleryCaptions && galleryCaptions.length > 0
+                        ? galleryCaptions[activeSlideIndex % galleryCaptions.length]?.subtitle
+                        : null) || "Cherished Wedding Memories"}
                     </p>
                   </div>
                 </motion.div>
@@ -1104,7 +1130,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       </AnimatePresence>
 
       {/* =================================================================== */}
-      {/* SECTION 5: VENUE & DRESS CODE CONCIERGE BENTO                      */}
+      {/* SECTION 5: VENUE & DRESS CODE GUEST GUIDE BENTO                   */}
       {/* =================================================================== */}
       <section className="noor-section noor-venue-section">
         <motion.div 
@@ -1115,7 +1141,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           transition={{ duration: 0.7 }}
         >
           <span className="noor-hero-eyebrow">LOCATION & GUIDELINES</span>
-          <h2 className="noor-section-title">The Grand Venue & Concierge</h2>
+          <h2 className="noor-section-title">The Grand Venue &amp; Guest Guide</h2>
           <div className="noor-section-filigree">✦ ⚜ ✦</div>
         </motion.div>
 
@@ -1366,12 +1392,22 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           </div>
 
           <p className="noor-footer-signature">
-            "And He has placed between you affection and mercy" — Surah Ar-Rum 30:21
+            &ldquo;And He has placed between you affection and mercy&rdquo; &mdash; Surah Ar-Rum 30:21
           </p>
 
           <p className="noor-footer-credits">
             Crafted with love on WedInvites • wedinvites.in
           </p>
+        </div>
+
+        {/* ── Marketing Content At End of Template Footer ── */}
+        <div className="w-full text-left">
+          <TemplateMarketingFooter
+            templateId="noor-e-nikah"
+            templateName="Noor-e-Nikah"
+            brideName={brideName}
+            groomName={groomName}
+          />
         </div>
       </footer>
     </div>

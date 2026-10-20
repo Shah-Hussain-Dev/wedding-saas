@@ -35,6 +35,7 @@ import {
   Compass,
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs
@@ -1567,7 +1568,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
       {/* ====================================================
           FOOTER & REPLAY
           ==================================================== */}
-      <footer className="py-14 bg-[#2C2019] border-t border-[#C9A46E]/30 text-center space-y-4 text-xs text-[#F1E8E1]/80">
+      <footer className="pt-14 pb-0 bg-[#2C2019] border-t border-[#C9A46E]/30 text-center space-y-4 text-xs text-[#F1E8E1]/80">
         <p className="font-cormorant italic text-base text-[#F1E8E1]">
           Two hearts united under the eternal canopy of stars, <br />
           {groomName} &amp; {brideName}
@@ -1575,13 +1576,23 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         <p className="text-[11px] font-montserrat tracking-widest text-[#E2B993] font-semibold">
           {hashtag}
         </p>
-        <div className="flex items-center justify-center gap-4 pt-2">
+        <div className="flex items-center justify-center gap-4 pt-2 pb-10">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="inline-flex items-center gap-1.5 text-xs text-[#E2B993] hover:text-white font-semibold cursor-pointer transition-colors"
           >
             <ArrowsClockwise size={14} /> Back to Top
           </button>
+        </div>
+
+        {/* ── Marketing Content At End of Template Footer ── */}
+        <div className="text-left">
+          <TemplateMarketingFooter
+            templateId="celestial-rose"
+            templateName="Celestial Rose"
+            brideName={brideName}
+            groomName={groomName}
+          />
         </div>
       </footer>
       </main>

@@ -37,6 +37,7 @@ import {
   HandGrabbing,
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs
@@ -1589,7 +1590,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
       {/* ====================================================
           FOOTER & REPLAY
           ==================================================== */}
-      <footer className="py-14 bg-[#2C2019] border-t border-[#B89773]/30 text-center space-y-4 text-xs text-[#E5D8C4]/80">
+      <footer className="pt-14 pb-0 bg-[#2C2019] border-t border-[#B89773]/30 text-center space-y-4 text-xs text-[#E5D8C4]/80">
         <p className="font-cormorant italic text-base text-[#E5D8C4]">
           With profound love and royal gratitude, <br />
           The Imperial &amp; De Valois Dynasties
@@ -1597,7 +1598,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
         <p className="text-[11px] font-montserrat tracking-widest text-[#D5BA97] font-semibold">
           {hashtag}
         </p>
-        <div className="flex items-center justify-center gap-4 pt-2">
+        <div className="flex items-center justify-center gap-4 pt-2 pb-10">
           <button
             onClick={handleReplayEntrance}
             className="inline-flex items-center gap-1.5 text-xs text-[#D5BA97] hover:text-white font-semibold cursor-pointer transition-colors"
@@ -1611,6 +1612,16 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
           >
             Back to Top
           </button>
+        </div>
+
+        {/* ── Marketing Content At End of Template Footer ── */}
+        <div className="text-left">
+          <TemplateMarketingFooter
+            templateId="imperial-palace"
+            templateName="Imperial Palace"
+            brideName={brideName}
+            groomName={groomName}
+          />
         </div>
       </footer>
       </main>

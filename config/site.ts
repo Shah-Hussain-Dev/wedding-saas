@@ -35,6 +35,19 @@ export const siteConfig = {
     instagramHandle: "@wedinvites.in",
   },
 
+  // Support & Contact Phone / WhatsApp Details
+  phone: "+91 63949 42159",
+  phoneRaw: "+916394942159",
+  whatsappNumber: "+91 63949 42159",
+  whatsappRaw: "916394942159",
+  telUrl: "tel:+916394942159",
+  getWhatsAppSupportUrl: (customMsg?: string) => {
+    const defaultMsg =
+      "Hi WedInvites! I just saw this wedding invitation website and would love to create one for our wedding. Can you assist me?";
+    const text = encodeURIComponent(customMsg || defaultMsg);
+    return `https://wa.me/916394942159?text=${text}`;
+  },
+
   // Logos and Media Assets
   assets: {
     logo: "/images/brand-logo.png",

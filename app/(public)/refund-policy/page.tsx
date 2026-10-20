@@ -7,18 +7,14 @@ import {
   Headset,
   WarningCircle,
   ArrowRight,
-  WhatsappLogo,
   EnvelopeSimple,
-  Sparkle,
   ArrowsClockwise,
-  ShieldCheck,
-  CheckCircle,
 } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata: Metadata = {
   title: `Cancellation & Refund Policy — ${siteConfig.name}`,
   description:
-    `${siteConfig.name} digital purchase policy: all sales are final and non-refundable, fully backed by our 100% white-glove Concierge Help and Support Guarantee.`,
+    `${siteConfig.name} digital purchase policy: all sales are final and non-refundable, fully backed by our 100% Help and Support Guarantee.`,
   alternates: {
     canonical: "/refund-policy",
   },
@@ -51,7 +47,7 @@ export default function RefundPolicyPage() {
 
           <div className="flex items-center gap-2 text-xs font-mono uppercase text-[#E1C98E] tracking-widest font-bold">
             <Headset size={16} weight="fill" />
-            <span>Purchase Policy &amp; Concierge Promise</span>
+            <span>Purchase Policy &amp; Support Promise</span>
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold leading-tight text-white">
@@ -63,7 +59,7 @@ export default function RefundPolicyPage() {
               Because WedInvites provides <strong>instant digital fulfillment</strong> — immediately provisioning your custom template code, dedicated vanity domain slug, high-speed cloud CDN hosting, and RSVP collection engines upon checkout — <strong>all sales and purchases are strictly non-refundable and final once completed</strong>.
             </p>
             <p>
-              However, you are never on your own. We stand firmly behind every couple with our <strong>100% Concierge Help &amp; Technical Support Guarantee</strong>. If you experience any challenge, confusion, or need custom adjustments, our support engineers will actively step in to assist and resolve it until your wedding invitation is completely flawless.
+              However, you are never on your own. We stand firmly behind every couple with our <strong>100% Help &amp; Technical Support Guarantee</strong>. If you experience any challenge, confusion, or need custom adjustments, our support engineers will actively step in to assist and resolve it until your wedding invitation is completely flawless.
             </p>
           </div>
 
@@ -76,13 +72,13 @@ export default function RefundPolicyPage() {
               </p>
             </div>
             <div className="p-4 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md space-y-1">
-              <span className="font-bold text-[#E1C98E] block">White-Glove Help</span>
+              <span className="font-bold text-[#E1C98E] block">Dedicated Help</span>
               <p className="text-[11px] text-stone-300 leading-snug">
-                Stuck on formatting or audio? Our concierge team will directly format and tune your invitation for you.
+                Stuck on formatting or audio? Our support team will directly format and tune your invitation for you.
               </p>
             </div>
             <div className="p-4 rounded-2xl bg-white/10 border border-white/15 backdrop-blur-md space-y-1">
-              <span className="font-bold text-[#E1C98E] block">Rapid Concierge SLA</span>
+              <span className="font-bold text-[#E1C98E] block">Rapid Support SLA</span>
               <p className="text-[11px] text-stone-300 leading-snug">
                 Priority email support with average response times under 2 hours.
               </p>
@@ -132,11 +128,11 @@ export default function RefundPolicyPage() {
               </h2>
             </div>
             <p>
-              While purchases are non-refundable, our team guarantees that no couple is left dissatisfied. If you run into any hurdle, our engineering and concierge team provides active resolution:
+              While purchases are non-refundable, our team guarantees that no couple is left dissatisfied. If you run into any hurdle, our engineering and support team provides active resolution:
             </p>
             <ul className="list-disc pl-5 space-y-1.5 pt-1 text-stone-700">
               <li>
-                <strong>Date &amp; Venue Postponements:</strong> If your wedding schedule or location changes due to unforeseen events, you do not need to buy a new invitation. Simply update your dates and venue details in your dashboard, or ask our concierge to update it for you free of charge.
+                <strong>Date &amp; Venue Postponements:</strong> If your wedding schedule or location changes due to unforeseen events, you do not need to buy a new invitation. Simply update your dates and venue details in your dashboard, or ask our support team to update it for you free of charge.
               </li>
               <li>
                 <strong>Custom Audio Tuning:</strong> If you want a specific family song, qawwali, or instrumental piece synced to your page, send us the file and our audio team will balance and link it.
@@ -172,14 +168,14 @@ export default function RefundPolicyPage() {
             <div className="flex items-center gap-2.5 text-[#073D31]">
               <EnvelopeSimple size={22} weight="fill" className="text-[#C8A45E]" />
               <h2 className="font-serif text-lg sm:text-xl font-bold text-[#18211E]">
-                4. Contact Concierge &amp; Priority Help Desk
+                4. Contact Support &amp; Help Desk
               </h2>
             </div>
             <p>
               We are committed to making your celebration magical. Reach our support desk through any of the following channels:
             </p>
             <div className="p-4 rounded-2xl bg-[#FAF8F5] border border-stone-200/80 space-y-2 text-xs">
-              <p><strong>{siteConfig.name} Support &amp; Concierge Sanctuary</strong></p>
+              <p><strong>{siteConfig.name} Customer Support &amp; Help Desk</strong></p>
               <p>General Support Email: <a href={`mailto:${siteConfig.email.support}`} className="text-[#073D31] font-bold underline">{siteConfig.email.support}</a></p>
               <p>Billing Inquiries: <a href={`mailto:${siteConfig.email.support}`} className="text-[#073D31] font-bold underline">{siteConfig.email.support}</a></p>
               <p>Support Hours: {siteConfig.supportHours}</p>

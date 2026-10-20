@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "motion/react";
 import { Sparkle, ArrowRight, Heart, ShieldCheck, WhatsappLogo, EnvelopeSimple, PaperPlaneTilt, CheckCircle } from "@phosphor-icons/react";
 import { siteConfig } from "@/config/site";
 
@@ -83,16 +82,26 @@ export function PremiumFooter() {
                 </Link>
 
                 <a
+                  href={siteConfig.getWhatsAppSupportUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/50 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer shadow-md"
+                >
+                  <WhatsappLogo size={18} weight="fill" className="text-emerald-400" />
+                  <span>WhatsApp: {siteConfig.phone}</span>
+                </a>
+
+                <a
                   href={`mailto:${siteConfig.email.support}`}
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer"
                 >
                   <EnvelopeSimple size={16} weight="fill" className="text-[#E1C98E]" />
-                  <span>Email Concierge</span>
+                  <span>Email Support</span>
                 </a>
               </div>
 
               <p className="text-[11px] sm:text-xs text-[#E1C98E]/80 font-sans tracking-wide">
-                ✦ Customize 100% free first · Instant WhatsApp delivery · Lifetime hosting
+                ✦ Customize 100% free first · Instant WhatsApp delivery · Call/WhatsApp {siteConfig.phone}
               </p>
             </div>
           </div>
@@ -223,7 +232,7 @@ export function PremiumFooter() {
               </li>
               <li>
                 <Link href="/contact" className="hover:text-[#E1C98E] transition-colors">
-                  Concierge Support
+                  Customer Support
                 </Link>
               </li>
               <li>

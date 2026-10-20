@@ -27,6 +27,7 @@ import {
 import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs (preventing 'track1' / 404 / unsupported source errors)
@@ -724,7 +725,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
         </section>
 
         {/* ── CHAPTER 8: FOOTER (DEEP OLIVE & ANTIQUE GOLD) ── */}
-        <footer className="bg-grace-olive py-14 border-t border-[#9A7A49]/30 text-center space-y-4 text-xs text-[#E0D3B8]">
+        <footer className="bg-grace-olive pt-14 pb-0 border-t border-[#9A7A49]/30 text-center space-y-4 text-xs text-[#E0D3B8]">
           <p className="font-lora italic text-base text-[#FAF7F0]">
             With boundless love and gratitude, <br />
             The Kapoor &amp; Singhania Families
@@ -732,7 +733,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
           <p className="text-[11px] font-jakarta tracking-widest text-[#B69A68] font-bold">
             {hashtag}
           </p>
-          <div className="flex items-center justify-center gap-4 pt-2 font-jakarta">
+          <div className="flex items-center justify-center gap-4 pt-2 pb-10 font-jakarta">
             <button
               onClick={handleReplayGate}
               className="inline-flex items-center gap-1.5 text-xs text-[#FAF7F0] hover:text-[#B69A68] font-semibold cursor-pointer"
@@ -748,6 +749,16 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
             >
               Back to Top
             </button>
+          </div>
+
+          {/* ── Marketing Content At End of Template Footer ── */}
+          <div className="text-left">
+            <TemplateMarketingFooter
+              templateId="royal-grace"
+              templateName="Royal Grace"
+              brideName={brideName}
+              groomName={groomName}
+            />
           </div>
         </footer>
       </main>

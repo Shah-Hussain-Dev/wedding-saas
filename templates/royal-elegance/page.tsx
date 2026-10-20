@@ -21,6 +21,7 @@ import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { LuxuryAudioDock } from "@/components/invitation/LuxuryAudioDock";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface RoyalEleganceProps {
@@ -895,18 +896,27 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
           </AnimatePresence>
 
           {/* 9. FOOTER */}
-          <footer className="py-16 px-4 text-center border-t border-[#d4af37]/30 bg-[#f8eedc]">
-            <p className="font-cormorant text-2xl font-bold text-[#5a0e1a] mb-1">
-              {brideName} & {groomName}
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#8c5d12] font-semibold mb-4">
-              # {hashtag.replace(/^#/, "")}
-            </p>
-            <p className="text-[11px] text-[#523e32] font-light">
-              We warmly await the honor of your presence at our wedding festivities.
-            </p>
-            <div className="mt-8 text-[9px] text-stone-500 uppercase tracking-widest">
-              WedInvites • wedinvites.in
+          <footer className="pt-16 pb-0 px-0 text-center border-t border-[#d4af37]/30 bg-[#f8eedc]">
+            <div className="px-4 pb-8">
+              <p className="font-cormorant text-2xl font-bold text-[#5a0e1a] mb-1">
+                {brideName} & {groomName}
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#8c5d12] font-semibold mb-4">
+                # {hashtag.replace(/^#/, "")}
+              </p>
+              <p className="text-[11px] text-[#523e32] font-light">
+                We warmly await the honor of your presence at our wedding festivities.
+              </p>
+            </div>
+
+            {/* ── Marketing Content At End of Template Footer ── */}
+            <div className="text-left">
+              <TemplateMarketingFooter
+                templateId="royal-elegance"
+                templateName="Royal Elegance"
+                brideName={brideName}
+                groomName={groomName}
+              />
             </div>
           </footer>
         </main>

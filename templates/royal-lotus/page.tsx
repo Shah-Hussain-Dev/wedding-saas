@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
 import { Heart, Sparkle, CheckCircle, X, WhatsappLogo } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface EventItem {
@@ -860,7 +861,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
               },
               {
                 title: "Stay Options",
-                detail: "A curated block of rooms has been reserved at the palace — please contact our concierge.",
+                detail: "A curated block of rooms has been reserved at the palace — please contact our guest team.",
                 icon: "/templates/lotus-courtyard/icon-stay-options.webp",
               },
               {
@@ -990,6 +991,16 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           />
           <p className="closing__date eyebrow">{formattedDateString.replace(/ /g, " · ")}</p>
         </motion.div>
+
+        {/* ── Marketing Content At End of Template Footer ── */}
+        <div className="w-full relative z-10 text-left">
+          <TemplateMarketingFooter
+            templateId="royal-lotus"
+            templateName="Royal Lotus"
+            brideName={brideName}
+            groomName={groomName}
+          />
+        </div>
       </section>
 
       {/* LIGHTBOX MODAL */}

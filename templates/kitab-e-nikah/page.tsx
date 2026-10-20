@@ -27,6 +27,7 @@ import {
   WhatsappLogo,
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface EventItem {
@@ -1049,7 +1050,7 @@ export default function KitabENikah({ data }: KitabENikahProps) {
                     },
                     {
                       title: "Hospitality & Stay",
-                      desc: "Curated suites reserved at the Ottoman Palace Estate. Please contact our hospitality concierge.",
+                      desc: "Curated suites reserved at the Ottoman Palace Estate. Please contact our hospitality team.",
                       icon: <MapPin size={24} weight="fill" />,
                     },
                     {
@@ -1186,6 +1187,16 @@ export default function KitabENikah({ data }: KitabENikahProps) {
                 <p className="kn-footer-quote">
                   United in Sacred Covenant · Bound by Divine Mercy · Insha&apos;Allah Forever
                 </p>
+
+                {/* ── Marketing Content At End of Template Footer ── */}
+                <div className="mt-8 text-left">
+                  <TemplateMarketingFooter
+                    templateId="kitab-e-nikah"
+                    templateName="Kitab-e-Nikah"
+                    brideName={brideName}
+                    groomName={groomName}
+                  />
+                </div>
               </motion.footer>
             </motion.div>
           )}

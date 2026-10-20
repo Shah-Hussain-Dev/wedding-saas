@@ -21,6 +21,7 @@ import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { LuxuryAudioDock } from "@/components/invitation/LuxuryAudioDock";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface ModernMinimalProps {
@@ -896,18 +897,27 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
           </AnimatePresence>
 
           {/* 9. FOOTER */}
-          <footer className="py-16 px-4 text-center border-t border-[#d4af37]/20 bg-[#f7f4ee]">
-            <p className="font-cormorant text-2xl font-bold text-[#1c1a17] mb-1">
-              {brideName} & {groomName}
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#8c6d23] font-semibold mb-4">
-              # {hashtag.replace(/^#/, "")}
-            </p>
-            <p className="text-[11px] text-stone-500 font-light">
-              We look forward to celebrating our sacred journey with you.
-            </p>
-            <div className="mt-8 text-[9px] text-stone-400 uppercase tracking-widest">
-              WedInvites • wedinvites.in
+          <footer className="pt-16 pb-0 px-0 text-center border-t border-[#d4af37]/20 bg-[#f7f4ee]">
+            <div className="px-4 pb-8">
+              <p className="font-cormorant text-2xl font-bold text-[#1c1a17] mb-1">
+                {brideName} & {groomName}
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#8c6d23] font-semibold mb-4">
+                # {hashtag.replace(/^#/, "")}
+              </p>
+              <p className="text-[11px] text-stone-500 font-light">
+                We look forward to celebrating our sacred journey with you.
+              </p>
+            </div>
+
+            {/* ── Marketing Content At End of Template Footer ── */}
+            <div className="text-left">
+              <TemplateMarketingFooter
+                templateId="modern-minimal"
+                templateName="Modern Minimal"
+                brideName={brideName}
+                groomName={groomName}
+              />
             </div>
           </footer>
         </main>

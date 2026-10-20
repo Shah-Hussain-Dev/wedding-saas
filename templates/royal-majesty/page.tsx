@@ -28,6 +28,7 @@ import {
 } from "@phosphor-icons/react";
 import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs
@@ -759,7 +760,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
         </section>
 
         {/* FOOTER */}
-        <footer className="py-14 bg-majesty-twilight border-t border-[#A9C1D0]/30 text-center space-y-4 text-xs text-[#FAFBF9]/80">
+        <footer className="pt-14 pb-0 bg-majesty-twilight border-t border-[#A9C1D0]/30 text-center space-y-4 text-xs text-[#FAFBF9]/80">
           <p className="font-lora italic text-base text-[#FAFBF9]">
             With profound love and gratitude, <br />
             The Montgomery &amp; De Valois Families
@@ -767,7 +768,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
           <p className="text-[11px] font-montserrat tracking-widest text-[#C9B989] font-semibold">
             {hashtag}
           </p>
-          <div className="flex items-center justify-center gap-4 pt-2">
+          <div className="flex items-center justify-center gap-4 pt-2 pb-10">
             <button
               onClick={handleReplay}
               className="inline-flex items-center gap-1.5 text-xs text-[#A9C1D0] hover:text-white font-semibold cursor-pointer transition-colors"
@@ -783,6 +784,16 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
             >
               Back to Top
             </button>
+          </div>
+
+          {/* ── Marketing Content At End of Template Footer ── */}
+          <div className="text-left">
+            <TemplateMarketingFooter
+              templateId="royal-majesty"
+              templateName="Royal Majesty"
+              brideName={brideName}
+              groomName={groomName}
+            />
           </div>
         </footer>
       </main>

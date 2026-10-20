@@ -27,6 +27,7 @@ import {
   WhatsappLogo,
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface EventItem {
@@ -1216,6 +1217,16 @@ export default function GulENoor({ data }: GulENoorProps) {
                 <p className="gn-footer-quote">
                   Bound by Love · Guided by Faith · Together Forever
                 </p>
+
+                {/* ── Marketing Content At End of Template Footer ── */}
+                <div className="mt-8 text-left">
+                  <TemplateMarketingFooter
+                    templateId="gul-e-noor"
+                    templateName="Gul-e-Noor"
+                    brideName={brideName}
+                    groomName={groomName}
+                  />
+                </div>
               </motion.footer>
             </motion.div>
           )}

@@ -27,6 +27,7 @@ import {
 import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs
@@ -726,7 +727,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
         </section>
 
         {/* CHAPTER 8: FOOTER (DEEP TEAL & NAVY) */}
-        <footer className="py-14 bg-heritage-deep border-t border-[#77A3AE]/30 text-center space-y-4 text-xs text-[#FAF8F5]/80">
+        <footer className="pt-14 pb-0 bg-heritage-deep border-t border-[#77A3AE]/30 text-center space-y-4 text-xs text-[#FAF8F5]/80">
           <p className="font-lora italic text-base text-[#FAF8F5]">
             With boundless love and gratitude, <br />
             The Singhania &amp; Rathore Families
@@ -734,7 +735,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
           <p className="text-[11px] font-montserrat tracking-widest text-[#E66B5E] font-semibold">
             {hashtag}
           </p>
-          <div className="flex items-center justify-center gap-4 pt-2">
+          <div className="flex items-center justify-center gap-4 pt-2 pb-10">
             <button
               onClick={handleReplayGate}
               className="inline-flex items-center gap-1.5 text-xs text-[#77A3AE] hover:text-white font-semibold cursor-pointer transition-colors"
@@ -750,6 +751,16 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
             >
               Back to Top
             </button>
+          </div>
+
+          {/* ── Marketing Content At End of Template Footer ── */}
+          <div className="text-left">
+            <TemplateMarketingFooter
+              templateId="royal-heritage"
+              templateName="Royal Heritage"
+              brideName={brideName}
+              groomName={groomName}
+            />
           </div>
         </footer>
       </main>

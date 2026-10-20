@@ -23,6 +23,7 @@ import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { LuxuryAudioDock } from "@/components/invitation/LuxuryAudioDock";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 interface EmeraldNoirProps {
@@ -914,18 +915,27 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
           </AnimatePresence>
 
           {/* 9. FOOTER */}
-          <footer className="py-16 px-4 text-center border-t border-[#d4af37]/30 bg-[#020d09]">
-            <p className="font-cormorant text-2xl font-bold text-[#fff2be] mb-1">
-              {brideName} & {groomName}
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37] font-semibold mb-4">
-              # {hashtag.replace(/^#/, "")}
-            </p>
-            <p className="text-[11px] text-[#c5ddd3] font-light">
-              We look forward to celebrating our sacred union in your divine presence.
-            </p>
-            <div className="mt-8 text-[9px] text-stone-500 uppercase tracking-widest">
-              WedInvites • wedinvites.in
+          <footer className="pt-16 pb-0 px-0 text-center border-t border-[#d4af37]/30 bg-[#020d09]">
+            <div className="px-4 pb-8">
+              <p className="font-cormorant text-2xl font-bold text-[#fff2be] mb-1">
+                {brideName} & {groomName}
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#d4af37] font-semibold mb-4">
+                # {hashtag.replace(/^#/, "")}
+              </p>
+              <p className="text-[11px] text-[#c5ddd3] font-light">
+                We look forward to celebrating our sacred union in your divine presence.
+              </p>
+            </div>
+
+            {/* ── Marketing Content At End of Template Footer ── */}
+            <div className="text-left">
+              <TemplateMarketingFooter
+                templateId="emerald-noir"
+                templateName="Emerald Noir"
+                brideName={brideName}
+                groomName={groomName}
+              />
             </div>
           </footer>
         </main>

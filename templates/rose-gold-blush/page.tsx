@@ -27,6 +27,7 @@ import {
 import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
+import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs
@@ -746,7 +747,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
         </section>
 
         {/* CHAPTER 8: FOOTER (🏛️ SEAMLESS DEEP NAVY #102A43 WITH ANTIQUE GOLD DETAIL) */}
-        <footer className="py-14 bg-rgb-footer border-t border-[#B78C4E]/25 text-center space-y-4 text-xs text-stone-300">
+        <footer className="pt-14 pb-0 bg-rgb-footer border-t border-[#B78C4E]/25 text-center space-y-4 text-xs text-stone-300">
           <p className="font-lora italic text-base text-[#F5EFE3]">
             With boundless love and gratitude, <br />
             The Oberoi &amp; Singhania Families
@@ -754,7 +755,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
           <p className="text-[11px] font-montserrat tracking-widest text-[#D7B875] font-semibold">
             {hashtag}
           </p>
-          <div className="flex items-center justify-center gap-4 pt-2">
+          <div className="flex items-center justify-center gap-4 pt-2 pb-10">
             <button
               onClick={handleReplayGate}
               className="inline-flex items-center gap-1.5 text-xs text-[#D7B875] hover:text-[#F5EFE3] font-semibold cursor-pointer transition-colors"
@@ -770,6 +771,16 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
             >
               Back to Top
             </button>
+          </div>
+
+          {/* ── Marketing Content At End of Template Footer ── */}
+          <div className="text-left">
+            <TemplateMarketingFooter
+              templateId="rose-gold-blush"
+              templateName="Rose Gold Blush"
+              brideName={brideName}
+              groomName={groomName}
+            />
           </div>
         </footer>
       </main>

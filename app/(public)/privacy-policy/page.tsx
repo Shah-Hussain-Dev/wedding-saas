@@ -208,7 +208,7 @@ export default function PrivacyPolicyPage() {
             <div className="flex items-center gap-2.5 text-[#073D31]">
               <Sparkle size={22} weight="fill" className="text-[#C8A45E]" />
               <h2 className="font-serif text-lg sm:text-xl font-bold text-[#18211E]">
-                6. Contact the Data Protection Concierge
+                6. Contact Data Protection &amp; Support
               </h2>
             </div>
             <p>

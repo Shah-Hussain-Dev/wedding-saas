@@ -32,7 +32,7 @@ const FAQS: FaqItem[] = [
           {siteConfig.name} maintains a <strong>strict No-Refund Policy</strong> on all digital invitation purchases. Because your custom code, database rows, cloud hosting, and unique link are provisioned instantaneously upon checkout, purchases cannot be canceled or refunded.
         </p>
         <p>
-          However, our team guarantees <strong>100% white-glove Concierge Help &amp; Support</strong>. If you encounter any technical glitch, date change, music adjustment, or formatting issue, our engineers will actively assist and resolve it until your invitation is exactly how you envisioned it.
+          However, our team guarantees <strong>100% dedicated Help &amp; Support</strong>. If you encounter any technical glitch, date change, music adjustment, or formatting issue, our engineers will actively assist and resolve it until your invitation is exactly how you envisioned it.
         </p>
       </div>
     ),
@@ -136,7 +136,7 @@ export default function FaqPage() {
           </h1>
 
           <p className="text-xs sm:text-sm md:text-base text-[#76766F] font-sans max-w-xl mx-auto leading-relaxed">
-            Everything you need to know about our digital wedding invitations, no-refund policy, concierge support, and dashboard data deletion rights.
+            Everything you need to know about our digital wedding invitations, no-refund policy, customer support, and dashboard data deletion rights.
           </p>
         </div>
 
@@ -209,7 +209,7 @@ export default function FaqPage() {
             Still have questions or need custom assistance?
           </h2>
           <p className="text-xs sm:text-sm text-stone-300 max-w-md mx-auto font-sans leading-relaxed">
-            Our concierge team is available 7 days a week via email to assist you with every aspect of your wedding stationery.
+            Our support team is available 7 days a week via email to assist you with every aspect of your wedding stationery.
           </p>
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
             <a
