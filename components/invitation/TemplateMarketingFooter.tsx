@@ -8,7 +8,7 @@ import {
   Sparkle,
   ShieldCheck,
   WhatsappLogo,
-  EnvelopeSimple,
+  ArrowRight,
   CheckCircle,
   ArrowUpRight,
 } from "@phosphor-icons/react";
@@ -398,16 +398,7 @@ export function TemplateMarketingFooter({
     ...(isLight !== undefined ? { isLight } : {}),
   };
 
-  // Dynamic WhatsApp pre-filled inquiry text
-  const whatsAppInquiry = hasCouple
-    ? `Hi WedInvites! I just saw ${coupleDisplay}'s stunning wedding website${
-        templateName ? ` (${templateName})` : ""
-      } and I want to create an interactive wedding website for our celebration. Could you guide me?`
-    : `Hi WedInvites! I am scrolling through the ${
-        templateName || "wedding"
-      } template and would love to create an interactive wedding website for my wedding. Could you assist me?`;
 
-  const whatsAppUrl = siteConfig.getWhatsAppSupportUrl(whatsAppInquiry);
 
   return (
     <section
@@ -466,7 +457,7 @@ export function TemplateMarketingFooter({
               </>
             ) : (
               <>
-                Want an unforgettable wedding website <br className="hidden sm:inline" />
+                Want an unforgettable {templateName ? `${templateName} ` : ""}wedding website <br className="hidden sm:inline" />
                 <span className="italic font-normal" style={{ color: theme.accentColor }}>just like this</span> for your big day?
               </>
             )}
@@ -554,33 +545,29 @@ export function TemplateMarketingFooter({
           </div>
         </motion.div>
 
-        {/* Dual High-Conversion Action Controls (Customize button removed per user request) */}
+        {/* Main Website Home CTA Button */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3.5 w-full sm:w-auto"
+          className="pt-3 flex items-center justify-center w-full"
         >
-          {/* WhatsApp Direct Support CTA */}
-          <a
-            href={whatsAppUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-gradient-to-r from-emerald-600 via-[#25D366] to-emerald-600 hover:brightness-110 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans transition-all duration-300 active:scale-95 cursor-pointer shadow-[0_8px_25px_rgba(37,211,102,0.25)] hover:shadow-[0_12px_30px_rgba(37,211,102,0.35)]"
-          >
-            <WhatsappLogo size={20} weight="fill" className="text-white" />
-            <span>Chat on WhatsApp</span>
-          </a>
-
-          {/* Contact Support Link */}
           <Link
-            href="/contact"
-            className={`w-full sm:w-auto min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full ${theme.secondaryBtnBg} ${theme.secondaryBtnBorder} font-sans text-xs sm:text-sm font-medium tracking-wider backdrop-blur-md transition-all duration-300 hover:scale-[1.02] active:scale-95 cursor-pointer shadow-sm`}
-            style={{ color: theme.secondaryBtnText }}
+            href="/"
+            className="group relative w-full sm:w-auto min-h-[48px] sm:min-h-[52px] inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-sans text-xs sm:text-sm font-bold tracking-wider uppercase transition-all duration-300 hover:scale-[1.03] hover:brightness-110 active:scale-95 cursor-pointer shadow-lg hover:shadow-2xl overflow-hidden"
+            style={{
+              backgroundColor: theme.accentColor,
+              color: theme.isLight ? "#FFFFFF" : "#1A1A1A",
+              boxShadow: `0 10px 30px ${theme.accentColor}40`,
+            }}
           >
-            <EnvelopeSimple size={18} weight="fill" style={{ color: theme.accentColor }} />
-            <span>Contact Support</span>
+            <span>Create Your Invitation</span>
+            <ArrowRight
+              size={17}
+              weight="bold"
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            />
           </Link>
         </motion.div>
 
@@ -613,7 +600,10 @@ export function TemplateMarketingFooter({
             color: theme.bottomTextColor,
           }}
         >
-          <div className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
+          <Link
+            href="/"
+            className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
+          >
             <Image
               src={theme.logoVariant === "dark" ? siteConfig.assets.logo : siteConfig.assets.logoWhite}
               alt={siteConfig.name}
@@ -622,7 +612,7 @@ export function TemplateMarketingFooter({
               className="h-4 w-auto object-contain"
             />
             <span>• {siteConfig.domain}</span>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-4">
             <Link
