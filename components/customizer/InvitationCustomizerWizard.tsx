@@ -388,6 +388,8 @@ export function InvitationCustomizerWizard({
       }
     }
 
+    let finalSlug = normalizedSlug;
+
     // Backend sync: PUT if editing existing ID, POST if new
     try {
       if (invitationId && !invitationId.startsWith("demo-")) {
@@ -401,11 +403,27 @@ export function InvitationCustomizerWizard({
           console.warn("PUT /api/invitations/[id] returned non-ok status:", res.status);
         }
       } else {
-        await fetch("/api/invitations", {
+        const res = await fetch("/api/invitations", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        if (res.ok) {
+          const created = await res.json();
+          if (created?.id) {
+            if (created.slug) {
+              setSlug(created.slug);
+              finalSlug = created.slug;
+            }
+            if (typeof window !== "undefined") {
+              const fullRecord = JSON.stringify({ ...payload, ...created });
+              localStorage.setItem(`unfold_invitation_${created.slug || normalizedSlug}`, fullRecord);
+              localStorage.setItem(`unfold_invitation_${created.id}`, fullRecord);
+              localStorage.setItem("unfold_pending_draft", fullRecord);
+              sessionStorage.setItem("unfold_pending_draft", fullRecord);
+            }
+          }
+        }
       }
     } catch (err) {
       console.warn("Backend sync fallback:", err);
@@ -415,7 +433,7 @@ export function InvitationCustomizerWizard({
     setIsSubmitting(false);
 
     // Redirect to live preview
-    router.push(`/preview/${normalizedSlug}`);
+    router.push(`/preview/${finalSlug}`);
   };
 
   const getNextButtonLabel = () => {

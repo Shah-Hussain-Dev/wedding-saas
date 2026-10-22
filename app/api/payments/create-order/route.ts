@@ -6,31 +6,60 @@ import { getTemplatePriceInr } from "@/lib/template-pricing";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { invitationId, templateId } = body;
+    const {
+      invitationId,
+      templateId,
+      slug,
+      customerEmail,
+      customerName,
+      customerPhone,
+      amount,
+    } = body;
 
-    if (!invitationId) {
-      return NextResponse.json({ error: "Missing invitationId" }, { status: 400 });
-    }
+    const resolvedInvitationIdentifier = invitationId || slug || `demo-${templateId || "celestial-rose"}`;
 
+    // 1. Resolve active template ID
     let activeTemplateId = templateId;
-    if (!activeTemplateId && invitationId) {
+    let targetInv: any = null;
+
+    if (invitationId && !invitationId.startsWith("demo-")) {
       try {
-        const inv = await prisma.invitation.findUnique({
+        targetInv = await prisma.invitation.findUnique({
           where: { id: invitationId },
-          select: { templateId: true },
         });
-        if (inv?.templateId) activeTemplateId = inv.templateId;
       } catch (_) {}
     }
 
-    // Dynamic price lookup from admin configuration
+    if (!targetInv && (slug || invitationId)) {
+      const candidateSlug = (slug || invitationId?.replace(/^demo-/, "") || "").trim().toLowerCase();
+      if (candidateSlug) {
+        try {
+          targetInv = await prisma.invitation.findUnique({
+            where: { slug: candidateSlug },
+          });
+        } catch (_) {}
+      }
+    }
+
+    if (targetInv?.templateId) {
+      activeTemplateId = targetInv.templateId;
+    } else if (!activeTemplateId) {
+      activeTemplateId = "celestial-rose";
+    }
+
+    // 2. Dynamic price lookup from admin configuration
     const configuredPrice = activeTemplateId ? await getTemplatePriceInr(activeTemplateId) : 1199;
-    const resolvedAmount = configuredPrice !== undefined ? configuredPrice : (body.amount !== undefined ? Number(body.amount) : 1199);
+    const resolvedAmount =
+      configuredPrice !== undefined
+        ? configuredPrice
+        : amount !== undefined
+        ? Number(amount)
+        : 1199;
 
     const amountPaise = resolvedAmount * 100;
-    const receipt = `rcpt_${invitationId.slice(0, 10)}_${Date.now().toString().slice(-6)}`;
+    const receipt = `rcpt_${String(resolvedInvitationIdentifier).slice(0, 10)}_${Date.now().toString().slice(-6)}`;
 
-    // Create order on Razorpay
+    // 3. Create order on Razorpay
     let razorpayOrder: any;
     try {
       razorpayOrder = await createRazorpayOrder({
@@ -47,15 +76,33 @@ export async function POST(req: NextRequest) {
       };
     }
 
-    // Try to find user from invitation or fallback
+    // 4. Resolve user ownership for pending order
     let userId: string | null = null;
-    try {
-      const inv = await prisma.invitation.findUnique({
-        where: { id: invitationId },
-        select: { userId: true },
-      });
-      userId = inv?.userId || null;
-    } catch (_) {}
+    const normalizedEmail = customerEmail?.trim()?.toLowerCase();
+
+    if (normalizedEmail && normalizedEmail.includes("@")) {
+      try {
+        const user = await prisma.user.upsert({
+          where: { email: normalizedEmail },
+          update: {
+            phone: customerPhone?.trim() || undefined,
+            name: customerName?.trim() || undefined,
+          },
+          create: {
+            email: normalizedEmail,
+            name: customerName?.trim() || "Wedding Host",
+            phone: customerPhone?.trim() || null,
+          },
+        });
+        userId = user.id;
+      } catch (userErr) {
+        console.warn("User upsert in create-order error:", userErr);
+      }
+    }
+
+    if (!userId && targetInv?.userId) {
+      userId = targetInv.userId;
+    }
 
     if (!userId) {
       try {
@@ -64,14 +111,14 @@ export async function POST(req: NextRequest) {
       } catch (_) {}
     }
 
-    // Save or update pending order in database
+    // 5. Save pending order in database
     let dbOrder: any = null;
     if (userId) {
       try {
         dbOrder = await prisma.order.create({
           data: {
             userId,
-            templateId: templateId || "kitab-e-nikah",
+            templateId: activeTemplateId,
             amountPaise,
             currency: "INR",
             razorpayOrderId: razorpayOrder.id,
@@ -79,13 +126,15 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // Link invitation to this order
-        await prisma.invitation.update({
-          where: { id: invitationId },
-          data: { orderId: dbOrder.id },
-        });
+        // Link invitation to this order if invitation exists
+        if (targetInv) {
+          await prisma.invitation.update({
+            where: { id: targetInv.id },
+            data: { orderId: dbOrder.id },
+          });
+        }
       } catch (dbErr) {
-        console.warn("DB record creation warning:", dbErr);
+        console.warn("DB record creation warning in create-order:", dbErr);
       }
     }
 

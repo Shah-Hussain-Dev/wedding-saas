@@ -21,6 +21,8 @@ interface DemoBannerProps {
   slug: string;
   templateId: string;
   templateName?: string;
+  brideName?: string;
+  groomName?: string;
   amountPaise?: number;
   isPublished?: boolean;
   expiresInSeconds?: number;
@@ -31,6 +33,8 @@ export function DemoBanner({
   slug,
   templateId,
   templateName = "Royal Wedding Invitation",
+  brideName,
+  groomName,
   amountPaise,
   isPublished = false,
   expiresInSeconds = 900,
@@ -41,6 +45,10 @@ export function DemoBanner({
   const dynamicPriceInr = getPriceNumber(templateId, 1199);
   const dynamicPriceFormatted = getPriceFormatted(templateId, `₹${dynamicPriceInr.toLocaleString("en-IN")}`);
   const effectiveAmountPaise = dynamicPriceInr * 100;
+
+  const nameParts = (templateName || "").split("&").map(s => s.trim());
+  const effectiveBrideName = brideName || nameParts[0] || "Bride";
+  const effectiveGroomName = groomName || nameParts[1] || "Groom";
 
   const [timeLeft, setTimeLeft] = useState(expiresInSeconds);
   const [isUnlocked, setIsUnlocked] = useState(isPublished);
@@ -202,6 +210,8 @@ export function DemoBanner({
               invitationId={invitationId}
               slug={slug}
               templateId={templateId}
+              brideName={effectiveBrideName}
+              groomName={effectiveGroomName}
               amount={dynamicPriceInr}
               amountPaise={effectiveAmountPaise}
               buttonText={`Unlock Website (${dynamicPriceFormatted})`}
@@ -247,6 +257,8 @@ export function DemoBanner({
                 invitationId={invitationId}
                 slug={slug}
                 templateId={templateId}
+                brideName={effectiveBrideName}
+                groomName={effectiveGroomName}
                 amount={dynamicPriceInr}
                 amountPaise={effectiveAmountPaise}
                 buttonText={`Unlock Website Now (${dynamicPriceFormatted})`}

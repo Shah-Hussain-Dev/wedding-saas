@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { generateUniqueSlug } from "@/lib/slug";
 import { siteConfig } from "@/config/site";
+import { getTemplateDefaultData } from "@/templates";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,6 +17,83 @@ export async function GET(req: NextRequest) {
     }
 
     try {
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (user) {
+        // Self-healing check: ensure any paid orders have an active invitation linked to this user
+        try {
+          const paidOrders = await prisma.order.findMany({
+            where: { userId: user.id, status: "paid" },
+            include: { invitations: true },
+          });
+
+          for (const po of paidOrders) {
+            if (po.invitations.length === 0) {
+              // 1. Check if an unlinked invitation for this template was saved under support user
+              const unlinked = await prisma.invitation.findFirst({
+                where: {
+                  templateId: po.templateId,
+                  user: { email: siteConfig.email.support },
+                },
+                orderBy: { createdAt: "desc" },
+              });
+
+              if (unlinked) {
+                await prisma.invitation.update({
+                  where: { id: unlinked.id },
+                  data: {
+                    userId: user.id,
+                    orderId: po.id,
+                    isPublished: true,
+                  },
+                });
+              } else {
+                // 2. Auto-generate invitation from template defaults
+                const templateDefault = getTemplateDefaultData(po.templateId);
+                const coupleBride =
+                  templateDefault?.couple?.brideName ||
+                  templateDefault?.brideName ||
+                  user.name?.split("&")?.[0]?.trim() ||
+                  "Bride";
+                const coupleGroom =
+                  templateDefault?.couple?.groomName ||
+                  templateDefault?.groomName ||
+                  user.name?.split("&")?.[1]?.trim() ||
+                  "Groom";
+                const newSlug = await generateUniqueSlug(`${coupleBride}-${coupleGroom}`);
+
+                await prisma.invitation.create({
+                  data: {
+                    userId: user.id,
+                    orderId: po.id,
+                    templateId: po.templateId,
+                    slug: newSlug,
+                    brideName: coupleBride,
+                    groomName: coupleGroom,
+                    weddingDate: new Date(Date.now() + 90 * 86400000),
+                    weddingTime: "7:00 PM onwards",
+                    venueName: templateDefault?.venue?.name || templateDefault?.venueName || "The Grand Palace",
+                    venueAddress: templateDefault?.venue?.address || templateDefault?.venueAddress || "Rajasthan, India",
+                    heroImageUrl: templateDefault?.heroImage || templateDefault?.heroImageUrl || null,
+                    slideshowImages: templateDefault?.gallery || templateDefault?.slideshowImages || [],
+                    musicTrack: "track1",
+                    eventsJson: templateDefault?.events || templateDefault?.eventsJson || [],
+                    isPublished: true,
+                    translations: {
+                      religion: "universal",
+                    },
+                  },
+                });
+              }
+            }
+          }
+        } catch (healErr) {
+          console.warn("Self-healing paid invitations check non-fatal error:", healErr);
+        }
+      }
+
       const invitations = await prisma.invitation.findMany({
         where: {
           user: {
