@@ -18,6 +18,8 @@ import {
   EnvelopeSimple,
   Phone,
   Key,
+  Copy,
+  WhatsappLogo,
 } from "@phosphor-icons/react";
 import confetti from "canvas-confetti";
 import { siteConfig } from "@/config/site";
@@ -70,6 +72,7 @@ export function RazorpayCheckoutButton({
     email?: string;
     slug?: string;
   } | null>(null);
+  const [copiedSuccessLink, setCopiedSuccessLink] = useState(false);
 
   const finalAmount = amount !== undefined
     ? Math.max(0, Math.round(Number(amount)))
@@ -179,7 +182,13 @@ export function RazorpayCheckoutButton({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           invitationId,
+          slug,
           templateId,
+          brideName,
+          groomName,
+          customerEmail: payerEmail,
+          customerName: payerName || `${brideName} & ${groomName}`,
+          customerPhone: payerPhone,
           amount: finalAmount,
         }),
       });
@@ -205,6 +214,9 @@ export function RazorpayCheckoutButton({
         notes: {
           invitationId,
           slug: slug || "",
+          templateId,
+          brideName,
+          groomName,
           couple: `${brideName} & ${groomName}`,
           email: payerEmail || "",
         },
@@ -222,6 +234,10 @@ export function RazorpayCheckoutButton({
                 razorpayPaymentId: response.razorpay_payment_id || `pay_${Date.now()}`,
                 razorpaySignature: response.razorpay_signature || "mock_signature",
                 invitationId,
+                slug,
+                templateId,
+                brideName,
+                groomName,
                 customerEmail: payerEmail,
                 customerPhone: payerPhone,
                 customerName: payerName || `${brideName} & ${groomName}`,
@@ -232,17 +248,22 @@ export function RazorpayCheckoutButton({
             if (verifyRes.ok && verifyData.success) {
               setIsSuccess(true);
               const userEmail = verifyData.user?.email || payerEmail || "";
-              
+              const finalSlug = verifyData.invitation?.slug || slug;
+              const resolvedLiveUrl = verifyData.liveUrl || (finalSlug ? `/${finalSlug}` : `/${invitationId}`);
+
               setSuccessData({
-                liveUrl: verifyData.liveUrl || `/${slug || invitationId}`,
+                liveUrl: resolvedLiveUrl,
                 email: userEmail,
-                slug: slug || verifyData.invitation?.slug,
+                slug: finalSlug,
               });
 
               // Save to client storage and clear pending draft
               if (typeof window !== "undefined") {
                 try {
                   if (userEmail) localStorage.setItem("unfold_user_email", userEmail);
+                  if (finalSlug && verifyData.invitation) {
+                    localStorage.setItem(`unfold_invitation_${finalSlug}`, JSON.stringify(verifyData.invitation));
+                  }
                   localStorage.removeItem("unfold_pending_draft");
                   sessionStorage.removeItem("unfold_pending_draft");
                 } catch (_) {}
@@ -258,7 +279,7 @@ export function RazorpayCheckoutButton({
               } catch (_) {}
 
               if (onSuccess) {
-                onSuccess(verifyData.liveUrl);
+                onSuccess(resolvedLiveUrl);
               }
             } else {
               alert(verifyData.error || "Payment verification failed.");
@@ -521,13 +542,60 @@ export function RazorpayCheckoutButton({
           </p>
         </div>
 
+        {/* Link Box with Copy Button */}
+        <div className="p-3 bg-stone-100 rounded-2xl border border-stone-250 flex items-center justify-between gap-2 text-left">
+          <div className="min-w-0 flex-1">
+            <span className="text-[10px] uppercase font-bold text-stone-500 block">Your Shareable Link</span>
+            <span className="text-xs font-mono font-semibold text-stone-900 truncate block">
+              {siteConfig.domain}{successData.liveUrl.startsWith("/") ? successData.liveUrl : `/${successData.liveUrl}`}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              const origin = typeof window !== "undefined" && window.location.origin ? window.location.origin : siteConfig.url;
+              const fullUrl = `${origin}${successData.liveUrl.startsWith("/") ? successData.liveUrl : `/${successData.liveUrl}`}`;
+              navigator.clipboard.writeText(fullUrl);
+              setCopiedSuccessLink(true);
+              setTimeout(() => setCopiedSuccessLink(false), 2500);
+            }}
+            className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs shadow-xs transition-all active:scale-95 cursor-pointer"
+          >
+            {copiedSuccessLink ? (
+              <>
+                <CheckCircle size={14} weight="fill" />
+                <span>Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy size={14} weight="bold" />
+                <span>Copy</span>
+              </>
+            )}
+          </button>
+        </div>
+
         {/* Action Buttons */}
-        <div className="space-y-2.5 pt-2">
+        <div className="space-y-2 pt-1">
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(
+              `You are cordially invited to celebrate the wedding of ${brideName} & ${groomName}!\n\nView details & RSVP here: ${
+                typeof window !== "undefined" && window.location.origin ? window.location.origin : siteConfig.url
+              }${successData.liveUrl.startsWith("/") ? successData.liveUrl : `/${successData.liveUrl}`}`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-all shadow-md active:scale-98"
+          >
+            <WhatsappLogo size={18} weight="fill" />
+            <span>Share via WhatsApp</span>
+          </a>
+
           <a
             href={successData.liveUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-full bg-[#082F27] text-white hover:bg-[#0C4337] font-semibold text-xs transition-all shadow-md"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-5 rounded-full bg-[#082F27] text-white hover:bg-[#0C4337] font-semibold text-xs transition-all shadow-md"
           >
             <span>View Live Invitation</span>
             <ArrowSquareOut size={16} />
@@ -535,7 +603,7 @@ export function RazorpayCheckoutButton({
 
           <Link
             href="/dashboard"
-            className="w-full flex items-center justify-center gap-2 py-3 px-5 rounded-full border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-semibold text-xs transition-all"
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-5 rounded-full border border-stone-300 bg-white hover:bg-stone-50 text-stone-800 font-semibold text-xs transition-all"
           >
             <House size={16} />
             <span>Go to My Dashboard</span>
