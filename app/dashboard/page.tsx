@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { GlassNav } from "@/components/ui/glass-nav";
@@ -30,10 +30,13 @@ import {
   ShieldCheck,
   FilePdf,
   Copy,
+  LockKey,
+  ArrowSquareOut,
 } from "@phosphor-icons/react";
 import { formatDate, formatDateTime } from "@/lib/utils";
 import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
 import { ShareInvitationModal } from "@/components/sharing/ShareInvitationModal";
+import { RazorpayCheckoutButton } from "@/components/payment/RazorpayCheckoutButton";
 
 // Helper to robustly extract and format invitation created_at timestamp
 function getInviteCreatedAt(invite: any): string {
@@ -139,133 +142,137 @@ export default function DashboardPage() {
     }
   };
 
-  useEffect(() => {
-    async function loadDashboardData() {
-      let email: string | null = session?.user?.email || null;
+  const [paymentFilter, setPaymentFilter] = useState<"all" | "paid" | "unpaid">("all");
 
+  const loadDashboardData = useCallback(async () => {
+    let email: string | null = session?.user?.email || null;
+
+    if (typeof window !== "undefined") {
+      try {
+        if (!email) {
+          email = localStorage.getItem("unfold_user_email");
+        } else {
+          localStorage.setItem("unfold_user_email", email);
+        }
+        setConnectedEmail(email);
+      } catch (e) {}
+    }
+
+    if (email) {
+      // Check for any single pending draft created before login
+      let pendingDraft: any = null;
       if (typeof window !== "undefined") {
         try {
-          if (!email) {
-            email = localStorage.getItem("unfold_user_email");
-          } else {
-            localStorage.setItem("unfold_user_email", email);
+          const rawDraft = localStorage.getItem("unfold_pending_draft") || sessionStorage.getItem("unfold_pending_draft");
+          if (rawDraft) {
+            pendingDraft = JSON.parse(rawDraft);
           }
-          setConnectedEmail(email);
-        } catch (e) {}
+        } catch (_) {}
       }
 
-      if (email) {
-        // Check for any single pending draft created before login
-        let pendingDraft: any = null;
-        if (typeof window !== "undefined") {
-          try {
-            const rawDraft = localStorage.getItem("unfold_pending_draft") || sessionStorage.getItem("unfold_pending_draft");
-            if (rawDraft) {
-              pendingDraft = JSON.parse(rawDraft);
-            }
-          } catch (_) {}
+      try {
+        if (pendingDraft) {
+          // Claim single pending draft and clear it
+          const claimRes = await fetch("/api/invitations/claim", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: email.toLowerCase(),
+              draft: pendingDraft,
+            }),
+          });
+
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("unfold_pending_draft");
+            sessionStorage.removeItem("unfold_pending_draft");
+          }
+
+          if (claimRes.ok) {
+            const claimData = await claimRes.json();
+            setInvitations(claimData.invitations || []);
+            setMessages(claimData.messages || []);
+            setIsDemoMode(false);
+            setLoading(false);
+            return;
+          }
         }
 
-        try {
-          if (pendingDraft) {
-            // Claim single pending draft and clear it
-            const claimRes = await fetch("/api/invitations/claim", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: email.toLowerCase(),
-                draft: pendingDraft,
-              }),
-            });
-
-            if (typeof window !== "undefined") {
-              localStorage.removeItem("unfold_pending_draft");
-              sessionStorage.removeItem("unfold_pending_draft");
-            }
-
-            if (claimRes.ok) {
-              const claimData = await claimRes.json();
-              setInvitations(claimData.invitations || []);
-              setMessages(claimData.messages || []);
-              setIsDemoMode(false);
-              setLoading(false);
-              return;
-            }
-          }
-
-          // Fetch strictly the user's invitations from database
-          const response = await fetch(`/api/invitations?email=${encodeURIComponent(email)}`);
-          if (response.ok) {
-            const data = await response.json();
-            setInvitations(data.invitations || []);
-            setMessages(data.messages || []);
-            setIsDemoMode(false);
-          } else {
-            setInvitations([]);
-            setMessages([]);
-          }
-        } catch (err) {
-          console.warn("Failed to fetch user invitations:", err);
+        // Fetch strictly the user's invitations from database
+        const response = await fetch(`/api/invitations?email=${encodeURIComponent(email)}`);
+        if (response.ok) {
+          const data = await response.json();
+          setInvitations(data.invitations || []);
+          setMessages(data.messages || []);
+          setIsDemoMode(false);
+        } else {
           setInvitations([]);
           setMessages([]);
-        } finally {
-          setLoading(false);
         }
-      } else {
-        // Unauthenticated sandbox session
-        loadMockDashboardData();
+      } catch (err) {
+        console.warn("Failed to fetch user invitations:", err);
+        setInvitations([]);
+        setMessages([]);
+      } finally {
         setLoading(false);
       }
+    } else {
+      // Unauthenticated sandbox session
+      loadMockDashboardData();
+      setLoading(false);
     }
-
-    function loadMockDashboardData() {
-      setIsDemoMode(true);
-      const mockInvitations = [
-        {
-          id: "demo-invitation-id",
-          brideName: "Siya",
-          groomName: "Kabir",
-          slug: "siya-kabir",
-          templateId: "royal-lotus",
-          weddingDate: "2026-12-14T18:30:00.000Z",
-          venueName: "The Maharaja Palace, Udaipur",
-        }
-      ];
-      setInvitations(mockInvitations);
-
-      const mockMessages = [
-        {
-          id: "m1",
-          guestName: "Vikram & Neha Sharma",
-          message: "Congratulations Siya & Kabir! Wishing you a lifetime of love and royal happiness together.",
-          rsvpJson: {
-            phone: "+91 91234 56789",
-            attending: true,
-            guests: 2,
-            submittedAt: new Date().toISOString(),
-          },
-          createdAt: new Date().toISOString(),
-          invitationSlug: "siya-kabir",
-        },
-        {
-          id: "m2",
-          guestName: "Aarav Patel",
-          message: "Heartiest congratulations on your auspicious wedding celebration!",
-          rsvpJson: {
-            phone: "+91 91234 56789",
-            attending: true,
-            guests: 1,
-            submittedAt: new Date().toISOString(),
-          },
-          createdAt: new Date(Date.now() - 3600000).toISOString(),
-          invitationSlug: "siya-kabir",
-        }
-      ];
-      setMessages(mockMessages);
-    }
-
-    loadDashboardData();
   }, [session]);
+
+  function loadMockDashboardData() {
+    setIsDemoMode(true);
+    const mockInvitations = [
+      {
+        id: "demo-invitation-id-1",
+        brideName: "Ananya",
+        groomName: "Shubham",
+        slug: "ananya-shubham-yheb",
+        templateId: "royal-majesty",
+        weddingDate: "2026-12-22T18:30:00.000Z",
+        venueName: "The Ridgewood Grand Palace",
+        isPaid: true,
+        orderStatus: "paid",
+        orderAmount: 1199,
+      },
+      {
+        id: "demo-invitation-id-2",
+        brideName: "Ananya",
+        groomName: "Shubhamm",
+        slug: "ananya-shubhamm",
+        templateId: "celestial-rose",
+        weddingDate: "2026-12-22T18:30:00.000Z",
+        venueName: "The Ridgewood Grand Palace",
+        isPaid: false,
+        orderStatus: "pending",
+        orderAmount: 1499,
+      }
+    ];
+    setInvitations(mockInvitations);
+
+    const mockMessages = [
+      {
+        id: "m1",
+        guestName: "Vikram & Neha Sharma",
+        message: "Congratulations! Wishing you a lifetime of royal happiness together.",
+        rsvpJson: {
+          phone: "+91 91234 56789",
+          attending: true,
+          guests: 2,
+          submittedAt: new Date().toISOString(),
+        },
+        createdAt: new Date().toISOString(),
+        invitationSlug: "ananya-shubham-yheb",
+      }
+    ];
+    setMessages(mockMessages);
+  }
+
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
 
   // Overall calculations
   let totalAttendingHeadcount = 0;
@@ -283,6 +290,18 @@ export default function DashboardPage() {
   });
 
   const totalRSVPs = messages.length;
+
+  // Paid vs Unpaid categorizations
+  const paidInvitations = invitations.filter((inv) => Boolean(inv.isPaid));
+  const unpaidInvitations = invitations.filter((inv) => !Boolean(inv.isPaid));
+  const paidCount = paidInvitations.length;
+  const unpaidCount = unpaidInvitations.length;
+
+  const displayedInvitations = invitations.filter((invite) => {
+    if (paymentFilter === "paid") return Boolean(invite.isPaid);
+    if (paymentFilter === "unpaid") return !Boolean(invite.isPaid);
+    return true;
+  });
 
   // Filtered guest messages list
   const filteredMessages = messages.filter((msg) => {
@@ -450,19 +469,23 @@ export default function DashboardPage() {
             </div>
           </DoubleBezelCard>
 
-          {/* Metric 3: Active Invitations */}
+          {/* Metric 3: Total Invitations / Paid Status */}
           <DoubleBezelCard className="bg-white border-stone-200/60 p-5">
             <div className="flex justify-between items-start">
               <div>
                 <span className="text-[10px] uppercase tracking-wider font-bold text-stone-400">
-                  Active Invitations
+                  Total Invitations
                 </span>
                 <h3 className="text-3xl font-bold text-stone-950 mt-1 font-mono">
                   {invitations.length}
                 </h3>
-                <span className="text-[10px] text-indigo-700 font-semibold mt-1 inline-block">
-                  Live &amp; Accessible
-                </span>
+                <div className="text-[10px] font-semibold mt-1 flex flex-wrap items-center gap-1.5">
+                  <span className="text-emerald-700 font-bold">{paidCount} Paid &amp; Live</span>
+                  <span className="text-stone-300">•</span>
+                  <span className={unpaidCount > 0 ? "text-amber-700 font-bold" : "text-stone-400"}>
+                    {unpaidCount} Need Payment
+                  </span>
+                </div>
               </div>
               <div className="h-10 w-10 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-700">
                 <Heart className="h-5 w-5" weight="fill" />
@@ -492,46 +515,166 @@ export default function DashboardPage() {
           </DoubleBezelCard>
         </div>
 
-        {/* ── Section 1: Active Invitations ── */}
+        {/* ── Section 1: Invitations & Category Tabs ── */}
         <div className="space-y-4 mb-14">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h2 className="text-xl font-serif font-bold text-stone-900">
                 Your Digital Wedding Invitations
               </h2>
               <p className="text-xs text-stone-500">
-                Manage details, customize your story, and copy your personalized link to share with guests.
+                Manage details, complete payment to publish live, and share your personalized link with guests.
               </p>
+            </div>
+
+            {/* Category Filter Tabs */}
+            <div className="inline-flex items-center p-1 bg-stone-100/90 rounded-2xl border border-stone-250/70 max-w-full overflow-x-auto no-scrollbar shrink-0">
+              <button
+                type="button"
+                onClick={() => setPaymentFilter("all")}
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[40px] ${
+                  paymentFilter === "all"
+                    ? "bg-white text-stone-950 shadow-xs border border-stone-200/80"
+                    : "text-stone-600 hover:text-stone-950"
+                }`}
+              >
+                <span>All Invitations</span>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                  paymentFilter === "all" ? "bg-stone-900 text-white" : "bg-stone-200 text-stone-700"
+                }`}>
+                  {invitations.length}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentFilter("paid")}
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[40px] ${
+                  paymentFilter === "paid"
+                    ? "bg-white text-emerald-950 shadow-xs border border-emerald-300"
+                    : "text-stone-600 hover:text-stone-950"
+                }`}
+              >
+                <CheckCircle size={14} weight="fill" className="text-emerald-600" />
+                <span>Paid &amp; Live</span>
+                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                  paymentFilter === "paid" ? "bg-emerald-600 text-white" : "bg-emerald-100 text-emerald-800"
+                }`}>
+                  {paidCount}
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPaymentFilter("unpaid")}
+                className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer min-h-[40px] ${
+                  paymentFilter === "unpaid"
+                    ? "bg-white text-amber-950 shadow-xs border border-amber-300"
+                    : "text-stone-600 hover:text-stone-950"
+                }`}
+              >
+                <LockKey size={14} weight="fill" className="text-amber-600" />
+                <span>Unpaid · Need Payment</span>
+                {unpaidCount > 0 ? (
+                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500 text-stone-950 font-bold">
+                    {unpaidCount}
+                  </span>
+                ) : (
+                  <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-stone-200 text-stone-700">
+                    0
+                  </span>
+                )}
+              </button>
             </div>
           </div>
 
           {invitations.length === 0 ? (
             <DoubleBezelCard className="text-center py-12 bg-white border-stone-200">
               <EnvelopeSimple size={40} className="text-stone-300 mx-auto mb-3" />
-              <p className="text-sm font-serif font-bold text-stone-700 mb-1">No Active Invitations Yet</p>
+              <p className="text-sm font-serif font-bold text-stone-700 mb-1">No Invitations Yet</p>
               <p className="text-xs text-stone-400 mb-4">Create your first bespoke digital invitation in minutes.</p>
               <Link href="/dashboard/invitation/new">
                 <PremiumButton>Create Your First Invite</PremiumButton>
               </Link>
             </DoubleBezelCard>
+          ) : displayedInvitations.length === 0 ? (
+            <DoubleBezelCard className="text-center py-12 bg-white border-stone-200">
+              {paymentFilter === "paid" ? (
+                <>
+                  <LockKey size={40} className="text-amber-500 mx-auto mb-3" weight="fill" />
+                  <p className="text-sm font-serif font-bold text-stone-900 mb-1">No Paid Invitations Yet</p>
+                  <p className="text-xs text-stone-500 mb-4 max-w-sm mx-auto">
+                    You currently have {unpaidCount} invitation draft awaiting payment to go live for guests.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentFilter("unpaid")}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs shadow-xs cursor-pointer"
+                  >
+                    <LockKey size={14} weight="fill" />
+                    <span>View Unpaid Invitations ({unpaidCount})</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <CheckCircle size={40} className="text-emerald-500 mx-auto mb-3" weight="fill" />
+                  <p className="text-sm font-serif font-bold text-stone-900 mb-1">All Caught Up!</p>
+                  <p className="text-xs text-stone-500 mb-4 max-w-sm mx-auto">
+                    All of your digital wedding invitations are paid, live, and actively collecting RSVPs.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setPaymentFilter("all")}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-amber-400 font-bold text-xs shadow-xs cursor-pointer"
+                  >
+                    <span>View All Invitations ({invitations.length})</span>
+                  </button>
+                </>
+              )}
+            </DoubleBezelCard>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {invitations.map((invite) => {
+              {displayedInvitations.map((invite) => {
                 const createdAtStr = getInviteCreatedAt(invite);
+                const isPaid = Boolean(invite.isPaid);
 
                 return (
-                  <DoubleBezelCard key={invite.id} className="bg-white border-stone-200 p-6 flex flex-col justify-between gap-5 shadow-xs">
+                  <DoubleBezelCard
+                    key={invite.id}
+                    className={`bg-white p-6 flex flex-col justify-between gap-5 shadow-xs transition-all relative ${
+                      isPaid
+                        ? "border-emerald-200/80 hover:border-emerald-300"
+                        : "border-amber-300/80 bg-gradient-to-b from-amber-50/25 to-white hover:border-amber-400"
+                    }`}
+                  >
                     <div>
-                      <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/60 rounded-full px-2.5 py-0.5 uppercase tracking-wider">
-                          {invite.templateId?.replace(/-/g, " ") || "Royal Lotus"}
-                        </span>
-                        <span className="text-[11px] text-stone-400 font-mono flex items-center gap-1">
+                      {/* Top Badges Row */}
+                      <div className="flex items-center justify-between gap-2 mb-2.5">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200/60 rounded-full px-2.5 py-0.5 uppercase tracking-wider">
+                            {invite.templateId?.replace(/-/g, " ") || "Royal Lotus"}
+                          </span>
+
+                          {isPaid ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 rounded-full px-2.5 py-0.5 uppercase tracking-wider">
+                              <CheckCircle size={12} weight="fill" className="text-emerald-600" />
+                              <span>Paid · Live</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-900 bg-amber-100/90 border border-amber-300 rounded-full px-2.5 py-0.5 uppercase tracking-wider">
+                              <LockKey size={12} weight="fill" className="text-amber-700" />
+                              <span>Unpaid · Payment Needed</span>
+                            </span>
+                          )}
+                        </div>
+
+                        <span className="text-[11px] text-stone-400 font-mono flex items-center gap-1 shrink-0">
                           <Calendar size={12} className="text-stone-400" />
                           <span>{formatDate(invite.weddingDate)}</span>
                         </span>
                       </div>
 
+                      {/* Names & Venue */}
                       <h3 className="text-2xl font-serif font-bold text-stone-950">
                         {invite.brideName} &amp; {invite.groomName}
                       </h3>
@@ -549,17 +692,32 @@ export default function DashboardPage() {
                         </div>
                       )}
 
+                      {/* Link Row */}
                       <div className="mt-3 pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
-                        <a
-                          href={`/${invite.slug}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition truncate max-w-[calc(100%-85px)]"
-                          title="Open invitation in new tab"
-                        >
-                          <LinkIcon size={14} weight="bold" className="shrink-0" />
-                          <span className="truncate">{siteConfig.domain}/{invite.slug}</span>
-                        </a>
+                        {isPaid ? (
+                          <a
+                            href={`/${invite.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 hover:text-emerald-800 transition truncate max-w-[calc(100%-85px)]"
+                            title="Open live invitation in new tab"
+                          >
+                            <LinkIcon size={14} weight="bold" className="shrink-0 text-emerald-600" />
+                            <span className="truncate">{siteConfig.domain}/{invite.slug}</span>
+                          </a>
+                        ) : (
+                          <a
+                            href={`/${invite.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-600 hover:text-amber-800 transition truncate max-w-[calc(100%-85px)]"
+                            title="Preview draft invitation"
+                          >
+                            <ArrowSquareOut size={14} weight="bold" className="shrink-0 text-amber-600" />
+                            <span className="truncate">{siteConfig.domain}/{invite.slug}</span>
+                            <span className="text-[10px] text-amber-700 bg-amber-100 px-1.5 py-0.2 rounded font-mono font-normal">Draft</span>
+                          </a>
+                        )}
 
                         <button
                           type="button"
@@ -584,78 +742,173 @@ export default function DashboardPage() {
                           )}
                         </button>
                       </div>
+
+                      {/* Middle Status / Payment Action Callout */}
+                      {isPaid ? (
+                        <div className="mt-3 p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/60 flex items-center gap-2 text-emerald-900 text-xs">
+                          <CheckCircle size={16} weight="fill" className="text-emerald-600 shrink-0" />
+                          <span className="text-[11px] leading-tight">
+                            <strong>Live &amp; Verified.</strong> All guest RSVPs are syncing directly to your manifest below.
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="mt-3 p-3.5 rounded-2xl bg-amber-50/90 border border-amber-300/90 flex flex-col gap-2.5 shadow-2xs">
+                          <div className="flex items-start gap-2.5">
+                            <div className="w-8 h-8 rounded-xl bg-amber-200/80 text-amber-900 flex items-center justify-center shrink-0 mt-0.5">
+                              <LockKey size={18} weight="fill" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wide">
+                                  Payment Needed to Go Live
+                                </h4>
+                                <span className="text-xs font-mono font-extrabold text-amber-950 bg-amber-200/70 px-2 py-0.5 rounded-md border border-amber-300">
+                                  ₹{invite.orderAmount || 1499}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-amber-800 mt-1 leading-snug">
+                                Complete payment to publish live for guests, remove demo banners, unlock matching PDFs, and activate real-time RSVP collection.
+                              </p>
+                            </div>
+                          </div>
+
+                          <RazorpayCheckoutButton
+                            invitationId={invite.id}
+                            slug={invite.slug}
+                            templateId={invite.templateId}
+                            amount={invite.orderAmount || 1499}
+                            brideName={invite.brideName}
+                            groomName={invite.groomName}
+                            onSuccess={() => {
+                              loadDashboardData();
+                            }}
+                            buttonText={`Pay & Unlock Invitation (₹${invite.orderAmount || 1499})`}
+                            className="w-full justify-center !py-2.5 !text-xs !font-bold !rounded-xl !shadow-sm"
+                          />
+                        </div>
+                      )}
                     </div>
 
-                  <div className="flex flex-col gap-2 pt-2 border-t border-stone-100">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedPdfInvite(invite)}
-                      className="w-full text-center border border-amber-300/90 bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/60 text-amber-950 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-2xs cursor-pointer min-h-[40px]"
-                    >
-                      <FilePdf size={15} weight="bold" className="text-amber-700" />
-                      <span>Download 2 Matching PDFs</span>
-                      <span className="text-[9px] bg-amber-200/90 text-amber-900 px-1.5 py-0.5 rounded-full uppercase font-bold tracking-wider ml-1">
-                        Free Included
-                      </span>
-                    </button>
-
-                    <div className="grid grid-cols-2 sm:flex sm:items-center gap-2">
-                      <Link href={`/dashboard/invitation/${invite.id}/edit`} className="w-full sm:flex-1">
-                        <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[44px]">
-                          <Pencil size={14} weight="bold" />
-                          <span>Edit Details</span>
+                    {/* Bottom Action Buttons */}
+                    {isPaid ? (
+                      <div className="flex flex-col gap-2 pt-2 border-t border-stone-100">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedPdfInvite(invite)}
+                          className="w-full text-center border border-amber-300/90 bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/60 text-amber-950 font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition shadow-2xs cursor-pointer min-h-[40px]"
+                        >
+                          <FilePdf size={15} weight="bold" className="text-amber-700" />
+                          <span>Download 2 Matching PDFs</span>
+                          <span className="text-[9px] bg-amber-200/90 text-amber-900 px-1.5 py-0.5 rounded-full uppercase font-bold tracking-wider ml-1">
+                            Free Included
+                          </span>
                         </button>
-                      </Link>
 
-                      {/* Dedicated Copy Link Button */}
-                      <button
-                        type="button"
-                        onClick={() => handleCopyLink(invite.slug)}
-                        className={`w-full sm:flex-1 text-center border font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[44px] ${
-                          copiedSlug === invite.slug
-                            ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
-                            : "border-stone-250 bg-white hover:bg-stone-50 text-stone-800"
-                        }`}
-                      >
-                        {copiedSlug === invite.slug ? (
-                          <>
-                            <CheckCircle size={15} weight="fill" />
-                            <span>Link Copied!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy size={15} weight="bold" />
-                            <span>Copy Link</span>
-                          </>
-                        )}
-                      </button>
+                        <div className="grid grid-cols-2 sm:flex sm:items-center gap-2">
+                          <Link href={`/dashboard/invitation/${invite.id}/edit`} className="w-full sm:flex-1">
+                            <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[44px]">
+                              <Pencil size={14} weight="bold" />
+                              <span>Edit Details</span>
+                            </button>
+                          </Link>
 
-                      {/* Dedicated Share Link Button (Opens Share Modal) */}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedShareInvite(invite)}
-                        className="w-full sm:flex-1 text-center border border-amber-300/80 bg-gradient-to-r from-amber-50 to-amber-100/70 hover:from-amber-100 hover:to-amber-200/70 text-amber-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs min-h-[44px]"
-                      >
-                        <ShareNetwork size={15} weight="bold" className="text-amber-700" />
-                        <span>Share Link</span>
-                      </button>
+                          {/* Dedicated Copy Link Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleCopyLink(invite.slug)}
+                            className={`w-full sm:flex-1 text-center border font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[44px] ${
+                              copiedSlug === invite.slug
+                                ? "bg-emerald-600 text-white border-emerald-600 shadow-xs"
+                                : "border-stone-250 bg-white hover:bg-stone-50 text-stone-800"
+                            }`}
+                          >
+                            {copiedSlug === invite.slug ? (
+                              <>
+                                <CheckCircle size={15} weight="fill" />
+                                <span>Link Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={15} weight="bold" />
+                                <span>Copy Link</span>
+                              </>
+                            )}
+                          </button>
 
-                      {/* Delete Button */}
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteInvitation(invite.id, `${invite.brideName} & ${invite.groomName}`)}
-                        disabled={deletingId === invite.id}
-                        title="Permanently delete invitation and wipe guest data"
-                        className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
-                      >
-                        <TrashSimple size={14} weight="bold" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
-              </DoubleBezelCard>
-            );
-          })}
+                          {/* Dedicated Share Link Button (Opens Share Modal) */}
+                          <button
+                            type="button"
+                            onClick={() => setSelectedShareInvite(invite)}
+                            className="w-full sm:flex-1 text-center border border-amber-300/80 bg-gradient-to-r from-amber-50 to-amber-100/70 hover:from-amber-100 hover:to-amber-200/70 text-amber-950 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-2xs min-h-[44px]"
+                          >
+                            <ShareNetwork size={15} weight="bold" className="text-amber-700" />
+                            <span>Share Link</span>
+                          </button>
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteInvitation(invite.id, `${invite.brideName} & ${invite.groomName}`)}
+                            disabled={deletingId === invite.id}
+                            title="Permanently delete invitation and wipe guest data"
+                            className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
+                          >
+                            <TrashSimple size={14} weight="bold" />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-2 pt-2 border-t border-stone-100">
+                        <div className="grid grid-cols-2 sm:flex sm:items-center gap-2">
+                          <Link href={`/dashboard/invitation/${invite.id}/edit`} className="w-full sm:flex-1">
+                            <button className="w-full text-center border border-stone-250 bg-stone-50 hover:bg-stone-100 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[44px]">
+                              <Pencil size={14} weight="bold" />
+                              <span>Edit Details</span>
+                            </button>
+                          </Link>
+
+                          <a
+                            href={`/${invite.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full sm:flex-1"
+                          >
+                            <button className="w-full text-center border border-stone-250 bg-white hover:bg-stone-50 text-stone-800 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[44px]">
+                              <ArrowSquareOut size={14} weight="bold" />
+                              <span>Preview Draft</span>
+                            </button>
+                          </a>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              alert("Please complete payment above to unlock full guest sharing (WhatsApp, Instagram, QR codes).");
+                            }}
+                            className="w-full sm:flex-1 text-center border border-dashed border-stone-300 bg-stone-50 text-stone-400 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-not-allowed min-h-[44px]"
+                            title="Payment required to share with guests"
+                          >
+                            <LockKey size={14} weight="bold" />
+                            <span>Share (Locked)</span>
+                          </button>
+
+                          {/* Delete Button */}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteInvitation(invite.id, `${invite.brideName} & ${invite.groomName}`)}
+                            disabled={deletingId === invite.id}
+                            title="Permanently delete draft invitation"
+                            className="w-full sm:w-auto px-3.5 py-2.5 rounded-xl border border-rose-200/80 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1 transition-all cursor-pointer disabled:opacity-50 min-h-[44px]"
+                          >
+                            <TrashSimple size={14} weight="bold" />
+                            <span>Delete</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </DoubleBezelCard>
+                );
+              })}
             </div>
           )}
         </div>

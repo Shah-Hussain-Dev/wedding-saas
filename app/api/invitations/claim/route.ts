@@ -96,6 +96,7 @@ export async function POST(req: NextRequest) {
       where: { userId: user.id },
       orderBy: { createdAt: "desc" },
       include: {
+        order: true,
         guestMessages: {
           orderBy: { createdAt: "desc" },
         },
@@ -104,8 +105,17 @@ export async function POST(req: NextRequest) {
 
     const enrichedInvitations = userInvitations.map((inv) => {
       const trans = (inv.translations as any) || {};
+      const isPaid = inv.order?.status === "paid";
+      const orderStatus = inv.order?.status || (isPaid ? "paid" : "pending");
+      const orderAmount = inv.order?.amountPaise
+        ? Math.floor(inv.order.amountPaise / 100)
+        : 1199;
+
       return {
         ...inv,
+        isPaid,
+        orderStatus,
+        orderAmount,
         religion: trans.religion || "universal",
         sacredInvocation: trans.sacredInvocation || null,
         sacredVerse: trans.sacredVerse || null,

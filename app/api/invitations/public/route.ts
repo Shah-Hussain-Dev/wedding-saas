@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
       const invitation = await prisma.invitation.findUnique({
         where: { slug },
         include: {
+          order: true,
           guestMessages: {
             orderBy: { createdAt: "desc" },
             take: 20,
@@ -26,8 +27,11 @@ export async function GET(req: NextRequest) {
       }
 
       const transObj = (invitation.translations as any) || {};
+      const isPaid = invitation.order?.status === "paid";
       const enrichedInvitation = {
         ...invitation,
+        isPaid,
+        isPublished: Boolean(invitation.isPublished && isPaid),
         religion: transObj.religion || "universal",
         sacredInvocation: transObj.sacredInvocation || null,
         sacredVerse: transObj.sacredVerse || null,

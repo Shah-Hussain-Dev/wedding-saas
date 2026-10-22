@@ -1,7 +1,8 @@
 {
   "celestial-rose": {
     "priceInr": 1,
-    "isActive": true
+    "isActive": true,
+    "isPopular": false
   },
   "noor-e-nikah": {
     "priceInr": 1,
