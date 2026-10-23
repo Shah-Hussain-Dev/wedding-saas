@@ -13,6 +13,7 @@ export async function GET(
       const invitation = await prisma.invitation.findUnique({
         where: { id },
         include: {
+          order: true,
           guestMessages: {
             orderBy: { createdAt: "desc" },
           },
@@ -24,8 +25,12 @@ export async function GET(
       }
 
       const trans = (invitation.translations as any) || {};
+      const isPaid = invitation.order?.status === "paid";
       const enriched = {
         ...invitation,
+        isPaid,
+        isPublished: Boolean(invitation.isPublished && isPaid),
+        orderStatus: invitation.order?.status || (isPaid ? "paid" : "pending"),
         religion: trans.religion || "universal",
         sacredInvocation: trans.sacredInvocation || null,
         sacredVerse: trans.sacredVerse || null,
@@ -88,6 +93,14 @@ export async function PUT(
     };
 
     try {
+      const existing = await prisma.invitation.findUnique({
+        where: { id },
+        include: { order: true },
+      });
+
+      const isPaid = existing?.order?.status === "paid";
+      const isPublished = isPaid ? Boolean(body.isPublished ?? existing?.isPublished ?? true) : false;
+
       const updated = await prisma.invitation.update({
         where: { id },
         data: {
@@ -110,11 +123,15 @@ export async function PUT(
           transportText: transportText || null,
           eventsJson: eventsJson || [],
           translations: translationsData,
+          isPublished,
         },
       });
 
       const enrichedUpdated = {
         ...updated,
+        isPaid,
+        isPublished,
+        orderStatus: existing?.order?.status || (isPaid ? "paid" : "pending"),
         religion: resolvedReligion,
         sacredInvocation: sacredInvocation || null,
         sacredVerse: sacredVerse || null,
@@ -137,6 +154,9 @@ export async function PUT(
           venueAddress,
           eventsJson,
           slideshowImages,
+          isPublished: false,
+          isPaid: false,
+          orderStatus: "pending",
           religion: resolvedReligion,
           sacredInvocation: sacredInvocation || null,
           sacredVerse: sacredVerse || null,

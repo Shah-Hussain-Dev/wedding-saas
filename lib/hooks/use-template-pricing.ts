@@ -3,19 +3,22 @@
 import { useState, useEffect } from "react";
 
 export function useTemplatePricing() {
-  const [pricingMap, setPricingMap] = useState<Record<string, number>>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = localStorage.getItem("unfold_template_pricing");
-        if (stored) return JSON.parse(stored);
-      } catch (_) {}
-    }
-    return {};
-  });
+  const [pricingMap, setPricingMap] = useState<Record<string, number>>({});
+  const [isMounted, setIsMounted] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
+    setIsMounted(true);
+
+    // 1. Immediately read cached prices from localStorage on client mount (safe after hydration)
+    try {
+      const stored = localStorage.getItem("unfold_template_pricing");
+      if (stored) {
+        setPricingMap(JSON.parse(stored));
+      }
+    } catch (_) {}
+
+    let isSubscribed = true;
 
     async function fetchPricing() {
       try {
@@ -24,7 +27,7 @@ export function useTemplatePricing() {
         });
         if (res.ok) {
           const data = await res.json();
-          if (isMounted && data.pricingMap) {
+          if (isSubscribed && data.pricingMap) {
             setPricingMap(data.pricingMap);
             try {
               localStorage.setItem("unfold_template_pricing", JSON.stringify(data.pricingMap));
@@ -34,14 +37,14 @@ export function useTemplatePricing() {
       } catch (err) {
         console.warn("Could not load dynamic template prices:", err);
       } finally {
-        if (isMounted) setLoading(false);
+        if (isSubscribed) setLoading(false);
       }
     }
 
     fetchPricing();
 
     return () => {
-      isMounted = false;
+      isSubscribed = false;
     };
   }, []);
 
@@ -62,6 +65,7 @@ export function useTemplatePricing() {
 
   return {
     pricingMap,
+    isMounted,
     loading,
     getPriceFormatted,
     getPriceNumber,

@@ -43,31 +43,25 @@ function PreviewContent({ templateId }: { templateId: string }) {
 
   useEffect(() => {
     async function checkData() {
+      let localItem: any = null;
       if (typeof window !== "undefined") {
         try {
           const storedSingle =
             localStorage.getItem(`unfold_invitation_${normalizedId}`) ||
             localStorage.getItem(`unfold_invitation_${templateId}`);
           if (storedSingle) {
-            setCustomData(JSON.parse(storedSingle));
-            setLoading(false);
-            return;
-          }
-
-          const storedList = localStorage.getItem("unfold_active_invitations");
-          if (storedList) {
-            const list = JSON.parse(storedList);
-            const found = list.find(
-              (item: any) =>
-                item.slug === normalizedId ||
-                item.slug === templateId ||
-                item.id === normalizedId ||
-                item.id === templateId
-            );
-            if (found) {
-              setCustomData(found);
-              setLoading(false);
-              return;
+            localItem = JSON.parse(storedSingle);
+          } else {
+            const storedList = localStorage.getItem("unfold_active_invitations");
+            if (storedList) {
+              const list = JSON.parse(storedList);
+              localItem = list.find(
+                (item: any) =>
+                  item.slug === normalizedId ||
+                  item.slug === templateId ||
+                  item.id === normalizedId ||
+                  item.id === templateId
+              );
             }
           }
         } catch (e) {
@@ -75,26 +69,48 @@ function PreviewContent({ templateId }: { templateId: string }) {
         }
       }
 
-      // If not in storage and not a known template, attempt DB lookup
-      if (!isKnownTemplate) {
+      // Check DB if slug is not a base template or if custom
+      let dbItem: any = null;
+      if (!isKnownTemplate || isCustomParam) {
         try {
-          const res = await fetch(`/api/invitations/public?slug=${normalizedId}`);
+          const res = await fetch(`/api/invitations/public?slug=${encodeURIComponent(normalizedId)}`);
           if (res.ok) {
-            const data = await res.json();
-            setCustomData(data);
-            setLoading(false);
-            return;
+            dbItem = await res.json();
           }
         } catch (err) {
           console.warn("API check offline");
         }
       }
 
+      const merged = dbItem ? { ...localItem, ...dbItem } : localItem;
+
+      if (merged) {
+        // Enforce payment status ground truth: unpaid invitations are NEVER paid or published
+        const isPaid = Boolean(
+          merged.isPaid === true ||
+          merged.order?.status === "paid" ||
+          merged.orderStatus === "paid"
+        );
+        merged.isPaid = isPaid;
+        merged.isPublished = Boolean(merged.isPublished && isPaid);
+
+        // Sanitize corrupted localStorage cache if it was mistakenly marked isPublished
+        if (!isPaid && typeof window !== "undefined") {
+          try {
+            localStorage.setItem(`unfold_invitation_${normalizedId}`, JSON.stringify(merged));
+          } catch (_) {}
+        }
+
+        setCustomData(merged);
+        setLoading(false);
+        return;
+      }
+
       setLoading(false);
     }
 
     checkData();
-  }, [templateId, normalizedId, isKnownTemplate]);
+  }, [templateId, normalizedId, isKnownTemplate, isCustomParam]);
 
   if (loading) {
     return (
@@ -115,10 +131,44 @@ function PreviewContent({ templateId }: { templateId: string }) {
   const templateDefault = getTemplateDefaultData(activeTemplateId);
   const SelectedTemplate = TEMPLATES_MAP[activeTemplateId] || NoorNikah;
 
+  const isCustomized = Boolean(
+    customData?.brideName ||
+    customData?.groomName ||
+    customData?.slug
+  );
+
+  const dynamicHashtag = (customData?.groomName && customData?.brideName)
+    ? `#${customData.groomName}And${customData.brideName}`.replace(/[\s&]+/g, "")
+    : undefined;
+
+  const isPaid = Boolean(
+    customData?.isPaid === true ||
+    customData?.order?.status === "paid" ||
+    customData?.orderStatus === "paid"
+  );
+
+  const isEffectivePublished = Boolean(customData?.isPublished && isPaid);
+
   const invitationData = customData
     ? {
         ...templateDefault,
+        ...(isCustomized ? {
+          hashtag: dynamicHashtag,
+          couple: {
+            ...templateDefault.couple,
+            brideName: customData.brideName,
+            groomName: customData.groomName,
+            brideParents: customData.brideParents || "",
+            groomParents: customData.groomParents || "",
+            brideEducation: customData.brideEducation || "",
+            groomEducation: customData.groomEducation || "",
+            brideProfession: customData.brideProfession || "",
+            groomProfession: customData.groomProfession || "",
+          },
+        } : {}),
         ...customData,
+        isPaid,
+        isPublished: isEffectivePublished,
         events: customData.events && customData.events.length > 0 ? customData.events : templateDefault.events,
       }
     : {
@@ -128,6 +178,8 @@ function PreviewContent({ templateId }: { templateId: string }) {
         templateId: activeTemplateId,
         brideName: templateDefault?.couple?.brideName || "Diya",
         groomName: templateDefault?.couple?.groomName || "Shaan",
+        isPaid: false,
+        isPublished: false,
       };
 
   return (
@@ -141,7 +193,8 @@ function PreviewContent({ templateId }: { templateId: string }) {
         brideName={invitationData.brideName}
         groomName={invitationData.groomName}
         amountPaise={customData?.amountPaise}
-        isPublished={invitationData.isPublished}
+        isPublished={isEffectivePublished}
+        isPaid={isPaid}
         expiresInSeconds={900} // 15-minute interactive demo session
       />
 

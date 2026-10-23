@@ -372,6 +372,13 @@ interface ImperialPalaceProps {
 }
 
 export default function ImperialPalace({ data }: ImperialPalaceProps) {
+  const isCustomized = Boolean(
+    (data?.brideName && data.brideName !== defaultData.couple?.brideName) ||
+    (data?.groomName && data.groomName !== defaultData.couple?.groomName) ||
+    data?.slug ||
+    data?.id
+  );
+
   const brideName =
     data?.brideName || data?.couple?.brideName || defaultData.couple.brideName;
   const groomName =
@@ -379,27 +386,27 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
   const groomParents =
     data?.groomParents ||
     data?.couple?.groomParents ||
-    defaultData.couple.groomParents;
+    (isCustomized ? "" : defaultData.couple.groomParents);
   const groomEducation =
     data?.groomEducation ||
     data?.couple?.groomEducation ||
-    defaultData.couple.groomEducation;
+    (isCustomized ? "" : defaultData.couple.groomEducation);
   const groomProfession =
     data?.groomProfession ||
     data?.couple?.groomProfession ||
-    defaultData.couple.groomProfession;
+    (isCustomized ? "" : defaultData.couple.groomProfession);
   const brideParents =
     data?.brideParents ||
     data?.couple?.brideParents ||
-    defaultData.couple.brideParents;
+    (isCustomized ? "" : defaultData.couple.brideParents);
   const brideEducation =
     data?.brideEducation ||
     data?.couple?.brideEducation ||
-    defaultData.couple.brideEducation;
+    (isCustomized ? "" : defaultData.couple.brideEducation);
   const brideProfession =
     data?.brideProfession ||
     data?.couple?.brideProfession ||
-    defaultData.couple.brideProfession;
+    (isCustomized ? "" : defaultData.couple.brideProfession);
 
   const rawDate = data?.weddingDate || defaultData.weddingDate;
   const weddingDateObj = new Date(rawDate);
@@ -409,10 +416,11 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     month: "long",
   });
   const yearStr = weddingDateObj.getFullYear().toString();
+  const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
   const hashtag =
-    data?.hashtag ||
-    defaultData.hashtag ||
-    `#${groomName}And${brideName}`.replace(/\s+/g, "");
+    (data?.hashtag && !data.hashtag.toLowerCase().includes("alexander") && !data.hashtag.toLowerCase().includes("eleanor"))
+      ? data.hashtag
+      : dynamicHashtag;
 
   const venueName =
     data?.venueName || data?.venue?.name || defaultData.venue.name;
@@ -905,9 +913,11 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                 <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl text-[#E5D8C4] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {groomName}
                 </h1>
-                <p className="font-cormorant italic text-[11px] sm:text-sm text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light max-w-xs sm:max-w-md mx-auto">
-                  {groomParents}
-                </p>
+                {groomParents ? (
+                  <p className="font-cormorant italic text-[11px] sm:text-sm text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light max-w-xs sm:max-w-md mx-auto">
+                    {groomParents}
+                  </p>
+                ) : null}
                 {(groomEducation || groomProfession) && (
                   <p className="text-[10px] sm:text-xs text-[#D5BA97] font-montserrat drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
                     {groomEducation}
@@ -938,9 +948,11 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                 <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl text-[#E5D8C4] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {brideName}
                 </h1>
-                <p className="font-cormorant italic text-[11px] sm:text-sm text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light max-w-xs sm:max-w-md mx-auto">
-                  {brideParents}
-                </p>
+                {brideParents ? (
+                  <p className="font-cormorant italic text-[11px] sm:text-sm text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light max-w-xs sm:max-w-md mx-auto">
+                    {brideParents}
+                  </p>
+                ) : null}
                 {(brideEducation || brideProfession) && (
                   <p className="text-[10px] sm:text-xs text-[#D5BA97] font-montserrat drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
                     {brideEducation}
@@ -1593,7 +1605,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
       <footer className="pt-14 pb-0 bg-[#2C2019] border-t border-[#B89773]/30 text-center space-y-4 text-xs text-[#E5D8C4]/80">
         <p className="font-cormorant italic text-base text-[#E5D8C4]">
           With profound love and royal gratitude, <br />
-          The Imperial &amp; De Valois Dynasties
+          {groomName} &amp; {brideName} and Families
         </p>
         <p className="text-[11px] font-montserrat tracking-widest text-[#D5BA97] font-semibold">
           {hashtag}

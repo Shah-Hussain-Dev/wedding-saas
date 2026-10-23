@@ -51,15 +51,18 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const [isOpenPanel, setIsOpenPanel] = useState(!isEmbed);
 
   const SelectedTemplate = TEMPLATES_MAP[normalizedId] || NoorNikah;
+  const activeGroom = groomName || defaultGroom;
+  const activeBride = brideName || defaultBride;
   const sampleData = {
     ...templateDefault,
     templateId: normalizedId,
-    brideName: brideName || defaultBride,
-    groomName: groomName || defaultGroom,
+    brideName: activeBride,
+    groomName: activeGroom,
+    hashtag: (activeGroom && activeBride) ? `#${activeGroom}And${activeBride}`.replace(/[\s&]+/g, "") : "",
     couple: {
       ...templateDefault?.couple,
-      brideName: brideName || defaultBride,
-      groomName: groomName || defaultGroom,
+      brideName: activeBride,
+      groomName: activeGroom,
     },
   };
 

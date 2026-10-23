@@ -123,7 +123,7 @@ model Invitation {
   translations         Json           @default("{}") // custom translations object
   
   // Settings
-  isPublished          Boolean        @default(true) @map("is_published")
+  isPublished          Boolean        @default(false) @map("is_published")
   isArchived           Boolean        @default(false) @map("is_archived")
   
   createdAt            DateTime       @default(now()) @map("created_at") @db.Timestamptz

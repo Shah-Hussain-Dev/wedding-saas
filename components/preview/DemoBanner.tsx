@@ -25,6 +25,7 @@ interface DemoBannerProps {
   groomName?: string;
   amountPaise?: number;
   isPublished?: boolean;
+  isPaid?: boolean;
   expiresInSeconds?: number;
 }
 
@@ -37,6 +38,7 @@ export function DemoBanner({
   groomName,
   amountPaise,
   isPublished = false,
+  isPaid = false,
   expiresInSeconds = 900,
 }: DemoBannerProps) {
   const { data: session } = useSession();
@@ -50,13 +52,30 @@ export function DemoBanner({
   const effectiveBrideName = brideName || nameParts[0] || "Bride";
   const effectiveGroomName = groomName || nameParts[1] || "Groom";
 
+  // Check if paid in local storage or via verified payment props
+  const checkIsUnlocked = () => {
+    if (isPaid) return true;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(`unfold_invitation_${slug}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.isPaid === true || parsed.order?.status === "paid" || parsed.orderStatus === "paid") {
+            return true;
+          }
+        }
+      } catch (_) {}
+    }
+    return false;
+  };
+
   const [timeLeft, setTimeLeft] = useState(expiresInSeconds);
-  const [isUnlocked, setIsUnlocked] = useState(isPublished);
+  const [isUnlocked, setIsUnlocked] = useState(checkIsUnlocked);
   const [isMinimized, setIsMinimized] = useState(true);
 
   useEffect(() => {
-    setIsUnlocked(isPublished);
-  }, [isPublished]);
+    setIsUnlocked(checkIsUnlocked());
+  }, [isPaid, slug]);
 
   useEffect(() => {
     if (isUnlocked) return;
@@ -191,13 +210,14 @@ export function DemoBanner({
       </div>
 
       {/* ── Bottom Floating Sleek Unlock Pill / Bar (Only in unpaid demo) ── */}
-      <div className="absolute bottom-3 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 flex flex-col items-center">
+      <div className="absolute bottom-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 flex flex-col items-center pb-[env(safe-area-inset-bottom,0px)]">
         {isMinimized ? (
           /* Minimized Compact Floating Unlock Pill */
-          <div className="pointer-events-auto flex items-center gap-2 bg-stone-950/90 backdrop-blur-xl border border-amber-400/40 px-3 py-1.5 rounded-full shadow-2xl animate-fade-in hover:scale-105 transition-all">
+          <div className="pointer-events-auto flex items-center gap-2 bg-stone-950/90 backdrop-blur-xl border border-amber-400/40 px-3 py-1.5 rounded-full shadow-2xl animate-fade-in hover:scale-105 transition-all min-h-[44px]">
             <button
+              type="button"
               onClick={() => setIsMinimized(false)}
-              className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 text-[10px] font-bold uppercase tracking-wider pr-1"
+              className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 text-[10px] font-bold uppercase tracking-wider pr-1 min-h-[44px] min-w-[44px] justify-center"
             >
               <Sparkle className="h-3.5 w-3.5 text-amber-400 animate-pulse" weight="fill" />
               <span>Details</span>
@@ -215,7 +235,7 @@ export function DemoBanner({
               amount={dynamicPriceInr}
               amountPaise={effectiveAmountPaise}
               buttonText={`Unlock Website (${dynamicPriceFormatted})`}
-              className="!py-1.5 !px-3.5 !text-[11px] !rounded-full !shadow-md"
+              className="!py-2 !px-3.5 !text-[11px] !rounded-full !shadow-md min-h-[44px] font-bold"
               onSuccess={handleUnlockSuccess}
             />
           </div>
@@ -241,7 +261,7 @@ export function DemoBanner({
               <button
                 type="button"
                 onClick={() => setIsMinimized(true)}
-                className="p-1 rounded-full text-stone-400 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-2 rounded-full text-stone-400 hover:text-white hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                 title="Minimize banner"
               >
                 <CaretDown className="h-4 w-4" />
@@ -262,7 +282,7 @@ export function DemoBanner({
                 amount={dynamicPriceInr}
                 amountPaise={effectiveAmountPaise}
                 buttonText={`Unlock Website Now (${dynamicPriceFormatted})`}
-                className="!py-2 !px-4 !text-xs !rounded-xl !shadow-lg"
+                className="!py-2.5 !px-4 !text-xs !rounded-xl !shadow-lg min-h-[44px] font-bold"
                 onSuccess={handleUnlockSuccess}
               />
             </div>

@@ -275,7 +275,7 @@ export function InteractiveTemplateGrid() {
                       <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-white/10">
                         {item.scenes[currentScene]?.title}
                       </span>
-                      <span className="text-[10px] font-bold text-white font-mono">
+                      <span suppressHydrationWarning className="text-[10px] font-bold text-white font-mono">
                         {getPriceFormatted(item.id, item.price)}
                       </span>
                     </div>

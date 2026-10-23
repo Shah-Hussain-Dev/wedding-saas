@@ -31,14 +31,26 @@ interface EmeraldNoirProps {
 }
 
 export default function EmeraldNoir({ data }: EmeraldNoirProps) {
+  const isCustomized = Boolean(
+    (data?.brideName && data.brideName !== defaultData.couple?.brideName) ||
+    (data?.groomName && data.groomName !== defaultData.couple?.groomName) ||
+    data?.slug ||
+    data?.id
+  );
+
   const brideName = data?.brideName || defaultData.couple.brideName;
   const groomName = data?.groomName || defaultData.couple.groomName;
+  const brideParents = data?.brideParents || data?.couple?.brideParents || (isCustomized ? "" : defaultData.couple?.brideParents || "");
+  const groomParents = data?.groomParents || data?.couple?.groomParents || (isCustomized ? "" : defaultData.couple?.groomParents || "");
   const rawDate = data?.weddingDate || defaultData.weddingDate;
   const weddingDateObj = new Date(rawDate);
   const dayStr = weddingDateObj.toLocaleDateString("en-IN", { weekday: "long" });
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
-  const hashtag = data?.hashtag || defaultData.hashtag || `#${brideName}${groomName}Vivah`.replace(/\s+/g, "");
+  const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
+  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("radhika") && !data.hashtag.toLowerCase().includes("devendra"))
+    ? data.hashtag
+    : dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -422,14 +434,20 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
                   </h1>
                 </div>
 
-                <div className="border-l-2 border-[#d4af37]/50 pl-4 py-1 space-y-1">
-                  <p className="font-cormorant text-lg text-[#d4af37] font-semibold">
-                    {defaultData.couple.brideParents}
-                  </p>
-                  <p className="font-cormorant text-lg text-[#d4af37] font-semibold">
-                    {defaultData.couple.groomParents}
-                  </p>
-                </div>
+                {(brideParents || groomParents) && (
+                  <div className="border-l-2 border-[#d4af37]/50 pl-4 py-1 space-y-1">
+                    {brideParents ? (
+                      <p className="font-cormorant text-lg text-[#d4af37] font-semibold">
+                        {brideParents}
+                      </p>
+                    ) : null}
+                    {groomParents ? (
+                      <p className="font-cormorant text-lg text-[#d4af37] font-semibold">
+                        {groomParents}
+                      </p>
+                    ) : null}
+                  </div>
+                )}
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <div className="px-5 py-2.5 rounded-2xl bg-[#06241b] border border-[#d4af37]/30 flex items-center gap-2.5">

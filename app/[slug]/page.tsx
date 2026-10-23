@@ -49,9 +49,12 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
           const data = await res.json();
           const trans = (data?.translations as any) || {};
           const resolvedReligion = data?.religion || trans.religion || localItem?.religion || "universal";
+          const isPaid = Boolean(data?.isPaid === true || data?.order?.status === "paid" || data?.orderStatus === "paid");
           setInvitation({
             ...localItem,
             ...data,
+            isPaid,
+            isPublished: Boolean(data?.isPublished && isPaid),
             religion: resolvedReligion,
             sacredInvocation: data?.sacredInvocation || trans.sacredInvocation || localItem?.sacredInvocation,
             sacredVerse: data?.sacredVerse || trans.sacredVerse || localItem?.sacredVerse,
@@ -65,7 +68,12 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
       }
 
       if (localItem) {
-        setInvitation(localItem);
+        const isPaid = Boolean(localItem.isPaid === true || localItem.order?.status === "paid" || localItem.orderStatus === "paid");
+        setInvitation({
+          ...localItem,
+          isPaid,
+          isPublished: Boolean(localItem.isPublished && isPaid),
+        });
         setLoading(false);
         return;
       }
@@ -113,9 +121,40 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
   const transObj = (invitation.translations as any) || {};
   const selectedReligion = invitation.religion || transObj.religion || templateDefault.religion || "universal";
 
+  const isCustomized = Boolean(
+    invitation.brideName ||
+    invitation.groomName ||
+    invitation.slug
+  );
+
+  const dynamicHashtag = (invitation.groomName && invitation.brideName)
+    ? `#${invitation.groomName}And${invitation.brideName}`.replace(/[\s&]+/g, "")
+    : undefined;
+
   const mergedInvitation = {
     ...templateDefault,
+    ...(isCustomized ? {
+      hashtag: dynamicHashtag,
+      couple: {
+        ...templateDefault.couple,
+        brideName: invitation.brideName,
+        groomName: invitation.groomName,
+        brideParents: invitation.brideParents || "",
+        groomParents: invitation.groomParents || "",
+        brideEducation: invitation.brideEducation || "",
+        groomEducation: invitation.groomEducation || "",
+        brideProfession: invitation.brideProfession || "",
+        groomProfession: invitation.groomProfession || "",
+      },
+      groomParents: invitation.groomParents || "",
+      brideParents: invitation.brideParents || "",
+      groomEducation: invitation.groomEducation || "",
+      groomProfession: invitation.groomProfession || "",
+      brideEducation: invitation.brideEducation || "",
+      brideProfession: invitation.brideProfession || "",
+    } : {}),
     ...invitation,
+    hashtag: invitation.hashtag || dynamicHashtag || templateDefault.hashtag,
     religion: selectedReligion,
     sacredInvocation: invitation.sacredInvocation || transObj.sacredInvocation,
     sacredVerse: invitation.sacredVerse || transObj.sacredVerse,
@@ -131,7 +170,8 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
     setHasOpenedDoors(true);
   };
 
-  const isUnpublished = invitation.isPublished === false;
+  const isPaid = Boolean(invitation.isPaid === true || invitation.order?.status === "paid" || invitation.orderStatus === "paid");
+  const isUnpublished = !(invitation.isPublished && isPaid);
 
   return (
     <div className="relative min-h-screen no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
@@ -142,8 +182,11 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
           slug={invitation.slug || slug}
           templateId={invitation.templateId || "royal-lotus"}
           templateName={invitation.brideName ? `${invitation.brideName} & ${invitation.groomName}` : undefined}
+          brideName={invitation.brideName}
+          groomName={invitation.groomName}
           amountPaise={invitation.amountPaise}
           isPublished={false}
+          isPaid={false}
           expiresInSeconds={900}
         />
       )}

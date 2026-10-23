@@ -1,20 +1,20 @@
 {
   "templateId": "imperial-palace",
   "couple": {
-    "groomName": "Prince Alexander",
-    "groomParents": "Son of His Imperial Highness Duke Leopold & Duchess Victoria",
-    "groomEducation": "M.A. International Diplomacy, Oxford",
-    "groomProfession": "Heritage Estate Conservator",
-    "brideName": "Princess Eleanor",
-    "brideParents": "Daughter of Count Maximilian & Countess Charlotte De Valois",
-    "brideEducation": "M.Sc. Classical Architecture, Sorbonne",
-    "brideProfession": "Fine Arts & Architecture Curator"
+    "groomName": "Kabir",
+    "groomParents": "",
+    "groomEducation": "",
+    "groomProfession": "",
+    "brideName": "Tara",
+    "brideParents": "",
+    "brideEducation": "",
+    "brideProfession": ""
   },
   "weddingDate": "2027-10-24T18:00:00.000Z",
   "weddingTime": "06:00 PM CET",
-  "hashtag": "#AlexanderAndEleanor",
+  "hashtag": "",
   "religion": "universal",
-  "quote": "In the presence of our cherished families and under starlit skies, two dynasties unite in eternal devotion, honour, and love.",
+  "quote": "In the presence of our cherished families and under starlit skies, two souls unite in eternal devotion, honour, and love.",
   "videoUrl": "/videos/royal-elegance-royal.mp4",
   "musicTrack": "/templates/imperial-palace/music.mp3",
   "venue": {

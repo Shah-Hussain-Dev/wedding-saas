@@ -46,21 +46,31 @@ interface RoyalHeritageProps {
 }
 
 export default function RoyalHeritage({ data }: RoyalHeritageProps) {
+  const isCustomized = Boolean(
+    (data?.brideName && data.brideName !== defaultData.couple?.brideName) ||
+    (data?.groomName && data.groomName !== defaultData.couple?.groomName) ||
+    data?.slug ||
+    data?.id
+  );
+
   const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple.brideName;
   const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple.groomName;
-  const groomParents = data?.groomParents || data?.couple?.groomParents || defaultData.couple.groomParents;
-  const groomEducation = data?.groomEducation || data?.couple?.groomEducation || defaultData.couple.groomEducation;
-  const groomProfession = data?.groomProfession || data?.couple?.groomProfession || defaultData.couple.groomProfession;
-  const brideParents = data?.brideParents || data?.couple?.brideParents || defaultData.couple.brideParents;
-  const brideEducation = data?.brideEducation || data?.couple?.brideEducation || defaultData.couple.brideEducation;
-  const brideProfession = data?.brideProfession || data?.couple?.brideProfession || defaultData.couple.brideProfession;
+  const groomParents = data?.groomParents || data?.couple?.groomParents || (isCustomized ? "" : defaultData.couple.groomParents);
+  const groomEducation = data?.groomEducation || data?.couple?.groomEducation || (isCustomized ? "" : defaultData.couple.groomEducation);
+  const groomProfession = data?.groomProfession || data?.couple?.groomProfession || (isCustomized ? "" : defaultData.couple.groomProfession);
+  const brideParents = data?.brideParents || data?.couple?.brideParents || (isCustomized ? "" : defaultData.couple.brideParents);
+  const brideEducation = data?.brideEducation || data?.couple?.brideEducation || (isCustomized ? "" : defaultData.couple.brideEducation);
+  const brideProfession = data?.brideProfession || data?.couple?.brideProfession || (isCustomized ? "" : defaultData.couple.brideProfession);
 
   const rawDate = data?.weddingDate || defaultData.weddingDate;
   const weddingDateObj = new Date(rawDate);
   const dayStr = weddingDateObj.toLocaleDateString("en-IN", { weekday: "long" });
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
-  const hashtag = data?.hashtag || defaultData.hashtag || `#${groomName}Found${brideName}`.replace(/\s+/g, "");
+  const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
+  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("aarav") && !data.hashtag.toLowerCase().includes("samaira"))
+    ? data.hashtag
+    : dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -458,9 +468,11 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                 <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
                   {groomName}
                 </h1>
-                <p className="font-lora italic text-xs sm:text-sm md:text-base text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light">
-                  {groomParents}
-                </p>
+                {groomParents ? (
+                  <p className="font-lora italic text-xs sm:text-sm md:text-base text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light">
+                    {groomParents}
+                  </p>
+                ) : null}
                 {(groomEducation || groomProfession) && (
                   <p className="text-[11px] sm:text-xs md:text-sm text-[#91B5BC] font-lora drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
                     {groomEducation}
@@ -482,9 +494,11 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                 <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
                   {brideName}
                 </h1>
-                <p className="font-lora italic text-xs sm:text-sm md:text-base text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light">
-                  {brideParents}
-                </p>
+                {brideParents ? (
+                  <p className="font-lora italic text-xs sm:text-sm md:text-base text-stone-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-light">
+                    {brideParents}
+                  </p>
+                ) : null}
                 {(brideEducation || brideProfession) && (
                   <p className="text-[11px] sm:text-xs md:text-sm text-[#91B5BC] font-lora drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
                     {brideEducation}
@@ -730,7 +744,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
         <footer className="pt-14 pb-0 bg-heritage-deep border-t border-[#77A3AE]/30 text-center space-y-4 text-xs text-[#FAF8F5]/80">
           <p className="font-lora italic text-base text-[#FAF8F5]">
             With boundless love and gratitude, <br />
-            The Singhania &amp; Rathore Families
+            {groomName} &amp; {brideName} and Families
           </p>
           <p className="text-[11px] font-montserrat tracking-widest text-[#E66B5E] font-semibold">
             {hashtag}

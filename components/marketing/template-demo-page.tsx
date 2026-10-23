@@ -43,17 +43,20 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
   // Direct template rendering data for mobile view
   const templateDefault = getTemplateDefaultData(normalizedId);
   const SelectedTemplate = TEMPLATES_MAP[normalizedId] || NoorNikah;
+  const sampleGroom = templateDefault?.couple?.groomName || templateDefault?.groomName || "Shaan";
+  const sampleBride = templateDefault?.couple?.brideName || templateDefault?.brideName || "Diya";
   const sampleData = {
     ...templateDefault,
     id: `demo-${normalizedId}`,
     slug: normalizedId,
     templateId: normalizedId,
-    brideName: templateDefault?.couple?.brideName || templateDefault?.brideName || "Diya",
-    groomName: templateDefault?.couple?.groomName || templateDefault?.groomName || "Shaan",
+    brideName: sampleBride,
+    groomName: sampleGroom,
+    hashtag: `#${sampleGroom}And${sampleBride}`.replace(/[\s&]+/g, ""),
     couple: {
       ...templateDefault?.couple,
-      brideName: templateDefault?.couple?.brideName || templateDefault?.brideName || "Diya",
-      groomName: templateDefault?.couple?.groomName || templateDefault?.groomName || "Shaan",
+      brideName: sampleBride,
+      groomName: sampleGroom,
     },
   };
 
@@ -209,7 +212,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <span className="font-serif text-2xl sm:text-3xl font-bold text-[#073D31] block">
+                      <span suppressHydrationWarning className="font-serif text-2xl sm:text-3xl font-bold text-[#073D31] block">
                         {dynamicPriceFormatted}
                       </span>
                       <span className="text-[10px] text-stone-400 uppercase tracking-wider font-semibold">

@@ -114,6 +114,7 @@ export async function POST(req: NextRequest) {
       return {
         ...inv,
         isPaid,
+        isPublished: Boolean(inv.isPublished && isPaid),
         orderStatus,
         orderAmount,
         religion: trans.religion || "universal",

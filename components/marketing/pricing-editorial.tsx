@@ -71,7 +71,7 @@ export function PricingEditorial() {
                   <span className="text-stone-400 line-through text-base sm:text-lg font-sans">₹2,999</span>
                 </div>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-4xl sm:text-5xl font-serif font-bold text-[#073D31]">
+                  <span suppressHydrationWarning className="text-4xl sm:text-5xl font-serif font-bold text-[#073D31]">
                     {startingPriceFormatted}
                   </span>
                   <span className="text-xs text-[#76766F] font-sans font-medium">/ complete wedding</span>

@@ -128,6 +128,7 @@ export async function GET(req: NextRequest) {
         return {
           ...inv,
           isPaid,
+          isPublished: Boolean(inv.isPublished && isPaid),
           orderStatus,
           orderAmount,
           religion: trans.religion || "universal",
@@ -227,6 +228,9 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      const isPaid = order.status === "paid";
+      const isPublished = Boolean(body.isPublished && isPaid);
+
       const invitation = await prisma.invitation.create({
         data: {
           userId: user.id,
@@ -250,11 +254,15 @@ export async function POST(req: NextRequest) {
           transportText: transportText || null,
           eventsJson: eventsJson || [],
           translations: translationsData,
+          isPublished,
         },
       });
 
       const enrichedCreated = {
         ...invitation,
+        isPublished,
+        isPaid,
+        orderStatus: order.status,
         religion: resolvedReligion,
         sacredInvocation: sacredInvocation || null,
         sacredVerse: sacredVerse || null,
@@ -277,6 +285,9 @@ export async function POST(req: NextRequest) {
           venueAddress,
           eventsJson,
           slideshowImages,
+          isPublished: false,
+          isPaid: false,
+          orderStatus: "pending",
           religion: resolvedReligion,
           sacredInvocation: sacredInvocation || null,
           sacredVerse: sacredVerse || null,

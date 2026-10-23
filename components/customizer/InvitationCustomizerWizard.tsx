@@ -343,6 +343,12 @@ export function InvitationCustomizerWizard({
 
     const targetEmail = session?.user?.email || (typeof window !== "undefined" ? localStorage.getItem("unfold_user_email") || undefined : undefined);
 
+    const isAlreadyPaid = Boolean(
+      initialData?.isPaid === true ||
+      initialData?.order?.status === "paid" ||
+      initialData?.orderStatus === "paid"
+    );
+
     const payload = {
       id: invitationId || `demo-${Date.now()}`,
       slug: normalizedSlug,
@@ -364,7 +370,8 @@ export function InvitationCustomizerWizard({
       musicTrack,
       eventsJson: events,
       events: events,
-      isPublished: Boolean(initialData?.isPublished ?? false),
+      isPaid: isAlreadyPaid,
+      isPublished: isAlreadyPaid && Boolean(initialData?.isPublished),
       userEmail: targetEmail,
       email: targetEmail,
       createdAt: initialData?.createdAt || initialData?.created_at || new Date().toISOString(),
@@ -399,7 +406,27 @@ export function InvitationCustomizerWizard({
           body: JSON.stringify(payload),
         });
 
-        if (!res.ok) {
+        if (res.ok) {
+          const updated = await res.json();
+          if (typeof window !== "undefined") {
+            const isResultPaid = Boolean(
+              updated.isPaid === true ||
+              updated.order?.status === "paid" ||
+              updated.orderStatus === "paid" ||
+              isAlreadyPaid
+            );
+            const fullRecord = JSON.stringify({
+              ...payload,
+              ...updated,
+              isPaid: isResultPaid,
+              isPublished: Boolean(updated.isPublished && isResultPaid),
+            });
+            localStorage.setItem(`unfold_invitation_${updated.slug || normalizedSlug}`, fullRecord);
+            if (invitationId) {
+              localStorage.setItem(`unfold_invitation_${invitationId}`, fullRecord);
+            }
+          }
+        } else {
           console.warn("PUT /api/invitations/[id] returned non-ok status:", res.status);
         }
       } else {
@@ -416,7 +443,18 @@ export function InvitationCustomizerWizard({
               finalSlug = created.slug;
             }
             if (typeof window !== "undefined") {
-              const fullRecord = JSON.stringify({ ...payload, ...created });
+              const isResultPaid = Boolean(
+                created.isPaid === true ||
+                created.order?.status === "paid" ||
+                created.orderStatus === "paid" ||
+                isAlreadyPaid
+              );
+              const fullRecord = JSON.stringify({
+                ...payload,
+                ...created,
+                isPaid: isResultPaid,
+                isPublished: Boolean(created.isPublished && isResultPaid),
+              });
               localStorage.setItem(`unfold_invitation_${created.slug || normalizedSlug}`, fullRecord);
               localStorage.setItem(`unfold_invitation_${created.id}`, fullRecord);
               localStorage.setItem("unfold_pending_draft", fullRecord);

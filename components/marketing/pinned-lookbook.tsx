@@ -10,13 +10,14 @@ import {
   PanInfo,
 } from "motion/react";
 import { ArrowRight } from "@phosphor-icons/react";
+import { getTemplateDefaultData } from "@/templates";
 
 interface LookbookFrame {
   id: string;
   templateId: string;
   chapter: string;
   title: string;
-  couple: string;
+  couple?: string;
   tag: string;
   image: string;
   video?: string;
@@ -30,7 +31,6 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     templateId: "imperial-palace",
     chapter: "Royal Palaces",
     title: "Imperial Palace Grand Ballroom",
-    couple: "Maharaja Veer & Sunaina",
     tag: "3D Double Palace Doors",
     image: "/templates/imperial-palace/ballroom.jpg",
     description: "Ornate gold leaf arches, royal elephant procession, and regal velvet fanfare.",
@@ -41,7 +41,6 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     templateId: "royal-majesty",
     chapter: "Royal Palaces",
     title: "Regal Ballroom & Lakeside Terrace",
-    couple: "Lord Julian & Genevieve",
     tag: "Regal Grandeur",
     video: "/videos/royal-majesty.mp4",
     image: "/templates/imperial-palace/ballroom.jpg",
@@ -53,7 +52,6 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     templateId: "noor-e-nikah",
     chapter: "Sacred Nikahs",
     title: "Noor-e-Nikah Sacred Archway",
-    couple: "Zayd & Mariam",
     tag: "24K Gold Bismillah",
     image: "/templates/noor-e-nikah/envelope-bg.jpg",
     description: "Embossed ivory floral envelope, slow-lighting wax seal, and sacred Ayah calligraphy.",
@@ -64,7 +62,6 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     templateId: "azure-nikah",
     chapter: "Sacred Nikahs",
     title: "Azure Nikah Mosque Courtyard",
-    couple: "Faris & Anaya",
     tag: "Persian Sapphire",
     image: "/templates/noor-e-nikah/envelope-bg.jpg",
     description: "Persian sapphire tilework with celestial moonrise animations.",
@@ -75,7 +72,6 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     templateId: "celestial-rose",
     chapter: "Celestial Dreamscapes",
     title: "Celestial Rose & Starlight Terrace",
-    couple: "Armaan & Tara",
     tag: "Awwwards 3D",
     video: "/videos/royal-prestige.mp4",
     image: "/templates/imperial-palace/ballroom.jpg",
@@ -87,7 +83,6 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     templateId: "rose-gold-blush",
     chapter: "Modern Florals",
     title: "Rose Gold Blush & Champagne Silk",
-    couple: "Rohan & Meera",
     tag: "Petal Shower",
     video: "/videos/rose-gold-blush.mp4",
     image: "/templates/imperial-palace/ballroom.jpg",
@@ -105,6 +100,33 @@ export function PinnedLookbook() {
   const [isMobile, setIsMobile] = useState(false);
   const [viewportWidth, setViewportWidth] = useState(390);
   const isDraggingRef = useRef(false);
+
+  const [activeInvitations, setActiveInvitations] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("unfold_active_invitations");
+      if (stored) {
+        setActiveInvitations(JSON.parse(stored));
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  const getDynamicCouple = (templateId: string) => {
+    const custom = activeInvitations.find((item: any) => item.templateId === templateId);
+    if (custom?.brideName && custom?.groomName) {
+      return `${custom.groomName} & ${custom.brideName}`;
+    }
+    const def = getTemplateDefaultData(templateId);
+    const groom = def?.couple?.groomName || def?.groomName;
+    const bride = def?.couple?.brideName || def?.brideName;
+    if (groom && bride) {
+      return `${groom} & ${bride}`;
+    }
+    return "Wedding Celebration";
+  };
 
   useEffect(() => {
     const updateDims = () => {
@@ -292,7 +314,7 @@ export function PinnedLookbook() {
                         {frame.title}
                       </h3>
                       <p className="text-[11px] text-stone-300 font-sans mt-0.5 line-clamp-1">
-                        {frame.couple}
+                        {getDynamicCouple(frame.templateId)}
                       </p>
                     </div>
                   </div>
@@ -447,7 +469,7 @@ export function PinnedLookbook() {
                         {frame.title}
                       </h3>
                       <p className="text-[11px] sm:text-xs text-stone-300 font-sans mt-0.5 line-clamp-1">
-                        {frame.couple}
+                        {getDynamicCouple(frame.templateId)}
                       </p>
                     </div>
                   </div>

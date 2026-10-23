@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -93,15 +93,30 @@ const THEME_PRESETS: ThemePreset[] = [
 ];
 
 export function InteractiveCustomizerDemo() {
-  const [groomName, setGroomName] = useState("Aarav");
-  const [brideName, setBrideName] = useState("Zara");
+  const [groomName, setGroomName] = useState("Rohan");
+  const [brideName, setBrideName] = useState("Pooja");
   const [weddingDate, setWeddingDate] = useState("November 28, 2026");
   const [weddingVenue, setWeddingVenue] = useState("The Taj Lake Palace, Udaipur");
   const [selectedPreset, setSelectedPreset] = useState<ThemePreset>(THEME_PRESETS[1]); // Imperial Palace
   const [religion, setReligion] = useState<"universal" | "hindu" | "muslim">("universal");
 
-  const groomInitial = (groomName.trim()[0] || "A").toUpperCase();
-  const brideInitial = (brideName.trim()[0] || "Z").toUpperCase();
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("unfold_active_invitations");
+      if (stored) {
+        const list = JSON.parse(stored);
+        if (list && list.length > 0 && list[0]?.brideName && list[0]?.groomName) {
+          setGroomName(list[0].groomName);
+          setBrideName(list[0].brideName);
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, []);
+
+  const groomInitial = (groomName.trim()[0] || "R").toUpperCase();
+  const brideInitial = (brideName.trim()[0] || "P").toUpperCase();
 
   const handlePresetSelect = (preset: ThemePreset) => {
     setSelectedPreset(preset);

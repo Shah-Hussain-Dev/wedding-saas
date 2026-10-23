@@ -576,6 +576,13 @@ interface CelestialRoseProps {
 }
 
 export default function CelestialRose({ data }: CelestialRoseProps) {
+  const isCustomized = Boolean(
+    (data?.brideName && data.brideName !== defaultData.couple?.brideName) ||
+    (data?.groomName && data.groomName !== defaultData.couple?.groomName) ||
+    data?.slug ||
+    data?.id
+  );
+
   const brideName =
     data?.brideName || data?.couple?.brideName || defaultData.couple.brideName;
   const groomName =
@@ -583,27 +590,27 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
   const groomParents =
     data?.groomParents ||
     data?.couple?.groomParents ||
-    defaultData.couple.groomParents;
+    (isCustomized ? "" : defaultData.couple.groomParents);
   const groomEducation =
     data?.groomEducation ||
     data?.couple?.groomEducation ||
-    defaultData.couple.groomEducation;
+    (isCustomized ? "" : defaultData.couple.groomEducation);
   const groomProfession =
     data?.groomProfession ||
     data?.couple?.groomProfession ||
-    defaultData.couple.groomProfession;
+    (isCustomized ? "" : defaultData.couple.groomProfession);
   const brideParents =
     data?.brideParents ||
     data?.couple?.brideParents ||
-    defaultData.couple.brideParents;
+    (isCustomized ? "" : defaultData.couple.brideParents);
   const brideEducation =
     data?.brideEducation ||
     data?.couple?.brideEducation ||
-    defaultData.couple.brideEducation;
+    (isCustomized ? "" : defaultData.couple.brideEducation);
   const brideProfession =
     data?.brideProfession ||
     data?.couple?.brideProfession ||
-    defaultData.couple.brideProfession;
+    (isCustomized ? "" : defaultData.couple.brideProfession);
 
   const rawDate = data?.weddingDate || defaultData.weddingDate;
   const weddingDateObj = new Date(rawDate);
@@ -613,10 +620,11 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
     month: "long",
   });
   const yearStr = weddingDateObj.getFullYear().toString();
+  const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
   const hashtag =
-    data?.hashtag ||
-    defaultData.hashtag ||
-    `#${groomName}And${brideName}`.replace(/\s+/g, "");
+    (data?.hashtag && !data.hashtag.toLowerCase().includes("aarav") && !data.hashtag.toLowerCase().includes("zara"))
+      ? data.hashtag
+      : dynamicHashtag;
 
   const venueName =
     data?.venueName || data?.venue?.name || defaultData.venue.name;
@@ -1139,9 +1147,11 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                 <h3 className="text-2xl font-playfair font-bold text-[#685868]">
                   {groomName}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#788898] font-cormorant italic">
-                  {groomParents}
-                </p>
+                {groomParents ? (
+                  <p className="text-xs sm:text-sm text-[#788898] font-cormorant italic">
+                    {groomParents}
+                  </p>
+                ) : null}
                 {(groomEducation || groomProfession) && (
                   <p className="text-[11px] text-[#C9A46E] font-montserrat pt-1 font-medium">
                     {groomEducation} · {groomProfession}
@@ -1157,9 +1167,11 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                 <h3 className="text-2xl font-playfair font-bold text-[#685868]">
                   {brideName}
                 </h3>
-                <p className="text-xs sm:text-sm text-[#788898] font-cormorant italic">
-                  {brideParents}
-                </p>
+                {brideParents ? (
+                  <p className="text-xs sm:text-sm text-[#788898] font-cormorant italic">
+                    {brideParents}
+                  </p>
+                ) : null}
                 {(brideEducation || brideProfession) && (
                   <p className="text-[11px] text-[#C9A46E] font-montserrat pt-1 font-medium">
                     {brideEducation} · {brideProfession}
