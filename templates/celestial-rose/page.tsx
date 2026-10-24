@@ -946,8 +946,8 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* Layer 1: Atmospheric Light Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/65 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
-        {!hideReligionSwitcher && (
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) or Invisible Spacer */}
+        {!hideReligionSwitcher ? (
           <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
             <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/60 backdrop-blur-md border border-[#E2B993]/40 shadow-md text-xs font-montserrat">
               <button
@@ -994,6 +994,8 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
               </button>
             </div>
           </header>
+        ) : (
+          <div className="relative z-20 w-full h-12 sm:h-10 pointer-events-none" aria-hidden="true" />
         )}
 
         {/* AnimatePresence for Unveiled Invitation Content After 5.5s */}

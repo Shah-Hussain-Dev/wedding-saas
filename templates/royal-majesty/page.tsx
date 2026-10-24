@@ -397,8 +397,8 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
         {/* Ambient Subtle Vignette */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-black/70 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
-        {!hideReligionSwitcher && (
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) or Invisible Spacer */}
+        {!hideReligionSwitcher ? (
           <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
             <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/30 shadow-md text-xs font-montserrat">
               <button
@@ -436,6 +436,8 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
               </button>
             </div>
           </header>
+        ) : (
+          <div className="relative z-20 w-full h-12 sm:h-10 pointer-events-none" aria-hidden="true" />
         )}
 
         {/* Transparent Clickable Trigger Over Full Screen */}

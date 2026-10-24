@@ -382,8 +382,8 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
         {/* Ambient Twilight Vignette */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-black/80 z-[1] pointer-events-none" />
 
-        {/* Top Header: Discreet Faith Switcher Pill (Right on desktop, Centered on mobile) */}
-        {!hideReligionSwitcher && (
+        {/* Top Header: Discreet Faith Switcher Pill (Right on desktop, Centered on mobile) or Invisible Spacer */}
+        {!hideReligionSwitcher ? (
           <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
             <div className="inline-flex items-center gap-1 p-1 rounded-full bg-black/60 backdrop-blur-md border border-[#B78C4E]/40 shadow-lg text-xs font-montserrat">
               <button
@@ -421,6 +421,8 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
               </button>
             </div>
           </header>
+        ) : (
+          <div className="relative z-20 w-full h-12 sm:h-10 pointer-events-none" aria-hidden="true" />
         )}
 
         {/* ----------------------------------------------------

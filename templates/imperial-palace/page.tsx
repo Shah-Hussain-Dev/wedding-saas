@@ -781,8 +781,8 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
         {/* Subtle Ambient Vignette & Warm Royal Tint */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/75 z-[1] pointer-events-none" />
 
-        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) */}
-        {!hideReligionSwitcher && (
+        {/* Top Header: Faith Switcher Pill (Right on desktop, Centered on mobile) or Invisible Top Spacer */}
+        {!hideReligionSwitcher ? (
           <header className="relative z-20 w-full px-4 sm:px-6 pt-12 sm:pt-4 flex items-center justify-center sm:justify-end pointer-events-auto">
             <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/65 backdrop-blur-md border border-[#B89773]/40 shadow-md text-xs font-montserrat">
               <button
@@ -820,58 +820,62 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
               </button>
             </div>
           </header>
+        ) : (
+          <div className="relative z-20 w-full h-12 sm:h-10 pointer-events-none" aria-hidden="true" />
         )}
 
-        {/* Full-Screen Tap Area When Video Has Not Started */}
-        {!isVideoStarted && (
-          <div
-            onClick={handleStartExperience}
-            className="absolute inset-0 z-15 cursor-pointer flex flex-col items-center justify-end pb-16 touch-manipulation"
-          />
-        )}
-
-        {/* BEFORE USER CLICKS: Sleek, Unobstructed Floating "Tap to Enter Palace" Button */}
+        {/* Full-Screen Tap Area & Floating "Tap to Enter Palace" Button When Video Has Not Started */}
         <AnimatePresence>
           {!isVideoStarted && (
-            <motion.div
-              initial={{ opacity: 0, y: 25, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9, y: 15, filter: "blur(8px)" }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              onClick={handleStartExperience}
-              className="relative z-20 pb-16 sm:pb-24 flex flex-col items-center gap-2.5 cursor-pointer group px-4"
-            >
-              {/* Glowing Pulse Aura */}
-              <motion.div
-                animate={{
-                  boxShadow: [
-                    "0 0 15px rgba(184, 151, 115, 0.35)",
-                    "0 0 35px rgba(213, 186, 151, 0.7)",
-                    "0 0 15px rgba(184, 151, 115, 0.35)",
-                  ],
-                  scale: [1, 1.025, 1],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 2.2,
-                  ease: "easeInOut",
-                }}
-                className="rounded-full"
-              >
-                <button
-                  type="button"
-                  className="px-7 py-3.5 sm:px-10 sm:py-4.5 rounded-full bg-gradient-to-r from-[#B89773] via-[#D5BA97] to-[#B89773] text-[#2C0F0D] text-[11px] sm:text-sm font-bold font-montserrat tracking-[0.2em] uppercase shadow-2xl flex items-center gap-2.5 border border-white/50 group-hover:scale-105 transition-transform"
-                >
-                  <Sparkle size={15} weight="fill" className="text-[#551618] animate-spin-slow" />
-                  <span>Tap to Enter Palace</span>
-                  <Sparkle size={15} weight="fill" className="text-[#551618] animate-spin-slow" />
-                </button>
-              </motion.div>
+            <div className="absolute inset-0 z-20 pointer-events-none flex flex-col items-center justify-end pb-16 sm:pb-24">
+              {/* Full-Screen Click Target */}
+              <div
+                onClick={handleStartExperience}
+                className="absolute inset-0 pointer-events-auto cursor-pointer touch-manipulation"
+                aria-label="Tap to Enter Palace"
+              />
 
-              <span className="text-[9px] sm:text-[11px] tracking-[0.22em] text-[#D5BA97] font-montserrat uppercase font-semibold drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
-                ✦ Royal Gates Await Your Presence ✦
-              </span>
-            </motion.div>
+              {/* BEFORE USER CLICKS: Sleek, Unobstructed Floating "Tap to Enter Palace" Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 25, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9, y: 15, filter: "blur(8px)" }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                onClick={handleStartExperience}
+                className="relative z-30 pointer-events-auto flex flex-col items-center gap-2.5 cursor-pointer group px-4 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)]"
+              >
+                {/* Glowing Pulse Aura */}
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      "0 0 15px rgba(184, 151, 115, 0.35)",
+                      "0 0 35px rgba(213, 186, 151, 0.7)",
+                      "0 0 15px rgba(184, 151, 115, 0.35)",
+                    ],
+                    scale: [1, 1.025, 1],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 2.2,
+                    ease: "easeInOut",
+                  }}
+                  className="rounded-full"
+                >
+                  <button
+                    type="button"
+                    className="px-7 py-3.5 sm:px-10 sm:py-4.5 rounded-full bg-gradient-to-r from-[#B89773] via-[#D5BA97] to-[#B89773] text-[#2C0F0D] text-[11px] sm:text-sm font-bold font-montserrat tracking-[0.2em] uppercase shadow-2xl flex items-center gap-2.5 border border-white/50 group-hover:scale-105 transition-transform min-h-[44px]"
+                  >
+                    <Sparkle size={15} weight="fill" className="text-[#551618] animate-spin-slow" />
+                    <span>Tap to Enter Palace</span>
+                    <Sparkle size={15} weight="fill" className="text-[#551618] animate-spin-slow" />
+                  </button>
+                </motion.div>
+
+                <span className="text-[9px] sm:text-[11px] tracking-[0.22em] text-[#D5BA97] font-montserrat uppercase font-semibold drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)]">
+                  ✦ Royal Gates Await Your Presence ✦
+                </span>
+              </motion.div>
+            </div>
           )}
         </AnimatePresence>
 
