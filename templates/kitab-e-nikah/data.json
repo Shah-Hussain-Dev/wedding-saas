@@ -6,17 +6,22 @@
   "couple": {
     "brideName": "Maryam",
     "groomName": "Ibrahim",
-    "brideParents": "Mr. & Mrs. Dr. Rashid Malik",
-    "groomParents": "Mr. & Mrs. Engr. Tahir Farooqi"
+    "brideFullName": "Maryam Fatima Malik",
+    "groomFullName": "Ibrahim Tahir Farooqi",
+    "brideParents": "Dr. & Mrs. Rashid Anwar Malik",
+    "groomParents": "Engr. & Mrs. Tahir Farooqi",
+    "tagline": "The Auspicious Royal Nikah Celebration Of",
+    "invitationMessage": "With the divine grace of Almighty Allah (SWT) and the cherished prayers of our beloved parents and elders, we cordially invite you to witness the sacred signing of the Nikahnama as our children unite in marriage.",
+    "urduGreeting": "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."
   },
   "weddingDate": "2027-05-09T16:30:00.000Z",
   "dateFormatted": "Sunday, 09 May 2027",
   "islamicDate": "03 Dhu al-Qi'dah 1448 AH",
   "venue": {
-    "name": "The Grand Ottoman Heritage Palace",
-    "city": "Istanbul, Turkey",
-    "address": "Ciragan Caddesi, Besiktas, Istanbul",
-    "mapUrl": "https://maps.google.com/?q=Ciragan+Palace+Istanbul"
+    "name": "The Royal Heritage Qasr",
+    "city": "Lucknow, Uttar Pradesh, India",
+    "address": "Gomti Riverfront Heritage Boulevard, Hazratganj, Lucknow 226001",
+    "mapUrl": "https://maps.google.com/?q=Hazratganj+Lucknow"
   },
   "videoOpening": {
     "videoUrl": "/templates/kitab-e-nikah/opening.mp4",
@@ -25,35 +30,36 @@
     "sealMonogram": "M&I"
   },
   "audioTrack": "/audio/wedding-ambience.mp3",
+  "storyMessage": "In the historic city of Tehzeeb and timeless grace, our stories met on the illuminated golden pages of destiny. With the heartfelt blessings and prayers of our elders, we sign our lifelong covenant of devotion, tranquility, and faith.",
   "events": [
     {
-      "name": "Majlis-e-Dua & Henna",
+      "name": "Majlis-e-Dua, Manjha & Mehendi",
       "date": "Friday, 07 May 2027",
       "time": "06:00 PM",
       "venue": "Bosphorus Garden Terrace",
-      "location": "The Grand Ottoman Heritage Palace",
-      "dressCode": "Ottoman Silk & Pastel Embroidery",
-      "description": "An intimate gathering of prayers, heartfelt blessings, and traditional Turkish henna ceremonies.",
+      "location": "The Royal Heritage Qasr, Lucknow",
+      "dressCode": "Awadhi Zari & Pastel Embroidery",
+      "description": "An auspicious gathering of heartfelt Quranic duas, fresh marigold ubtan ceremonies, and intricate Awadhi bridal henna artistry surrounded by family warmth.",
       "enabled": true
     },
     {
-      "name": "Nikahnama Signing & Solemnization",
+      "name": "Sacred Nikahnama Signing & Solemnization (Ijab-o-Qubool)",
       "date": "Saturday, 08 May 2027",
       "time": "04:30 PM",
       "venue": "The Royal Velvet Sultan Hall",
-      "location": "The Grand Ottoman Heritage Palace",
-      "dressCode": "Traditional Grand Formal / Sherwanis & Gowns",
-      "description": "Signing of the sacred Nikahnama contract and recitation of Surah Ar-Rum before family and elders.",
+      "location": "The Royal Heritage Qasr, Lucknow",
+      "dressCode": "Traditional Grand Formal / Sherwanis & Lehengas",
+      "description": "Signing of the sacred Nikahnama parchment, recitation of Khutbah-e-Nikah, and solemn vows before family elders in an atmosphere of reverence and grace.",
       "enabled": true
     },
     {
-      "name": "Grand Walima Banquet",
+      "name": "Rukhsati & Royal Dawat-e-Walima Banquet",
       "date": "Sunday, 09 May 2027",
       "time": "07:30 PM",
       "venue": "Imperial Palace Grand Ballroom",
-      "location": "The Grand Ottoman Heritage Palace",
-      "dressCode": "Black Tie / Royal Ottoman Velvet",
-      "description": "A magnificent celebratory feast on the Bosphorus shores with live Ney flute symphony and fine dining.",
+      "location": "The Royal Heritage Qasr, Lucknow",
+      "dressCode": "Black Tie / Royal Awadhi Velvet & Gold",
+      "description": "Tender parental prayers under the holy Quran followed by a grand celebratory Awadhi feast featuring legendary Lucknowi delicacies and live Sufi ensemble.",
       "enabled": true
     }
   ],
@@ -74,6 +80,8 @@
   "verse": {
     "arabic": "هُوَ الَّذِي خَلَقَكُم مِّن نَّفْسٍ وَاحِدَةٍ وَجَعَلَ مِنْهَا زَوْجَهَا لِيَسْكُنَ إِلَيْهَا",
     "translation": "It is He who created you from one soul and created from it its mate that he might dwell in security with her.",
-    "reference": "Surah Al-A'raf · 7:189"
+    "reference": "Surah Al-A'raf · 7:189",
+    "propheticDua": "بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+    "propheticDuaTranslation": "May Allah bless you, and shower His blessings upon you, and unite you both in goodness and eternal love."
   }
 }

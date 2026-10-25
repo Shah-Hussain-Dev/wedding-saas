@@ -29,6 +29,22 @@ interface InvitationData {
   id?: string;
   brideName?: string;
   groomName?: string;
+  brideParents?: string;
+  groomParents?: string;
+  couple?: {
+    brideName?: string;
+    groomName?: string;
+    brideParents?: string;
+    groomParents?: string;
+  };
+  sacred?: {
+    invocation?: string;
+    mantra?: string;
+    shloka?: string;
+    shlokaTranslation?: string;
+    tagline?: string;
+    [key: string]: any;
+  };
   weddingDate?: Date | string;
   weddingTime?: string;
   venueName?: string;
@@ -399,9 +415,13 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const brideName = data?.brideName || "Siya";
-  const groomName = data?.groomName || "Kabir";
-  const weddingDateRaw = data?.weddingDate ? new Date(data.weddingDate) : new Date("2026-12-14T18:30:00");
+  const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple?.brideName || "Ananya";
+  const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple?.groomName || "Shubham";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || defaultData.couple?.brideParents || "Mrs. Sunita & Mr. Rajesh Sharma";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || defaultData.couple?.groomParents || "Mrs. Meenakshi & Mr. Alok Verma";
+  const vedicShloka = data?.sacred?.shloka || defaultData.sacred?.shloka || "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥";
+  const shlokaTranslation = data?.sacred?.shlokaTranslation || defaultData.sacred?.shlokaTranslation || "O Lord Ganesha, of colossal form and radiance of a million suns, remove all obstacles from our sacred journey forever.";
+  const weddingDateRaw = data?.weddingDate ? new Date(data.weddingDate) : new Date("2026-12-22T17:00:00");
   const venueName = data?.venueName || "The Maharaja Palace";
   const venueAddress = data?.venueAddress || "Lake Pichola Road, Udaipur, Rajasthan";
   const hashtag = `#${brideName}Weds${groomName}`;
@@ -626,11 +646,58 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           </motion.div>
         </motion.div>
 
-        <a className="invite__scroll-cue" href="#events" aria-label="Scroll down">
+        <a className="invite__scroll-cue" href="#sacred-blessing" aria-label="Scroll down">
           <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
             <path d="M1 1.5 9 9.5 17 1.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </a>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          SECTION 1B: SACRED SHLOKA & ELDERS' BLESSING CARD
+      ───────────────────────────────────────────────────────────────────────────── */}
+      <section id="sacred-blessing" className="section blessing-card-section py-12 px-4" style={{ background: "rgba(252, 249, 242, 0.96)" }}>
+        <motion.div
+          className="section-inner max-w-2xl mx-auto text-center p-8 sm:p-10 rounded-3xl border border-[#D4AF37]/40 shadow-xl"
+          style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 100%)" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="inline-block px-4 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#8C6D23] font-bold text-sm tracking-widest mb-3">
+            || श्री गणेशाय नमः ||
+          </div>
+          <p className="font-serif text-lg sm:text-xl font-bold text-[#8C2836] leading-relaxed tracking-wide my-2">
+            {vedicShloka}
+          </p>
+          <p className="text-xs sm:text-sm text-[#735A42] italic max-w-lg mx-auto mb-5">
+            &ldquo;{shlokaTranslation}&rdquo;
+          </p>
+
+          <div className="w-16 h-[1.5px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto my-4" />
+
+          <p className="text-xs sm:text-sm text-[#5C4D3C] uppercase tracking-[0.2em] font-semibold mb-2">
+            WITH THE BLESSINGS OF OUR ELDERS
+          </p>
+          <p className="text-xs sm:text-sm text-[#4A3B2C] leading-relaxed mb-3">
+            With the divine grace of <strong>Lord Ganesha</strong> and the affectionate prayers of our beloved parents:
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 font-serif font-bold text-sm sm:text-base text-[#8C2836] my-2">
+            <span>{brideParents}</span>
+            <span className="text-[#D4AF37] text-xs">❖ &amp; ❖</span>
+            <span>{groomParents}</span>
+          </div>
+          <p className="text-xs sm:text-sm text-[#5C4D3C] mt-2">
+            cordially invite you to celebrate the auspicious Shubh Vivah and shower your warm blessings upon their children:
+          </p>
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-[#8C2836] my-2 tracking-wide">
+            {brideName} <span className="text-[#D4AF37]">&amp;</span> {groomName}
+          </p>
+          <p className="text-xs sm:text-sm text-[#8C6D23] italic font-medium mt-3">
+            &ldquo;Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.&rdquo;
+          </p>
+        </motion.div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
@@ -1046,9 +1113,9 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
               {isRsvpSubmitted ? (
                 <div className="rl-success-msg">
                   <CheckCircle size={48} className="text-[#D4AF37] mb-3 mx-auto" weight="fill" />
-                  <h4 className="text-xl font-serif text-[#D4AF37]">Graciously Received!</h4>
+                  <h4 className="text-xl font-serif text-[#D4AF37]">Dhanyawad!</h4>
                   <p className="text-xs text-[#F5E5A3] mt-1.5 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and blessings have been saved. We look forward to celebrating with you!
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(212,175,55,0.2)]">

@@ -120,6 +120,8 @@ export default function KitabENikah({ data }: KitabENikahProps) {
   // Extract Props / Data
   const brideName = data?.brideName || data?.couple?.brideName || resolvedData.couple?.brideName || "Maryam";
   const groomName = data?.groomName || data?.couple?.groomName || resolvedData.couple?.groomName || "Ibrahim";
+  const brideParents = data?.brideParents || resolvedData.brideParents || "Dr. & Mrs. Rashid Anwar Malik";
+  const groomParents = data?.groomParents || resolvedData.groomParents || "Engr. & Mrs. Tahir Farooqi";
   const weddingDateStr = data?.weddingDate || data?.date || resolvedData.weddingDate;
   const weddingDate = new Date(weddingDateStr);
   const formattedDate = !isNaN(weddingDate.getTime())
@@ -689,6 +691,51 @@ export default function KitabENikah({ data }: KitabENikahProps) {
                 <p className="kn-arabic-verse">{resolvedData.verse?.arabic || "هُوَ الَّذِي خَلَقَكُم مِّن نَّفْسٍ وَاحِدَةٍ وَجَعَلَ مِنْهَا زَوْجَهَا لِيَسْكُنَ إِلَيْهَا"}</p>
                 <p className="kn-verse-translation">&ldquo;{resolvedData.verse?.translation || "It is He who created you from one soul and created from it its mate that he might dwell in security with her."}&rdquo;</p>
                 <p className="kn-verse-ref">{resolvedData.verse?.reference || "Surah Al-A'raf · 7:189"}</p>
+
+                {/* Prophetic Dua Banner */}
+                <div className="kn-prophetic-dua-wrap mt-5 pt-4 border-t border-[rgba(229,184,105,0.25)] text-center">
+                  <p className="font-serif text-base sm:text-xl text-[#F9E8B2] leading-relaxed tracking-wide font-medium">
+                    بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-[#F5E6CC]/85 italic mt-1 max-w-md mx-auto">
+                    &ldquo;May Allah bless you, shower His blessings upon you, and unite you both in goodness and eternal love.&rdquo;
+                  </p>
+                </div>
+              </motion.section>
+
+              {/* ── Elders' & Parents' Blessing Invitation Card ── */}
+              <motion.section
+                className="kn-section kn-elders-blessing-card text-center"
+                initial={{ opacity: 0, y: 45, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.3 } }}
+              >
+                <div className="kn-section-corner-ornament top-left" aria-hidden="true" />
+                <div className="kn-section-corner-ornament top-right" aria-hidden="true" />
+                <div className="kn-section-corner-ornament bottom-left" aria-hidden="true" />
+                <div className="kn-section-corner-ornament bottom-right" aria-hidden="true" />
+                <span className="kn-section-subtitle">WITH THE BLESSINGS OF OUR ELDERS</span>
+                <h2 className="kn-section-title">Sacred Nikah Invitation</h2>
+                <div className="text-[#E5B869] text-sm my-2">✦ ⚜ ✦</div>
+                <p className="kn-couple-story-text max-w-xl mx-auto leading-relaxed">
+                  With the divine grace of <strong>Almighty Allah (SWT)</strong> and the affectionate prayers of our beloved parents and elders:
+                </p>
+                <div className="my-4 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm sm:text-base font-serif font-bold text-[#E5B869]">
+                  <span className="tracking-wide">{brideParents}</span>
+                  <span className="text-[#C29B38] font-sans font-normal opacity-70 text-xs">❖ &amp; ❖</span>
+                  <span className="tracking-wide">{groomParents}</span>
+                </div>
+                <p className="kn-couple-story-text max-w-xl mx-auto text-xs sm:text-sm text-[#F5E6CC]/90 leading-relaxed">
+                  cordially invite you to celebrate the holy covenant of Nikah and grace us with your warm presence and heartfelt duas for our beloved children:
+                </p>
+                <p className="font-serif text-xl sm:text-3xl font-bold text-[#E5B869] mt-3 tracking-wide">
+                  {brideName} <span className="text-[#F5E6CC] font-normal">&amp;</span> {groomName}
+                </p>
+                <p className="text-xs sm:text-sm text-[#E5B869] italic mt-3 font-medium opacity-90">
+                  &ldquo;Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi.&rdquo;
+                </p>
               </motion.section>
 
               {/* ── Meet the Couple ("The Story of Two Souls") ── */}
@@ -1261,7 +1308,7 @@ export default function KitabENikah({ data }: KitabENikahProps) {
                   <CheckCircle size={48} className="text-[#E5B869] mb-3 mx-auto" weight="fill" />
                   <h4 className="text-lg font-serif text-[#E5B869]">JazakAllah Khair!</h4>
                   <p className="text-xs text-[#F5E6CC] mt-1 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt duas have been saved.
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt duas have been received with deep gratitude. Aapki shirkat hamari khushiyon ko dobala karegi.
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(229,184,105,0.2)]">

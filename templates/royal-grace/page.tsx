@@ -571,6 +571,21 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
               <p className="font-cormorant text-sm sm:text-base md:text-lg text-[#3C2F1D] leading-relaxed max-w-xl mx-auto font-medium">
                 {invocation.english}
               </p>
+
+              <div className="pt-5 border-t border-[#9A7A49]/30 space-y-2">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#9A7A49] block">
+                  WITH THE BLESSINGS OF OUR ELDERS
+                </span>
+                <p className="font-lora text-xs sm:text-sm text-[#4A3B24] max-w-lg mx-auto leading-relaxed">
+                  Together with their beloved parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence to celebrate the grand botanical royal wedding of their children:
+                </p>
+                <p className="font-playfair text-2xl sm:text-3xl font-bold text-[#3C2F1D]">
+                  {brideName} <span className="text-[#9A7A49]">&amp;</span> {groomName}
+                </p>
+                <p className="font-lora italic text-xs sm:text-sm text-[#9A7A49] font-medium">
+                  &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+                </p>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -859,10 +874,10 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h4 className="text-2xl font-lora font-bold text-[#3C2F1D]">
-                    Heartfelt Gratitude!
+                    Dhanyawad / JazakAllah!
                   </h4>
                   <p className="text-sm text-[#4B4D34] font-lora leading-relaxed max-w-xs mx-auto font-medium">
-                    Thank you, <strong className="text-[#3C2F1D]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been lovingly recorded.
+                    Thank you, <strong className="text-[#3C2F1D]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <div className="pt-4 border-t border-[#9A7A49]/30">
                     <button

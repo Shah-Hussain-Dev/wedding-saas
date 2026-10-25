@@ -51,7 +51,18 @@ export interface CrimsonRoyaleData {
   couple?: {
     brideName?: string;
     groomName?: string;
+    brideParents?: string;
+    groomParents?: string;
   };
+  brideParents?: string;
+  groomParents?: string;
+  sacred?: {
+    invocation?: string;
+    shloka?: string;
+    shlokaTranslation?: string;
+    [key: string]: any;
+  };
+  welcomeMessage?: string;
   weddingDate?: Date | string;
   date?: Date | string;
   weddingTime?: string;
@@ -188,10 +199,14 @@ export default function CrimsonRoyale({
   const venueCardY = useTransform(venueProgress, [0, 1], ["25px", "-25px"]);
 
   // Couple Data normalization
-  const brideName = data?.brideName || data?.couple?.brideName || "Ananya";
-  const groomName = data?.groomName || data?.couple?.groomName || "Shubham";
+  const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple?.brideName || "Ananya";
+  const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple?.groomName || "Shubham";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || defaultData.couple?.brideParents || "Mrs. Radhika & Mr. Harshvardhan Singhania";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || defaultData.couple?.groomParents || "Mrs. Anuradha & Mr. Yashwant Rathore";
+  const vedicShloka = data?.sacred?.shloka || defaultData.sacred?.shloka || "|| मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||";
+  const shlokaTranslation = data?.sacred?.shlokaTranslation || defaultData.sacred?.shlokaTranslation || "All auspiciousness to Lord Vishnu, the lotus-eyed Supreme, and may the Divine grace this holy marriage with lifelong harmony and peace.";
   
-  const rawDate = data?.weddingDate || data?.date || "2026-12-22T17:00:00";
+  const rawDate = data?.weddingDate || data?.date || defaultData.weddingDate || "2026-12-22T17:00:00";
   const weddingDate = new Date(rawDate);
   const formattedDate = !isNaN(weddingDate.getTime()) 
     ? weddingDate.toLocaleDateString("en-US", {
@@ -623,7 +638,7 @@ export default function CrimsonRoyale({
           </motion.div>
         </section>
 
-        {/* SECTION 2 (EVEN): Welcome / Note (Rich Royal Velvet Color Gradient) */}
+        {/* SECTION 2 (EVEN): Sacred Invocation & Elders' Blessing (Rich Royal Velvet Color Gradient) */}
         <section className="section section--welcome">
           <motion.div 
             className="section-inner"
@@ -636,11 +651,41 @@ export default function CrimsonRoyale({
               <div style={{ width: "clamp(260px, 45vw, 360px)", height: "115px", margin: "0 auto 0.5rem auto" }}>
                 <Lottie src={crimsonRoyalFloral} loop autoplay />
               </div>
-              <p className="eyebrow" style={{ marginBottom: "0.4rem" }}>A Little Note From Us</p>
-              <h2 className="welcome__title">Welcome to Our Celebration</h2>
-              <div className="divider">✦</div>
-              <p className="welcome__body">
-                We're so grateful to have you in our lives and can't wait to celebrate this special day with you. Here you'll find all the details you need for the wedding — from timings and locations to RSVP and more.
+              <div className="inline-block px-4 py-1 rounded-full bg-[rgba(212,175,55,0.15)] border border-[rgba(212,175,55,0.35)] text-[var(--gold)] font-bold text-xs tracking-widest mb-3">
+                || श्री गणेशाय नमः ||
+              </div>
+              <p className="font-serif text-lg sm:text-xl font-bold text-[var(--gold)] leading-relaxed tracking-wide my-2 px-4">
+                {vedicShloka}
+              </p>
+              <p className="text-xs sm:text-sm text-[#F5E5A3]/90 italic max-w-lg mx-auto mb-4 px-4">
+                &ldquo;{shlokaTranslation}&rdquo;
+              </p>
+              
+              <div className="divider">✦ ⚜ ✦</div>
+
+              <p className="eyebrow" style={{ marginBottom: "0.4rem" }}>WITH THE BLESSINGS OF OUR ELDERS</p>
+              <h2 className="welcome__title">Royal Shubh Vivah Invitation</h2>
+              
+              <p className="welcome__body leading-relaxed max-w-xl mx-auto mt-2">
+                With the divine grace of <strong>Lord Ganesha</strong> and the affectionate prayers of our beloved parents and elders:
+              </p>
+
+              <div className="my-4 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 font-serif font-bold text-base sm:text-lg text-[var(--gold)]">
+                <span>{brideParents}</span>
+                <span className="text-[var(--gold-soft)] text-xs opacity-70">❖ &amp; ❖</span>
+                <span>{groomParents}</span>
+              </div>
+
+              <p className="welcome__body text-xs sm:text-sm text-[#FAF7F2]/90 max-w-xl mx-auto leading-relaxed">
+                cordially invite you to celebrate the sacred union and shower your warm blessings upon their beloved children:
+              </p>
+
+              <p className="font-serif text-2xl sm:text-3xl font-bold text-[var(--gold)] mt-3 tracking-wide">
+                {brideName} <span className="text-[#FAF7F2] font-normal">&amp;</span> {groomName}
+              </p>
+
+              <p className="text-xs sm:text-sm text-[var(--gold-soft)] italic font-medium mt-3">
+                &ldquo;Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.&rdquo;
               </p>
             </div>
           </motion.div>
@@ -1076,9 +1121,9 @@ export default function CrimsonRoyale({
               {isRsvpSubmitted ? (
                 <div className="cr-success-msg">
                   <CheckCircle size={48} className="text-[#D4AF37] mb-3 mx-auto" weight="fill" />
-                  <h4 className="text-xl font-serif text-[#D4AF37]">Graciously Received!</h4>
+                  <h4 className="text-xl font-serif text-[#D4AF37]">Dhanyawad!</h4>
                   <p className="text-xs text-[#F5E5A3] mt-1.5 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and blessings have been saved. We look forward to celebrating together!
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(212,175,55,0.2)]">

@@ -99,6 +99,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
   // Template Data extraction with safe fallbacks from data.json
   const brideName = data?.brideName || data?.couple?.brideName || data?.bride_name || resolvedData.couple?.brideName || "Diya";
   const groomName = data?.groomName || data?.couple?.groomName || data?.groom_name || resolvedData.couple?.groomName || "Shaan";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || resolvedData.couple?.brideParents || "Mr. & Mrs. Tariq Anwar Khan";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || resolvedData.couple?.groomParents || "Mr. & Mrs. Imran Ahmed Mirza";
   const rawDate = data?.weddingDate || data?.date || resolvedData.weddingDate;
   const weddingDate = new Date(rawDate);
   const formattedDate = !isNaN(weddingDate.getTime())
@@ -784,16 +786,46 @@ export default function NoorNikah({ data }: NoorNikahProps) {
             بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
           </p>
 
+          {/* Prophetic Dua Calligraphy Banner */}
+          <div className="my-4 px-4 py-3 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/25 text-center">
+            <p className="text-base sm:text-xl font-serif text-[#D4AF37] leading-relaxed tracking-wide font-medium">
+              بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+            </p>
+            <p className="text-[11px] sm:text-xs text-stone-600 dark:text-stone-300 italic mt-1 max-w-md mx-auto">
+              &ldquo;May Allah bless you, shower His blessings upon you, and unite you both in goodness and eternal love.&rdquo;
+            </p>
+          </div>
+
           <div className="noor-quote-lines">
-            <p>Two Souls · One Destiny</p>
+            <p>Two Souls · One Sacred Covenant</p>
             <span className="noor-quote-written">
-              A Lifetime written by Allah
+              A Lifetime Written by Allah (SWT)
             </span>
           </div>
 
-          <p className="noor-welcome-msg">
-            With the divine blessings of Almighty Allah and our beloved families, we invite you to grace our auspicious Nikah celebrations with your presence, duas, and love.
-          </p>
+          {/* Formal Elders' & Parents' Blessing Invitation Block */}
+          <div className="my-5 p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-[#FAF8F5]/90 to-[#F5EFE6]/70 border border-[#D4AF37]/35 shadow-sm text-center">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.25em] text-[#D4AF37] uppercase block mb-2">
+              ✦ WITH THE BLESSINGS OF OUR ELDERS ✦
+            </span>
+            <p className="text-xs sm:text-sm text-stone-700 leading-relaxed max-w-lg mx-auto">
+              With the boundless grace of <strong>Almighty Allah (SWT)</strong> and the cherished prayers of our beloved parents and elders:
+            </p>
+            <div className="my-3 py-2 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-5 text-xs sm:text-sm font-serif font-bold text-[#1C2D23]">
+              <span className="tracking-wide">{brideParents}</span>
+              <span className="text-[#D4AF37] font-sans font-normal opacity-70 text-xs">❖ &amp; ❖</span>
+              <span className="tracking-wide">{groomParents}</span>
+            </div>
+            <p className="text-xs sm:text-sm text-stone-600 max-w-lg mx-auto leading-relaxed">
+              cordially request the honour of your gracious presence and heartfelt duas to grace the auspicious Nikah celebrations of their beloved children:
+            </p>
+            <p className="font-serif text-lg sm:text-2xl font-bold text-[#1C2D23] mt-2 tracking-wide">
+              {brideName} <span className="text-[#D4AF37] font-normal">&amp;</span> {groomName}
+            </p>
+            <p className="text-[11px] sm:text-xs text-[#8C6D23] italic mt-3 font-medium">
+              &ldquo;Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi.&rdquo;
+            </p>
+          </div>
 
           {/* Modern Bento Countdown Card */}
           <div className="noor-countdown-bento">
@@ -1273,7 +1305,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                 </div>
                 <h3 className="noor-success-title">JazakAllah Khair!</h3>
                 <p className="noor-success-sub">
-                  Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your response and beautiful duas have been saved with immense gratitude.
+                  Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your response and sacred duas have been received with immense gratitude. <br className="hidden sm:inline" />
+                  <span className="italic text-[#8C6D23] font-medium block mt-1">Aapki duayein hamari nayi zindagi ke aaghaaz mein barkat ka sabab banengi.</span>
                 </p>
 
                 <div className="mt-5 pt-4 border-t border-[rgba(212,175,55,0.2)] flex flex-col gap-2.5 max-w-xs mx-auto">

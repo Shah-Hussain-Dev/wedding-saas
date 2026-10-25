@@ -7,11 +7,15 @@
     "groomName": "Shubham",
     "brideFullName": "Ananya Sharma",
     "groomFullName": "Shubham Verma",
-    "tagline": "The Royal Wedding Of"
+    "tagline": "The Royal Wedding Of",
+    "brideParents": "Mrs. Sunita & Mr. Rajesh Sharma",
+    "groomParents": "Mrs. Meenakshi & Mr. Alok Verma"
   },
   "sacred": {
     "invocation": "|| श्री गणेशाय नमः ||",
     "mantra": "ॐ श्री गणेशाय नमः",
+    "shloka": "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥",
+    "shlokaTranslation": "O Lord Ganesha, of colossal form and radiance of a million suns, remove all obstacles from our sacred journey forever.",
     "tagline": "Two Hearts, One Soul, Infinite Love"
   },
   "weddingDate": "2026-12-22T17:00:00",
@@ -23,7 +27,7 @@
     "mapUrl": "https://maps.google.com/?q=Fatehsagar+Lake+Road+Udaipur+Rajasthan"
   },
   "musicTrack": "/templates/lotus-courtyard/music.mp3",
-  "storyMessage": "Under the celestial stars of Udaipur, surrounded by the fragrance of lotus blossoms and the sacred fire, we begin our journey of a lifetime.",
+  "storyMessage": "With the divine blessings of Lord Ganesha and the cherished prayers of our parents, we invite you to celebrate the sacred union of our lives. Under the celestial skies of Udaipur, amidst fragrant lotus blossoms and the holy Agni, your presence and blessings will make our celebration truly auspicious.",
   "rsvpDeadline": "December 15, 2026",
   "dressCodeText": "Royal Traditional & Festive Indian Attire (Ivory, Rani Pink, Royal Gold)",
   "transportText": "Complimentary Heritage Shuttles available from City Palace Gate 2",

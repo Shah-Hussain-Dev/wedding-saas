@@ -1177,6 +1177,21 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
               {invocation.english}
             </p>
 
+            <div className="pt-6 border-t border-[#B89773]/40 space-y-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#551618] block">
+                WITH THE BLESSINGS OF OUR FAMILIES &amp; ELDERS
+              </span>
+              <p className="font-cormorant text-xs sm:text-base text-[#593C28] max-w-lg mx-auto leading-relaxed">
+                Together with their cherished parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence at the grand imperial wedding celebration of their children:
+              </p>
+              <p className="font-playfair text-2xl sm:text-4xl font-bold text-[#551618]">
+                {brideName} <span className="text-[#B89773]">&amp;</span> {groomName}
+              </p>
+              <p className="font-cormorant italic text-xs sm:text-sm text-[#986E47] font-medium">
+                &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+              </p>
+            </div>
+
             {/* Consecrated Matrimonial Muhurat & Date Callout */}
             <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
               <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#36281D] text-[#E5D8C4] text-xs font-montserrat font-bold shadow-md">
@@ -1762,10 +1777,10 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                       <CheckCircle size={32} weight="fill" />
                     </div>
                     <h4 className="text-xl font-playfair font-bold text-[#551618]">
-                      Blessings Recorded
+                      Dhanyawad / JazakAllah!
                     </h4>
                     <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic leading-relaxed max-w-sm mx-auto">
-                      Your attendance has been formally recorded in the sovereign ledger. We eagerly await your gracious company.
+                      Thank you, <strong className="text-[#551618]">{rsvpName || "Honoured Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                     </p>
                     <button
                       type="button"

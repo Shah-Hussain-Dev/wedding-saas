@@ -6,17 +6,22 @@
   "couple": {
     "brideName": "Zoya",
     "groomName": "Farhan",
-    "brideParents": "Mr. & Mrs. Tariq Khan",
-    "groomParents": "Mr. & Mrs. Imran Qureshi"
+    "brideFullName": "Zoya Fatima Khan",
+    "groomFullName": "Farhan Ahmed Qureshi",
+    "brideParents": "Mr. & Mrs. Tariq Anwar Khan",
+    "groomParents": "Mr. & Mrs. Imran Ahmed Qureshi",
+    "tagline": "The Auspicious Royal Nikah Celebration Of",
+    "invitationMessage": "With the divine grace of Almighty Allah (SWT) and the heartfelt prayers of our beloved parents and elders, we cordially request the honour of your gracious presence and blessings as our children unite in the sacred bond of Nikah.",
+    "urduGreeting": "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."
   },
   "weddingDate": "2027-02-14T17:00:00.000Z",
   "dateFormatted": "Sunday, 14 February 2027",
   "islamicDate": "07 Sha'ban 1448 AH",
   "venue": {
-    "name": "The Grand Qasr Al-Firdous",
-    "city": "Abu Dhabi, UAE",
-    "address": "Corniche Road West, Al Ras Al Akhdar, Abu Dhabi",
-    "mapUrl": "https://maps.google.com/?q=Emirates+Palace+Abu+Dhabi"
+    "name": "The Grand Falaknuma Palace",
+    "city": "Hyderabad, Telangana, India",
+    "address": "Engine Bowli, Falaknuma, Hyderabad, Telangana 500053",
+    "mapUrl": "https://maps.google.com/?q=Taj+Falaknuma+Palace+Hyderabad"
   },
   "videoOpening": {
     "videoUrl": "/templates/emerald-qasr/opening.mp4",
@@ -25,35 +30,36 @@
     "sealMonogram": "Z&F"
   },
   "audioTrack": "/audio/wedding-ambience.mp3",
+  "storyMessage": "Underneath the starlit skies of the historic City of Pearls, amidst the timeless Nizami archways and glowing crystal chandeliers, two souls were destined in love. With the boundless grace of Allah (SWT) and the sacred prayers of our loving parents, we begin our eternal covenant of Nikah.",
   "events": [
     {
-      "name": "Rasm-e-Hina (Mehendi)",
+      "name": "Manjha & Rasm-e-Hina (Haldi & Mehendi)",
       "date": "Friday, 12 February 2027",
       "time": "06:30 PM",
       "venue": "Emerald Courtyard Garden",
-      "location": "The Grand Qasr Al-Firdous",
-      "dressCode": "Shades of Emerald & Mustard Gold",
-      "description": "An enchanting evening of intricate henna artistry, traditional folk melodies, and fragrant jasmine blooms.",
+      "location": "The Grand Falaknuma Palace, Hyderabad",
+      "dressCode": "Shades of Emerald Green & Turmeric Gold",
+      "description": "An enchanting evening of fragrant ubtan, fresh jasmine motiya, intricate bridal henna, and soulful Awadhi folk geet.",
       "enabled": true
     },
     {
-      "name": "Sacred Nikah Ceremony",
+      "name": "The Sacred Nikah (Ijab-o-Qubool)",
       "date": "Saturday, 13 February 2027",
       "time": "04:30 PM",
-      "venue": "Royal Marble Pavilion",
-      "location": "The Grand Qasr Al-Firdous",
-      "dressCode": "Regal Modest Formal / Sherwanis & Embroidered Lehengas",
-      "description": "Solemnization of marriage under the sacred Quranic vows and blessings of family and elders.",
+      "venue": "Royal Marble Durbar Pavilion",
+      "location": "The Grand Falaknuma Palace, Hyderabad",
+      "dressCode": "Regal Nizami Formal / Sherwanis & Zari Lehengas",
+      "description": "Solemnization of marriage vows and Khutbah-e-Nikah under the magnificent palace dome, sealed with sacred duas and elder blessings.",
       "enabled": true
     },
     {
-      "name": "Grand Dawat-e-Walima",
+      "name": "Rukhsati & Grand Dawat-e-Walima",
       "date": "Sunday, 14 February 2027",
       "time": "07:30 PM",
-      "venue": "Imperial Crystal Grand Ballroom",
-      "location": "The Grand Qasr Al-Firdous",
-      "dressCode": "Black Tie / Royal Velvet & Zari",
-      "description": "A grand celebration of love with royal Mughal delicacies, live classical symphony, and timeless elegance.",
+      "venue": "Imperial 101 Dining Hall & Palace Terraces",
+      "location": "The Grand Falaknuma Palace, Hyderabad",
+      "dressCode": "Royal Velvet, Emerald & Gold Formal",
+      "description": "Heartfelt parental blessings under the holy Quran followed by an opulent royal banquet celebrating eternal joy with authentic Hyderabadi delicacies and live Sufi symphony.",
       "enabled": true
     }
   ],
@@ -72,8 +78,10 @@
     { "title": "The Royal Banquet", "subtitle": "Celebration of Two Families" }
   ],
   "verse": {
-    "arabic": "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا",
-    "translation": "And of His signs is that He created for you from yourselves mates that you may find tranquility in them.",
-    "reference": "Surah Ar-Rum · 30:21"
+    "arabic": "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+    "translation": "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy.",
+    "reference": "Surah Ar-Rum · 30:21",
+    "propheticDua": "بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+    "propheticDuaTranslation": "May Allah bless you, and shower His blessings upon you, and unite you both in goodness and eternal love."
   }
 }

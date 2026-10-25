@@ -6,17 +6,22 @@
   "couple": {
     "brideName": "Areesha",
     "groomName": "Hamza",
-    "brideParents": "Mr. & Mrs. Shakeel Ahmed",
-    "groomParents": "Mr. & Mrs. Rafiq Memon"
+    "brideFullName": "Areesha Fatima Siddiqui",
+    "groomFullName": "Hamza Rafiq Memon",
+    "brideParents": "Mr. & Mrs. Shakeel Ahmed Siddiqui",
+    "groomParents": "Mr. & Mrs. Rafiq Usman Memon",
+    "tagline": "The Auspicious Wedding Celebration Of",
+    "invitationMessage": "With the divine grace of Almighty Allah (SWT) and the cherished prayers of our beloved parents and elders, we request the honour of your gracious presence as our children unite in the sacred bond of Nikah.",
+    "urduGreeting": "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."
   },
   "weddingDate": "2027-03-21T18:00:00.000Z",
   "dateFormatted": "Sunday, 21 March 2027",
   "islamicDate": "12 Ramadan 1448 AH",
   "venue": {
-    "name": "The Rosewood Palace Estate",
-    "city": "Dubai, UAE",
-    "address": "Al Barari, Jasmine Avenue, Dubai",
-    "mapUrl": "https://maps.google.com/?q=Al+Barari+Dubai"
+    "name": "The Rosewood Heritage Palace",
+    "city": "New Delhi, India",
+    "address": "Chhatarpur Heritage Boulevard, Mehrauli, New Delhi 110074",
+    "mapUrl": "https://maps.google.com/?q=Chhatarpur+Heritage+New+Delhi"
   },
   "videoOpening": {
     "videoUrl": "/templates/gul-e-noor/opening.mp4",
@@ -25,35 +30,36 @@
     "sealMonogram": "A&H"
   },
   "audioTrack": "/audio/wedding-ambience.mp3",
+  "storyMessage": "Like delicate rose petals blooming in morning dew, Allah (SWT) destined our hearts to unite in affection, tranquil peace, and barakah. Surrounded by the heartfelt prayers of our parents and elders, we begin this blessed journey of togetherness.",
   "events": [
     {
-      "name": "Dholki & Henna Night",
+      "name": "Jashn-e-Dholki & Phoolon Ki Mehendi",
       "date": "Friday, 19 March 2027",
       "time": "06:00 PM",
       "venue": "Blush Rose Conservatory",
-      "location": "The Rosewood Palace Estate",
+      "location": "The Rosewood Heritage Palace, New Delhi",
       "dressCode": "Pastel Floral Lehengas & Kurtas",
-      "description": "An intimate evening filled with joyful music, laughter, and fragrant rose henna.",
+      "description": "An enchanting rose-scented evening filled with traditional dholak beats, fragrant jasmine motiya garlands, and vibrant floral henna amidst laughter and elders' blessings.",
       "enabled": true
     },
     {
-      "name": "Nikah & Ring Exchange",
+      "name": "The Sacred Nikah Ceremony (Ijab-o-Qubool)",
       "date": "Saturday, 20 March 2027",
       "time": "04:00 PM",
       "venue": "The Golden Floral Gazebo",
-      "location": "The Rosewood Palace Estate",
+      "location": "The Rosewood Heritage Palace, New Delhi",
       "dressCode": "Dusty Rose & Ivory Traditional",
-      "description": "The sacred covenant of marriage sealed with prayers and lifelong promises.",
+      "description": "The sacred covenant of Nikah solemnized under a canopy of blush roses, sealed with Quranic recitation, Ijab-o-Qubool, and lifelong promises.",
       "enabled": true
     },
     {
-      "name": "Walima Dinner & Reception",
+      "name": "Rukhsati & Royal Dawat-e-Walima Banquet",
       "date": "Sunday, 21 March 2027",
       "time": "07:30 PM",
       "venue": "The Grand Rose Ballroom",
-      "location": "The Rosewood Palace Estate",
-      "dressCode": "Evening Formal / Black Tie",
-      "description": "Celebrating the beginning of a lifetime of togetherness under the starlight.",
+      "location": "The Rosewood Heritage Palace, New Delhi",
+      "dressCode": "Evening Formal / Black Tie & Zari",
+      "description": "Tender parental prayers under the holy Quran followed by a radiant banquet celebrating the beautiful new beginning of two families with gourmet feast and starlight celebrations.",
       "enabled": true
     }
   ],
@@ -74,6 +80,8 @@
   "verse": {
     "arabic": "وَخَلَقْنَاكُمْ أَزْوَاجًا",
     "translation": "And We created you in pairs.",
-    "reference": "Surah An-Naba · 78:8"
+    "reference": "Surah An-Naba · 78:8",
+    "propheticDua": "بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+    "propheticDuaTranslation": "May Allah bless you, and shower His blessings upon you, and unite you both in goodness and eternal love."
   }
 }

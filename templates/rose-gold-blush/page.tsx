@@ -597,6 +597,21 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
             <p className="font-cormorant text-sm sm:text-base md:text-lg text-[#5A4633] leading-relaxed max-w-xl mx-auto font-medium">
               {invocation.english}
             </p>
+
+            <div className="pt-5 border-t border-[#B78C4E]/25 space-y-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#B78C4E] block">
+                WITH THE BLESSINGS OF OUR ELDERS
+              </span>
+              <p className="font-lora text-xs sm:text-sm text-[#5A4633] max-w-lg mx-auto leading-relaxed">
+                Together with their beloved parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence to celebrate the holy matrimony of their children:
+              </p>
+              <p className="font-great-vibes text-3xl sm:text-4xl text-[#B78C4E]">
+                {brideName} &amp; {groomName}
+              </p>
+              <p className="font-lora italic text-xs sm:text-sm text-[#8C6D23] font-medium">
+                &ldquo;Aapki pur-khuloos upasthiti aur aashirwad hamare is utsav ko mangalmay banayenge.&rdquo;
+              </p>
+            </div>
           </motion.div>
         </section>
 
@@ -880,10 +895,10 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h4 className="text-2xl font-lora font-bold text-[#17334F]">
-                    Heartfelt Gratitude!
+                    Dhanyawad / JazakAllah!
                   </h4>
                   <p className="text-sm text-[#5A4633] font-lora leading-relaxed max-w-xs mx-auto font-medium">
-                    Thank you, <strong className="text-[#17334F]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been lovingly recorded.
+                    Thank you, <strong className="text-[#17334F]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with deep love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <div className="pt-4 border-t border-[#B78C4E]/30">
                     <button

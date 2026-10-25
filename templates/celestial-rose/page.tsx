@@ -1139,6 +1139,21 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
               {invocation.english}
             </p>
 
+            <div className="pt-6 border-t border-[#C9A46E]/40 space-y-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#5898B8] block">
+                WITH THE BLESSINGS OF OUR FAMILIES &amp; ELDERS
+              </span>
+              <p className="font-cormorant text-xs sm:text-base text-[#685868] max-w-lg mx-auto leading-relaxed">
+                Together with their beloved parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence at the celestial wedding celebration of their children:
+              </p>
+              <p className="font-playfair text-2xl sm:text-3xl font-bold text-[#685868]">
+                {brideName} <span className="text-[#C9A46E]">&amp;</span> {groomName}
+              </p>
+              <p className="font-cormorant italic text-xs sm:text-sm text-[#C9A46E] font-medium">
+                &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+              </p>
+            </div>
+
             {/* Groom & Bride Pedestals */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 text-left">
               {/* Groom */}
@@ -1736,10 +1751,10 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                       <Star size={32} weight="fill" />
                     </motion.div>
                     <h4 className="text-xl font-playfair font-bold text-[#685868]">
-                      Your star has joined our celebration!
+                      Dhanyawad / JazakAllah!
                     </h4>
                     <p className="text-xs sm:text-sm text-[#788898] font-cormorant italic leading-relaxed max-w-sm mx-auto">
-                      Your presence has been recorded in the celestial ledger. We eagerly anticipate celebrating under the stars with you.
+                      Thank you, <strong className="text-[#685868]">{rsvpName || "Honoured Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                     </p>
                     <button
                       type="button"

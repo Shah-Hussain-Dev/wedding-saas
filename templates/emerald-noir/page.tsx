@@ -109,7 +109,7 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
   const handleOpenInvitation = () => {
     setIsOpening(true);
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => { });
     }
     confetti({
       particleCount: 75,
@@ -316,9 +316,8 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
             <div className="haveli-door-container relative w-full max-w-md aspect-[3/4] flex items-center justify-center rounded-3xl p-3 bg-gradient-to-b from-[#124235] via-[#08261c] to-[#020d09] border-2 border-[#d4af37]/50 shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
               {/* Left Door */}
               <div
-                className={`haveli-door-left absolute top-3 bottom-3 left-3 w-[calc(50%-12px)] bg-gradient-to-r from-[#061e16] to-[#0d3b2e] rounded-l-2xl border-r border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${
-                  isOpening ? "open" : ""
-                }`}
+                className={`haveli-door-left absolute top-3 bottom-3 left-3 w-[calc(50%-12px)] bg-gradient-to-r from-[#061e16] to-[#0d3b2e] rounded-l-2xl border-r border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${isOpening ? "open" : ""
+                  }`}
               >
                 <div className="w-full h-8 border-t-2 border-b border-[#d4af37]/40" />
                 <div className="my-auto text-center opacity-30">
@@ -329,9 +328,8 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
 
               {/* Right Door */}
               <div
-                className={`haveli-door-right absolute top-3 bottom-3 right-3 w-[calc(50%-12px)] bg-gradient-to-l from-[#061e16] to-[#0d3b2e] rounded-r-2xl border-l border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${
-                  isOpening ? "open" : ""
-                }`}
+                className={`haveli-door-right absolute top-3 bottom-3 right-3 w-[calc(50%-12px)] bg-gradient-to-l from-[#061e16] to-[#0d3b2e] rounded-r-2xl border-l border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${isOpening ? "open" : ""
+                  }`}
               >
                 <div className="w-full h-8 border-t-2 border-b border-[#d4af37]/40" />
                 <div className="my-auto text-center opacity-30">
@@ -483,7 +481,7 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
                       className="w-full h-full object-cover object-top filter brightness-[0.98] contrast-[1.05]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#03140e]/70 via-transparent to-transparent pointer-events-none" />
-                    
+
                     <div className="absolute bottom-4 left-4 right-4 text-center py-2 px-3 rounded-xl bg-[#03140e]/85 backdrop-blur-md border border-[#d4af37]/40">
                       <span className="text-[10px] uppercase tracking-widest text-[#d4af37] font-bold">
                         {hashtag}
@@ -568,13 +566,16 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
                 <Sparkle size={24} weight="fill" />
               </div>
               <p className="font-cormorant text-xl md:text-2xl text-[#fff2be] font-bold leading-relaxed tracking-wider italic mb-4 gold-text-glow">
-                {defaultData.vedicMantra}
+                {data?.vedicMantra || defaultData.vedicMantra}
               </p>
               <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto my-4" />
               <p className="text-xs md:text-sm text-[#c5ddd3] font-light leading-relaxed max-w-2xl mx-auto">
-                {defaultData.quote}
+                {data?.quote || defaultData.quote}
               </p>
-              <div className="mt-6 text-[10px] uppercase tracking-[0.25em] text-[#d4af37] font-bold">
+              <p className="text-xs text-[#d4af37] italic font-medium mt-3">
+                &ldquo;Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.&rdquo;
+              </p>
+              <div className="mt-5 text-[10px] uppercase tracking-[0.25em] text-[#d4af37] font-bold">
                 || सुमुहूर्त सावधान ||
               </div>
             </motion.div>
@@ -916,10 +917,10 @@ export default function EmeraldNoir({ data }: EmeraldNoirProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h3 className="text-2xl font-cormorant font-bold text-[#fff2be] mb-2">
-                    RSVP Confirmed!
+                    Dhanyawad!
                   </h3>
                   <p className="text-xs text-[#c5ddd3] font-light leading-relaxed mb-6">
-                    Thank you, <strong className="text-[#fff2be]">{rsvpName}</strong>! Your RSVP and blessings have been gracefully recorded.
+                    Thank you, <strong className="text-[#fff2be]">{rsvpName}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <button
                     onClick={() => setIsRsvpSubmitted(false)}

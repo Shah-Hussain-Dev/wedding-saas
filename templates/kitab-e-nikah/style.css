@@ -2119,8 +2119,9 @@
   100% { transform: translateX(24px) rotate(25deg); }
 }
 
-/* ── Meet the Couple Story Section ── */
-.kn-couple-story-box {
+/* ── Meet the Couple Story Section & Elders Blessing ── */
+.kn-couple-story-box,
+.kn-elders-blessing-card {
   text-align: center;
   padding: 36px 24px;
 }
@@ -2419,7 +2420,8 @@
     font-size: 12px;
   }
 
-  .kn-couple-story-box {
+  .kn-couple-story-box,
+  .kn-elders-blessing-card {
     padding: 52px 48px;
   }
 

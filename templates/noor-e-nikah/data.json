@@ -7,7 +7,11 @@
     "groomName": "Shaan",
     "brideFullName": "Diya Fatima Khan",
     "groomFullName": "Shaan Ahmed Mirza",
-    "tagline": "The Wedding Celebration Of"
+    "brideParents": "Mr. & Mrs. Tariq Anwar Khan",
+    "groomParents": "Mr. & Mrs. Imran Ahmed Mirza",
+    "tagline": "The Auspicious Wedding Celebration Of",
+    "invitationMessage": "With the divine grace of Almighty Allah (SWT) and the cherished prayers of our beloved parents and elders, we request the honour of your gracious presence and heartfelt duas as we celebrate the sacred Nikah of our beloved children.",
+    "urduGreeting": "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."
   },
   "sacred": {
     "bismillah": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
@@ -15,7 +19,9 @@
     "surahVerse": "And We created you in pairs",
     "surahRef": "Surah An-Naba 78:8",
     "surahArRum": "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy.",
-    "surahArRumRef": "Surah Ar-Rum 30:21"
+    "surahArRumRef": "Surah Ar-Rum 30:21",
+    "propheticDua": "بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+    "propheticDuaTranslation": "May Allah bless you, and shower His blessings upon you, and unite you both in goodness and eternal love."
   },
   "weddingDate": "2027-01-24T17:00:00",
   "dateFormatted": "Sunday, January 24, 2027",
@@ -41,35 +47,35 @@
   "events": [
     {
       "id": "haldi",
-      "name": "Haldi & Mayun Ceremony",
+      "name": "Manjha & Mayun Ceremony",
       "date": "Saturday, January 23, 2027",
       "time": "11:00 AM",
       "venue": "Golden Courtyard, Qasr Al-Noor",
-      "description": "A joyful golden morning of turmeric rituals, marigold petals, and sisterly songs."
+      "description": "A radiant golden morning of fragrant ubtan, fresh turmeric rituals, marigold showers, and joyful sisterly melodies."
     },
     {
       "id": "mehndi",
-      "name": "Jashn-e-Mehndi",
+      "name": "Jashn-e-Mehendi & Sangeet",
       "date": "Saturday, January 23, 2027",
       "time": "06:30 PM",
       "venue": "Emerald Pavilion, Qasr Al-Noor",
-      "description": "A vibrant evening of fragrant henna, traditional folk melodies, and sweet confectioneries."
+      "description": "An enchanting evening of intricate henna artistry, soulful Sufi qawwali notes, traditional dholak beats, and celebration."
     },
     {
       "id": "nikah",
-      "name": "The Sacred Nikah",
+      "name": "The Sacred Nikah (Ijab-o-Qubool)",
       "date": "Sunday, January 24, 2027",
       "time": "05:00 PM onwards",
       "venue": "Grand Mughal Diwan, Qasr Al-Noor",
-      "description": "Solemnization of marriage vows under the celestial dome with sacred duas and blessings."
+      "description": "Solemnization of marriage vows and Khutbah-e-Nikah under the celestial dome with sacred duas, surrounded by loved ones."
     },
     {
       "id": "walima",
-      "name": "Royal Walima Reception",
+      "name": "Rukhsati & Royal Walima",
       "date": "Sunday, January 24, 2027",
       "time": "08:00 PM onwards",
       "venue": "Courtyard of Whispers, Qasr Al-Noor",
-      "description": "An opulent banquet celebrating eternal love with gourmet Mughlai cuisine, live Sufi ensemble, and festivities."
+      "description": "Tender parental blessings followed by an opulent Mughal banquet celebrating eternal love with gourmet delicacies and festivities."
     }
   ],
   "gallery": [

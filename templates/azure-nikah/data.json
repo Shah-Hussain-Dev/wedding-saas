@@ -6,17 +6,22 @@
   "couple": {
     "brideName": "Samira",
     "groomName": "Zayd",
-    "brideParents": "Mr. & Mrs. Farooq Siddiqui",
-    "groomParents": "Mr. & Mrs. Danish Al-Mansoor"
+    "brideFullName": "Samira Noor Siddiqui",
+    "groomFullName": "Zayd Danish Al-Mansoor",
+    "brideParents": "Mr. & Mrs. Farooq Ahmed Siddiqui",
+    "groomParents": "Mr. & Mrs. Danish Al-Mansoor",
+    "tagline": "The Auspicious Royal Nikah Celebration Of",
+    "invitationMessage": "With the divine grace of Almighty Allah (SWT) and the cherished prayers of our beloved parents and elders, we cordially invite you to celebrate the sacred bond of Nikah as our children unite their destinies.",
+    "urduGreeting": "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."
   },
   "weddingDate": "2027-04-18T17:30:00.000Z",
   "dateFormatted": "Sunday, 18 April 2027",
   "islamicDate": "11 Shawwal 1448 AH",
   "venue": {
-    "name": "The Sapphire Palace Marina",
-    "city": "Doha, Qatar",
-    "address": "The Pearl Boulevard, Porto Arabia, Doha",
-    "mapUrl": "https://maps.google.com/?q=The+Pearl+Qatar"
+    "name": "The Royal Azure Lake Palace",
+    "city": "Udaipur, Rajasthan, India",
+    "address": "Pichola Waterfront Heritage Estate, Udaipur, Rajasthan 313001",
+    "mapUrl": "https://maps.google.com/?q=Lake+Palace+Udaipur"
   },
   "videoOpening": {
     "videoUrl": "/templates/azure-nikah/opening.mp4",
@@ -25,35 +30,36 @@
     "sealMonogram": "S&Z"
   },
   "audioTrack": "/audio/wedding-ambience.mp3",
+  "storyMessage": "Underneath a celestial midnight sky shimmering with crescent stars and sapphire reflections upon the water, our destiny was written by the Most Merciful. With the loving prayers of our parents and elders, we unite our lives in the sacred covenant of Nikah.",
   "events": [
     {
-      "name": "Celestial Sangeet & Qawwali",
+      "name": "Jashn-e-Qawwali, Manjha & Sangeet Night",
       "date": "Friday, 16 April 2027",
       "time": "07:00 PM",
       "venue": "Sapphire Waterside Amphitheatre",
-      "location": "The Sapphire Palace Marina",
+      "location": "The Royal Azure Lake Palace, Udaipur",
       "dressCode": "Midnight Blue & Shimmering Gold",
-      "description": "An ethereal evening under the starlit sky with soul-stirring Sufi qawwali and festive celebration.",
+      "description": "An ethereal starlight evening of marigold showers, fragrant ubtan, and soul-stirring Sufi qawwali melodies celebrating family harmony.",
       "enabled": true
     },
     {
-      "name": "The Royal Nikah Ceremony",
+      "name": "The Sacred Nikah Ceremony (Ijab-o-Qubool)",
       "date": "Saturday, 17 April 2027",
       "time": "04:30 PM",
       "venue": "Lapis Lazuli Grand Pavilion",
-      "location": "The Sapphire Palace Marina",
+      "location": "The Royal Azure Lake Palace, Udaipur",
       "dressCode": "Royal Sapphire / Traditional Formal",
-      "description": "The sacred marriage covenant solemnized amidst the presence of respected elders and cherished family.",
+      "description": "The sacred marriage covenant solemnized amidst the recitation of holy verses, Khutbah-e-Nikah, and the heartfelt prayers of respected elders.",
       "enabled": true
     },
     {
-      "name": "Grand Walima Gala",
+      "name": "Rukhsati & Grand Dawat-e-Walima Gala",
       "date": "Sunday, 18 April 2027",
       "time": "08:00 PM",
       "venue": "Starlight Royal Grand Ballroom",
-      "location": "The Sapphire Palace Marina",
-      "dressCode": "Black Tie / Royal Attire",
-      "description": "A magnificent feast celebrating love, honor, and the union of two noble families.",
+      "location": "The Royal Azure Lake Palace, Udaipur",
+      "dressCode": "Black Tie / Royal Zari Attire",
+      "description": "Tender parental prayers under the shadow of the Quran followed by a magnificent royal banquet celebrating love, honor, and the union of two families.",
       "enabled": true
     }
   ],
@@ -72,8 +78,10 @@
     { "title": "The Starlight Gala", "subtitle": "A Night to Remember" }
   ],
   "verse": {
-    "arabic": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ",
+    "arabic": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
     "translation": "Our Lord, grant us from among our spouses and offspring comfort to our eyes and make us an example for the righteous.",
-    "reference": "Surah Al-Furqan · 25:74"
+    "reference": "Surah Al-Furqan · 25:74",
+    "propheticDua": "بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+    "propheticDuaTranslation": "May Allah bless you, and shower His blessings upon you, and unite you both in goodness and eternal love."
   }
 }

@@ -7,8 +7,16 @@
     "groomName": "Shubham",
     "brideFullName": "Ananya Singhania",
     "groomFullName": "Shubham Singhania",
-    "tagline": "Royal Wedding Invitation"
+    "tagline": "Royal Wedding Invitation",
+    "brideParents": "Mrs. Radhika & Mr. Harshvardhan Singhania",
+    "groomParents": "Mrs. Anuradha & Mr. Yashwant Rathore"
   },
+  "sacred": {
+    "invocation": "|| श्री गणेशाय नमः ||",
+    "shloka": "|| मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
+    "shlokaTranslation": "All auspiciousness to Lord Vishnu, the lotus-eyed Supreme, and may the Divine grace this holy marriage with lifelong harmony and peace."
+  },
+  "welcomeMessage": "With the divine grace of Lord Ganesha and the affectionate prayers of our beloved parents and elders, we cordially invite you to celebrate the sacred Shubh Vivah of our children. Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.",
   "weddingDate": "2026-12-22T17:00:00",
   "weddingTime": "05:00 PM onwards",
   "dateFormatted": "Tuesday, December 22, 2026",
