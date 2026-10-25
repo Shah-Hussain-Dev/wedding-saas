@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   X,
@@ -8,7 +8,6 @@ import {
   Sparkle,
   Pencil,
   Check,
-  Eye,
   FilePdf,
   ShareNetwork,
   ArrowsInSimple,
@@ -105,9 +104,34 @@ export function PdfPreviewModal({
   }, [isOpen, activeTab, isEditingDetails, isMobilePersonalizeOpen, isFullSize, computeFitScale]);
 
   // Sync initialData if updated externally
-  React.useEffect(() => {
+  useEffect(() => {
     setData(initialData);
   }, [initialData]);
+
+  // Lock background scroll when modal is open to ensure pure native app feel
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    const prevTouchAction = document.body.style.touchAction;
+    document.body.style.overflow = "hidden";
+    document.body.style.touchAction = "none";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.body.style.touchAction = prevTouchAction;
+    };
+  }, [isOpen]);
+
+  // Handle ESC key to dismiss modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
 
   const tokens = getPdfThemeTokens(templateId, data.religion);
 
@@ -243,21 +267,21 @@ export function PdfPreviewModal({
     }
   };
 
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-1 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md overflow-hidden">
         {/* Backdrop click to close */}
         <div className="fixed inset-0" onClick={onClose} />
 
-        {/* Modal Window Container */}
+        {/* ── Native Mobile App Sheet / Desktop Window ── */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.98 }}
           transition={{ duration: 0.25, ease: "easeOut" }}
-          className={`relative z-10 w-full max-w-4xl bg-[#121614] border border-[#C8A45E]/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#F7F4ED] ${
-            isFullSize ? "h-[98vh] sm:h-[92vh]" : "max-h-[94vh] sm:max-h-[90vh]"
-          }`}
+          className={`relative z-10 w-full max-w-4xl bg-[#121614] border border-[#C8A45E]/30 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col text-[#F7F4ED] ${isFullSize ? "h-[98vh] sm:h-[92vh]" : "max-h-[94vh] sm:max-h-[90vh]"
+            }`}
         >
           {/* ── Standard Mode Header (Hidden in Full Size) ── */}
           {!isFullSize && (
@@ -296,22 +320,20 @@ export function PdfPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("barat")}
-                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${
-                      activeTab === "barat"
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${activeTab === "barat"
                         ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                         : "text-stone-300 hover:text-white"
-                    }`}
+                      }`}
                   >
                     1. Barat
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("reception")}
-                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${
-                      activeTab === "reception"
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${activeTab === "reception"
                         ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                         : "text-stone-300 hover:text-white"
-                    }`}
+                      }`}
                   >
                     2. Reception
                   </button>
@@ -321,11 +343,10 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => setIsMobilePersonalizeOpen(!isMobilePersonalizeOpen)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-sans font-semibold border transition-all cursor-pointer ${
-                    isMobilePersonalizeOpen
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-sans font-semibold border transition-all cursor-pointer ${isMobilePersonalizeOpen
                       ? "bg-[#C8A45E] text-[#032A23] border-[#C8A45E]"
                       : "bg-[#C8A45E]/10 text-[#E1C98E] border-[#C8A45E]/30"
-                  }`}
+                    }`}
                 >
                   <Sparkle size={13} weight="fill" />
                   <span>{isMobilePersonalizeOpen ? "Hide Options" : "Personalize"}</span>
@@ -374,33 +395,30 @@ export function PdfPreviewModal({
                         <button
                           type="button"
                           onClick={() => handleSelectReligion("muslim")}
-                          className={`px-2 py-0.5 rounded-full font-bold ${
-                            (data.religion || tokens.tradition) === "muslim"
+                          className={`px-2 py-0.5 rounded-full font-bold ${(data.religion || tokens.tradition) === "muslim"
                               ? "bg-[#C8A45E] text-[#032A23]"
                               : "text-stone-400 bg-white/5"
-                          }`}
+                            }`}
                         >
                           ☪️ Muslim
                         </button>
                         <button
                           type="button"
                           onClick={() => handleSelectReligion("hindu")}
-                          className={`px-2 py-0.5 rounded-full font-bold ${
-                            (data.religion || tokens.tradition) === "hindu"
+                          className={`px-2 py-0.5 rounded-full font-bold ${(data.religion || tokens.tradition) === "hindu"
                               ? "bg-[#C8A45E] text-[#032A23]"
                               : "text-stone-400 bg-white/5"
-                          }`}
+                            }`}
                         >
                           🕉️ Hindu
                         </button>
                         <button
                           type="button"
                           onClick={() => handleSelectReligion("universal")}
-                          className={`px-2 py-0.5 rounded-full font-bold ${
-                            (data.religion || tokens.tradition) === "universal"
+                          className={`px-2 py-0.5 rounded-full font-bold ${(data.religion || tokens.tradition) === "universal"
                               ? "bg-[#C8A45E] text-[#032A23]"
                               : "text-stone-400 bg-white/5"
-                          }`}
+                            }`}
                         >
                           💫 Universal
                         </button>
@@ -484,11 +502,10 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => setActiveTab("barat")}
-                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${
-                    activeTab === "barat"
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${activeTab === "barat"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-md"
                       : "text-stone-300 hover:text-white"
-                  }`}
+                    }`}
                 >
                   <span>1. {tokens.baratEventTitle}</span>
                 </button>
@@ -496,11 +513,10 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => setActiveTab("reception")}
-                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${
-                    activeTab === "reception"
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${activeTab === "reception"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-md"
                       : "text-stone-300 hover:text-white"
-                  }`}
+                    }`}
                 >
                   <span>2. {tokens.receptionEventTitle}</span>
                 </button>
@@ -511,11 +527,10 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => handleSelectReligion("muslim")}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
-                    (data.religion || tokens.tradition) === "muslim"
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${(data.religion || tokens.tradition) === "muslim"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                       : "text-stone-400 hover:text-white"
-                  }`}
+                    }`}
                 >
                   ☪️ Muslim
                 </button>
@@ -523,11 +538,10 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => handleSelectReligion("hindu")}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
-                    (data.religion || tokens.tradition) === "hindu"
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${(data.religion || tokens.tradition) === "hindu"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                       : "text-stone-400 hover:text-white"
-                  }`}
+                    }`}
                 >
                   🕉️ Hindu
                 </button>
@@ -535,11 +549,10 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => handleSelectReligion("universal")}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
-                    (data.religion || tokens.tradition) === "universal"
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${(data.religion || tokens.tradition) === "universal"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                       : "text-stone-400 hover:text-white"
-                  }`}
+                    }`}
                 >
                   💫 Universal
                 </button>
@@ -573,7 +586,13 @@ export function PdfPreviewModal({
                   <input
                     type="text"
                     value={data.hostNames || ""}
-                    placeholder="e.g. Mrs. & Mr. Hashmat Khan"
+                    placeholder={
+                      data.religion === "hindu"
+                        ? "e.g. Mrs. & Mr. Alok Verma"
+                        : data.religion === "universal"
+                        ? "e.g. Mrs. & Mr. Vikram Malhotra"
+                        : "e.g. Mrs. & Mr. Hashmat Khan"
+                    }
                     onChange={(e) => setData({ ...data, hostNames: e.target.value })}
                     className="w-full px-3 py-1.5 rounded-lg bg-black/60 border border-white/20 text-white focus:border-[#C8A45E] outline-none text-xs"
                   />
@@ -586,7 +605,13 @@ export function PdfPreviewModal({
                   <input
                     type="text"
                     value={data.parentageDetails || ""}
-                    placeholder="e.g. D/o Mohd. Nizamuddin"
+                    placeholder={
+                      data.religion === "hindu"
+                        ? "e.g. D/o Shri Rajesh Sharma"
+                        : data.religion === "universal"
+                        ? "e.g. D/o Mr. Arvind Kapoor"
+                        : "e.g. D/o Mohd. Nizamuddin"
+                    }
                     onChange={(e) => setData({ ...data, parentageDetails: e.target.value })}
                     className="w-full px-3 py-1.5 rounded-lg bg-black/60 border border-white/20 text-white focus:border-[#C8A45E] outline-none text-xs"
                   />
@@ -624,9 +649,8 @@ export function PdfPreviewModal({
           {/* ── Main Canvas Preview Display (Adaptive Auto-Fit / Full Size View) ── */}
           <div
             ref={previewContainerRef}
-            className={`relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col items-center bg-[#070B09] overscroll-contain [scrollbar-width:thin] [scrollbar-color:#C8A45E40_transparent] ${
-              isFullSize ? "p-2 sm:p-4 pt-16 pb-20 justify-start" : "p-2 sm:p-4 justify-center"
-            }`}
+            className={`relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col items-center bg-[#070B09] overscroll-contain [scrollbar-width:thin] [scrollbar-color:#C8A45E40_transparent] ${isFullSize ? "p-2 sm:p-4 pt-16 pb-20 justify-start" : "p-2 sm:p-4 justify-center"
+              }`}
           >
             {/* Visual background ambient glow */}
             <div className="absolute w-[400px] h-[400px] rounded-full bg-[#C8A45E]/5 blur-3xl pointer-events-none" />
@@ -648,22 +672,20 @@ export function PdfPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("barat")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      activeTab === "barat"
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${activeTab === "barat"
                         ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                         : "text-stone-300 hover:text-white"
-                    }`}
+                      }`}
                   >
                     Barat
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("reception")}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
-                      activeTab === "reception"
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${activeTab === "reception"
                         ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                         : "text-stone-300 hover:text-white"
-                    }`}
+                      }`}
                   >
                     Reception
                   </button>
@@ -707,9 +729,8 @@ export function PdfPreviewModal({
 
             {/* TAB 1: Barat Card Renderer */}
             <div
-              className={`transition-all duration-300 my-auto flex-shrink-0 relative shadow-2xl rounded-sm ${
-                activeTab === "barat" ? "block" : "hidden"
-              }`}
+              className={`transition-all duration-300 my-auto flex-shrink-0 relative shadow-2xl rounded-sm ${activeTab === "barat" ? "block" : "hidden"
+                }`}
               style={{
                 width: `${Math.round(592 * activeScale)}px`,
                 height: `${Math.round(840 * activeScale)}px`,
@@ -739,9 +760,8 @@ export function PdfPreviewModal({
 
             {/* TAB 2: Reception Card Renderer */}
             <div
-              className={`transition-all duration-300 my-auto flex-shrink-0 relative shadow-2xl rounded-sm ${
-                activeTab === "reception" ? "block" : "hidden"
-              }`}
+              className={`transition-all duration-300 my-auto flex-shrink-0 relative shadow-2xl rounded-sm ${activeTab === "reception" ? "block" : "hidden"
+                }`}
               style={{
                 width: `${Math.round(592 * activeScale)}px`,
                 height: `${Math.round(840 * activeScale)}px`,

@@ -68,9 +68,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("aarav") && !data.hashtag.toLowerCase().includes("samaira"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -99,11 +97,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State (opens at ~6.0s)
   const [isVideoStarted, setIsVideoStarted] = useState(false);

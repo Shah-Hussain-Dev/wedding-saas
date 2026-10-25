@@ -101,7 +101,7 @@ export default function KitabENikah({ data }: KitabENikahProps) {
           origin: { y: 0.45 },
           colors: ["#E5B869", "#FEF0C7", "#991B1B", "#FFFDF8", "#D4AF37"],
         });
-      } catch (_) {}
+      } catch (_) { }
       setTimeout(() => setIsFlashing(false), 750);
     }
     setIsHeroRevealed(true);
@@ -126,12 +126,12 @@ export default function KitabENikah({ data }: KitabENikahProps) {
   const weddingDate = new Date(weddingDateStr);
   const formattedDate = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      })
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    })
     : resolvedData.dateFormatted;
 
   const revealMonthDay = !isNaN(weddingDate.getTime())
@@ -156,16 +156,16 @@ export default function KitabENikah({ data }: KitabENikahProps) {
   const rawGallery: any[] = Array.isArray(data?.slideshowImages) && data.slideshowImages.length > 0
     ? data.slideshowImages
     : Array.isArray(data?.gallery) && data.gallery.length > 0
-    ? data.gallery
-    : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
-    ? data.galleryImages
-    : resolvedData.gallery || [
-        "/templates/kitab-e-nikah/poster.png",
-        "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-      ];
+      ? data.gallery
+      : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
+        ? data.galleryImages
+        : resolvedData.gallery || [
+          "/templates/kitab-e-nikah/poster.png",
+          "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+        ];
   const galleryPhotos: string[] = rawGallery
     .map((item: any) => (typeof item === "string" ? item : item?.url || item?.src || ""))
     .filter(Boolean);
@@ -301,7 +301,7 @@ export default function KitabENikah({ data }: KitabENikahProps) {
         origin: { y: 0.6 },
         colors: ["#E5B869", "#782233", "#FBF5E6", "#FFFFFF"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
 
 
@@ -835,7 +835,7 @@ export default function KitabENikah({ data }: KitabENikahProps) {
                               origin: { y: 0.7 },
                               colors: ["#E5B869", "#FEF0C7", "#991B1B", "#D4AF37", "#FFFFFF"],
                             });
-                          } catch (_) {}
+                          } catch (_) { }
                         }}
                       />
                     </div>
@@ -1214,7 +1214,6 @@ export default function KitabENikah({ data }: KitabENikahProps) {
                     whileTap={{ scale: 0.97 }}
                   >
                     <span>Confirm Your RSVP</span>
-                    <Sparkle size={16} weight="fill" />
                   </motion.button>
                 </div>
               </motion.section>

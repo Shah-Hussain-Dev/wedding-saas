@@ -60,7 +60,7 @@ export function RazorpayCheckoutButton({
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
-  
+
   const [customerEmail, setCustomerEmail] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerName, setCustomerName] = useState(`${brideName} & ${groomName}`);
@@ -77,8 +77,8 @@ export function RazorpayCheckoutButton({
   const finalAmount = amount !== undefined
     ? Math.max(0, Math.round(Number(amount)))
     : amountPaise !== undefined
-    ? Math.max(0, Math.floor(amountPaise / 100))
-    : 1199;
+      ? Math.max(0, Math.floor(amountPaise / 100))
+      : 1199;
 
   const effectiveButtonText = buttonText || `Unlock Permanent Live Website · ₹${finalAmount.toLocaleString("en-IN")}`;
 
@@ -266,7 +266,7 @@ export function RazorpayCheckoutButton({
                   }
                   localStorage.removeItem("unfold_pending_draft");
                   sessionStorage.removeItem("unfold_pending_draft");
-                } catch (_) {}
+                } catch (_) { }
               }
 
               try {
@@ -276,7 +276,7 @@ export function RazorpayCheckoutButton({
                   origin: { y: 0.5 },
                   colors: ["#D4AF37", "#10B981", "#FEF0C7", "#991B1B", "#FFFFFF"],
                 });
-              } catch (_) {}
+              } catch (_) { }
 
               if (onSuccess) {
                 onSuccess(resolvedLiveUrl);
@@ -310,7 +310,7 @@ export function RazorpayCheckoutButton({
 
   const modalContent = isAccountModalOpen && mounted ? createPortal(
     <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-6 bg-black/75 backdrop-blur-md pointer-events-auto overflow-y-auto">
-      <div 
+      <div
         className="relative w-full max-w-md bg-[#FCFBF7] text-[#1A1A1A] border-2 border-amber-400/60 rounded-3xl p-6 sm:p-7 shadow-[0_25px_70px_rgba(0,0,0,0.5)] my-auto max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
@@ -341,11 +341,10 @@ export function RazorpayCheckoutButton({
           <button
             type="button"
             onClick={() => setAuthTab("quick")}
-            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${
-              authTab === "quick"
-                ? "bg-white text-stone-900 shadow-sm"
-                : "text-stone-500 hover:text-stone-800"
-            }`}
+            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-2 ${authTab === "quick"
+              ? "bg-white text-stone-900 shadow-sm"
+              : "text-stone-500 hover:text-stone-800"
+              }`}
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -359,11 +358,10 @@ export function RazorpayCheckoutButton({
           <button
             type="button"
             onClick={() => setAuthTab("password")}
-            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${
-              authTab === "password"
-                ? "bg-white text-stone-900 shadow-sm"
-                : "text-stone-500 hover:text-stone-800"
-            }`}
+            className={`py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 ${authTab === "password"
+              ? "bg-white text-stone-900 shadow-sm"
+              : "text-stone-500 hover:text-stone-800"
+              }`}
           >
             <EnvelopeSimple className="h-4 w-4" weight="bold" />
             <span>Email &amp; Password</span>
@@ -485,7 +483,6 @@ export function RazorpayCheckoutButton({
               className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#B89730] text-[#1B1202] font-serif font-bold text-xs transition-all shadow-lg hover:brightness-105 active:scale-95 mt-2"
             >
               <span>Create Account &amp; Pay ₹{finalAmount}</span>
-              <Sparkle size={16} weight="fill" />
             </button>
 
             <div className="flex items-center justify-between text-[11px] text-stone-500 pt-1">
@@ -579,8 +576,7 @@ export function RazorpayCheckoutButton({
         <div className="space-y-2 pt-1">
           <a
             href={`https://wa.me/?text=${encodeURIComponent(
-              `You are cordially invited to celebrate the wedding of ${brideName} & ${groomName}!\n\nView details & RSVP here: ${
-                typeof window !== "undefined" && window.location.origin ? window.location.origin : siteConfig.url
+              `You are cordially invited to celebrate the wedding of ${brideName} & ${groomName}!\n\nView details & RSVP here: ${typeof window !== "undefined" && window.location.origin ? window.location.origin : siteConfig.url
               }${successData.liveUrl.startsWith("/") ? successData.liveUrl : `/${successData.liveUrl}`}`
             )}`}
             target="_blank"
@@ -619,11 +615,10 @@ export function RazorpayCheckoutButton({
       <button
         onClick={handleInitialClick}
         disabled={loading || isSuccess}
-        className={`inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full font-serif font-bold tracking-wide transition-all shadow-lg active:scale-95 disabled:opacity-75 disabled:pointer-events-none ${
-          isSuccess
-            ? "bg-emerald-600 text-white shadow-emerald-500/25"
-            : "bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#B89730] text-[#1B1202] hover:brightness-105 shadow-amber-500/30"
-        } ${className}`}
+        className={`inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full font-serif font-bold tracking-wide transition-all shadow-lg active:scale-95 disabled:opacity-75 disabled:pointer-events-none ${isSuccess
+          ? "bg-emerald-600 text-white shadow-emerald-500/25"
+          : "bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#B89730] text-[#1B1202] hover:brightness-105 shadow-amber-500/30"
+          } ${className}`}
       >
         {loading ? (
           <>
@@ -639,7 +634,6 @@ export function RazorpayCheckoutButton({
           <>
             <LockOpen size={18} weight="bold" />
             <span>{effectiveButtonText}</span>
-            <Sparkle size={16} weight="fill" />
           </>
         )}
       </button>

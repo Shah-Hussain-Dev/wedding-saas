@@ -28,6 +28,8 @@ export interface PreviewMusicSelectorProps {
   onSelectTrack: (trackUrl: string) => void;
   className?: string;
   placement?: "responsive-dock" | "bottom-left" | "bottom-right";
+  hasBottomBar?: boolean;
+  isHeroTapped?: boolean;
 }
 
 export function PreviewMusicSelector({
@@ -38,6 +40,8 @@ export function PreviewMusicSelector({
   onSelectTrack,
   className = "",
   placement = "responsive-dock",
+  hasBottomBar = false,
+  isHeroTapped = false,
 }: PreviewMusicSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
@@ -283,74 +287,63 @@ export function PreviewMusicSelector({
 
   const placementClass =
     placement === "bottom-left"
-      ? "left-4 right-auto"
+      ? "left-3.5 sm:left-4 right-auto"
       : placement === "bottom-right"
       ? "right-[72px] left-auto"
-      : "left-4 right-auto md:left-auto md:right-[72px]";
+      : "left-3.5 sm:left-4 right-auto md:left-auto md:right-[76px]";
 
   return (
     <>
       {/* ─────────────────────────────────────────────────────────────
-          1. FLOATING THUMB-ZONE MUSIC BADGE (Trigger)
-          Positioned bottom-left on mobile; docked next to speaker on desktop
-          to ensure left-side Customize button & Sandbox panel are 100% visible
+          1. FLOATING SOUNDTRACK TRIGGER ICON (TOP-LEFT)
+          Non-obtrusive 44×44px circular luxury button in top-left thumb zone
           ───────────────────────────────────────────────────────────── */}
       <div
-        className={`fixed z-[9998] pointer-events-auto ${placementClass} ${className}`}
+        className={`fixed left-3 sm:left-4 z-[9998] pointer-events-auto ${isHeroTapped ? "hidden sm:block" : "block"} transition-all duration-300 ${className}`}
         style={{
-          bottom: "max(18px, env(safe-area-inset-bottom, 18px))",
+          top: className?.includes("top-") ? undefined : "max(10px, env(safe-area-inset-top, 10px))",
         }}
       >
         <motion.button
           type="button"
           id="preview-music-selector-btn"
-          aria-label="Change invitation soundtrack"
+          aria-label={`Soundtrack: ${currentTrackItem.title} - Tap to change music`}
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           onClick={() => setIsOpen(true)}
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.95 }}
-          className="group relative flex items-center gap-2.5 h-[44px] pl-3 pr-3.5 rounded-full bg-stone-950/85 backdrop-blur-xl border border-amber-400/35 text-white shadow-[0_10px_30px_rgba(0,0,0,0.65)] hover:border-amber-400/60 transition-all select-none cursor-pointer"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.94 }}
+          title={`Soundtrack: ${currentTrackItem.title} (Tap to change)`}
+          className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-stone-950/85 hover:bg-stone-900 backdrop-blur-xl border border-amber-400/40 text-amber-300 shadow-[0_8px_24px_rgba(0,0,0,0.65)] flex items-center justify-center cursor-pointer select-none transition-colors"
         >
           {/* Pulsing glow aura when music is playing */}
           {isPlaying && (
-            <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-amber-500/20 to-amber-300/20 blur-sm animate-pulse pointer-events-none" />
+            <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-amber-500/25 to-amber-300/25 blur-sm animate-pulse pointer-events-none" />
           )}
 
           {/* Equalizer Wave / Music Note */}
-          <div className="relative flex items-center justify-center w-6 h-6 rounded-full bg-amber-500/15 text-amber-300 shrink-0">
+          <div className="relative flex items-center justify-center">
             {isPlaying ? (
-              <span className="flex items-end gap-[2px] h-3">
+              <span className="flex items-end gap-[2px] h-3.5">
                 <span className="w-[2.5px] bg-amber-400 rounded-full animate-[soundwave_0.8s_ease-in-out_infinite]" />
                 <span className="w-[2.5px] bg-amber-300 rounded-full animate-[soundwave_0.8s_ease-in-out_0.2s_infinite]" />
                 <span className="w-[2.5px] bg-amber-400 rounded-full animate-[soundwave_0.8s_ease-in-out_0.4s_infinite]" />
               </span>
             ) : (
-              <MusicNotes size={14} weight="bold" />
+              <MusicNotes size={18} weight="fill" />
             )}
           </div>
 
-          {/* Track Name */}
-          <div className="flex flex-col text-left leading-tight pr-1">
-            <span className="text-[9px] uppercase tracking-wider text-amber-300/80 font-bold">
-              Soundtrack
-            </span>
-            <span className="text-xs font-semibold text-stone-100 truncate max-w-[110px] sm:max-w-[145px]">
-              {currentTrackItem.title}
-            </span>
-          </div>
-
-          {/* Change Pill */}
-          <div className="flex items-center gap-0.5 pl-1.5 border-l border-white/15 text-amber-400 text-[11px] font-bold tracking-wide">
-            <span>Change</span>
-            <CaretDown size={11} weight="bold" />
-          </div>
+          {/* Mini active music dot badge */}
+          <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center shadow-sm">
+            <Sparkle size={8} weight="fill" />
+          </span>
         </motion.button>
       </div>
 
       {/* ─────────────────────────────────────────────────────────────
           2. ELEGANT BOTTOM SHEET DRAWER (Non-Obstructive Preview)
-          Constrained to max-h-[60vh] to preserve wedding couple portrait
+          Optimized for smooth momentum scrolling on all mobile viewports
           ───────────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {isOpen && (
@@ -362,7 +355,7 @@ export function PreviewMusicSelector({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-pointer"
+              className="absolute inset-0 bg-black/65 backdrop-blur-sm cursor-pointer"
             />
 
             {/* Bottom Sheet Modal Container */}
@@ -371,9 +364,9 @@ export function PreviewMusicSelector({
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 300 }}
-              className="relative w-full max-w-xl mx-auto h-[62vh] sm:h-[65vh] max-h-[680px] flex flex-col rounded-t-[28px] border-t border-amber-400/25 bg-[#12100E]/95 backdrop-blur-2xl text-stone-100 shadow-[0_-20px_50px_rgba(0,0,0,0.85)] overflow-hidden"
+              className="relative w-full max-w-xl mx-auto h-[82vh] sm:h-[75vh] max-h-[720px] flex flex-col rounded-t-[28px] border-t border-amber-400/30 bg-[#12100E]/98 backdrop-blur-2xl text-stone-100 shadow-[0_-20px_50px_rgba(0,0,0,0.95)] overflow-hidden"
               style={{
-                paddingBottom: "max(16px, env(safe-area-inset-bottom, 16px))",
+                paddingBottom: "max(14px, env(safe-area-inset-bottom, 14px))",
               }}
             >
               {/* Drag Pill Handle */}
@@ -492,14 +485,13 @@ export function PreviewMusicSelector({
                 )}
               </div>
 
-              {/* Scrollable Song List */}
+              {/* Scrollable Song List (Explicit Flex Scrolling with Momentum for Mobile) */}
               <div
-                className="flex-1 min-h-0 overflow-y-auto px-4 py-3 space-y-2 overscroll-contain scroll-smooth"
+                className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-3 sm:px-4 py-3 space-y-2"
                 style={{
-                  scrollbarWidth: "thin",
-                  scrollbarColor: "rgba(245, 158, 11, 0.35) transparent",
                   WebkitOverflowScrolling: "touch",
-                  touchAction: "pan-y",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "rgba(245, 158, 11, 0.4) transparent",
                 }}
               >
                 {filteredTracks.map((track) => {
@@ -510,9 +502,9 @@ export function PreviewMusicSelector({
                     <div
                       key={track.id}
                       onClick={() => handleSelectSong(track)}
-                      className={`group relative rounded-2xl p-3 flex items-center justify-between gap-3 transition-all cursor-pointer border ${
+                      className={`group relative rounded-2xl p-3 flex items-center justify-between gap-3 transition-all cursor-pointer border select-none touch-manipulation active:scale-[0.99] ${
                         isSelected
-                          ? "bg-amber-500/10 border-amber-400/50 shadow-[0_0_20px_rgba(245,158,11,0.15)]"
+                          ? "bg-amber-500/15 border-amber-400/60 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-400/30"
                           : "bg-white/[0.03] hover:bg-white/[0.07] border-white/10 hover:border-white/20"
                       }`}
                     >
@@ -577,8 +569,8 @@ export function PreviewMusicSelector({
                     </div>
                   );
                 })}
-                {/* Bottom clearance spacer */}
-                <div className="h-4 shrink-0" aria-hidden="true" />
+                {/* Bottom clearance spacer ensuring last track is never covered */}
+                <div className="h-6 shrink-0" aria-hidden="true" />
               </div>
 
               {/* Sticky "Now Playing" Bottom Bar inside the Sheet */}

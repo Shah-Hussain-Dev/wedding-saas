@@ -191,6 +191,8 @@ export function HeroExperience() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(1200);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [modalIndex, setModalIndex] = useState(0);
+  const [isModalPaused, setIsModalPaused] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -235,7 +237,7 @@ export function HeroExperience() {
     setIsHovered(false);
   };
 
-  // Immediate slide navigation
+  // Immediate hero slide navigation
   const nextTemplate = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % HERO_INVITATIONS.length);
   }, []);
@@ -243,6 +245,37 @@ export function HeroExperience() {
   const prevTemplate = useCallback(() => {
     setActiveIndex((prev) => (prev - 1 + HERO_INVITATIONS.length) % HERO_INVITATIONS.length);
   }, []);
+
+  // Modal carousel navigation
+  const nextModalTemplate = useCallback(() => {
+    setModalIndex((prev) => (prev + 1) % HERO_INVITATIONS.length);
+  }, []);
+
+  const prevModalTemplate = useCallback(() => {
+    setModalIndex((prev) => (prev - 1 + HERO_INVITATIONS.length) % HERO_INVITATIONS.length);
+  }, []);
+
+  // Modal auto-carousel timer (rotates templates every 4.8s unless hovered or interacted)
+  useEffect(() => {
+    if (!isPreviewOpen || isModalPaused) return;
+
+    const timer = setInterval(() => {
+      setModalIndex((prev) => (prev + 1) % HERO_INVITATIONS.length);
+    }, 4800);
+
+    return () => clearInterval(timer);
+  }, [isPreviewOpen, isModalPaused]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isPreviewOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isPreviewOpen]);
 
   // Automatic Slide Transitions (Autoplay every 5.5s, pauses on hover/modal)
   useEffect(() => {
@@ -269,17 +302,27 @@ export function HeroExperience() {
         document.activeElement?.tagName === "TEXTAREA"
       )
         return;
+
+      if (isPreviewOpen) {
+        if (e.key === "ArrowLeft") {
+          prevModalTemplate();
+        } else if (e.key === "ArrowRight") {
+          nextModalTemplate();
+        } else if (e.key === "Escape") {
+          setIsPreviewOpen(false);
+        }
+        return;
+      }
+
       if (e.key === "ArrowLeft") {
         prevTemplate();
       } else if (e.key === "ArrowRight") {
         nextTemplate();
-      } else if (e.key === "Escape" && isPreviewOpen) {
-        setIsPreviewOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [nextTemplate, prevTemplate, isPreviewOpen]);
+  }, [nextTemplate, prevTemplate, nextModalTemplate, prevModalTemplate, isPreviewOpen]);
 
   const isDraggingRef = useRef(false);
 
@@ -304,6 +347,7 @@ export function HeroExperience() {
   };
 
   const activeTemplate = HERO_INVITATIONS[activeIndex];
+  const currentModalTemplate = HERO_INVITATIONS[modalIndex] || HERO_INVITATIONS[0];
 
   // Motion variants
   const easeOutCubic = [0.22, 1, 0.36, 1] as const;
@@ -455,13 +499,16 @@ export function HeroExperience() {
                 {/* Secondary: Watch Preview Button */}
                 <button
                   type="button"
-                  onClick={() => setIsPreviewOpen(true)}
+                  onClick={() => {
+                    setModalIndex(activeIndex);
+                    setIsPreviewOpen(true);
+                  }}
                   className="group w-full sm:w-auto min-h-[50px] px-7 sm:px-8 py-3.5 rounded-full bg-white/95 hover:bg-white text-[#171614] border border-[#E8D8BB] hover:border-[#C49A5A]/70 text-xs sm:text-[13px] font-bold tracking-wider uppercase font-sans transition-all duration-300 shadow-2xs hover:shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 cursor-pointer backdrop-blur-md"
                 >
                   <span className="w-5.5 h-5.5 rounded-full bg-[#C49A5A] text-white flex items-center justify-center pl-0.5 shadow-2xs">
                     <Play size={11} weight="fill" />
                   </span>
-                  <span>WATCH PREVIEW</span>
+                  <span className="text-upper">WATCH DEMO</span>
                 </button>
               </div>
 
@@ -640,11 +687,10 @@ export function HeroExperience() {
                         if (isLeft1) prevTemplate();
                         else if (isRight1) nextTemplate();
                       }}
-                      className={`absolute w-[180px] sm:w-[220px] md:w-[250px] lg:w-[270px] xl:w-[285px] aspect-[9/18.8] rounded-[30px] sm:rounded-[36px] lg:rounded-[42px] p-[5px] sm:p-[6px] bg-[#1a1714] border-[3px] ${
-                        isCenter
-                          ? "border-[#D4AF37] shadow-[0_32px_75px_-12px_rgba(6,63,53,0.42),0_0_36px_rgba(212,175,55,0.22)] ring-1 ring-amber-200/50 cursor-default"
-                          : "border-[#C49A5A]/50 shadow-2xl hover:border-[#D4AF37] cursor-pointer pointer-events-auto"
-                      } backdrop-blur-md transition-colors duration-300`}
+                      className={`absolute w-[180px] sm:w-[220px] md:w-[250px] lg:w-[270px] xl:w-[285px] aspect-[9/18.8] rounded-[30px] sm:rounded-[36px] lg:rounded-[42px] p-[5px] sm:p-[6px] bg-[#1a1714] border-[3px] ${isCenter
+                        ? "border-[#D4AF37] shadow-[0_32px_75px_-12px_rgba(6,63,53,0.42),0_0_36px_rgba(212,175,55,0.22)] ring-1 ring-amber-200/50 cursor-default"
+                        : "border-[#C49A5A]/50 shadow-2xl hover:border-[#D4AF37] cursor-pointer pointer-events-auto"
+                        } backdrop-blur-md transition-colors duration-300`}
                       style={{
                         zIndex,
                         transformStyle: "preserve-3d",
@@ -678,13 +724,15 @@ export function HeroExperience() {
 
                         {/* Bottom CTA: Golden Capsule Button on Active Center Phone Only */}
                         {isCenter && (
-                          <div className="relative z-30 pb-4 sm:pb-5 px-4 flex justify-center">
+                          <div className="relative z-30 pb-3 sm:pb-4 lg:pb-5 px-2 sm:px-3 flex justify-center w-full">
                             <Link
                               href={`/preview/${inv.slug}`}
-                              className="px-6 sm:px-7 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-[#DFB873] via-[#ECC985] to-[#D4A759] text-[#2C210E] font-bold text-[9px] sm:text-[10px] tracking-wider uppercase shadow-[0_8px_20px_rgba(212,167,89,0.35)] flex items-center justify-center gap-1.5 hover:brightness-105 active:scale-95 transition-all cursor-pointer"
+                              onClick={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => e.stopPropagation()}
+                              className="group relative inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-3.5 sm:px-5 md:px-6 py-1.5 sm:py-2 md:py-2.5 min-h-[34px] sm:min-h-[38px] md:min-h-[40px] rounded-full bg-gradient-to-r from-[#DFB873] via-[#ECC985] to-[#D4A759] text-[#2C210E] font-extrabold text-[9px] sm:text-[10px] md:text-[11px] tracking-wider sm:tracking-widest uppercase shadow-[0_8px_20px_rgba(212,167,89,0.38)] border border-[#FFF4D0]/60 hover:brightness-105 active:scale-95 transition-all cursor-pointer before:absolute before:-inset-2 before:content-['']"
                             >
                               <span>VIEW INVITATION</span>
-                              <ArrowRight size={11} weight="bold" />
+                              <ArrowRight size={11} weight="bold" className="shrink-0 transition-transform duration-200 group-hover:translate-x-0.5" />
                             </Link>
                           </div>
                         )}
@@ -699,145 +747,148 @@ export function HeroExperience() {
       </div>
 
       {/* ========================================================= */}
-      {/* 4. BOTTOM ROYAL SCALLOPED TRUST BAR (PIXEL PERFECT MOCKUP) */}
+      {/* 4. BOTTOM ROYAL SCALLOPED TRUST BAR (COMMENTED OUT FOR ALL DEVICES) */}
       {/* ========================================================= */}
-      <div className="relative z-20 w-full max-w-6xl mx-auto mt-8 lg:mt-4 lg:mb-2 px-3 sm:px-6">
-        <div className="relative filter drop-shadow-[0_12px_36px_rgba(40,30,15,0.08)]">
-          {/* Authentic Royal Scalloped Cartouche Frame (Left Scallop + Center Fill + Right Scallop) */}
-          <div className="absolute inset-0 flex items-stretch pointer-events-none z-0">
-            {/* Left Scalloped Ogee Bracket Cap */}
-            <div className="w-7 sm:w-9 h-full shrink-0">
-              <svg
-                viewBox="0 0 36 76"
-                preserveAspectRatio="none"
-                className="w-full h-full block"
-              >
-                <path
-                  d="M 36 1 L 28 1 C 20 1 14 18 1 38 C 14 58 20 75 28 75 L 36 75 Z"
-                  fill="#FCF8F1"
-                  stroke="#C5A267"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M 36 4.5 L 28 4.5 C 22 4.5 16 19 5 38 C 16 57 22 71.5 28 71.5 L 36 71.5"
-                  fill="none"
-                  stroke="#C5A267"
-                  strokeOpacity="0.45"
-                  strokeWidth="0.9"
-                />
-              </svg>
-            </div>
-
-            {/* Center Panel with Double Gold Hairline Border */}
-            <div className="relative flex-1 bg-[#FCF8F1] border-t-[1.2px] border-b-[1.2px] border-[#C5A267]">
-              {/* Inner top & bottom hairline borders */}
-              <div className="absolute top-[3.5px] left-0 right-0 h-[0.9px] bg-[#C5A267]/45" />
-              <div className="absolute bottom-[3.5px] left-0 right-0 h-[0.9px] bg-[#C5A267]/45" />
-            </div>
-
-            {/* Right Scalloped Ogee Bracket Cap */}
-            <div className="w-7 sm:w-9 h-full shrink-0">
-              <svg
-                viewBox="0 0 36 76"
-                preserveAspectRatio="none"
-                className="w-full h-full block"
-              >
-                <path
-                  d="M 0 1 L 8 1 C 16 1 22 18 35 38 C 22 58 16 75 8 75 L 0 75 Z"
-                  fill="#FCF8F1"
-                  stroke="#C5A267"
-                  strokeWidth="1.2"
-                />
-                <path
-                  d="M 0 4.5 L 8 4.5 C 14 4.5 20 19 31 38 C 20 57 14 71.5 8 71.5 L 0 71.5"
-                  fill="none"
-                  stroke="#C5A267"
-                  strokeOpacity="0.45"
-                  strokeWidth="0.9"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Inner Content Layout (Horizontally Aligned, Exactly like Reference Mockup) */}
-          <div className="relative z-10 py-3.5 sm:py-4 px-6 sm:px-8 lg:px-11 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4 sm:gap-6 lg:gap-4">
-            {/* Stat 1: 5000+ Happy Couples */}
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <Heart size={16} weight="fill" className="text-[#A3753C] shrink-0" />
-              <div className="flex flex-col">
-                <span className="font-serif font-bold text-xl sm:text-2xl text-[#1E1810] leading-none">
-                  5000+
-                </span>
-                <span className="text-[11px] sm:text-xs text-[#6E6659] font-sans font-medium mt-0.5">
-                  Happy Couples
-                </span>
-              </div>
-            </div>
-
-            {/* Stat 2: 1M+ Invitations Shared */}
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <PaperPlaneTilt size={16} weight="fill" className="text-[#A3753C] shrink-0" />
-              <div className="flex flex-col">
-                <span className="font-serif font-bold text-xl sm:text-2xl text-[#1E1810] leading-none">
-                  1M+
-                </span>
-                <span className="text-[11px] sm:text-xs text-[#6E6659] font-sans font-medium mt-0.5">
-                  Invitations Shared
-                </span>
-              </div>
-            </div>
-
-            {/* Stat 3: 4.9 ★ Rated by Couples + 5 Distinct Avatars */}
-            <div className="flex items-center gap-2.5 sm:gap-3">
-              <UsersThree size={18} weight="fill" className="text-[#A3753C] shrink-0" />
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1 leading-none">
-                  <span className="font-serif font-bold text-xl sm:text-2xl text-[#1E1810] leading-none">
-                    4.9
-                  </span>
-                  <Star size={13} weight="fill" className="text-[#A3753C]" />
-                </div>
-                <span className="text-[11px] sm:text-xs text-[#6E6659] font-sans font-medium mt-0.5">
-                  Rated by Couples
-                </span>
-              </div>
-
-              {/* 5 Distinct Overlapping Couple Avatars */}
-              <div className="flex items-center -space-x-2 sm:-space-x-2.5 ml-1 sm:ml-2 shrink-0">
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <img
-                    key={num}
-                    src={`/images/avatar-${num}.jpg`}
-                    alt={`Couple ${num}`}
-                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white shadow-xs object-cover"
+      {false && (
+        <div className="relative z-20 w-full max-w-6xl mx-auto mt-8 lg:mt-4 lg:mb-2 px-3 sm:px-6">
+          <div className="relative filter drop-shadow-[0_12px_36px_rgba(40,30,15,0.08)]">
+            {/* Authentic Royal Scalloped Cartouche Frame (Left Scallop + Center Fill + Right Scallop) */}
+            <div className="absolute inset-0 flex items-stretch pointer-events-none z-0">
+              {/* Left Scalloped Ogee Bracket Cap */}
+              <div className="w-7 sm:w-9 h-full shrink-0">
+                <svg
+                  viewBox="0 0 36 76"
+                  preserveAspectRatio="none"
+                  className="w-full h-full block"
+                >
+                  <path
+                    d="M 36 1 L 28 1 C 20 1 14 18 1 38 C 14 58 20 75 28 75 L 36 75 Z"
+                    fill="#FCF8F1"
+                    stroke="#C5A267"
+                    strokeWidth="1.2"
                   />
-                ))}
+                  <path
+                    d="M 36 4.5 L 28 4.5 C 22 4.5 16 19 5 38 C 16 57 22 71.5 28 71.5 L 36 71.5"
+                    fill="none"
+                    stroke="#C5A267"
+                    strokeOpacity="0.45"
+                    strokeWidth="0.9"
+                  />
+                </svg>
+              </div>
+
+              {/* Center Panel with Double Gold Hairline Border */}
+              <div className="relative flex-1 bg-[#FCF8F1] border-t-[1.2px] border-b-[1.2px] border-[#C5A267]">
+                {/* Inner top & bottom hairline borders */}
+                <div className="absolute top-[3.5px] left-0 right-0 h-[0.9px] bg-[#C5A267]/45" />
+                <div className="absolute bottom-[3.5px] left-0 right-0 h-[0.9px] bg-[#C5A267]/45" />
+              </div>
+
+              {/* Right Scalloped Ogee Bracket Cap */}
+              <div className="w-7 sm:w-9 h-full shrink-0">
+                <svg
+                  viewBox="0 0 36 76"
+                  preserveAspectRatio="none"
+                  className="w-full h-full block"
+                >
+                  <path
+                    d="M 0 1 L 8 1 C 16 1 22 18 35 38 C 22 58 16 75 8 75 L 0 75 Z"
+                    fill="#FCF8F1"
+                    stroke="#C5A267"
+                    strokeWidth="1.2"
+                  />
+                  <path
+                    d="M 0 4.5 L 8 4.5 C 14 4.5 20 19 31 38 C 20 57 14 71.5 8 71.5 L 0 71.5"
+                    fill="none"
+                    stroke="#C5A267"
+                    strokeOpacity="0.45"
+                    strokeWidth="0.9"
+                  />
+                </svg>
               </div>
             </div>
 
-            {/* Vertical Hairline Divider */}
-            <div className="hidden lg:block w-px h-10 bg-[#C5A267]/40 shrink-0" />
+            {/* Inner Content Layout (Horizontally Aligned, Exactly like Reference Mockup) */}
+            <div className="relative z-10 py-3.5 sm:py-4 px-6 sm:px-8 lg:px-11 flex flex-wrap lg:flex-nowrap items-center justify-between gap-4 sm:gap-6 lg:gap-4">
 
-            {/* Testimonial Quote */}
-            <div className="flex items-start gap-2.5 max-w-sm w-full lg:w-auto">
-              <span className="font-serif text-[#A3753C] text-2xl sm:text-3xl leading-none shrink-0 font-bold -mt-0.5 select-none">
-                “
-              </span>
-              <div className="flex flex-col">
-                <p className="font-serif italic text-xs sm:text-[13px] text-[#2C241B] leading-snug">
-                  “Made our wedding announcement feel so special and personal!”
-                </p>
-                <span className="text-[10.5px] sm:text-[11px] text-[#786F62] font-sans font-medium mt-0.5">
-                  — Ananya &amp; Kabir, Mumbai
+              {/* Stat 1: 5000+ Happy Couples */}
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <Heart size={16} weight="fill" className="text-[#A3753C] shrink-0" />
+                <div className="flex flex-col">
+                  <span className="font-serif font-bold text-xl sm:text-2xl text-[#1E1810] leading-none">
+                    5000+
+                  </span>
+                  <span className="text-[11px] sm:text-xs text-[#6E6659] font-sans font-medium mt-0.5">
+                    Happy Couples
+                  </span>
+                </div>
+              </div>
+
+              {/* Stat 2: 1M+ Invitations Shared */}
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <PaperPlaneTilt size={16} weight="fill" className="text-[#A3753C] shrink-0" />
+                <div className="flex flex-col">
+                  <span className="font-serif font-bold text-xl sm:text-2xl text-[#1E1810] leading-none">
+                    1M+
+                  </span>
+                  <span className="text-[11px] sm:text-xs text-[#6E6659] font-sans font-medium mt-0.5">
+                    Invitations Shared
+                  </span>
+                </div>
+              </div>
+
+              {/* Stat 3: 4.9 ★ Rated by Couples + 5 Distinct Avatars */}
+              <div className="flex items-center gap-2.5 sm:gap-3">
+                <UsersThree size={18} weight="fill" className="text-[#A3753C] shrink-0" />
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1 leading-none">
+                    <span className="font-serif font-bold text-xl sm:text-2xl text-[#1E1810] leading-none">
+                      4.9
+                    </span>
+                    <Star size={13} weight="fill" className="text-[#A3753C]" />
+                  </div>
+                  <span className="text-[11px] sm:text-xs text-[#6E6659] font-sans font-medium mt-0.5">
+                    Rated by Couples
+                  </span>
+                </div>
+
+                {/* 5 Distinct Overlapping Couple Avatars */}
+                <div className="flex items-center -space-x-2 sm:-space-x-2.5 ml-1 sm:ml-2 shrink-0">
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <img
+                      key={num}
+                      src={`/images/avatar-${num}.jpg`}
+                      alt={`Couple ${num}`}
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white shadow-xs object-cover"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Vertical Hairline Divider */}
+              <div className="hidden lg:block w-px h-10 bg-[#C5A267]/40 shrink-0" />
+
+              {/* Testimonial Quote */}
+              <div className="flex items-start gap-2.5 max-w-sm w-full lg:w-auto">
+                <span className="font-serif text-[#A3753C] text-2xl sm:text-3xl leading-none shrink-0 font-bold -mt-0.5 select-none">
+                  “
                 </span>
+                <div className="flex flex-col">
+                  <p className="font-serif italic text-xs sm:text-[13px] text-[#2C241B] leading-snug">
+                    “Made our wedding announcement feel so special and personal!”
+                  </p>
+                  <span className="text-[10.5px] sm:text-[11px] text-[#786F62] font-sans font-medium mt-0.5">
+                    — Ananya &amp; Kabir, Mumbai
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ========================================================= */}
-      {/* 5. WATCH PREVIEW CINEMATIC MODAL */}
+      {/* 5. WATCH DEMO CINEMATIC AUTO-CAROUSEL MODAL */}
       {/* ========================================================= */}
       <AnimatePresence>
         {isPreviewOpen && (
@@ -845,81 +896,219 @@ export function HeroExperience() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md"
             onClick={() => setIsPreviewOpen(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-md sm:max-w-lg aspect-[9/16] max-h-[85vh] rounded-[32px] overflow-hidden bg-black border-2 border-[#C49A5A] shadow-2xl flex flex-col justify-between p-4"
+              onMouseEnter={() => setIsModalPaused(true)}
+              onMouseLeave={() => setIsModalPaused(false)}
+              onTouchStart={() => setIsModalPaused(true)}
+              onTouchEnd={() => setIsModalPaused(false)}
+              className="relative w-full max-w-[380px] sm:max-w-md md:max-w-lg aspect-[9/16] sm:aspect-[9/15.5] max-h-[90dvh] rounded-[28px] sm:rounded-[36px] overflow-hidden bg-black border-2 border-[#C49A5A]/80 shadow-[0_25px_70px_rgba(0,0,0,0.85),0_0_40px_rgba(196,154,90,0.25)] flex flex-col justify-between"
             >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setIsPreviewOpen(false)}
-                className="absolute top-4 right-4 z-40 w-9 h-9 rounded-full bg-black/60 hover:bg-black text-white/90 border border-white/20 backdrop-blur-md flex items-center justify-center cursor-pointer transition-transform hover:scale-110"
-                aria-label="Close Preview"
-              >
-                <X size={16} weight="bold" />
-              </button>
+              {/* Media Background Showcase (Smooth cross-fade transitions) */}
+              <div className="absolute inset-0 w-full h-full pointer-events-none">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentModalTemplate.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="absolute inset-0 w-full h-full"
+                  >
+                    {currentModalTemplate.video ? (
+                      <video
+                        ref={modalVideoRef}
+                        src={currentModalTemplate.video}
+                        poster={currentModalTemplate.image}
+                        autoPlay
+                        loop
+                        muted={isAudioMuted}
+                        playsInline
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <img
+                        src={currentModalTemplate.image}
+                        alt={currentModalTemplate.name}
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                    {/* Cinematic top & bottom ambient vignettes */}
+                    <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/85 via-black/40 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-black/95 via-black/70 to-transparent" />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
-              {/* Sound Toggle */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (modalVideoRef.current) {
-                    modalVideoRef.current.muted = !modalVideoRef.current.muted;
-                    setIsAudioMuted(modalVideoRef.current.muted);
+              {/* ── Top Header Controls & Progress Bar ── */}
+              <div className="relative z-40 flex flex-col w-full">
+                {/* Segmented Story Progress Indicators */}
+                <div className="px-3.5 pt-3 pb-1.5 flex items-center gap-1.5 w-full">
+                  {HERO_INVITATIONS.map((item, idx) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => setModalIndex(idx)}
+                      aria-label={`Switch to ${item.name}`}
+                      className="flex-1 h-1 sm:h-1.5 rounded-full overflow-hidden bg-white/20 hover:bg-white/40 transition-colors cursor-pointer"
+                    >
+                      <div
+                        className={`h-full transition-all duration-300 rounded-full ${
+                          idx === modalIndex
+                            ? "w-full bg-gradient-to-r from-[#DFB873] to-[#ECC985] shadow-[0_0_8px_rgba(223,184,115,0.6)]"
+                            : idx < modalIndex
+                            ? "w-full bg-white/60"
+                            : "w-0 bg-transparent"
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                {/* Top Action Bar */}
+                <div className="px-3 sm:px-4 py-1.5 flex items-center justify-between">
+                  {/* Sound Toggle */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (modalVideoRef.current) {
+                        modalVideoRef.current.muted = !modalVideoRef.current.muted;
+                        setIsAudioMuted(modalVideoRef.current.muted);
+                      }
+                    }}
+                    className="min-h-[38px] px-3 py-1.5 rounded-full bg-black/65 hover:bg-black text-white/90 border border-white/20 backdrop-blur-md flex items-center gap-1.5 text-xs font-sans font-medium transition-transform active:scale-95 cursor-pointer shadow-sm"
+                  >
+                    {isAudioMuted ? (
+                      <>
+                        <SpeakerSlash size={14} weight="bold" />
+                        <span className="text-[11px] sm:text-xs">Unmute</span>
+                      </>
+                    ) : (
+                      <>
+                        <SpeakerHigh size={14} weight="bold" />
+                        <span className="text-[11px] sm:text-xs">Sound On</span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* Center Tag / Counter */}
+                  <div className="px-2.5 sm:px-3 py-1 rounded-full bg-black/55 border border-[#C49A5A]/50 text-[#F5DEB3] text-[10px] sm:text-xs font-bold uppercase tracking-wider backdrop-blur-md flex items-center gap-1.5 shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#DFB873] animate-pulse" />
+                    <span>{currentModalTemplate.tag} · {modalIndex + 1}/{HERO_INVITATIONS.length}</span>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    type="button"
+                    onClick={() => setIsPreviewOpen(false)}
+                    className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/65 hover:bg-black text-white/90 border border-white/20 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer shadow-sm"
+                    aria-label="Close Preview"
+                  >
+                    <X size={16} weight="bold" />
+                  </button>
+                </div>
+              </div>
+
+              {/* ── Center Swipe Area & Flanking Caret Buttons ── */}
+              <motion.div
+                className="relative flex-1 w-full flex items-center justify-between px-2 sm:px-3 pointer-events-auto"
+                onPanEnd={(_e, info) => {
+                  if (info.offset.x < -30) {
+                    nextModalTemplate();
+                  } else if (info.offset.x > 30) {
+                    prevModalTemplate();
                   }
                 }}
-                className="absolute top-4 left-4 z-40 px-3 py-1.5 rounded-full bg-black/60 hover:bg-black text-white/90 border border-white/20 backdrop-blur-md flex items-center gap-1.5 text-xs cursor-pointer font-sans"
               >
-                {isAudioMuted ? (
-                  <>
-                    <SpeakerSlash size={14} weight="bold" />
-                    <span>Unmute</span>
-                  </>
-                ) : (
-                  <>
-                    <SpeakerHigh size={14} weight="bold" />
-                    <span>Sound On</span>
-                  </>
-                )}
-              </button>
-
-              {/* Video Element */}
-              <video
-                ref={modalVideoRef}
-                key={activeTemplate.id}
-                src={activeTemplate.video || "/videos/royal-prestige.mp4"}
-                autoPlay
-                loop
-                muted={isAudioMuted}
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-
-              {/* Bottom Card in Modal */}
-              <div className="relative z-30 mt-auto p-4 rounded-2xl bg-black/75 backdrop-blur-md border border-[#C49A5A]/40 flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-serif font-bold text-[#E1C98E]">
-                    {activeTemplate.name}
-                  </span>
-                  <span className="text-xs font-mono font-bold text-white/90">
-                    {activeTemplate.price}
-                  </span>
-                </div>
-                <Link
-                  href={`/preview/${activeTemplate.id || activeTemplate.slug}`}
-                  onClick={() => setIsPreviewOpen(false)}
-                  className="w-full py-2.5 rounded-full bg-[#063F35] hover:bg-[#032A23] text-white text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                {/* Previous Template Button */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    prevModalTemplate();
+                  }}
+                  aria-label="Previous template"
+                  className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/65 hover:bg-black text-[#F3D59B] hover:text-white border border-[#C49A5A]/50 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 active:scale-90 cursor-pointer shadow-lg"
                 >
-                  <span>Select This Invitation</span>
-                  <ArrowRight size={13} weight="bold" />
-                </Link>
+                  <CaretLeft size={20} weight="bold" className="-ml-0.5" />
+                </button>
+
+                {/* Next Template Button */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    nextModalTemplate();
+                  }}
+                  aria-label="Next template"
+                  className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/65 hover:bg-black text-[#F3D59B] hover:text-white border border-[#C49A5A]/50 backdrop-blur-md flex items-center justify-center transition-transform hover:scale-110 active:scale-90 cursor-pointer shadow-lg"
+                >
+                  <CaretRight size={20} weight="bold" className="-mr-0.5" />
+                </button>
+              </motion.div>
+
+              {/* ── Bottom Template Chips & Open Demo Action ── */}
+              <div className="relative z-40 flex flex-col gap-2 w-full p-2.5 sm:p-3.5">
+                {/* Interactive Template Selector Chips */}
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 px-0.5">
+                  {HERO_INVITATIONS.map((tmpl, idx) => {
+                    const isSelected = idx === modalIndex;
+                    return (
+                      <button
+                        key={tmpl.id}
+                        type="button"
+                        onClick={() => setModalIndex(idx)}
+                        className={`shrink-0 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs transition-all cursor-pointer whitespace-nowrap ${
+                          isSelected
+                            ? "bg-gradient-to-r from-[#DFB873] via-[#ECC985] to-[#D4A759] text-[#2C210E] font-bold shadow-[0_2px_10px_rgba(212,167,89,0.5)] scale-105"
+                            : "bg-black/60 hover:bg-black/80 text-white/80 border border-white/15"
+                        }`}
+                      >
+                        {tmpl.shortName || tmpl.name}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Template Info & Direct Open Demo CTA */}
+                <div className="p-3 sm:p-3.5 rounded-2xl bg-black/80 backdrop-blur-lg border border-[#C49A5A]/50 flex flex-col gap-2.5 shadow-2xl">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-xs sm:text-sm font-serif font-bold text-[#E1C98E] truncate">
+                        {currentModalTemplate.name}
+                      </span>
+                      <span className="text-[10px] sm:text-[11px] text-white/70 font-sans truncate">
+                        {currentModalTemplate.style}
+                      </span>
+                    </div>
+                    <div className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#C49A5A]/20 border border-[#C49A5A]/40">
+                      <span className="text-[11px] sm:text-xs font-mono font-bold text-[#F3D59B]">
+                        {currentModalTemplate.price}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Primary Action Button: Open Live Demo */}
+                  <Link
+                    href={`/preview/${currentModalTemplate.slug || currentModalTemplate.id}`}
+                    onClick={() => setIsPreviewOpen(false)}
+                    className="group w-full min-h-[46px] py-2.5 px-5 rounded-full bg-gradient-to-r from-[#084B3E] via-[#063F35] to-[#042F27] hover:brightness-110 text-white text-xs sm:text-[13px] font-bold tracking-wider uppercase flex items-center justify-center gap-2 border border-[#C49A5A]/50 shadow-[0_6px_20px_rgba(6,63,53,0.5)] transition-all active:scale-[0.98] cursor-pointer"
+                  >
+                    <span>OPEN LIVE DEMO</span>
+                    <ArrowRight
+                      size={14}
+                      weight="bold"
+                      className="text-[#E1C98E] group-hover:translate-x-1 transition-transform"
+                    />
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </motion.div>

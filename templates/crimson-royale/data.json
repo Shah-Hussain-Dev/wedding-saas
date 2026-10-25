@@ -6,11 +6,12 @@
     "brideName": "Ananya",
     "groomName": "Shubham",
     "brideFullName": "Ananya Singhania",
-    "groomFullName": "Shubham Singhania",
+    "groomFullName": "Shubham Rathore",
     "tagline": "Royal Wedding Invitation",
     "brideParents": "Mrs. Radhika & Mr. Harshvardhan Singhania",
     "groomParents": "Mrs. Anuradha & Mr. Yashwant Rathore"
   },
+  "hashtag": "#ShubhamWedsAnanya",
   "sacred": {
     "invocation": "|| श्री गणेशाय नमः ||",
     "shloka": "|| मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
@@ -39,33 +40,41 @@
   "events": [
     {
       "id": "haldi",
+      "name": "Haldi Ceremony",
       "title": "Haldi Ceremony",
       "date": "Dec 21, 2026",
       "time": "10:00 AM",
+      "venue": "Courtyard Garden, The Ridgewood",
       "location": "Courtyard Garden, The Ridgewood",
       "description": "An auspicious morning filled with golden turmeric, laughter, and blessings."
     },
     {
       "id": "mehendi",
+      "name": "Mehendi & Sangeet",
       "title": "Mehendi & Sangeet",
       "date": "Dec 21, 2026",
       "time": "06:00 PM",
+      "venue": "Royal Banquet Hall, The Ridgewood",
       "location": "Royal Banquet Hall, The Ridgewood",
       "description": "An enchanting evening of henna artistry, rhythmic folk melodies, and spirited dance."
     },
     {
       "id": "pheras",
+      "name": "The Sacred Pheras",
       "title": "The Sacred Pheras",
       "date": "Dec 22, 2026",
       "time": "04:30 PM",
+      "venue": "Lakeside Mandap, The Ridgewood",
       "location": "Lakeside Mandap, The Ridgewood",
       "description": "The sacred nuptial vows as we unite in the presence of the holy fire under starry skies."
     },
     {
       "id": "reception",
+      "name": "Grand Royal Reception",
       "title": "Grand Royal Reception",
       "date": "Dec 22, 2026",
       "time": "08:00 PM",
+      "venue": "Grand Ballroom, The Ridgewood",
       "location": "Grand Ballroom, The Ridgewood",
       "description": "Join us for a royal banquet dinner feast, live classical symphonies, and midnight celebrations."
     }

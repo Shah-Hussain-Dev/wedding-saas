@@ -40,7 +40,7 @@ export function ReceptionCardRenderer({
           year: "numeric",
         });
       }
-    } catch (_) {}
+    } catch (_) { }
     return dateStr || "Monday, 12th October, 2026";
   };
 
@@ -64,18 +64,42 @@ export function ReceptionCardRenderer({
   const eventAddress =
     data.venueAddress || "Opp. Shia P.G. College, Sitapur Road, Lucknow";
 
-  // Host Names fallback matching Screenshot 2
-  const hostNames = data.hostNames || "Mrs. & Mr. Hashmat Khan";
+  // Host Names fallback matching tradition
+  const hostNames =
+    data.hostNames ||
+    data.groomParents ||
+    (tokens.tradition === "hindu"
+      ? "Mrs. & Mr. Alok Verma"
+      : tokens.tradition === "universal"
+      ? "Mrs. & Mr. Vikram Malhotra"
+      : "Mrs. & Mr. Hashmat Khan");
   const hostRelation = data.hostRelation || "of their Son";
 
-  // Bride Parentage fallback matching Screenshot 2
-  const parentage = data.parentageDetails || "D/o Mohd. Nizamuddin";
+  // Bride Parentage fallback matching tradition
+  const parentage =
+    data.parentageDetails ||
+    (data.brideParents ? `D/o ${data.brideParents}` : "") ||
+    (tokens.tradition === "hindu"
+      ? "D/o Shri Rajesh Sharma"
+      : tokens.tradition === "universal"
+      ? "D/o Mr. Arvind Kapoor"
+      : "D/o Mohd. Nizamuddin");
 
-  // RSVP lines fallback matching Screenshot 2
+  // RSVP lines fallback matching tradition
   const rsvpLines = data.rsvpContact
     ? data.rsvpContact.split("\n")
+    : tokens.tradition === "hindu"
+    ? [
+        "Verma & Sharma Family",
+        "With Best Compliments from All Relatives & Friends",
+      ]
+    : tokens.tradition === "universal"
+    ? [
+        "Malhotra & Kapoor Family",
+        "With Best Compliments from All Relatives & Friends",
+      ]
     : [
-        "Peer Khan, Suhail Khan, Mohd, Kajf Khan",
+        "Peer Khan, Suhail Khan, Mohd. Kaif Khan",
         "Mohd. Arif Khan, Mohd. Asif Khan, Anas Khan",
       ];
 
@@ -159,7 +183,7 @@ export function ReceptionCardRenderer({
         className="absolute bottom-4 right-4"
       />
 
-      {/* ── Main Content Container (Matching Screenshot 2 & Shah Husian.pdf Page 2) ── */}
+      {/* ── Main Content Container (Matching Screenshot 2 & Shah Hussain.pdf Page 2) ── */}
       <div className="relative z-10 w-full h-full flex flex-col justify-between py-10 px-8 text-center">
         {/* SECTION 1: Sacred Invocation & Host Announcement */}
         <div className="space-y-1 mt-1">

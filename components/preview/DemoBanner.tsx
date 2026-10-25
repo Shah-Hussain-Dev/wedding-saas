@@ -27,6 +27,7 @@ interface DemoBannerProps {
   isPublished?: boolean;
   isPaid?: boolean;
   expiresInSeconds?: number;
+  isHeroTapped?: boolean;
 }
 
 export function DemoBanner({
@@ -40,6 +41,7 @@ export function DemoBanner({
   isPublished = false,
   isPaid = false,
   expiresInSeconds = 900,
+  isHeroTapped = false,
 }: DemoBannerProps) {
   const { data: session } = useSession();
   const { getPriceFormatted, getPriceNumber } = useTemplatePricing();
@@ -157,14 +159,17 @@ export function DemoBanner({
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[999] overflow-hidden">
-      {/* ── Top Ultra-Compact Demo Badge & Timer (Left on desktop, Centered on mobile) ── */}
-      <div className="absolute top-2.5 inset-x-2 sm:inset-x-auto sm:left-6 sm:top-4 sm:translate-x-0 flex items-center justify-center sm:justify-start">
-        <div className="pointer-events-auto flex items-center gap-2 bg-stone-950/80 hover:bg-stone-950 text-white backdrop-blur-md border border-amber-400/30 px-3 py-1 rounded-full shadow-lg transition-all">
+      {/* ── Top Ultra-Compact Demo Badge & Timer (Left on desktop with space for music button, Centered on mobile) ── */}
+      <div
+        className={`absolute inset-x-2 sm:inset-x-auto sm:left-20 sm:translate-x-0 ${isHeroTapped ? "hidden" : "flex"} items-center justify-center sm:justify-start pointer-events-none transition-all duration-300`}
+        style={{ top: "max(10px, env(safe-area-inset-top, 10px))" }}
+      >
+        <div className="pointer-events-auto flex items-center gap-1.5 sm:gap-2 bg-stone-950/85 hover:bg-stone-950 text-white backdrop-blur-md border border-amber-400/30 px-2.5 sm:px-3 py-1 rounded-full shadow-lg transition-all">
           <span className="flex h-1.5 w-1.5 relative">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-400"></span>
           </span>
-          <span className="text-[9px] uppercase font-bold tracking-wider text-amber-300">
+          <span className="text-[9px] uppercase font-bold tracking-wider text-amber-300 whitespace-nowrap">
             Live Demo · {dynamicPriceFormatted}
           </span>
 
@@ -209,85 +214,25 @@ export function DemoBanner({
         </div>
       </div>
 
-      {/* ── Bottom Floating Sleek Unlock Pill / Bar (Only in unpaid demo) ── */}
-      <div className="absolute bottom-4 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 flex flex-col items-center pb-[env(safe-area-inset-bottom,0px)]">
-        {isMinimized ? (
-          /* Minimized Compact Floating Unlock Pill */
-          <div className="pointer-events-auto flex items-center gap-2 bg-stone-950/90 backdrop-blur-xl border border-amber-400/40 px-3 py-1.5 rounded-full shadow-2xl animate-fade-in hover:scale-105 transition-all min-h-[44px]">
-            <button
-              type="button"
-              onClick={() => setIsMinimized(false)}
-              className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 text-[10px] font-bold uppercase tracking-wider pr-1 min-h-[44px] min-w-[44px] justify-center"
-            >
-              <Sparkle className="h-3.5 w-3.5 text-amber-400 animate-pulse" weight="fill" />
-              <span>Details</span>
-              <CaretUp className="h-3 w-3" />
-            </button>
-
-            <span className="text-white/20 text-xs">|</span>
-
-            <RazorpayCheckoutButton
-              invitationId={invitationId}
-              slug={slug}
-              templateId={templateId}
-              brideName={effectiveBrideName}
-              groomName={effectiveGroomName}
-              amount={dynamicPriceInr}
-              amountPaise={effectiveAmountPaise}
-              buttonText={`Unlock Website (${dynamicPriceFormatted})`}
-              className="!py-2 !px-3.5 !text-[11px] !rounded-full !shadow-md min-h-[44px] font-bold"
-              onSuccess={handleUnlockSuccess}
-            />
-          </div>
-        ) : (
-          /* Expanded Card */
-          <div className="pointer-events-auto w-full max-w-md bg-stone-950/95 backdrop-blur-2xl border border-amber-400/40 rounded-3xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.8)] flex flex-col gap-3 animate-fade-in">
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex items-center gap-2.5">
-                <div className="h-8 w-8 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center shrink-0">
-                  <Sparkle className="h-4 w-4 text-amber-300" weight="fill" />
-                </div>
-                <div>
-                  <h4 className="text-xs font-serif font-bold text-white leading-tight">
-                    Love your customized invitation?
-                  </h4>
-                  <p className="text-[10px] text-stone-400">
-                    Unlock permanent website link, guest RSVPs &amp; WhatsApp sharing.
-                  </p>
-                </div>
-              </div>
-
-              {/* Minimize button */}
-              <button
-                type="button"
-                onClick={() => setIsMinimized(true)}
-                className="p-2 rounded-full text-stone-400 hover:text-white hover:bg-white/10 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-                title="Minimize banner"
-              >
-                <CaretDown className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="flex items-center justify-between gap-2 pt-1 border-t border-white/10">
-              <span className="text-[10px] text-stone-400 font-mono">
-                One-time: <strong className="text-white">{dynamicPriceFormatted}</strong>
-              </span>
-
-              <RazorpayCheckoutButton
-                invitationId={invitationId}
-                slug={slug}
-                templateId={templateId}
-                brideName={effectiveBrideName}
-                groomName={effectiveGroomName}
-                amount={dynamicPriceInr}
-                amountPaise={effectiveAmountPaise}
-                buttonText={`Unlock Website Now (${dynamicPriceFormatted})`}
-                className="!py-2.5 !px-4 !text-xs !rounded-xl !shadow-lg min-h-[44px] font-bold"
-                onSuccess={handleUnlockSuccess}
-              />
-            </div>
-          </div>
-        )}
+      {/* ── Bottom Clean & Simple Floating Unlock CTA ── */}
+      <div
+        className={`fixed bottom-3.5 left-3.5 right-[68px] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-auto z-[990] ${isHeroTapped ? "hidden" : "flex"} items-center justify-center pointer-events-none transition-all duration-300`}
+        style={{ bottom: "max(14px, env(safe-area-inset-bottom, 14px))" }}
+      >
+        <div className="pointer-events-auto w-full sm:w-auto">
+          <RazorpayCheckoutButton
+            invitationId={invitationId}
+            slug={slug}
+            templateId={templateId}
+            brideName={effectiveBrideName}
+            groomName={effectiveGroomName}
+            amount={dynamicPriceInr}
+            amountPaise={effectiveAmountPaise}
+            buttonText={`Unlock Website · ${dynamicPriceFormatted}`}
+            className="!w-full sm:!w-auto !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-xs sm:!text-sm !rounded-full !shadow-[0_10px_30px_rgba(245,158,11,0.35)] !border !border-amber-300/40 font-bold tracking-wide active:scale-98 transition-transform whitespace-nowrap"
+            onSuccess={handleUnlockSuccess}
+          />
+        </div>
       </div>
     </div>
   );

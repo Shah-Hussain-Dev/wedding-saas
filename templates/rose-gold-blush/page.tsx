@@ -68,9 +68,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("ishaan") && !data.hashtag.toLowerCase().includes("anaya"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -99,11 +97,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);

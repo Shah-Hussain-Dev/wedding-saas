@@ -46,9 +46,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("pooja") && !data.hashtag.toLowerCase().includes("rohan"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;

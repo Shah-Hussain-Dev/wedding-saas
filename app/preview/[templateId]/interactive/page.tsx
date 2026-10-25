@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Sliders, ArrowLeft, CreditCard } from "@phosphor-icons/react";
 import { TEMPLATES_MAP, getTemplateDefaultData, NoorNikah } from "@/templates";
-import { PreviewMusicSelector } from "@/components/preview/PreviewMusicSelector";
+import { PreviewControlsDock } from "@/components/preview/PreviewControlsDock";
+import {
+  PreviewFaith,
+  getDefaultFaithForTemplate,
+  getFaithAdjustedTemplateData,
+} from "@/lib/preview-faith-content";
 
 interface InteractivePreviewProps {
   templateId: string;
@@ -34,12 +39,46 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get("embed") === "1";
   const queryMusicTrack = searchParams.get("musicTrack");
+  const queryFaith = searchParams.get("faith") as PreviewFaith | null;
 
   // Normalize underscores to hyphens
   const normalizedId = (templateId || "").trim().replace(/_/g, "-").toLowerCase();
 
   const templateDefault = getTemplateDefaultData(normalizedId);
   const fallbackTrack = templateDefault?.musicTrack || `/templates/${normalizedId}/music.mp3`;
+
+  // Dynamic preview faith selection (Universal, Hindu, Muslim)
+  const [selectedFaith, setSelectedFaith] = useState<PreviewFaith>(() => {
+    if (queryFaith === "universal" || queryFaith === "hindu" || queryFaith === "muslim") {
+      return queryFaith;
+    }
+    return getDefaultFaithForTemplate(normalizedId);
+  });
+  const [isHeroTapped, setIsHeroTapped] = useState(false);
+
+  useEffect(() => {
+    if (queryFaith && (queryFaith === "universal" || queryFaith === "hindu" || queryFaith === "muslim")) {
+      setSelectedFaith(queryFaith);
+    }
+  }, [queryFaith]);
+
+  // Sync bidirectional faith message with parent window
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === "PREVIEW_FAITH_CHANGED" && e.data.faith) {
+        setSelectedFaith(e.data.faith);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  const handleFaithChange = (newFaith: PreviewFaith) => {
+    setSelectedFaith(newFaith);
+    if (typeof window !== "undefined" && window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "PREVIEW_FAITH_CHANGED", faith: newFaith }, "*");
+    }
+  };
 
   const [musicTrack, setMusicTrack] = useState<string>(() => {
     if (queryMusicTrack) return queryMusicTrack;
@@ -73,11 +112,11 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const defaultBride =
     templateDefault?.brideName ||
     templateDefault?.couple?.brideName ||
-    (normalizedId.includes("nikah") || normalizedId.includes("emerald") || normalizedId.includes("gul") ? "Diya" : "Ananya");
+    (normalizedId.includes("nikah") || normalizedId === "emerald-qasr" || normalizedId === "gul-e-noor" ? "Diya" : "Ananya");
   const defaultGroom =
     templateDefault?.groomName ||
     templateDefault?.couple?.groomName ||
-    (normalizedId.includes("nikah") || normalizedId.includes("emerald") || normalizedId.includes("gul") ? "Shaan" : "Shubham");
+    (normalizedId.includes("nikah") || normalizedId === "emerald-qasr" || normalizedId === "gul-e-noor" ? "Shaan" : "Shubham");
 
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);
@@ -86,7 +125,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const SelectedTemplate = TEMPLATES_MAP[normalizedId] || NoorNikah;
   const activeGroom = groomName || defaultGroom;
   const activeBride = brideName || defaultBride;
-  const sampleData = {
+  const baseSampleData = {
     ...templateDefault,
     templateId: normalizedId,
     brideName: activeBride,
@@ -98,6 +137,45 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
       brideName: activeBride,
       groomName: activeGroom,
     },
+  };
+
+  const isNameCustomized = (brideName !== defaultBride && brideName.trim().length > 0) ||
+    (groomName !== defaultGroom && groomName.trim().length > 0);
+
+  const sampleData = {
+    ...getFaithAdjustedTemplateData(
+      baseSampleData,
+      selectedFaith,
+      normalizedId,
+      isNameCustomized ? { bride: brideName, groom: groomName } : undefined
+    ),
+    hideReligionSwitcher: true,
+  };
+
+  useEffect(() => {
+    const handleCapturePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target?.closest("#preview-music-selector-btn") ||
+        target?.closest(".razorpay-checkout-button") ||
+        target?.closest("dialog") ||
+        target?.closest("[role='dialog']")
+      ) {
+        return;
+      }
+      setIsHeroTapped(true);
+    };
+
+    window.addEventListener("pointerdown", handleCapturePointerDown, { capture: true });
+    return () => {
+      window.removeEventListener("pointerdown", handleCapturePointerDown, { capture: true });
+    };
+  }, []);
+
+  const handleHeroPointerDown = (e: React.PointerEvent | React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target?.closest(".preview-faith-selector-wrapper")) return;
+    setIsHeroTapped(true);
   };
 
   return (
@@ -115,18 +193,45 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
           width: 0 !important;
           height: 0 !important;
         }
+        /* Suppress inconsistent template-native audio buttons so only the unified Mute/Unmute dock button is shown */
+        [id$="music-toggle"],
+        [id$="music-toggle-btn"],
+        .an-music-toggle,
+        .gn-music-toggle,
+        .kn-music-toggle,
+        .eq-music-toggle,
+        .music-toggle,
+        .noor-music-toggle,
+        .grace-music-toggle,
+        .heritage-music-toggle,
+        .majesty-music-toggle,
+        .rgb-music-toggle,
+        .celestial-audio-pill,
+        .imperial-audio-pill,
+        .luxury-audio-dock {
+          display: none !important;
+        }
       `}</style>
 
-      {/* Self-contained template render */}
-      <SelectedTemplate data={sampleData} />
+      {/* Hero-tappable Template Wrapper */}
+      <div
+        onPointerDown={handleHeroPointerDown}
+        onClick={handleHeroPointerDown}
+        className="relative w-full"
+      >
+        <SelectedTemplate data={sampleData} />
+      </div>
 
-      {/* Universal Interactive Music Selector & Audio Sync */}
-      <PreviewMusicSelector
+      {/* Unified Invitation Controls Dock: Floating Mute/Unmute + Floating Controls Button that opens bottom sheet */}
+      <PreviewControlsDock
         templateId={normalizedId}
         templateName={normalizedId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
         templateDefaultUrl={fallbackTrack}
         currentTrackUrl={musicTrack}
         onSelectTrack={handleTrackChange}
+        currentFaith={selectedFaith}
+        onSelectFaith={handleFaithChange}
+        isHeroTapped={isHeroTapped}
       />
 
       {!isEmbed && (

@@ -163,13 +163,13 @@ function RoyalLotusIntro({
     setIsLit(true);
 
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
 
     if (navigator.vibrate) {
       try {
         navigator.vibrate([14, 22, 88]);
-      } catch {}
+      } catch { }
     }
 
     const btn = ropeBtnRef.current;
@@ -203,7 +203,7 @@ function RoyalLotusIntro({
       setIsLit(true);
       setReveals({ names: true, date: true, venue: true, lotus: true });
       if (audioRef.current) {
-        audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+        audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
       }
     }
     if (!isLeaving) {
@@ -215,7 +215,7 @@ function RoyalLotusIntro({
   const handleLotusClick = () => {
     setIsLotusOpen(true);
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
     window.setTimeout(() => {
       setIsLeaving(true);
@@ -271,8 +271,8 @@ function RoyalLotusIntro({
             rawDelta <= springK1
               ? 0.92 * rawDelta
               : rawDelta <= springK2
-              ? 0.92 * springK1 + (rawDelta - springK1) * 0.58
-              : 0.92 * springK1 + (springK2 - springK1) * 0.58 + (rawDelta - springK2) * 0.3;
+                ? 0.92 * springK1 + (rawDelta - springK1) * 0.58
+                : 0.92 * springK1 + (springK2 - springK1) * 0.58 + (rawDelta - springK2) * 0.3;
 
           const progress = Math.min(rawDelta / limit, 1);
           const rotation = clamp((smoothY / limit) * 12, -13, 13);
@@ -387,7 +387,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
         origin: { y: 0.6 },
         colors: ["#FF9933", "#FFD700", "#138808", "#FFFFFF", "#D4AF37"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
 
 
@@ -435,36 +435,36 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
   const events: EventItem[] = data?.eventsJson && data.eventsJson.length > 0
     ? data.eventsJson
     : [
-        { id: "mehendi", name: "Mehendi", date: "12 December 2026", time: "4:00 PM", location: "Lotus Courtyard", detail: "Adorn yourself in fresh greens & blooms", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "haldi", name: "Haldi", date: "13 December 2026", time: "10:00 AM", location: "Poolside Courtyard", detail: "Come aglow in sunlit yellows & ivory", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "sangeet", name: "Sangeet", date: "13 December 2026", time: "7:30 PM", location: "Royal Ballroom", detail: "A night of music, dance & merriment", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "shaadi", name: "Shaadi", date: "14 December 2026", time: "6:30 PM", location: "Lake Mandap", detail: "Traditional attire, for our sacred vows", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "reception", name: "Reception", date: "14 December 2026", time: "9:00 PM", location: "Palace Lawns", detail: "An evening of feasting under candlelight", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "vidaai", name: "Vidaai", date: "15 December 2026", time: "9:00 AM", location: "Main Courtyard", detail: "A tender farewell, wrapped in blessings", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-      ];
+      { id: "mehendi", name: "Mehendi", date: "12 December 2026", time: "4:00 PM", location: "Lotus Courtyard", detail: "Adorn yourself in fresh greens & blooms", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "haldi", name: "Haldi", date: "13 December 2026", time: "10:00 AM", location: "Poolside Courtyard", detail: "Come aglow in sunlit yellows & ivory", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "sangeet", name: "Sangeet", date: "13 December 2026", time: "7:30 PM", location: "Royal Ballroom", detail: "A night of music, dance & merriment", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "shaadi", name: "Shaadi", date: "14 December 2026", time: "6:30 PM", location: "Lake Mandap", detail: "Traditional attire, for our sacred vows", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "reception", name: "Reception", date: "14 December 2026", time: "9:00 PM", location: "Palace Lawns", detail: "An evening of feasting under candlelight", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "vidaai", name: "Vidaai", date: "15 December 2026", time: "9:00 AM", location: "Main Courtyard", detail: "A tender farewell, wrapped in blessings", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+    ];
 
   // Authentic 6-item gallery photos from live template
   const rawLotusGallery = data?.gallery && data.gallery.length > 0 ? data.gallery : null;
   const galleryItems: GalleryItem[] = rawLotusGallery
     ? rawLotusGallery
-        .map((item: any, idx: number) => {
-          if (typeof item === "string") {
-            return { url: item, caption: `Wedding Moment ${idx + 1}` };
-          }
-          return {
-            url: item?.url || item?.src || "",
-            caption: item?.caption || item?.title || `Wedding Moment ${idx + 1}`,
-          };
-        })
-        .filter((item: GalleryItem) => Boolean(item.url))
+      .map((item: any, idx: number) => {
+        if (typeof item === "string") {
+          return { url: item, caption: `Wedding Moment ${idx + 1}` };
+        }
+        return {
+          url: item?.url || item?.src || "",
+          caption: item?.caption || item?.title || `Wedding Moment ${idx + 1}`,
+        };
+      })
+      .filter((item: GalleryItem) => Boolean(item.url))
     : [
-        { url: "/templates/crimson-royale/gallery-1.webp", caption: "The Royal Palace Courtyard" },
-        { url: "/templates/crimson-royale/gallery-2.webp", caption: "Intricate Bridal Mehendi" },
-        { url: "/templates/crimson-royale/gallery-3.webp", caption: "A Promise of Togetherness" },
-        { url: "/templates/crimson-royale/gallery-4.webp", caption: "Sunset at the Lake Palace" },
-        { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
-        { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
-      ];
+      { url: "/templates/crimson-royale/gallery-1.webp", caption: "The Royal Palace Courtyard" },
+      { url: "/templates/crimson-royale/gallery-2.webp", caption: "Intricate Bridal Mehendi" },
+      { url: "/templates/crimson-royale/gallery-3.webp", caption: "A Promise of Togetherness" },
+      { url: "/templates/crimson-royale/gallery-4.webp", caption: "Sunset at the Lake Palace" },
+      { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
+      { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
+    ];
 
   // Deterministic floating petals to guarantee 100% hydration match between SSR and client
   const petals = [
@@ -503,7 +503,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       audioRef.current.pause();
       setIsAudioPlaying(false);
     } else {
-      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
   };
 
@@ -1206,7 +1206,6 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
                   <button type="submit" className="rl-submit-btn">
                     <span>Send Royal RSVP</span>
-                    <Sparkle size={16} weight="fill" />
                   </button>
                 </form>
               )}

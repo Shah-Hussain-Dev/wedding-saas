@@ -96,7 +96,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
             origin: { y: 0.55 },
             colors: ["#38BDF8", "#FDE047", "#93C5FD", "#FFFDF8"],
           });
-        } catch (_) {}
+        } catch (_) { }
         setTimeout(() => setIsFlashing(false), 900);
       }, 1400);
       return () => clearTimeout(timer);
@@ -120,12 +120,12 @@ export default function AzureNikah({ data }: AzureNikahProps) {
   const weddingDate = new Date(weddingDateStr);
   const formattedDate = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      })
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    })
     : resolvedData.dateFormatted;
 
   const revealMonthDay = !isNaN(weddingDate.getTime())
@@ -150,16 +150,16 @@ export default function AzureNikah({ data }: AzureNikahProps) {
   const rawGallery: any[] = Array.isArray(data?.slideshowImages) && data.slideshowImages.length > 0
     ? data.slideshowImages
     : Array.isArray(data?.gallery) && data.gallery.length > 0
-    ? data.gallery
-    : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
-    ? data.galleryImages
-    : resolvedData.gallery || [
-        "/templates/azure-nikah/poster.png",
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
-      ];
+      ? data.gallery
+      : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
+        ? data.galleryImages
+        : resolvedData.gallery || [
+          "/templates/azure-nikah/poster.png",
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
+        ];
   const galleryPhotos: string[] = rawGallery
     .map((item: any) => (typeof item === "string" ? item : item?.url || item?.src || ""))
     .filter(Boolean);
@@ -240,7 +240,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
       videoRef.current.currentTime = 0;
       videoRef.current
         .play()
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.log("Video play error:", err);
           setVideoOpened(true);
@@ -320,7 +320,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
         origin: { y: 0.6 },
         colors: ["#38BDF8", "#FBBF24", "#DFB76C", "#FFFFFF"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
 
 
@@ -870,7 +870,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
                               origin: { y: 0.7 },
                               colors: ["#38BDF8", "#FDE047", "#93C5FD", "#FFFFFF"],
                             });
-                          } catch (_) {}
+                          } catch (_) { }
                         }}
                       />
                     </div>
@@ -1249,7 +1249,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
                     whileTap={{ scale: 0.97 }}
                   >
                     <span>Confirm Your RSVP</span>
-                    <Sparkle size={16} weight="fill" />
+
                   </motion.button>
                 </div>
               </motion.section>

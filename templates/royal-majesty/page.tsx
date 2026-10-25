@@ -69,9 +69,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("julian") && !data.hashtag.toLowerCase().includes("genevieve"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -100,11 +98,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
