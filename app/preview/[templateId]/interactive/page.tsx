@@ -236,6 +236,23 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
 
       {!isEmbed && (
         <>
+          {/* Top-Left: Back to Templates on all devices */}
+          <div
+            className="fixed top-2.5 sm:top-4 left-3 sm:left-6 z-[999] pointer-events-auto"
+            style={{ top: "max(10px, env(safe-area-inset-top, 10px))" }}
+          >
+            <Link
+              href="/templates"
+              id="interactive-back-to-templates"
+              aria-label="Back to templates"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 min-h-[38px] sm:min-h-[42px] rounded-full bg-stone-950/90 hover:bg-stone-900 text-stone-200 hover:text-amber-300 backdrop-blur-xl border border-white/20 hover:border-amber-400/50 text-[11px] sm:text-xs font-bold shadow-2xl transition-all active:scale-95 whitespace-nowrap cursor-pointer group"
+            >
+              <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
+              <span className="hidden sm:inline">Back to Templates</span>
+              <span className="sm:hidden">Templates</span>
+            </Link>
+          </div>
+
           <div
             className={`fixed bottom-6 left-6 z-50 transition-all duration-300 max-w-sm w-[90%] md:w-80 ${
               isOpenPanel ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0 pointer-events-none"

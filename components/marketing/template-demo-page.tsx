@@ -175,13 +175,14 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
           1. MOBILE EXPERIENCE (< lg): DIRECT FULLSCREEN PREVIEW & CLEAN FLOW
           ───────────────────────────────────────────────────────────── */}
       <div className="block lg:hidden relative min-h-[100dvh] w-full bg-[#0E1513]">
-        {/* Sticky Mobile Top Navigation Bar (In normal flow, never overlaps template tabs) */}
-        <header className="sticky top-0 inset-x-0 z-50 bg-[#0E1513]/95 backdrop-blur-md border-b border-white/10 px-3 py-2.5 flex items-center justify-between text-white shadow-lg">
+        {/* Sticky Mobile Top Navigation Bar (In normal flow, never overlaps template tabs, above z-[100] template gates) */}
+        <header className="sticky top-0 inset-x-0 z-[110] bg-[#0E1513]/95 backdrop-blur-md border-b border-white/10 px-3 py-2 flex items-center justify-between text-white shadow-lg">
           <Link
             href="/templates"
-            className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-stone-200 text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-95"
+            id="mobile-back-to-templates-link"
+            className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-stone-200 text-xs font-bold flex items-center gap-1.5 transition-colors active:scale-95 min-h-[38px]"
           >
-            <ArrowLeft size={14} weight="bold" />
+            <ArrowLeft size={14} weight="bold" className="text-amber-400" />
             <span>Templates</span>
           </Link>
 
@@ -240,6 +241,15 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
             <span>✓ WhatsApp RSVP</span>
             <span>✓ 100% Free to Try</span>
           </div>
+          <div className="pt-2">
+            <Link
+              href="/templates"
+              className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-300 transition-colors py-1.5"
+            >
+              <ArrowLeft size={13} weight="bold" className="text-amber-400" />
+              <span>Back to all templates</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -256,10 +266,11 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
           <div className="page-container relative z-[1]">
             <Link
               href="/templates"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-400 hover:text-accent-gold transition-colors mb-8"
+              id="desktop-back-to-templates-link"
+              className="inline-flex items-center gap-2 px-4 py-2 min-h-[38px] rounded-full bg-stone-900 hover:bg-stone-850 text-white border border-stone-700 hover:border-amber-400/50 text-xs font-bold shadow-md transition-all mb-8 group active:scale-95"
             >
-              <ArrowLeft size={14} />
-              Back to templates
+              <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
+              <span>Back to all templates</span>
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -481,6 +492,15 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                   </Link>
                 );
               })}
+            </div>
+            <div className="mt-8">
+              <Link
+                href="/templates"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-stone-900 hover:bg-stone-850 text-white border border-stone-700 hover:border-amber-400/50 text-xs font-bold shadow-md transition-all group active:scale-95"
+              >
+                <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
+                <span>Browse All 16 Templates</span>
+              </Link>
             </div>
           </div>
         </section>

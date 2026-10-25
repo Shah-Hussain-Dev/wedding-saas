@@ -1752,7 +1752,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
 
                 <button
                   type="button"
-                  className="w-10 h-10 rounded-full bg-[#551618] text-[#E5D8C4] flex items-center justify-center hover:bg-[#833624] transition-colors cursor-pointer flex-shrink-0 shadow-md border border-[#B89773]/50"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-[#551618] text-[#E5D8C4] flex items-center justify-center hover:bg-[#833624] transition-colors cursor-pointer flex-shrink-0 shadow-md border border-[#B89773]/50 active:scale-95"
                   onClick={() => setIsRsvpOpen(false)}
                   aria-label="Close RSVP form"
                 >

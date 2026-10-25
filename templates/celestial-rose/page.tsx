@@ -306,7 +306,7 @@ function CelestialOrbitCountdown({ targetDate }: { targetDate: string }) {
   }, [targetDate]);
 
   return (
-    <div className="relative py-12 px-4 flex flex-col items-center justify-center text-center">
+    <div className="relative py-4 sm:py-8 px-2 sm:px-4 flex flex-col items-center justify-center text-center">
       {/* Orbital Moon Ring */}
       <div className="relative w-64 h-64 sm:w-80 sm:h-80 rounded-full border border-[#C9A46E]/40 flex items-center justify-center shadow-[0_0_40px_rgba(88,152,184,0.15)] bg-gradient-to-b from-[#F1E8E1]/80 to-[#E8B8B8]/30 backdrop-blur-md">
         {/* Revolving Orbit Satellite Star */}
@@ -511,11 +511,11 @@ function ScratchTheStarsCard({
   }, [isRevealed]);
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="celestial-scratch-container relative w-full max-w-[420px] h-[260px] sm:h-[280px]">
+    <div className="w-full flex flex-col items-center px-1 sm:px-0">
+      <div className="celestial-scratch-container relative w-full max-w-[380px] sm:max-w-[420px] h-[240px] sm:h-[270px]">
         {/* Revealed Secret Content */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#F1E8E1] via-[#E8B8B8]/40 to-[#F1E8E1] p-5 sm:p-6 flex flex-col items-center justify-center text-center overflow-hidden border-2 border-[#C9A46E]/60 shadow-xl">
-          <div className="space-y-2 max-w-sm">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F1E8E1] via-[#E8B8B8]/40 to-[#F1E8E1] p-3.5 sm:p-6 flex flex-col items-center justify-center text-center overflow-hidden border-2 border-[#C9A46E]/60 shadow-xl">
+          <div className="space-y-1.5 sm:space-y-2 max-w-sm">
             <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-[0.25em] text-[#5898B8] font-montserrat flex items-center justify-center gap-1.5">
               <Sparkle size={12} weight="fill" className="text-[#C9A46E]" />
               Concurrence of Destiny
@@ -1025,7 +1025,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.2, duration: 1 }}
-                  className="font-great-vibes text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-[#F1E8E1] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] leading-tight font-normal"
+                  className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#F1E8E1] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] leading-tight font-normal"
                 >
                   {groomName}
                 </motion.h1>
@@ -1036,7 +1036,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                   transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
                   className="py-0"
                 >
-                  <span className="font-great-vibes text-3xl sm:text-5xl text-[#E2B993] drop-shadow-[0_3px_20px_rgba(0,0,0,0.95)] block">
+                  <span className="font-great-vibes text-2xl sm:text-4xl text-[#E2B993] drop-shadow-[0_3px_20px_rgba(0,0,0,0.95)] block">
                     &amp;
                   </span>
                 </motion.div>
@@ -1046,7 +1046,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                   initial={{ opacity: 0, scale: 0.92 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.35, duration: 1 }}
-                  className="font-great-vibes text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-[#F1E8E1] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] leading-tight font-normal"
+                  className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#F1E8E1] drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] leading-tight font-normal"
                 >
                   {brideName}
                 </motion.h1>
@@ -1056,9 +1056,9 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5, duration: 0.8 }}
-                  className="pt-2"
+                  className="pt-1.5 sm:pt-2"
                 >
-                  <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#E2B993]/70 text-[#F1E8E1] text-[10px] sm:text-xs font-montserrat shadow-2xl max-w-[90vw] truncate">
+                  <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-black/60 backdrop-blur-md border border-[#E2B993]/70 text-[#F1E8E1] text-[10px] sm:text-xs font-montserrat shadow-2xl max-w-[90vw] truncate">
                     <span className="text-[#E2B993] font-bold">✦ {dayStr}, {dateStr} {yearStr}</span>
                     <span className="text-white/40">·</span>
                     <span className="text-stone-200 truncate">{venueName.split("&")[0]?.trim() || venueName}</span>
@@ -1098,8 +1098,8 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* ====================================================
           SCENE 02: CELESTIAL ORBIT COUNTDOWN & SACRED PROCLAMATION
           ==================================================== */}
-        <section className="py-20 sm:py-28 px-4 bg-gradient-to-b from-[#F1E8E1] via-[#E8B8B8]/20 to-[#F1E8E1] text-center relative z-10">
-          <div className="max-w-4xl mx-auto space-y-12">
+        <section className="py-10 sm:py-24 px-3 sm:px-4 bg-gradient-to-b from-[#F1E8E1] via-[#E8B8B8]/20 to-[#F1E8E1] text-center relative z-10">
+          <div className="max-w-4xl mx-auto space-y-7 sm:space-y-12">
             {/* Orbital Countdown Ring */}
             <CelestialOrbitCountdown targetDate={rawDate} />
 
@@ -1109,51 +1109,51 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-60px" }}
               transition={{ duration: 0.9 }}
-              className="celestial-stationery-card rounded-[2.5rem] p-8 sm:p-14 space-y-6 text-center"
+              className="celestial-stationery-card rounded-2xl sm:rounded-[2.5rem] p-4 sm:p-10 md:p-14 space-y-4 sm:space-y-6 text-center"
             >
-              <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-[#E2B993]/25 border border-[#C9A46E]/60 text-[#685868] text-xs font-bold font-montserrat uppercase tracking-[0.2em]">
-                <Sparkle size={14} weight="fill" className="text-[#C9A46E]" />
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-1 sm:py-1.5 rounded-full bg-[#E2B993]/25 border border-[#C9A46E]/60 text-[#685868] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-[0.2em]">
+                <Sparkle size={13} weight="fill" className="text-[#C9A46E]" />
                 <span>{invocation.tag}</span>
-                <Sparkle size={14} weight="fill" className="text-[#C9A46E]" />
+                <Sparkle size={13} weight="fill" className="text-[#C9A46E]" />
               </div>
 
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#685868] tracking-tight">
+              <h2 className="text-xl sm:text-3xl md:text-5xl font-playfair font-bold text-[#685868] tracking-tight">
                 {invocation.title}
               </h2>
 
-              <p className="font-amiri text-lg sm:text-2xl md:text-3xl text-[#5898B8] italic leading-relaxed whitespace-pre-line max-w-2xl mx-auto">
+              <p className="font-amiri text-base sm:text-2xl md:text-3xl text-[#5898B8] italic leading-relaxed whitespace-pre-line max-w-2xl mx-auto">
                 {invocation.arabicOrSanskrit}
               </p>
 
-              <div className="w-28 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-[#C9A46E] to-transparent mx-auto" />
+              <div className="w-20 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-[#C9A46E] to-transparent mx-auto" />
 
-              <p className="font-cormorant text-base sm:text-xl md:text-2xl text-[#685868] leading-relaxed max-w-xl mx-auto font-medium">
+              <p className="font-cormorant text-sm sm:text-lg md:text-2xl text-[#685868] leading-relaxed max-w-xl mx-auto font-medium">
                 {invocation.english}
               </p>
 
-              <div className="pt-6 border-t border-[#C9A46E]/40 space-y-2">
-                <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#5898B8] block">
+              <div className="pt-4 sm:pt-6 border-t border-[#C9A46E]/40 space-y-1.5 sm:space-y-2">
+                <span className="text-[9px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#5898B8] block">
                   WITH THE BLESSINGS OF OUR FAMILIES &amp; ELDERS
                 </span>
                 <p className="font-cormorant text-xs sm:text-base text-[#685868] max-w-lg mx-auto leading-relaxed">
                   Together with their beloved parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence at the celestial wedding celebration of their children:
                 </p>
-                <p className="font-playfair text-2xl sm:text-3xl font-bold text-[#685868]">
+                <p className="font-playfair text-xl sm:text-3xl font-bold text-[#685868]">
                   {brideName} <span className="text-[#C9A46E]">&amp;</span> {groomName}
                 </p>
-                <p className="font-cormorant italic text-xs sm:text-sm text-[#C9A46E] font-medium">
+                <p className="font-cormorant italic text-[11px] sm:text-sm text-[#C9A46E] font-medium">
                   &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
                 </p>
               </div>
 
               {/* Groom & Bride Pedestals */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6 text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 pt-3 sm:pt-6 text-left">
                 {/* Groom */}
-                <div className="p-6 rounded-3xl bg-white/70 border border-[#C9A46E]/40 backdrop-blur-md space-y-2 shadow-sm">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#5898B8] font-montserrat block">
+                <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white/70 border border-[#C9A46E]/40 backdrop-blur-md space-y-1.5 sm:space-y-2 shadow-sm">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#5898B8] font-montserrat block">
                     The Groom
                   </span>
-                  <h3 className="text-2xl font-playfair font-bold text-[#685868]">
+                  <h3 className="text-xl sm:text-2xl font-playfair font-bold text-[#685868]">
                     {groomName}
                   </h3>
                   {groomParents ? (
@@ -1162,18 +1162,18 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                     </p>
                   ) : null}
                   {(groomEducation || groomProfession) && (
-                    <p className="text-[11px] text-[#C9A46E] font-montserrat pt-1 font-medium">
+                    <p className="text-[10px] sm:text-[11px] text-[#C9A46E] font-montserrat pt-0.5 sm:pt-1 font-medium">
                       {groomEducation} · {groomProfession}
                     </p>
                   )}
                 </div>
 
                 {/* Bride */}
-                <div className="p-6 rounded-3xl bg-white/70 border border-[#C9A46E]/40 backdrop-blur-md space-y-2 shadow-sm">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#5898B8] font-montserrat block">
+                <div className="p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl bg-white/70 border border-[#C9A46E]/40 backdrop-blur-md space-y-1.5 sm:space-y-2 shadow-sm">
+                  <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#5898B8] font-montserrat block">
                     The Bride
                   </span>
-                  <h3 className="text-2xl font-playfair font-bold text-[#685868]">
+                  <h3 className="text-xl sm:text-2xl font-playfair font-bold text-[#685868]">
                     {brideName}
                   </h3>
                   {brideParents ? (
@@ -1182,7 +1182,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                     </p>
                   ) : null}
                   {(brideEducation || brideProfession) && (
-                    <p className="text-[11px] text-[#C9A46E] font-montserrat pt-1 font-medium">
+                    <p className="text-[10px] sm:text-[11px] text-[#C9A46E] font-montserrat pt-0.5 sm:pt-1 font-medium">
                       {brideEducation} · {brideProfession}
                     </p>
                   )}
@@ -1197,16 +1197,16 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
           ==================================================== */}
         <section
           ref={storySectionRef}
-          className="py-24 sm:py-32 px-4 bg-gradient-to-b from-[#685868] via-[#4888A8] to-[#36281D] text-[#F1E8E1] relative z-10 overflow-hidden"
+          className="py-12 sm:py-28 px-3.5 sm:px-4 bg-gradient-to-b from-[#685868] via-[#4888A8] to-[#36281D] text-[#F1E8E1] relative z-10 overflow-hidden"
         >
-          <div className="max-w-5xl mx-auto space-y-16">
-            <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#E2B993]/50 text-[#E2B993] text-xs font-bold font-montserrat uppercase tracking-[0.25em] backdrop-blur-md">
-                <Star size={14} weight="fill" />
+          <div className="max-w-5xl mx-auto space-y-8 sm:space-y-16">
+            <div className="text-center space-y-2 sm:space-y-3">
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/10 border border-[#E2B993]/50 text-[#E2B993] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-[0.25em] backdrop-blur-md">
+                <Star size={13} weight="fill" />
                 <span>Written in the Stars</span>
-                <Star size={14} weight="fill" />
+                <Star size={13} weight="fill" />
               </div>
-              <h2 className="text-3xl sm:text-5xl font-playfair font-bold text-[#F1E8E1]">
+              <h2 className="text-2xl sm:text-5xl font-playfair font-bold text-[#F1E8E1]">
                 The Constellation of Our Love
               </h2>
               <p className="text-xs sm:text-sm text-[#E8B8B8] font-cormorant italic max-w-md mx-auto">
@@ -1215,7 +1215,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
             </div>
 
             {/* Connected Constellation Timeline Milestones */}
-            <div className="relative border-l-2 border-[#C9A46E]/40 ml-4 sm:ml-32 space-y-12 pl-6 sm:pl-10">
+            <div className="relative border-l-2 border-[#C9A46E]/40 ml-3 sm:ml-32 space-y-7 sm:space-y-12 pl-6 sm:pl-10">
               {milestones.map((item: any, idx: number) => (
                 <motion.div
                   key={idx}
@@ -1223,18 +1223,18 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{ duration: 0.8, delay: idx * 0.2 }}
-                  className="relative space-y-3"
+                  className="relative space-y-2 sm:space-y-3"
                 >
                   {/* Glowing Star Node */}
-                  <div className="absolute -left-[35px] sm:-left-[51px] top-1.5 w-6 h-6 rounded-full bg-[#C9A46E] border-2 border-white shadow-[0_0_15px_#E2B993] flex items-center justify-center">
-                    <Star size={12} weight="fill" className="text-[#36281D]" />
+                  <div className="absolute -left-[35px] sm:-left-[51px] top-1.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-[#C9A46E] border-2 border-white shadow-[0_0_15px_#E2B993] flex items-center justify-center">
+                    <Star size={11} weight="fill" className="text-[#36281D]" />
                   </div>
 
-                  <div className="inline-block px-3 py-1 rounded-full bg-white/10 text-[#E2B993] text-[11px] font-montserrat font-bold uppercase tracking-widest">
+                  <div className="inline-block px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-white/10 text-[#E2B993] text-[10px] sm:text-[11px] font-montserrat font-bold uppercase tracking-widest">
                     {item.year}
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-playfair font-bold text-[#F1E8E1]">
+                  <h3 className="text-lg sm:text-2xl font-playfair font-bold text-[#F1E8E1]">
                     {item.title}
                   </h3>
 
@@ -1250,13 +1250,13 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* ====================================================
           SCENE 04: 3D ZERO-GRAVITY MEMORIES GALLERY
           ==================================================== */}
-        <section className="py-24 sm:py-32 px-4 bg-[#F1E8E1] text-[#685868] relative z-10">
-          <div className="max-w-6xl mx-auto space-y-12">
-            <div className="text-center space-y-3">
+        <section className="py-12 sm:py-24 px-3 sm:px-4 bg-[#F1E8E1] text-[#685868] relative z-10">
+          <div className="max-w-6xl mx-auto space-y-6 sm:space-y-10">
+            <div className="text-center space-y-1.5 sm:space-y-3">
               <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5898B8] font-bold font-montserrat block">
                 Ethereal Keepsakes
               </span>
-              <h2 className="text-3xl sm:text-5xl font-playfair font-bold text-[#685868]">
+              <h2 className="text-2xl sm:text-5xl font-playfair font-bold text-[#685868]">
                 Memories in Zero-Gravity
               </h2>
               <p className="text-xs sm:text-sm text-[#788898] font-cormorant italic max-w-md mx-auto">
@@ -1265,7 +1265,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
             </div>
 
             {/* Grid of 3D Spatial Gallery Frames */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-8">
               {galleryImages.map((imgSrc, idx) => (
                 <motion.div
                   key={idx}
@@ -1274,18 +1274,18 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                   viewport={{ once: true }}
                   transition={{ duration: 0.7, delay: (idx % 3) * 0.15 }}
                   whileHover={{ y: -8, scale: 1.02 }}
-                  className="group cursor-pointer rounded-3xl overflow-hidden border border-[#C9A46E]/50 shadow-xl bg-white p-3.5 transition-shadow hover:shadow-[0_20px_50px_rgba(88,152,184,0.25)]"
+                  className="group cursor-pointer rounded-2xl sm:rounded-3xl overflow-hidden border border-[#C9A46E]/50 shadow-xl bg-white p-2.5 sm:p-3.5 transition-shadow hover:shadow-[0_20px_50px_rgba(88,152,184,0.25)]"
                   onClick={() => handleOpenPhoto(imgSrc, idx)}
                 >
-                  <div className="relative h-80 sm:h-96 rounded-2xl overflow-hidden">
+                  <div className="relative h-64 sm:h-80 md:h-96 rounded-xl sm:rounded-2xl overflow-hidden">
                     <img
                       src={imgSrc}
                       alt="Celestial gallery photograph"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/65 border border-[#E2B993] text-[#E2B993] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <MagnifyingGlassPlus size={16} weight="bold" />
+                    <div className="absolute top-3 right-3 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/65 border border-[#E2B993] text-[#E2B993] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <MagnifyingGlassPlus size={15} weight="bold" />
                     </div>
                   </div>
                 </motion.div>
@@ -1297,13 +1297,13 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* ====================================================
           SCENE 05: SCRATCH THE STARS (INTERACTIVE CELESTIAL FOIL REVEAL)
           ==================================================== */}
-        <section className="py-20 sm:py-28 px-4 bg-gradient-to-b from-[#F1E8E1] via-[#5898B8]/15 to-[#F1E8E1] text-center relative z-10">
+        <section className="py-10 sm:py-20 px-3 sm:px-4 bg-gradient-to-b from-[#F1E8E1] via-[#5898B8]/15 to-[#F1E8E1] text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="max-w-3xl mx-auto space-y-3"
+            className="max-w-3xl mx-auto space-y-2 sm:space-y-3"
           >
             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5898B8] font-bold font-montserrat block">
               Celestial Discovery
@@ -1315,7 +1315,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
               Gently rub the starlit metallic surface to unveil our official wedding date and muhurat
             </p>
 
-            <div className="pt-4">
+            <div className="pt-2 sm:pt-4">
               <ScratchTheStarsCard
                 brideName={brideName}
                 groomName={groomName}
@@ -1332,9 +1332,9 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* ====================================================
           SCENE 06: WATER RIPPLE TRANSITION & FLOATING DREAM WORLDS (COLLAPSIBLE ACCORDION ITINERARY)
           ==================================================== */}
-        <section className="py-16 sm:py-28 px-3 sm:px-4 bg-[#F1E8E1] text-[#685868] relative z-10 celestial-marble-reflection">
-          <div className="max-w-4xl mx-auto space-y-8 sm:space-y-10">
-            <div className="text-center space-y-2 sm:space-y-3">
+        <section className="py-10 sm:py-22 px-3 sm:px-4 bg-[#F1E8E1] text-[#685868] relative z-10 celestial-marble-reflection">
+          <div className="max-w-4xl mx-auto space-y-6 sm:space-y-10">
+            <div className="text-center space-y-1.5 sm:space-y-3">
               <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#5898B8] font-bold font-montserrat block">
                 Celebration Itinerary
               </span>
@@ -1347,13 +1347,13 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
             </div>
 
             {/* Collapsible Accordion Event Cards */}
-            <div className="space-y-3.5 sm:space-y-4">
+            <div className="space-y-2.5 sm:space-y-4">
               {events.map((evt: any, idx: number) => {
                 const isExpanded = selectedEventIdx === idx;
                 return (
                   <div
                     key={idx}
-                    className={`celestial-stationery-card rounded-2xl sm:rounded-3xl transition-all duration-300 overflow-hidden border ${isExpanded
+                    className={`celestial-stationery-card rounded-2xl sm:rounded-3xl transition-all duration-300 overflow-hidden border p-0 ${isExpanded
                         ? "border-[#5898B8]/80 shadow-[0_12px_35px_rgba(88,152,184,0.2)]"
                         : "border-[#C9A46E]/40 hover:border-[#C9A46E]/80 shadow-sm"
                       }`}
@@ -1362,11 +1362,11 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                     <button
                       type="button"
                       onClick={() => setSelectedEventIdx(isExpanded ? -1 : idx)}
-                      className="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-left transition-colors cursor-pointer select-none"
+                      className="w-full p-3.5 sm:p-5 flex items-center justify-between gap-3 text-left transition-colors cursor-pointer select-none min-h-[48px]"
                     >
                       <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
                         <span
-                          className={`flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold font-montserrat transition-all ${isExpanded
+                          className={`flex-shrink-0 w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold font-montserrat transition-all ${isExpanded
                               ? "bg-[#5898B8] text-[#F1E8E1] shadow-sm"
                               : "bg-[#5898B8]/15 text-[#5898B8]"
                             }`}
@@ -1374,7 +1374,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                           0{idx + 1}
                         </span>
                         <div className="min-w-0">
-                          <h3 className="text-base sm:text-xl font-playfair font-bold text-[#685868] truncate">
+                          <h3 className="text-sm sm:text-base md:text-xl font-playfair font-bold text-[#685868] leading-snug line-clamp-2">
                             {evt.name}
                           </h3>
                           <p className="text-[10px] sm:text-xs text-[#788898] font-montserrat flex items-center gap-1.5 mt-0.5">
@@ -1395,7 +1395,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                         transition={{ duration: 0.25 }}
                         className="flex-shrink-0 p-1.5 rounded-full bg-white/70 border border-[#C9A46E]/30 text-[#685868]"
                       >
-                        <CaretDown size={16} weight="bold" />
+                        <CaretDown size={15} weight="bold" />
                       </motion.div>
                     </button>
 
@@ -1410,16 +1410,16 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                           className="overflow-hidden"
                         >
-                          <div className="px-4 pb-5 pt-1 sm:px-6 sm:pb-6 space-y-3.5 border-t border-[#C9A46E]/20">
+                          <div className="px-3.5 pb-3.5 pt-1 sm:px-6 sm:pb-5 space-y-2.5 sm:space-y-3.5 border-t border-[#C9A46E]/20">
                             {evt.description && (
-                              <p className="text-xs sm:text-sm text-[#788898] font-cormorant leading-relaxed pt-2">
+                              <p className="text-xs sm:text-sm text-[#788898] font-cormorant leading-relaxed pt-1.5">
                                 {evt.description}
                               </p>
                             )}
 
                             {/* Date & Location Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
-                              <div className="p-3 rounded-xl bg-white/85 border border-[#C9A46E]/35 space-y-0.5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5 pt-0.5">
+                              <div className="p-2.5 sm:p-3 rounded-xl bg-white/85 border border-[#C9A46E]/35 space-y-0.5">
                                 <span className="text-[9px] uppercase font-bold tracking-wider text-[#5898B8] font-montserrat flex items-center gap-1">
                                   <CalendarCheck size={12} weight="bold" /> Date &amp; Timing
                                 </span>
@@ -1428,7 +1428,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                                 </p>
                               </div>
 
-                              <div className="p-3 rounded-xl bg-white/85 border border-[#C9A46E]/35 space-y-0.5">
+                              <div className="p-2.5 sm:p-3 rounded-xl bg-white/85 border border-[#C9A46E]/35 space-y-0.5">
                                 <span className="text-[9px] uppercase font-bold tracking-wider text-[#5898B8] font-montserrat flex items-center gap-1">
                                   <MapPin size={12} weight="bold" /> Location
                                 </span>
@@ -1439,7 +1439,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                             </div>
 
                             {evt.dress && (
-                              <div className="p-3 rounded-xl bg-[#5898B8]/10 border border-[#C9A46E]/30 flex items-center justify-between gap-2 text-left">
+                              <div className="p-2.5 sm:p-3 rounded-xl bg-[#5898B8]/10 border border-[#C9A46E]/30 flex items-center justify-between gap-2 text-left">
                                 <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-[#5898B8] font-montserrat">
                                   Attire &amp; Palette:
                                 </span>
@@ -1450,7 +1450,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                             )}
 
                             {/* CTA Get Directions */}
-                            <div className="pt-1 text-center">
+                            <div className="pt-0.5 text-center">
                               <a
                                 href={
                                   venueMapUrl ||
@@ -1460,7 +1460,7 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                                 }
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full celestial-btn-champagne text-[11px] font-bold font-montserrat shadow-md cursor-pointer"
+                                className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full celestial-btn-champagne text-[11px] font-bold font-montserrat shadow-md cursor-pointer min-h-[38px] sm:min-h-[44px]"
                               >
                                 <MapPin size={13} weight="bold" />
                                 <span>Get Directions</span>
@@ -1481,28 +1481,29 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* ====================================================
           SCENE 07: THE CELESTIAL ESTATE & GROUNDS (VENUE FLY-IN)
           ==================================================== */}
-        <section className="py-20 sm:py-32 px-4 bg-[#F1E8E1] text-[#685868] text-center relative z-10">
+        <section className="py-10 sm:py-24 px-3 sm:px-4 bg-[#F1E8E1] text-[#685868] text-center relative z-10">
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="celestial-stationery-card rounded-[2.5rem] p-8 sm:p-14 space-y-6"
+              className="celestial-stationery-card rounded-2xl sm:rounded-[2.5rem] p-5 sm:p-10 md:p-14 space-y-4 sm:space-y-6"
             >
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 50, ease: "linear" }}
-                className="w-16 h-16 rounded-full bg-[#5898B8] text-[#F1E8E1] flex items-center justify-center mx-auto shadow-lg border border-[#C9A46E]"
+                className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#5898B8] text-[#F1E8E1] flex items-center justify-center mx-auto shadow-lg border border-[#C9A46E]"
               >
-                <Compass size={28} weight="fill" />
+                <Compass size={24} weight="fill" className="sm:hidden" />
+                <Compass size={28} weight="fill" className="hidden sm:block" />
               </motion.div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#C9A46E] font-bold font-montserrat">
                   The Celestial Estate
                 </span>
-                <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#685868]">
+                <h2 className="text-xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#685868]">
                   {venueName}
                 </h2>
                 <p className="text-xs sm:text-sm md:text-base text-[#788898] max-w-lg mx-auto font-cormorant font-medium">
@@ -1510,29 +1511,29 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-1 sm:pt-2">
                 <a
                   href={venueMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-6 py-3.5 rounded-full celestial-btn-champagne text-xs font-bold font-montserrat flex items-center gap-2 shadow-lg cursor-pointer"
+                  className="px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-full celestial-btn-champagne text-[11px] sm:text-xs font-bold font-montserrat flex items-center gap-1.5 sm:gap-2 shadow-lg cursor-pointer min-h-[40px] sm:min-h-[44px]"
                 >
-                  <ArrowSquareOut size={16} weight="bold" />
+                  <ArrowSquareOut size={15} weight="bold" />
                   <span>Google Maps Navigation</span>
                 </a>
 
                 <button
                   onClick={handleCopyAddress}
-                  className="px-6 py-3.5 rounded-full bg-white border border-[#C9A46E] hover:border-[#5898B8] text-[#685868] text-xs font-bold font-montserrat flex items-center gap-2 cursor-pointer shadow-sm transition-all"
+                  className="px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-full bg-white border border-[#C9A46E] hover:border-[#5898B8] text-[#685868] text-[11px] sm:text-xs font-bold font-montserrat flex items-center gap-1.5 sm:gap-2 cursor-pointer shadow-sm transition-all min-h-[40px] sm:min-h-[44px]"
                 >
                   {copiedAddress ? (
                     <>
-                      <CheckCircle size={16} weight="fill" className="text-emerald-700" />
+                      <CheckCircle size={15} weight="fill" className="text-emerald-700" />
                       <span>Address Copied!</span>
                     </>
                   ) : (
                     <>
-                      <Copy size={16} weight="bold" />
+                      <Copy size={15} weight="bold" />
                       <span>Copy Estate Address</span>
                     </>
                   )}
@@ -1545,24 +1546,25 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
         {/* ====================================================
           SCENE 08: RSVP — WISH UPON A STAR
           ==================================================== */}
-        <section className="py-20 sm:py-32 px-4 bg-gradient-to-b from-[#4888A8] via-[#5898B8] to-[#36281D] text-[#F1E8E1] text-center relative z-10">
+        <section className="py-10 sm:py-24 px-3 sm:px-4 bg-gradient-to-b from-[#4888A8] via-[#5898B8] to-[#36281D] text-[#F1E8E1] text-center relative z-10">
           <div className="max-w-2xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 35 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="p-8 sm:p-12 rounded-[2.5rem] bg-black/40 border border-[#E2B993]/60 backdrop-blur-md shadow-2xl space-y-6"
+              className="p-5 sm:p-10 md:p-12 rounded-2xl sm:rounded-[2.5rem] bg-black/40 border border-[#E2B993]/60 backdrop-blur-md shadow-2xl space-y-4 sm:space-y-6"
             >
-              <div className="w-16 h-16 rounded-full bg-[#E2B993] text-[#36281D] flex items-center justify-center shadow-xl mx-auto border border-white">
-                <Star size={30} weight="fill" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#E2B993] text-[#36281D] flex items-center justify-center shadow-xl mx-auto border border-white">
+                <Star size={24} weight="fill" className="sm:hidden" />
+                <Star size={30} weight="fill" className="hidden sm:block" />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5 sm:space-y-2">
                 <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#E2B993] font-bold font-montserrat block">
                   Celebrate With Us
                 </span>
-                <h2 className="text-2xl sm:text-4xl font-playfair font-bold text-white">
+                <h2 className="text-xl sm:text-4xl font-playfair font-bold text-white">
                   Your Presence Is Our Honour
                 </h2>
                 <p className="text-xs sm:text-sm text-[#F1E8E1]/80 max-w-md mx-auto font-cormorant italic leading-relaxed">
@@ -1575,9 +1577,9 @@ export default function CelestialRose({ data }: CelestialRoseProps) {
                 onClick={() => setIsRsvpOpen(true)}
                 whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.96 }}
-                className="celestial-btn-champagne w-full sm:w-auto sm:min-w-[280px] mx-auto px-8 py-4 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-2 cursor-pointer font-montserrat"
+                className="celestial-btn-champagne w-full sm:w-auto sm:min-w-[280px] mx-auto px-6 py-3.5 sm:px-8 sm:py-4 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-2 cursor-pointer font-montserrat min-h-[44px]"
               >
-                <Sparkle size={18} weight="fill" />
+                <Sparkle size={16} weight="fill" />
                 <span>✦ Wish Upon a Star (RSVP) ✦</span>
               </motion.button>
             </motion.div>

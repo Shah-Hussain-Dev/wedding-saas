@@ -758,7 +758,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
                   href={venueMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1c1a17] text-[#fcfbfa] text-xs font-semibold hover:bg-[#333] transition-colors shadow-md"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-[#1c1a17] text-[#fcfbfa] text-xs font-semibold hover:bg-[#333] active:scale-95 transition-all shadow-md"
                 >
                   <ArrowSquareOut size={16} weight="bold" />
                   Get Google Maps Directions
@@ -766,7 +766,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
 
                 <button
                   onClick={handleCopyAddress}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-xs font-semibold text-[#1c1a17] border border-[#d4af37]/40 hover:bg-stone-50 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-white text-xs font-semibold text-[#1c1a17] border border-[#d4af37]/40 hover:bg-stone-50 active:scale-95 transition-all"
                 >
                   <Copy size={16} weight="bold" />
                   {copiedAddress ? "Copied to Clipboard!" : "Copy Address"}
@@ -872,7 +872,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-widest hover:bg-[#333] transition-colors shadow-lg mt-2"
+                className="w-full py-3.5 min-h-[44px] rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-widest hover:bg-[#333] active:scale-98 transition-all shadow-lg mt-2 flex items-center justify-center"
               >
                 Submit RSVP Confirmation
               </button>
@@ -905,7 +905,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
                   </p>
                   <button
                     onClick={() => setIsRsvpSubmitted(false)}
-                    className="w-full py-3 rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-wider"
+                    className="w-full py-3 min-h-[44px] rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-wider active:scale-98 transition-all flex items-center justify-center"
                   >
                     Return to Invitation
                   </button>

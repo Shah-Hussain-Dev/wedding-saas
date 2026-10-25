@@ -750,7 +750,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                   href={venueMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5a0e1a] text-[#fff2be] text-xs font-bold hover:bg-[#7a1c2a] transition-colors shadow-lg"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-[#5a0e1a] text-[#fff2be] text-xs font-bold hover:bg-[#7a1c2a] active:scale-95 transition-all shadow-lg"
                 >
                   <ArrowSquareOut size={16} weight="bold" />
                   Get Google Maps Directions
@@ -758,7 +758,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
 
                 <button
                   onClick={handleCopyAddress}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#f8eedc] text-xs font-semibold text-[#5a0e1a] border border-[#d4af37]/50 hover:bg-white transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-[#f8eedc] text-xs font-semibold text-[#5a0e1a] border border-[#d4af37]/50 hover:bg-white active:scale-95 transition-all"
                 >
                   <Copy size={16} weight="bold" />
                   {copiedAddress ? "Copied to Clipboard!" : "Copy Address"}
@@ -864,7 +864,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-widest hover:bg-[#7a1c2a] transition-colors shadow-lg mt-2"
+                className="w-full py-3.5 min-h-[44px] rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-widest hover:bg-[#7a1c2a] active:scale-98 transition-all shadow-lg mt-2 flex items-center justify-center"
               >
                 Submit RSVP Confirmation
               </button>
@@ -897,7 +897,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                   </p>
                   <button
                     onClick={() => setIsRsvpSubmitted(false)}
-                    className="w-full py-3 rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-wider"
+                    className="w-full py-3 min-h-[44px] rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-wider active:scale-98 transition-all flex items-center justify-center"
                   >
                     Return to Invitation
                   </button>

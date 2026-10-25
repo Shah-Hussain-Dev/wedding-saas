@@ -393,10 +393,12 @@
 
 .majesty-modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 34px;
-  height: 34px;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   background: rgba(78, 104, 122, 0.1);
   border: 1px solid rgba(169, 193, 208, 0.4);

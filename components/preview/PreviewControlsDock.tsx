@@ -16,6 +16,7 @@ import {
   CaretLeft,
   CaretRight,
   PencilSimple,
+  ArrowLeft,
 } from "@phosphor-icons/react";
 import {
   CURATED_AUDIO_TRACKS,
@@ -501,10 +502,10 @@ export function PreviewControlsDock({
                 <button
                   type="button"
                   onClick={() => setIsSheetOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-stone-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-full bg-white/5 hover:bg-white/10 active:scale-95 text-stone-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Close controls"
                 >
-                  <X size={16} weight="bold" />
+                  <X size={18} weight="bold" />
                 </button>
               </div>
 
@@ -513,7 +514,7 @@ export function PreviewControlsDock({
                 <button
                   type="button"
                   onClick={() => setActiveTab("tradition")}
-                  className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`flex-1 py-2.5 px-3 min-h-[44px] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98 ${
                     activeTab === "tradition"
                       ? "bg-gradient-to-r from-amber-500 to-amber-600 text-stone-950 shadow-md"
                       : "bg-white/5 hover:bg-white/10 text-stone-300"
@@ -522,7 +523,7 @@ export function PreviewControlsDock({
                   <span className="text-sm">{activeFaithOption.symbol}</span>
                   <span>Tradition</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold ${
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${
                       activeTab === "tradition"
                         ? "bg-stone-950/20 text-stone-950"
                         : "bg-white/10 text-stone-400"
@@ -535,7 +536,7 @@ export function PreviewControlsDock({
                 <button
                   type="button"
                   onClick={() => setActiveTab("soundtrack")}
-                  className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                  className={`flex-1 py-2.5 px-3 min-h-[44px] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98 ${
                     activeTab === "soundtrack"
                       ? "bg-gradient-to-r from-amber-500 to-amber-600 text-stone-950 shadow-md"
                       : "bg-white/5 hover:bg-white/10 text-stone-300"
@@ -544,7 +545,7 @@ export function PreviewControlsDock({
                   <MusicNotes size={14} weight="bold" />
                   <span>Soundtrack</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-semibold max-w-[80px] truncate ${
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold max-w-[80px] truncate ${
                       activeTab === "soundtrack"
                         ? "bg-stone-950/20 text-stone-950"
                         : "bg-white/10 text-stone-400"
@@ -840,20 +841,31 @@ export function PreviewControlsDock({
                 }}
               >
                 <Link
-                  href={`/customize/${templateId}${slug ? `?slug=${slug}` : ""}`}
-                  className="flex items-center gap-1 text-xs font-semibold text-stone-400 hover:text-amber-300 transition-colors"
+                  href="/templates"
+                  className="flex items-center gap-1.5 text-xs font-semibold text-stone-300 hover:text-amber-300 transition-colors"
+                  title="Back to all templates"
                 >
-                  <PencilSimple size={13} />
-                  <span>Edit Details</span>
+                  <ArrowLeft size={13} weight="bold" className="text-amber-400" />
+                  <span>Back to Templates</span>
                 </Link>
 
-                <button
-                  type="button"
-                  onClick={() => setIsSheetOpen(false)}
-                  className="px-6 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
-                >
-                  Done
-                </button>
+                <div className="flex items-center gap-2.5">
+                  <Link
+                    href={`/customize/${templateId}${slug ? `?slug=${slug}` : ""}`}
+                    className="flex items-center gap-1 text-xs font-semibold text-stone-400 hover:text-amber-300 transition-colors"
+                  >
+                    <PencilSimple size={13} />
+                    <span>Edit</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => setIsSheetOpen(false)}
+                    className="px-5 py-2 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+                  >
+                    Done
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>

@@ -461,7 +461,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
 
               {/* GROOM BLOCK */}
               <div className="space-y-0.5 pt-1">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {groomName}
                 </h1>
                 {groomParents ? (
@@ -487,7 +487,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
 
               {/* BRIDE BLOCK */}
               <div className="space-y-0.5">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {brideName}
                 </h1>
                 {brideParents ? (
@@ -1666,7 +1666,7 @@ function PanoramicArchGallery({
             <button
               onClick={handlePrev}
               aria-label="Previous photograph"
-              className="w-10 h-10 rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
             >
               <CaretLeft size={20} weight="bold" />
             </button>
@@ -1678,7 +1678,7 @@ function PanoramicArchGallery({
             <button
               onClick={handleNext}
               aria-label="Next photograph"
-              className="w-10 h-10 rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
             >
               <CaretRight size={20} weight="bold" />
             </button>

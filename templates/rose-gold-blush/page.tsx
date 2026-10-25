@@ -487,7 +487,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
 
               {/* GROOM BLOCK */}
               <div className="space-y-0.5 pt-1">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#D7B875] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#D7B875] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight">
                   {groomName}
                 </h1>
                 {groomParents ? (
@@ -513,7 +513,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
 
               {/* BRIDE BLOCK */}
               <div className="space-y-0.5">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#D7B875] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#D7B875] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight">
                   {brideName}
                 </h1>
                 {brideParents ? (
