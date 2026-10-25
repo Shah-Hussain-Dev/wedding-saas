@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
@@ -22,10 +22,12 @@ import {
   Crown,
   Check,
   DeviceMobile,
+  MusicNotes,
 } from "@phosphor-icons/react";
 import { fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
 import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 import { TEMPLATES_MAP, getTemplateDefaultData, NoorNikah } from "@/templates";
+import { PreviewMusicSelector } from "@/components/preview/PreviewMusicSelector";
 
 interface TemplateDemoPageProps {
   templateId: string;
@@ -35,14 +37,50 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
   const { getPriceFormatted, getPriceNumber } = useTemplatePricing();
   const normalizedId = (templateId || "").trim().replace(/_/g, "-").toLowerCase();
   const meta = getTemplateMeta(normalizedId);
-  const interactiveUrl = `/preview/${normalizedId}/interactive?embed=1`;
-  const dynamicPriceNum = getPriceNumber(normalizedId, 1199);
-  const dynamicPriceFormatted = getPriceFormatted(normalizedId, `₹${dynamicPriceNum.toLocaleString("en-IN")}`);
-  const royalPriceFormatted = `₹${(dynamicPriceNum + 300).toLocaleString("en-IN")}`;
 
   // Direct template rendering data for mobile view
   const templateDefault = getTemplateDefaultData(normalizedId);
   const SelectedTemplate = TEMPLATES_MAP[normalizedId] || NoorNikah;
+  const fallbackTrack = templateDefault?.musicTrack || `/templates/${normalizedId}/music.mp3`;
+
+  // Dynamic preview music selection
+  const [selectedTrackUrl, setSelectedTrackUrl] = useState<string>(fallbackTrack);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(`unfold_invitation_${normalizedId}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.musicTrack) {
+            setSelectedTrackUrl(parsed.musicTrack);
+            return;
+          }
+        }
+        const direct = localStorage.getItem(`unfold_preview_music_${normalizedId}`);
+        if (direct) {
+          setSelectedTrackUrl(direct);
+        }
+      } catch (_) {}
+    }
+  }, [normalizedId]);
+
+  // Sync bidirectional message with phone iframe
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === "PREVIEW_MUSIC_CHANGED" && e.data.trackUrl) {
+        setSelectedTrackUrl(e.data.trackUrl);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  const interactiveUrl = `/preview/${normalizedId}/interactive?embed=1&musicTrack=${encodeURIComponent(selectedTrackUrl)}`;
+  const dynamicPriceNum = getPriceNumber(normalizedId, 1199);
+  const dynamicPriceFormatted = getPriceFormatted(normalizedId, `₹${dynamicPriceNum.toLocaleString("en-IN")}`);
+  const royalPriceFormatted = `₹${(dynamicPriceNum + 300).toLocaleString("en-IN")}`;
+
   const sampleGroom = templateDefault?.couple?.groomName || templateDefault?.groomName || "Shaan";
   const sampleBride = templateDefault?.couple?.brideName || templateDefault?.brideName || "Diya";
   const sampleData = {
@@ -53,6 +91,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
     brideName: sampleBride,
     groomName: sampleGroom,
     hashtag: `#${sampleGroom}And${sampleBride}`.replace(/[\s&]+/g, ""),
+    musicTrack: selectedTrackUrl,
     couple: {
       ...templateDefault?.couple,
       brideName: sampleBride,
@@ -82,7 +121,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
           </div>
 
           <Link
-            href={`/customize/${normalizedId}`}
+            href={`/customize/${normalizedId}?musicTrack=${encodeURIComponent(selectedTrackUrl)}`}
             className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-xs shadow-md flex items-center gap-1 active:scale-95 transition-transform shrink-0"
           >
             <span>Customize</span>
@@ -93,6 +132,15 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
         {/* Direct Mobile Template Render (Full clearance for tabs, envelope seal & audio button) */}
         <div className="relative w-full min-h-[100dvh]">
           <SelectedTemplate data={sampleData} />
+
+          {/* Dedicated Non-Intrusive Song Selector & Controller */}
+          <PreviewMusicSelector
+            templateId={normalizedId}
+            templateName={meta.name}
+            templateDefaultUrl={fallbackTrack}
+            currentTrackUrl={selectedTrackUrl}
+            onSelectTrack={(newUrl) => setSelectedTrackUrl(newUrl)}
+          />
         </div>
 
         {/* End of Preview Call to Action */}
@@ -105,7 +153,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
             Personalize names, dates, events, venue location, soundtrack, and guest RSVP tracking in 2 minutes.
           </p>
           <Link
-            href={`/customize/${normalizedId}`}
+            href={`/customize/${normalizedId}?musicTrack=${encodeURIComponent(selectedTrackUrl)}`}
             className="block w-full py-3 px-5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-stone-950 font-bold text-sm shadow-xl active:scale-98 transition-transform"
           >
             Customize This Design — {dynamicPriceFormatted}
@@ -188,7 +236,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                     </p>
                   </div>
                   <Link
-                    href={`/customize/${normalizedId}`}
+                    href={`/customize/${normalizedId}?musicTrack=${encodeURIComponent(selectedTrackUrl)}`}
                     className="group shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans border border-[#C8A45E]/40 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                   >
                     <span>Enter Details Free</span>
@@ -223,7 +271,7 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
 
                   {/* Luxury Customize Button */}
                   <Link
-                    href={`/customize/${normalizedId}`}
+                    href={`/customize/${normalizedId}?musicTrack=${encodeURIComponent(selectedTrackUrl)}`}
                     className="group relative w-full flex items-center justify-center gap-2.5 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] py-3.5 px-6 text-xs sm:text-sm font-bold tracking-wider uppercase font-sans border border-[#C8A45E]/40 shadow-[0_8px_20px_rgba(7,61,49,0.22)] hover:shadow-[0_12px_28px_rgba(7,61,49,0.32)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] cursor-pointer"
                   >
                     <Sparkle size={15} weight="fill" className="text-[#E1C98E]" />

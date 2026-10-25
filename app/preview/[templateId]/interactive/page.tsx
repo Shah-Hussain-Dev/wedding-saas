@@ -1,10 +1,11 @@
 "use client";
 
-import { use, useState, Suspense } from "react";
+import { use, useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Sliders, ArrowLeft, CreditCard } from "@phosphor-icons/react";
 import { TEMPLATES_MAP, getTemplateDefaultData, NoorNikah } from "@/templates";
+import { PreviewMusicSelector } from "@/components/preview/PreviewMusicSelector";
 
 interface InteractivePreviewProps {
   templateId: string;
@@ -32,11 +33,43 @@ const ALL_16_TEMPLATES = [
 function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get("embed") === "1";
+  const queryMusicTrack = searchParams.get("musicTrack");
 
   // Normalize underscores to hyphens
   const normalizedId = (templateId || "").trim().replace(/_/g, "-").toLowerCase();
 
   const templateDefault = getTemplateDefaultData(normalizedId);
+  const fallbackTrack = templateDefault?.musicTrack || `/templates/${normalizedId}/music.mp3`;
+
+  const [musicTrack, setMusicTrack] = useState<string>(() => {
+    if (queryMusicTrack) return queryMusicTrack;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(`unfold_invitation_${normalizedId}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed.musicTrack) return parsed.musicTrack;
+        }
+        const direct = localStorage.getItem(`unfold_preview_music_${normalizedId}`);
+        if (direct) return direct;
+      } catch (_) {}
+    }
+    return fallbackTrack;
+  });
+
+  useEffect(() => {
+    if (queryMusicTrack) {
+      setMusicTrack(queryMusicTrack);
+    }
+  }, [queryMusicTrack]);
+
+  const handleTrackChange = (newUrl: string) => {
+    setMusicTrack(newUrl);
+    if (typeof window !== "undefined" && window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "PREVIEW_MUSIC_CHANGED", trackUrl: newUrl }, "*");
+    }
+  };
+
   const defaultBride =
     templateDefault?.brideName ||
     templateDefault?.couple?.brideName ||
@@ -59,6 +92,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
     brideName: activeBride,
     groomName: activeGroom,
     hashtag: (activeGroom && activeBride) ? `#${activeGroom}And${activeBride}`.replace(/[\s&]+/g, "") : "",
+    musicTrack,
     couple: {
       ...templateDefault?.couple,
       brideName: activeBride,
@@ -85,6 +119,15 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
 
       {/* Self-contained template render */}
       <SelectedTemplate data={sampleData} />
+
+      {/* Universal Interactive Music Selector & Audio Sync */}
+      <PreviewMusicSelector
+        templateId={normalizedId}
+        templateName={normalizedId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
+        templateDefaultUrl={fallbackTrack}
+        currentTrackUrl={musicTrack}
+        onSelectTrack={handleTrackChange}
+      />
 
       {!isEmbed && (
         <>
@@ -142,7 +185,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
                     <ArrowLeft className="h-3 w-3" /> Demo page
                   </button>
                 </Link>
-                <Link href={`/customize/${normalizedId}`} className="flex-1">
+                <Link href={`/customize/${normalizedId}?musicTrack=${encodeURIComponent(musicTrack)}`} className="flex-1">
                   <button className="w-full bg-amber-400 text-black text-xs font-bold py-2.5 rounded-full flex items-center justify-center gap-1 cursor-pointer hover:bg-amber-300">
                     <CreditCard className="h-3 w-3" /> Get Started
                   </button>

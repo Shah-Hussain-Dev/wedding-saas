@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { TemplateDemoPage } from "@/components/marketing/template-demo-page";
 import { TEMPLATES_MAP, NoorNikah, getTemplateDefaultData } from "@/templates";
 import { DemoBanner } from "@/components/preview/DemoBanner";
+import { PreviewMusicSelector } from "@/components/preview/PreviewMusicSelector";
 import { Sparkle } from "@phosphor-icons/react";
 
 interface PreviewPageProps {
@@ -182,6 +183,25 @@ function PreviewContent({ templateId }: { templateId: string }) {
         isPublished: false,
       };
 
+  const fallbackTrack = templateDefault?.musicTrack || `/templates/${activeTemplateId}/music.mp3`;
+  const [previewMusicTrack, setPreviewMusicTrack] = useState<string>(() => {
+    return invitationData.musicTrack || fallbackTrack;
+  });
+
+  const handleSelectMusic = (newUrl: string) => {
+    setPreviewMusicTrack(newUrl);
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem(`unfold_invitation_${normalizedId}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          parsed.musicTrack = newUrl;
+          localStorage.setItem(`unfold_invitation_${normalizedId}`, JSON.stringify(parsed));
+        }
+      } catch (_) {}
+    }
+  };
+
   return (
     <div className="relative min-h-screen no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
       {/* Demo Banner with Timer & Razorpay Checkout */}
@@ -199,7 +219,16 @@ function PreviewContent({ templateId }: { templateId: string }) {
       />
 
       {/* Render Self-Contained Template */}
-      <SelectedTemplate data={invitationData} />
+      <SelectedTemplate data={{ ...invitationData, musicTrack: previewMusicTrack }} />
+
+      {/* Universal Interactive Music Selector & Audio Sync */}
+      <PreviewMusicSelector
+        templateId={activeTemplateId}
+        templateName={invitationData.brideName ? `${invitationData.brideName} & ${invitationData.groomName}` : activeTemplateId}
+        templateDefaultUrl={fallbackTrack}
+        currentTrackUrl={previewMusicTrack}
+        onSelectTrack={handleSelectMusic}
+      />
     </div>
   );
 }

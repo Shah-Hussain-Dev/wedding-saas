@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
@@ -165,9 +165,26 @@ export function InvitationCustomizerWizard({
       ? initialData.gallery
       : []
   );
-  const [musicTrack, setMusicTrack] = useState(
-    initialData?.musicTrack || `/templates/${templateId}/music.mp3`
-  );
+  const searchParams = useSearchParams();
+  const paramMusicTrack = searchParams?.get("musicTrack");
+
+  const [musicTrack, setMusicTrack] = useState(() => {
+    if (initialData?.musicTrack) return initialData.musicTrack;
+    if (paramMusicTrack) return paramMusicTrack;
+    if (typeof window !== "undefined") {
+      try {
+        const previewMusic = localStorage.getItem(`unfold_preview_music_${templateId}`);
+        if (previewMusic) return previewMusic;
+      } catch (_) {}
+    }
+    return `/templates/${templateId}/music.mp3`;
+  });
+
+  useEffect(() => {
+    if (paramMusicTrack && !initialData?.musicTrack) {
+      setMusicTrack(paramMusicTrack);
+    }
+  }, [paramMusicTrack, initialData?.musicTrack]);
 
   const defaultEvents: EventItem[] = [
     { name: "Haldi Ceremony", enabled: true, venue: "Courtyard Garden", date: "Dec 21, 2026", time: "10:00 AM" },
