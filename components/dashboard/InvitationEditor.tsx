@@ -8,6 +8,7 @@ import { PremiumButton } from "@/components/ui/premium-button";
 import { Sparkle, Trash, Plus, ArrowLeft, Image, MusicNotes } from "@phosphor-icons/react";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { GalleryImagePickerModal } from "@/components/media/GalleryImagePickerModal";
 
 interface EventItem {
   name: string;
@@ -46,6 +47,7 @@ export function InvitationEditor({ initialData, invitationId, initialTemplateId 
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState<"details" | "events" | "media" | "extras">("details");
+  const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
 
   const defaultValues: InvitationFormValues = {
     templateId: initialData?.templateId || initialTemplateId || "royal-lotus",
@@ -176,6 +178,16 @@ export function InvitationEditor({ initialData, invitationId, initialTemplateId 
 
   const formBrideName = watchBrideName;
   const formGroomName = watchGroomName;
+
+  const handleLibrarySelect = (selectedUrls: string[], mode: "append" | "replace") => {
+    const current = watch("slideshowImagesText") || "";
+    const existing = current
+      .split("\n")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const updated = mode === "replace" ? selectedUrls : Array.from(new Set([...existing, ...selectedUrls]));
+    setValue("slideshowImagesText", updated.join("\n"));
+  };
 
   const [religionFilter, setReligionFilter] = useState<"all" | "hindu" | "muslim">("all");
 
@@ -500,10 +512,20 @@ export function InvitationEditor({ initialData, invitationId, initialTemplateId 
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold uppercase text-stone-500 flex items-center gap-1">
-                <Image className="h-4 w-4" />
-                <span>Slideshow Gallery Image URLs (One URL per line)</span>
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold uppercase text-stone-500 flex items-center gap-1">
+                  <Image className="h-4 w-4" />
+                  <span>Slideshow Gallery Image URLs (One URL per line)</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsLibraryModalOpen(true)}
+                  className="px-2.5 py-1 rounded-md bg-[#073D31] text-[#E1C98E] text-[10px] font-bold flex items-center gap-1 hover:bg-[#0A4D3E] cursor-pointer shadow-xs"
+                >
+                  <Sparkle size={12} weight="fill" />
+                  <span>Choose from Library</span>
+                </button>
+              </div>
               <textarea
                 rows={6}
                 placeholder="https://example.com/photo1.jpg&#10;https://example.com/photo2.jpg"
@@ -603,6 +625,20 @@ export function InvitationEditor({ initialData, invitationId, initialTemplateId 
             {isSubmitting ? "Generating..." : invitationId ? "Save Invitation" : "Create Invitation"}
           </PremiumButton>
         </div>
+
+        <GalleryImagePickerModal
+          isOpen={isLibraryModalOpen}
+          onClose={() => setIsLibraryModalOpen(false)}
+          onSelectImages={handleLibrarySelect}
+          currentGalleryCount={
+            (watch("slideshowImagesText") || "")
+              .split("\n")
+              .map((s) => s.trim())
+              .filter(Boolean).length
+          }
+          maxImages={6}
+          initialTradition={religionFilter}
+        />
       </form>
     </div>
   );

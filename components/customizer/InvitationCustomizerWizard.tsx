@@ -1248,6 +1248,8 @@ export function InvitationCustomizerWizard({
                   onChange={setSlideshowImages}
                   maxImages={6}
                   label="Add Gallery Photos"
+                  tradition={religion}
+                  enableLibrary={true}
                 />
               </div>
 
