@@ -34,8 +34,7 @@ npm ci --prefer-offline --no-audit
 
 echo "🗄️ 3. Generating Prisma Client and syncing database..."
 npx prisma generate
-# Use 'prisma db push' or 'prisma migrate deploy'
-npx prisma db push --skip-generate
+npx prisma db push
 
 echo "🏗️ 4. Building Next.js production bundle..."
 NODE_OPTIONS="--max-old-space-size=2048" npm run build
