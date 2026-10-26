@@ -281,9 +281,18 @@ EMAIL_FROM="support@wedinvites.in"
 Press `Ctrl + O` then `Enter` to save, and `Ctrl + X` to exit.
 
 ### 4. Install Dependencies & Run Initial Build
+> [!IMPORTANT]
+> Always use `npm ci` rather than `npm i`. Running `npm i` can fetch `prisma@latest` (which NPM has pointed to experimental Prisma 8 / `@prisma/composer`), causing `No command registered for generate`. `npm ci` strictly installs the locked, working Prisma `7.8.0` from `package-lock.json`.
+
 ```bash
 cd /var/www/wedinvites
+
+# Install exact locked dependencies
 npm ci
+
+# If postinstall hook ever fails due to a global prisma conflict, use:
+# npm ci --ignore-scripts
+
 npx prisma generate
 npx prisma db push
 NODE_OPTIONS="--max-old-space-size=2048" npm run build
