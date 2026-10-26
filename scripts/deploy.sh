@@ -20,9 +20,8 @@ echo "=================================================="
 echo "🚀 Starting WedInvites Deployment: $(date)"
 echo "=================================================="
 
-# Ensure log directory exists
-sudo mkdir -p "${LOG_DIR}"
-sudo chown -R "$USER":"$USER" "${LOG_DIR}"
+# Ensure log directory exists (created during initial setup, no sudo required)
+mkdir -p "${LOG_DIR}" 2>/dev/null || true
 
 cd "${APP_DIR}"
 

@@ -129,6 +129,10 @@ Avoid running applications as `root`:
 sudo adduser --gecos "" deploy
 sudo usermod -aG sudo deploy
 
+# Allow passwordless sudo for deploy (essential for automated CI/CD deployments)
+echo "deploy ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/deploy
+sudo chmod 0440 /etc/sudoers.d/deploy
+
 # Copy SSH keys to deploy
 sudo mkdir -p /home/deploy/.ssh
 sudo cp /root/.ssh/authorized_keys /home/deploy/.ssh/
