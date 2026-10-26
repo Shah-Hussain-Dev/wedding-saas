@@ -457,6 +457,12 @@ This generates:
 ### 2. Add the Public Key to the VPS
 On your VPS as user `deploy`:
 ```bash
+# Ensure .ssh exists and is owned by deploy (in case it was created as root)
+sudo mkdir -p ~/.ssh
+sudo chown -R deploy:deploy ~/.ssh
+chmod 700 ~/.ssh
+
+# Append the public key
 echo "<PASTE_CONTENTS_OF_github_actions_wedinvites.pub>" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
