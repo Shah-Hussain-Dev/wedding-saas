@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import Link from "next/link";
 import {
   X,
   DownloadSimple,
@@ -11,17 +12,80 @@ import {
   FilePdf,
   ShareNetwork,
   ArrowsInSimple,
+  Gift,
+  ArrowRight,
 } from "@phosphor-icons/react";
 import { BaratCardRenderer, PdfCardInvitationData } from "./BaratCardRenderer";
 import { ReceptionCardRenderer } from "./ReceptionCardRenderer";
 import { downloadElementAsPdf } from "@/lib/pdf-generator";
-import { getPdfThemeTokens } from "@/lib/pdf-theme-tokens";
+import { getPdfThemeTokens, CulturalTradition } from "@/lib/pdf-theme-tokens";
+
+const READONLY_SAMPLE_TRADITIONS: Record<CulturalTradition, Partial<PdfCardInvitationData>> = {
+  muslim: {
+    religion: "muslim",
+    brideName: "Heena",
+    groomName: "Arshad",
+    eventTitle: "Dawat-e-Walima",
+    weddingDate: "2026-10-12",
+    weddingTime: "7:30 p.m.",
+    venueName: "Gomti Lawn",
+    venueAddress: "Sitapur Road, Lucknow",
+    hostNames: "Mrs. & Mr. Hashmat Khan",
+    hostRelation: "of their Son",
+    parentageDetails: "D/o Mohd. Nizamuddin",
+    rsvpContact: "Khan Family & Relatives",
+    complimentsText: "With Best Compliments from All Friends",
+    recipientName: "Respected Guests & Family",
+    recipientCity: "Lucknow",
+    sacredInvocation: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    sacredTranslation: "In the name of ALLAH the most gracious and most merciful",
+  },
+  hindu: {
+    religion: "hindu",
+    brideName: "Ananya",
+    groomName: "Aarav",
+    eventTitle: "Shubh Vivah",
+    weddingDate: "2026-11-28",
+    weddingTime: "7:00 p.m.",
+    venueName: "The Grand Palace",
+    venueAddress: "Heritage Road, Civil Lines, Jaipur",
+    hostNames: "Mrs. & Mr. Rajesh Sharma",
+    hostRelation: "of their Son",
+    parentageDetails: "D/o Shri Alok Verma",
+    rsvpContact: "Sharma Family & Relatives",
+    complimentsText: "With Warm Compliments from All Friends & Family",
+    recipientName: "Respected Guests & Family",
+    recipientCity: "Jaipur",
+    sacredInvocation: "॥ श्री गणेशाय नमः ॥",
+    sacredTranslation: "May Lord Ganesha Bless This Auspicious Union",
+  },
+  universal: {
+    religion: "universal",
+    brideName: "Meera",
+    groomName: "Kabir",
+    eventTitle: "Wedding Celebration",
+    weddingDate: "2026-12-18",
+    weddingTime: "6:30 p.m.",
+    venueName: "The Oberoi Grand Ballroom",
+    venueAddress: "Marine Drive, Nariman Point, Mumbai",
+    hostNames: "Mrs. & Mr. Vikram Malhotra",
+    hostRelation: "of their Son",
+    parentageDetails: "D/o Mr. Arvind Kapoor",
+    rsvpContact: "Malhotra & Kapoor Families",
+    complimentsText: "Warmly Invited by All Friends & Loved Ones",
+    recipientName: "Respected Guests & Family",
+    recipientCity: "Mumbai",
+    sacredInvocation: "✦ Two Hearts · One Journey ✦",
+    sacredTranslation: "Invite you to witness the beginning of forever",
+  },
+};
 
 interface PdfPreviewModalProps {
   isOpen: boolean;
   onClose: () => void;
   templateId: string;
   initialData: PdfCardInvitationData;
+  isReadOnly?: boolean;
 }
 
 export function PdfPreviewModal({
@@ -29,6 +93,7 @@ export function PdfPreviewModal({
   onClose,
   templateId,
   initialData,
+  isReadOnly = false,
 }: PdfPreviewModalProps) {
   const [activeTab, setActiveTab] = useState<"barat" | "reception">("barat");
   const [data, setData] = useState<PdfCardInvitationData>(initialData);
@@ -147,6 +212,14 @@ export function PdfPreviewModal({
   };
 
   const handleSelectReligion = (rel: "muslim" | "hindu" | "universal") => {
+    if (isReadOnly) {
+      setData((prev) => ({
+        ...prev,
+        ...READONLY_SAMPLE_TRADITIONS[rel],
+      }));
+      return;
+    }
+
     if (rel === "muslim") {
       setData({
         ...data,
@@ -284,19 +357,22 @@ export function PdfPreviewModal({
             }`}
         >
           {/* ── Standard Mode Header (Hidden in Full Size) ── */}
+          {/* ── Standard Mode Header (Hidden in Full Size) ── */}
           {!isFullSize && (
-            <div className="flex-shrink-0 flex items-center justify-between px-3.5 sm:px-8 py-2.5 sm:py-4 border-b border-white/10 bg-[#0A0E0C]">
+            <div className="flex-shrink-0 flex items-center justify-between px-3.5 sm:px-8 py-2.5 sm:py-3.5 border-b border-white/10 bg-[#0A0E0C]">
               <div className="flex items-center gap-2 sm:gap-2.5">
                 <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-[#C8A45E] animate-pulse flex-shrink-0" />
                 <div>
                   <h3 className="font-serif text-sm sm:text-xl font-bold tracking-tight text-white flex items-center gap-1.5 sm:gap-2">
-                    <span>Wedding Stationery</span>
+                    <span>{isReadOnly ? "Complimentary Wedding Stationery" : "Wedding Stationery"}</span>
                     <span className="text-[9px] sm:text-[10px] font-sans font-bold uppercase tracking-wider bg-[#C8A45E]/20 text-[#E1C98E] px-1.5 sm:px-2 py-0.5 rounded-full border border-[#C8A45E]/40">
-                      Print Ready A5
+                      {isReadOnly ? "Free With Website" : "Print Ready A5"}
                     </span>
                   </h3>
                   <p className="text-[10px] sm:text-xs text-stone-400 font-sans hidden sm:block">
-                    Two matching designs included free with your {data.groomName} &amp; {data.brideName} invitation.
+                    {isReadOnly
+                      ? "Two matching 300 DPI print designs included free with your wedding invitation website."
+                      : `Two matching designs included free with your ${data.groomName} & ${data.brideName} invitation.`}
                   </p>
                 </div>
               </div>
@@ -311,8 +387,83 @@ export function PdfPreviewModal({
             </div>
           )}
 
-          {/* ── Mobile Compact Bar (Visible ONLY on Mobile < 640px in Standard View) ── */}
-          {!isFullSize && (
+          {/* ── Mobile Compact Bar for Read-Only Showcase Mode (< 640px) ── */}
+          {!isFullSize && isReadOnly && (
+            <div className="flex-shrink-0 block sm:hidden px-3 py-2 bg-gradient-to-r from-[#171C19] via-[#121614] to-[#171C19] border-b border-white/10 space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                {/* Compact Segmented Switcher */}
+                <div className="flex items-center p-0.5 bg-white/5 rounded-full border border-white/10 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("barat")}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                      activeTab === "barat"
+                        ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
+                        : "text-stone-300 hover:text-white"
+                    }`}
+                  >
+                    1. Barat
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("reception")}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                      activeTab === "reception"
+                        ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
+                        : "text-stone-300 hover:text-white"
+                    }`}
+                  >
+                    2. Reception
+                  </button>
+                </div>
+
+                {/* Free Included Badge */}
+                <span className="text-[10px] font-bold text-[#E1C98E] bg-[#C8A45E]/15 border border-[#C8A45E]/30 px-2 py-0.5 rounded-full font-sans">
+                  Included Free
+                </span>
+              </div>
+
+              {/* Tradition Pills on Mobile */}
+              <div className="flex items-center justify-center gap-1.5 pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => handleSelectReligion("muslim")}
+                  className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold font-sans transition-all cursor-pointer ${
+                    (data.religion || tokens.tradition) === "muslim"
+                      ? "bg-[#C8A45E] text-[#032A23]"
+                      : "text-stone-400 bg-white/5"
+                  }`}
+                >
+                  ☪️ Muslim
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectReligion("hindu")}
+                  className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold font-sans transition-all cursor-pointer ${
+                    (data.religion || tokens.tradition) === "hindu"
+                      ? "bg-[#C8A45E] text-[#032A23]"
+                      : "text-stone-400 bg-white/5"
+                  }`}
+                >
+                  🕉️ Hindu
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSelectReligion("universal")}
+                  className={`px-2.5 py-0.5 rounded-full text-[10.5px] font-bold font-sans transition-all cursor-pointer ${
+                    (data.religion || tokens.tradition) === "universal"
+                      ? "bg-[#C8A45E] text-[#032A23]"
+                      : "text-stone-400 bg-white/5"
+                  }`}
+                >
+                  💫 Universal
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── Mobile Compact Bar for Editable Mode (< 640px) ── */}
+          {!isFullSize && !isReadOnly && (
             <div className="flex-shrink-0 block sm:hidden px-3 py-2 bg-gradient-to-r from-[#171C19] via-[#121614] to-[#171C19] border-b border-white/10">
               <div className="flex items-center justify-between gap-2">
                 {/* Compact Segmented Switcher */}
@@ -320,20 +471,22 @@ export function PdfPreviewModal({
                   <button
                     type="button"
                     onClick={() => setActiveTab("barat")}
-                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${activeTab === "barat"
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${
+                      activeTab === "barat"
                         ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                         : "text-stone-300 hover:text-white"
-                      }`}
+                    }`}
                   >
                     1. Barat
                   </button>
                   <button
                     type="button"
                     onClick={() => setActiveTab("reception")}
-                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${activeTab === "reception"
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all ${
+                      activeTab === "reception"
                         ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                         : "text-stone-300 hover:text-white"
-                      }`}
+                    }`}
                   >
                     2. Reception
                   </button>
@@ -343,10 +496,11 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => setIsMobilePersonalizeOpen(!isMobilePersonalizeOpen)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-sans font-semibold border transition-all cursor-pointer ${isMobilePersonalizeOpen
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-sans font-semibold border transition-all cursor-pointer ${
+                    isMobilePersonalizeOpen
                       ? "bg-[#C8A45E] text-[#032A23] border-[#C8A45E]"
                       : "bg-[#C8A45E]/10 text-[#E1C98E] border-[#C8A45E]/30"
-                    }`}
+                  }`}
                 >
                   <Sparkle size={13} weight="fill" />
                   <span>{isMobilePersonalizeOpen ? "Hide Options" : "Personalize"}</span>
@@ -395,30 +549,33 @@ export function PdfPreviewModal({
                         <button
                           type="button"
                           onClick={() => handleSelectReligion("muslim")}
-                          className={`px-2 py-0.5 rounded-full font-bold ${(data.religion || tokens.tradition) === "muslim"
+                          className={`px-2 py-0.5 rounded-full font-bold ${
+                            (data.religion || tokens.tradition) === "muslim"
                               ? "bg-[#C8A45E] text-[#032A23]"
                               : "text-stone-400 bg-white/5"
-                            }`}
+                          }`}
                         >
                           ☪️ Muslim
                         </button>
                         <button
                           type="button"
                           onClick={() => handleSelectReligion("hindu")}
-                          className={`px-2 py-0.5 rounded-full font-bold ${(data.religion || tokens.tradition) === "hindu"
+                          className={`px-2 py-0.5 rounded-full font-bold ${
+                            (data.religion || tokens.tradition) === "hindu"
                               ? "bg-[#C8A45E] text-[#032A23]"
                               : "text-stone-400 bg-white/5"
-                            }`}
+                          }`}
                         >
                           🕉️ Hindu
                         </button>
                         <button
                           type="button"
                           onClick={() => handleSelectReligion("universal")}
-                          className={`px-2 py-0.5 rounded-full font-bold ${(data.religion || tokens.tradition) === "universal"
+                          className={`px-2 py-0.5 rounded-full font-bold ${
+                            (data.religion || tokens.tradition) === "universal"
                               ? "bg-[#C8A45E] text-[#032A23]"
                               : "text-stone-400 bg-white/5"
-                            }`}
+                          }`}
                         >
                           💫 Universal
                         </button>
@@ -430,8 +587,8 @@ export function PdfPreviewModal({
             </div>
           )}
 
-          {/* ── Desktop Guest Personalization & On-Demand Share Bar (Hidden in Full Size & Hidden on Mobile) ── */}
-          {!isFullSize && (
+          {/* ── Desktop Guest Personalization Bar (Editable Mode Only) ── */}
+          {!isFullSize && !isReadOnly && (
             <div className="flex-shrink-0 hidden sm:flex px-6 sm:px-8 py-2.5 sm:py-3.5 bg-gradient-to-r from-[#171C19] via-[#121614] to-[#171C19] border-b border-[#C8A45E]/30 flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 sm:gap-3 text-xs">
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-[#C8A45E]/20 text-[#E1C98E] flex items-center justify-center flex-shrink-0 border border-[#C8A45E]/40">
@@ -494,18 +651,19 @@ export function PdfPreviewModal({
             </div>
           )}
 
-          {/* ── Desktop Top Tabs & Action Controls (Hidden in Full Size & Hidden on Mobile) ── */}
-          {!isFullSize && (
-            <div className="flex-shrink-0 hidden sm:flex flex-wrap md:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 px-6 sm:px-8 py-2.5 sm:py-3 bg-black/40 border-b border-white/10">
+          {/* ── Desktop Top Controls for Read-Only Showcase Mode (Hidden in Full Size & Hidden on Mobile) ── */}
+          {!isFullSize && isReadOnly && (
+            <div className="flex-shrink-0 hidden sm:flex items-center justify-between gap-3 px-6 sm:px-8 py-2.5 sm:py-3 bg-black/40 border-b border-white/10">
               {/* Left: Card Tab Switcher */}
               <div className="flex items-center gap-1.5 sm:gap-2 p-1 bg-white/5 rounded-full border border-white/10">
                 <button
                   type="button"
                   onClick={() => setActiveTab("barat")}
-                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${activeTab === "barat"
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${
+                    activeTab === "barat"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-md"
                       : "text-stone-300 hover:text-white"
-                    }`}
+                  }`}
                 >
                   <span>1. {tokens.baratEventTitle}</span>
                 </button>
@@ -513,10 +671,93 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => setActiveTab("reception")}
-                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${activeTab === "reception"
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${
+                    activeTab === "reception"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-md"
                       : "text-stone-300 hover:text-white"
+                  }`}
+                >
+                  <span>2. {tokens.receptionEventTitle}</span>
+                </button>
+              </div>
+
+              {/* Center: Cultural Tradition Selector */}
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 font-sans">
+                  Cultural Theme:
+                </span>
+                <div className="flex items-center gap-1 p-1 bg-white/5 rounded-full border border-white/10 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectReligion("muslim")}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                      (data.religion || tokens.tradition) === "muslim"
+                        ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
+                        : "text-stone-400 hover:text-white"
                     }`}
+                  >
+                    ☪️ Muslim
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSelectReligion("hindu")}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                      (data.religion || tokens.tradition) === "hindu"
+                        ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
+                        : "text-stone-400 hover:text-white"
+                    }`}
+                  >
+                    🕉️ Hindu
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSelectReligion("universal")}
+                    className={`px-3 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                      (data.religion || tokens.tradition) === "universal"
+                        ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
+                        : "text-stone-400 hover:text-white"
+                    }`}
+                  >
+                    💫 Universal
+                  </button>
+                </div>
+              </div>
+
+              {/* Right: Premium Badge */}
+              <div className="flex items-center gap-1.5 text-[11px] text-[#E1C98E] font-sans bg-[#C8A45E]/10 border border-[#C8A45E]/30 px-3 py-1.5 rounded-full">
+                <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
+                <span className="font-semibold">Matching Pair · 100% Free</span>
+              </div>
+            </div>
+          )}
+
+          {/* ── Desktop Top Tabs & Action Controls (Editable Mode Only) ── */}
+          {!isFullSize && !isReadOnly && (
+            <div className="flex-shrink-0 hidden sm:flex flex-wrap md:flex-nowrap items-center justify-between gap-2.5 sm:gap-3 px-6 sm:px-8 py-2.5 sm:py-3 bg-black/40 border-b border-white/10">
+              {/* Left: Card Tab Switcher */}
+              <div className="flex items-center gap-1.5 sm:gap-2 p-1 bg-white/5 rounded-full border border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("barat")}
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${
+                    activeTab === "barat"
+                      ? "bg-[#C8A45E] text-[#032A23] shadow-md"
+                      : "text-stone-300 hover:text-white"
+                  }`}
+                >
+                  <span>1. {tokens.baratEventTitle}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("reception")}
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold font-sans transition-all cursor-pointer ${
+                    activeTab === "reception"
+                      ? "bg-[#C8A45E] text-[#032A23] shadow-md"
+                      : "text-stone-300 hover:text-white"
+                  }`}
                 >
                   <span>2. {tokens.receptionEventTitle}</span>
                 </button>
@@ -527,10 +768,11 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => handleSelectReligion("muslim")}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${(data.religion || tokens.tradition) === "muslim"
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                    (data.religion || tokens.tradition) === "muslim"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                       : "text-stone-400 hover:text-white"
-                    }`}
+                  }`}
                 >
                   ☪️ Muslim
                 </button>
@@ -538,10 +780,11 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => handleSelectReligion("hindu")}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${(data.religion || tokens.tradition) === "hindu"
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                    (data.religion || tokens.tradition) === "hindu"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                       : "text-stone-400 hover:text-white"
-                    }`}
+                  }`}
                 >
                   🕉️ Hindu
                 </button>
@@ -549,10 +792,11 @@ export function PdfPreviewModal({
                 <button
                   type="button"
                   onClick={() => handleSelectReligion("universal")}
-                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${(data.religion || tokens.tradition) === "universal"
+                  className={`px-2.5 py-1 rounded-full text-[11px] font-bold font-sans transition-all cursor-pointer ${
+                    (data.religion || tokens.tradition) === "universal"
                       ? "bg-[#C8A45E] text-[#032A23] shadow-sm"
                       : "text-stone-400 hover:text-white"
-                    }`}
+                  }`}
                 >
                   💫 Universal
                 </button>
@@ -570,9 +814,9 @@ export function PdfPreviewModal({
             </div>
           )}
 
-          {/* ── Optional Full Ceremony Details Form (Desktop) ── */}
+          {/* ── Optional Full Ceremony Details Form (Editable Mode Only) ── */}
           <AnimatePresence>
-            {!isFullSize && isEditingDetails && (
+            {!isFullSize && !isReadOnly && isEditingDetails && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
@@ -720,10 +964,18 @@ export function PdfPreviewModal({
                   type="button"
                   onClick={() => setIsFullSize(true)}
                   className="px-2.5 py-0.5 rounded-full font-bold transition-all cursor-pointer text-stone-400 hover:text-white"
-                  title="View full-size card (only PDF visible)"
+                  title="View full-size card"
                 >
                   Full Size
                 </button>
+              </div>
+            )}
+
+            {/* Read-Only Sample Stationery Watermark / Chip */}
+            {!isFullSize && isReadOnly && (
+              <div className="absolute top-2.5 left-3 z-20 hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-[#C8A45E]/30 text-[10.5px] font-sans text-[#E1C98E]">
+                <Sparkle size={12} weight="fill" className="text-[#C8A45E]" />
+                <span>Sample Stationery · Print-Ready 300 DPI</span>
               </div>
             )}
 
@@ -750,7 +1002,7 @@ export function PdfPreviewModal({
                   templateId={templateId}
                   data={data}
                   scale={1}
-                  editable={true}
+                  editable={!isReadOnly}
                   onUpdateRecipient={(name, city) =>
                     setData({ ...data, recipientName: name, recipientCity: city })
                   }
@@ -781,8 +1033,8 @@ export function PdfPreviewModal({
               </div>
             </div>
 
-            {/* ── Floating Download Action Bar in Full Size Mode ── */}
-            {isFullSize && (
+            {/* ── Floating Action Bar in Full Size Mode (Editable Mode) ── */}
+            {isFullSize && !isReadOnly && (
               <div className="sticky bottom-1 z-30 w-full max-w-md mx-auto mt-3 flex items-center justify-center gap-2 p-2 rounded-2xl bg-black/85 backdrop-blur-md border border-[#C8A45E]/30 shadow-2xl">
                 <button
                   type="button"
@@ -808,10 +1060,79 @@ export function PdfPreviewModal({
                 </button>
               </div>
             )}
+
+            {/* ── Floating Conversion Bar in Full Size Mode (Read-Only Showcase) ── */}
+            {isFullSize && isReadOnly && (
+              <div className="sticky bottom-2 z-30 w-full max-w-lg mx-auto mt-3 flex items-center justify-between gap-2 p-2.5 rounded-2xl bg-black/90 backdrop-blur-md border border-[#C8A45E]/40 shadow-2xl">
+                <div className="pl-2 leading-tight hidden xs:block">
+                  <p className="text-[11px] font-bold text-[#E1C98E] flex items-center gap-1">
+                    <Sparkle size={12} weight="fill" className="text-[#C8A45E]" />
+                    <span>Included Free (Valued at ₹2,500)</span>
+                  </p>
+                  <p className="text-[9.5px] text-stone-400 font-sans">Print PDFs included with every website</p>
+                </div>
+                <div className="flex items-center gap-2 ml-auto w-full xs:w-auto justify-end">
+                  <button
+                    type="button"
+                    onClick={() => setIsFullSize(false)}
+                    className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-stone-300 text-xs font-sans font-medium transition-all cursor-pointer min-h-[40px]"
+                  >
+                    Exit Full Size
+                  </button>
+                  <Link
+                    href="/templates"
+                    onClick={onClose}
+                    className="flex-1 xs:flex-none px-4 py-2 rounded-xl bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] font-bold text-xs uppercase tracking-wider font-sans transition-all flex items-center justify-center gap-1.5 shadow-md cursor-pointer min-h-[40px]"
+                  >
+                    <span>Select Template</span>
+                    <ArrowRight size={13} weight="bold" />
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* ── Standard Modal Footer Controls (Hidden in Full Size Mode) ── */}
-          {!isFullSize && (
+          {/* ── Standard Modal Footer Controls (Read-Only Showcase Mode) ── */}
+          {!isFullSize && isReadOnly && (
+            <div className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-8 py-3 sm:py-4 bg-[#0A0E0C] border-t border-[#C8A45E]/25 z-20 shadow-2xl">
+              {/* Offer Callout */}
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[#C8A45E]/15 border border-[#C8A45E]/30 flex items-center justify-center text-[#E1C98E] shrink-0">
+                  <Gift size={16} weight="fill" className="text-[#C8A45E]" />
+                </div>
+                <div className="leading-tight">
+                  <p className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                    <span>Valued at ₹2,500 · 100% Free with Every Invitation</span>
+                  </p>
+                  <p className="text-[10.5px] sm:text-xs text-stone-400 font-sans">
+                    Both cards are personalized with your couple names, wedding schedule &amp; venue upon selecting any template.
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-stone-300 hover:text-white font-sans text-xs font-semibold transition-all cursor-pointer min-h-[44px]"
+                >
+                  Close Preview
+                </button>
+                <Link
+                  href="/templates"
+                  onClick={onClose}
+                  className="flex-1 sm:flex-none px-5 py-2.5 rounded-full bg-gradient-to-r from-[#C8A45E] via-[#F3D59B] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] font-bold text-xs uppercase tracking-wider font-sans transition-all duration-300 shadow-xl hover:scale-105 active:scale-98 flex items-center justify-center gap-2 cursor-pointer min-h-[44px]"
+                >
+                  <span>Select Template · Get 2 Free PDFs</span>
+                  <ArrowRight size={14} weight="bold" />
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {/* ── Standard Modal Footer Controls (Editable Mode) ── */}
+          {!isFullSize && !isReadOnly && (
             <div className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 px-3.5 sm:px-8 py-2.5 sm:py-4 bg-[#0A0E0C] border-t border-white/10 z-20 shadow-2xl">
               <div className="flex items-center justify-between sm:justify-start gap-2">
                 <span className="text-[11px] sm:text-xs text-stone-400 font-sans truncate">
@@ -847,7 +1168,7 @@ export function PdfPreviewModal({
                   type="button"
                   onClick={handleDownloadBoth}
                   disabled={isDownloading}
-                  className="px-3.5 sm:px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider font-sans transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 border border-white/15 min-h-[44px]"
+                  className="px-3.5 py-4 sm:px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider font-sans transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 border border-white/15 min-h-[44px]"
                 >
                   <FilePdf size={16} weight="bold" />
                   <span>Both</span>
