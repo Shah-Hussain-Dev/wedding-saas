@@ -69,9 +69,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("julian") && !data.hashtag.toLowerCase().includes("genevieve"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -100,11 +98,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
@@ -474,7 +468,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
 
               {/* GROOM BLOCK */}
               <div className="space-y-0.5 pt-1">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAFBF9] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#FAFBF9] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {groomName}
                 </h1>
                 {groomParents ? (
@@ -500,7 +494,7 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
 
               {/* BRIDE BLOCK */}
               <div className="space-y-0.5">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAFBF9] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#FAFBF9] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {brideName}
                 </h1>
                 {brideParents ? (
@@ -596,6 +590,21 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
               <p className="font-cormorant text-sm sm:text-lg md:text-xl text-[#4E687A] leading-relaxed max-w-xl mx-auto font-medium">
                 {invocation.english}
               </p>
+
+              <div className="pt-6 border-t border-[#B7A16E]/30 space-y-2">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#9B875D] block">
+                  WITH THE BLESSINGS OF OUR FAMILIES &amp; ELDERS
+                </span>
+                <p className="font-lora text-xs sm:text-sm text-[#4E687A] max-w-lg mx-auto leading-relaxed">
+                  Together with their esteemed parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence at the grand regency matrimony of their children:
+                </p>
+                <p className="font-playfair text-2xl sm:text-3xl font-bold text-[#4E687A]">
+                  {brideName} <span className="text-[#9B875D]">&amp;</span> {groomName}
+                </p>
+                <p className="font-lora italic text-xs sm:text-sm text-[#9B875D] font-medium">
+                  &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+                </p>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -920,10 +929,10 @@ export default function RoyalMajesty({ data }: RoyalMajestyProps) {
                     <CheckCircle size={36} weight="fill" className="text-[#708FA8]" />
                   </div>
                   <h4 className="text-2xl font-lora font-bold text-[#4E687A]">
-                    Heartfelt Gratitude!
+                    Dhanyawad / JazakAllah!
                   </h4>
                   <p className="text-sm text-[#708FA8] font-lora leading-relaxed max-w-xs mx-auto font-medium">
-                    Thank you, <strong className="text-[#4E687A]">{rsvpName || "Gracious Guest"}</strong>! Your RSVP and warm wishes have been recorded.
+                    Thank you, <strong className="text-[#4E687A]">{rsvpName || "Gracious Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <div className="pt-4 border-t border-[#A9C1D0]/30">
                     <button
@@ -1857,7 +1866,7 @@ function SpatialMemoryUniverse({
           <button
             onClick={prevMemory}
             aria-label="Previous Memory"
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/20 border border-[#A9C1D0]/40 hover:border-[#B7A16E] text-[#FAFBF9] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer flex-shrink-0 group"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 border border-[#A9C1D0]/40 hover:border-[#B7A16E] text-[#FAFBF9] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer flex-shrink-0 group active:scale-95"
           >
             <CaretLeft size={18} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-[#C9B989]" />
           </button>
@@ -1867,7 +1876,7 @@ function SpatialMemoryUniverse({
             whileHover={{ scale: 1.03, y: -1 }}
             whileTap={{ scale: 0.97 }}
             onClick={nextMemory}
-            className="flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-[#B7A16E] via-[#C9B989] to-[#B7A16E] text-[#1D2C36] font-montserrat text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-lg shadow-[#B7A16E]/20 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap"
+            className="flex-1 sm:flex-initial px-4 sm:px-6 py-2.5 sm:py-3 min-h-[44px] rounded-full bg-gradient-to-r from-[#B7A16E] via-[#C9B989] to-[#B7A16E] text-[#1D2C36] font-montserrat text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-lg shadow-[#B7A16E]/20 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap active:scale-95"
           >
             <Sparkle size={14} weight="fill" />
             <span>Next Memory ({activeIndex + 1}/{totalMemories})</span>
@@ -1878,7 +1887,7 @@ function SpatialMemoryUniverse({
           <button
             onClick={nextMemory}
             aria-label="Next Memory"
-            className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/10 hover:bg-white/20 border border-[#A9C1D0]/40 hover:border-[#B7A16E] text-[#FAFBF9] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer flex-shrink-0 group"
+            className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-white/20 border border-[#A9C1D0]/40 hover:border-[#B7A16E] text-[#FAFBF9] flex items-center justify-center transition-all duration-300 shadow-md cursor-pointer flex-shrink-0 group active:scale-95"
           >
             <CaretRight size={18} weight="bold" className="group-hover:translate-x-0.5 transition-transform text-[#C9B989]" />
           </button>

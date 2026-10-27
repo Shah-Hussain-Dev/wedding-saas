@@ -46,9 +46,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("pooja") && !data.hashtag.toLowerCase().includes("rohan"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -106,7 +104,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
   const handleOpenInvitation = () => {
     setIsOpening(true);
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => { });
     }
     confetti({
       particleCount: 80,
@@ -311,9 +309,8 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
             <div className="curtain-container relative w-full max-w-md aspect-[3/4] flex items-center justify-center rounded-3xl p-3 bg-gradient-to-b from-[#5a0e1a] via-[#3a060f] to-[#1a0206] border-2 border-[#d4af37]/50 shadow-[0_25px_60px_rgba(0,0,0,0.9)]">
               {/* Left Curtain Drape */}
               <div
-                className={`curtain-left absolute top-3 bottom-3 left-3 w-[calc(50%-12px)] bg-gradient-to-r from-[#3a060f] to-[#6b1220] rounded-l-2xl border-r border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${
-                  isOpening ? "open" : ""
-                }`}
+                className={`curtain-left absolute top-3 bottom-3 left-3 w-[calc(50%-12px)] bg-gradient-to-r from-[#3a060f] to-[#6b1220] rounded-l-2xl border-r border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${isOpening ? "open" : ""
+                  }`}
               >
                 <div className="w-full h-8 border-t-2 border-b border-[#d4af37]/40" />
                 <div className="my-auto text-center opacity-30">
@@ -324,9 +321,8 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
 
               {/* Right Curtain Drape */}
               <div
-                className={`curtain-right absolute top-3 bottom-3 right-3 w-[calc(50%-12px)] bg-gradient-to-l from-[#3a060f] to-[#6b1220] rounded-r-2xl border-l border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${
-                  isOpening ? "open" : ""
-                }`}
+                className={`curtain-right absolute top-3 bottom-3 right-3 w-[calc(50%-12px)] bg-gradient-to-l from-[#3a060f] to-[#6b1220] rounded-r-2xl border-l border-[#d4af37]/60 flex flex-col justify-between p-4 shadow-2xl z-10 ${isOpening ? "open" : ""
+                  }`}
               >
                 <div className="w-full h-8 border-t-2 border-b border-[#d4af37]/40" />
                 <div className="my-auto text-center opacity-30">
@@ -415,20 +411,14 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                   </h1>
                 </div>
 
-                {(brideParents || groomParents) && (
-                  <div className="border-l-2 border-[#d4af37]/60 pl-4 py-1 space-y-1">
-                    {brideParents ? (
-                      <p className="font-cormorant text-lg text-[#5a0e1a] font-semibold">
-                        {brideParents}
-                      </p>
-                    ) : null}
-                    {groomParents ? (
-                      <p className="font-cormorant text-lg text-[#5a0e1a] font-semibold">
-                        {groomParents}
-                      </p>
-                    ) : null}
-                  </div>
-                )}
+                <div className="border-l-2 border-[#d4af37]/60 pl-4 py-1 space-y-1">
+                  <p className="font-cormorant text-lg text-[#5a0e1a] font-semibold">
+                    {defaultData.couple.brideParents}
+                  </p>
+                  <p className="font-cormorant text-lg text-[#5a0e1a] font-semibold">
+                    {defaultData.couple.groomParents}
+                  </p>
+                </div>
 
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <div className="px-5 py-2.5 rounded-2xl silk-card-shell flex items-center gap-2.5">
@@ -464,7 +454,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                       className="w-full h-full object-cover object-top filter brightness-[0.98] contrast-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#3b0810]/70 via-transparent to-transparent pointer-events-none" />
-                    
+
                     <div className="absolute bottom-4 left-4 right-4 text-center py-2 px-3 rounded-xl bg-[#5a0e1a]/90 backdrop-blur-md border border-[#d4af37]/40">
                       <span className="text-[10px] uppercase tracking-widest text-[#fff2be] font-bold">
                         {hashtag}
@@ -549,13 +539,16 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                 <Sparkle size={24} weight="fill" />
               </div>
               <p className="font-cormorant text-xl md:text-2xl text-[#5a0e1a] font-bold leading-relaxed tracking-wider italic mb-4">
-                {defaultData.vedicMantra}
+                {data?.vedicMantra || defaultData.vedicMantra}
               </p>
               <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto my-4" />
               <p className="text-xs md:text-sm text-[#4a2e1b] font-light leading-relaxed max-w-2xl mx-auto">
-                {defaultData.quote}
+                {data?.quote || defaultData.quote}
               </p>
-              <div className="mt-6 text-[10px] uppercase tracking-[0.25em] text-[#8c5d12] font-bold">
+              <p className="text-xs text-[#8c5d12] italic font-medium mt-3">
+                &ldquo;Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.&rdquo;
+              </p>
+              <div className="mt-5 text-[10px] uppercase tracking-[0.25em] text-[#8c5d12] font-bold">
                 || मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः ||
               </div>
             </motion.div>
@@ -757,7 +750,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                   href={venueMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#5a0e1a] text-[#fff2be] text-xs font-bold hover:bg-[#7a1c2a] transition-colors shadow-lg"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-[#5a0e1a] text-[#fff2be] text-xs font-bold hover:bg-[#7a1c2a] active:scale-95 transition-all shadow-lg"
                 >
                   <ArrowSquareOut size={16} weight="bold" />
                   Get Google Maps Directions
@@ -765,7 +758,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
 
                 <button
                   onClick={handleCopyAddress}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#f8eedc] text-xs font-semibold text-[#5a0e1a] border border-[#d4af37]/50 hover:bg-white transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-[#f8eedc] text-xs font-semibold text-[#5a0e1a] border border-[#d4af37]/50 hover:bg-white active:scale-95 transition-all"
                 >
                   <Copy size={16} weight="bold" />
                   {copiedAddress ? "Copied to Clipboard!" : "Copy Address"}
@@ -871,7 +864,7 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-widest hover:bg-[#7a1c2a] transition-colors shadow-lg mt-2"
+                className="w-full py-3.5 min-h-[44px] rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-widest hover:bg-[#7a1c2a] active:scale-98 transition-all shadow-lg mt-2 flex items-center justify-center"
               >
                 Submit RSVP Confirmation
               </button>
@@ -897,14 +890,14 @@ export default function RoyalElegance({ data }: RoyalEleganceProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h3 className="text-2xl font-cormorant font-bold text-[#5a0e1a] mb-2">
-                    RSVP Confirmed!
+                    Dhanyawad!
                   </h3>
                   <p className="text-xs text-[#523e32] font-light leading-relaxed mb-6">
-                    Thank you, <strong className="text-[#5a0e1a]">{rsvpName}</strong>! Your RSVP and heartfelt blessings have been lovingly recorded.
+                    Thank you, <strong className="text-[#5a0e1a]">{rsvpName}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <button
                     onClick={() => setIsRsvpSubmitted(false)}
-                    className="w-full py-3 rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-wider"
+                    className="w-full py-3 min-h-[44px] rounded-xl bg-[#5a0e1a] text-[#fff2be] text-xs font-bold uppercase tracking-wider active:scale-98 transition-all flex items-center justify-center"
                   >
                     Return to Invitation
                   </button>

@@ -27,7 +27,13 @@ import {
 import { fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
 import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 import { TEMPLATES_MAP, getTemplateDefaultData, NoorNikah } from "@/templates";
-import { PreviewMusicSelector } from "@/components/preview/PreviewMusicSelector";
+import { PreviewControlsDock } from "@/components/preview/PreviewControlsDock";
+import {
+  PreviewFaith,
+  getDefaultFaithForTemplate,
+  getFaithAdjustedTemplateData,
+  FAITH_VARIANTS,
+} from "@/lib/preview-faith-content";
 
 interface TemplateDemoPageProps {
   templateId: string;
@@ -46,6 +52,12 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
   // Dynamic preview music selection
   const [selectedTrackUrl, setSelectedTrackUrl] = useState<string>(fallbackTrack);
 
+  // Dynamic preview faith selection (Universal, Hindu, Muslim)
+  const [selectedFaith, setSelectedFaith] = useState<PreviewFaith>(() => {
+    return getDefaultFaithForTemplate(normalizedId);
+  });
+  const [isHeroTapped, setIsHeroTapped] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -54,8 +66,11 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
           const parsed = JSON.parse(stored);
           if (parsed.musicTrack) {
             setSelectedTrackUrl(parsed.musicTrack);
-            return;
           }
+          if (parsed.religion && (parsed.religion === "universal" || parsed.religion === "hindu" || parsed.religion === "muslim")) {
+            setSelectedFaith(parsed.religion);
+          }
+          return;
         }
         const direct = localStorage.getItem(`unfold_preview_music_${normalizedId}`);
         if (direct) {
@@ -71,19 +86,42 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
       if (e.data?.type === "PREVIEW_MUSIC_CHANGED" && e.data.trackUrl) {
         setSelectedTrackUrl(e.data.trackUrl);
       }
+      if (e.data?.type === "PREVIEW_FAITH_CHANGED" && e.data.faith) {
+        setSelectedFaith(e.data.faith);
+      }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  const interactiveUrl = `/preview/${normalizedId}/interactive?embed=1&musicTrack=${encodeURIComponent(selectedTrackUrl)}`;
+  useEffect(() => {
+    const handleCapturePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement;
+      if (
+        target?.closest("#preview-music-selector-btn") ||
+        target?.closest(".razorpay-checkout-button") ||
+        target?.closest("dialog") ||
+        target?.closest("[role='dialog']")
+      ) {
+        return;
+      }
+      setIsHeroTapped(true);
+    };
+
+    window.addEventListener("pointerdown", handleCapturePointerDown, { capture: true });
+    return () => {
+      window.removeEventListener("pointerdown", handleCapturePointerDown, { capture: true });
+    };
+  }, []);
+
+  const interactiveUrl = `/preview/${normalizedId}/interactive?embed=1&faith=${selectedFaith}&musicTrack=${encodeURIComponent(selectedTrackUrl)}`;
   const dynamicPriceNum = getPriceNumber(normalizedId, 1199);
   const dynamicPriceFormatted = getPriceFormatted(normalizedId, `₹${dynamicPriceNum.toLocaleString("en-IN")}`);
   const royalPriceFormatted = `₹${(dynamicPriceNum + 300).toLocaleString("en-IN")}`;
 
   const sampleGroom = templateDefault?.couple?.groomName || templateDefault?.groomName || "Shaan";
   const sampleBride = templateDefault?.couple?.brideName || templateDefault?.brideName || "Diya";
-  const sampleData = {
+  const baseSampleData = {
     ...templateDefault,
     id: `demo-${normalizedId}`,
     slug: normalizedId,
@@ -99,19 +137,52 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
     },
   };
 
+  const sampleData = {
+    ...getFaithAdjustedTemplateData(baseSampleData, selectedFaith, normalizedId),
+    hideReligionSwitcher: true,
+  };
+
+  const handleHeroPointerDown = (e: React.PointerEvent | React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target?.closest("#preview-music-selector-btn") || target?.closest(".preview-faith-selector-wrapper")) return;
+    setIsHeroTapped(true);
+  };
+
   return (
     <div className="min-h-screen bg-[#FCFBF7] text-[#1A1A1A]">
+      {/* Suppress inconsistent template-native audio buttons so only the unified Mute/Unmute dock button is shown */}
+      <style jsx global>{`
+        [id$="music-toggle"],
+        [id$="music-toggle-btn"],
+        .an-music-toggle,
+        .gn-music-toggle,
+        .kn-music-toggle,
+        .eq-music-toggle,
+        .music-toggle,
+        .noor-music-toggle,
+        .grace-music-toggle,
+        .heritage-music-toggle,
+        .majesty-music-toggle,
+        .rgb-music-toggle,
+        .celestial-audio-pill,
+        .imperial-audio-pill,
+        .luxury-audio-dock {
+          display: none !important;
+        }
+      `}</style>
+
       {/* ─────────────────────────────────────────────────────────────
           1. MOBILE EXPERIENCE (< lg): DIRECT FULLSCREEN PREVIEW & CLEAN FLOW
           ───────────────────────────────────────────────────────────── */}
       <div className="block lg:hidden relative min-h-[100dvh] w-full bg-[#0E1513]">
-        {/* Sticky Mobile Top Navigation Bar (In normal flow, never overlaps template tabs) */}
-        <header className="sticky top-0 inset-x-0 z-50 bg-[#0E1513]/95 backdrop-blur-md border-b border-white/10 px-3 py-2.5 flex items-center justify-between text-white shadow-lg">
+        {/* Sticky Mobile Top Navigation Bar (In normal flow, never overlaps template tabs, above z-[100] template gates) */}
+        <header className="sticky top-0 inset-x-0 z-[110] bg-[#0E1513]/95 backdrop-blur-md border-b border-white/10 px-3 py-2 flex items-center justify-between text-white shadow-lg">
           <Link
             href="/templates"
-            className="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-stone-200 text-xs font-semibold flex items-center gap-1.5 transition-colors active:scale-95"
+            id="mobile-back-to-templates-link"
+            className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-stone-200 text-xs font-bold flex items-center gap-1.5 transition-colors active:scale-95 min-h-[38px]"
           >
-            <ArrowLeft size={14} weight="bold" />
+            <ArrowLeft size={14} weight="bold" className="text-amber-400" />
             <span>Templates</span>
           </Link>
 
@@ -130,16 +201,23 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
         </header>
 
         {/* Direct Mobile Template Render (Full clearance for tabs, envelope seal & audio button) */}
-        <div className="relative w-full min-h-[100dvh]">
+        <div
+          onPointerDown={handleHeroPointerDown}
+          onClick={handleHeroPointerDown}
+          className="relative w-full min-h-[100dvh]"
+        >
           <SelectedTemplate data={sampleData} />
 
-          {/* Dedicated Non-Intrusive Song Selector & Controller */}
-          <PreviewMusicSelector
+          {/* Unified Invitation Controls Dock: Floating Mute/Unmute + Floating Controls Button that opens bottom sheet */}
+          <PreviewControlsDock
             templateId={normalizedId}
             templateName={meta.name}
             templateDefaultUrl={fallbackTrack}
             currentTrackUrl={selectedTrackUrl}
             onSelectTrack={(newUrl) => setSelectedTrackUrl(newUrl)}
+            currentFaith={selectedFaith}
+            onSelectFaith={(f) => setSelectedFaith(f)}
+            isHeroTapped={isHeroTapped}
           />
         </div>
 
@@ -163,6 +241,15 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
             <span>✓ WhatsApp RSVP</span>
             <span>✓ 100% Free to Try</span>
           </div>
+          <div className="pt-2">
+            <Link
+              href="/templates"
+              className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-300 transition-colors py-1.5"
+            >
+              <ArrowLeft size={13} weight="bold" className="text-amber-400" />
+              <span>Back to all templates</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -179,10 +266,11 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
           <div className="page-container relative z-[1]">
             <Link
               href="/templates"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-400 hover:text-accent-gold transition-colors mb-8"
+              id="desktop-back-to-templates-link"
+              className="inline-flex items-center gap-2 px-4 py-2 min-h-[38px] rounded-full bg-stone-900 hover:bg-stone-850 text-white border border-stone-700 hover:border-amber-400/50 text-xs font-bold shadow-md transition-all mb-8 group active:scale-95"
             >
-              <ArrowLeft size={14} />
-              Back to templates
+              <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
+              <span>Back to all templates</span>
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
@@ -191,8 +279,44 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                 initial={{ opacity: 0, x: -24 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
-                className="flex justify-center lg:justify-end lg:sticky lg:top-28"
+                className="flex flex-col items-center lg:items-end gap-3.5 lg:sticky lg:top-28"
               >
+                {/* Desktop Tradition Switcher Bar */}
+                <div className="flex items-center gap-1.5 p-1 rounded-full bg-stone-900/95 border border-stone-800 shadow-xl backdrop-blur-md">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400/90 pl-3 pr-1">
+                    Tradition:
+                  </span>
+                  {(["universal", "hindu", "muslim"] as PreviewFaith[]).map((f) => {
+                    const isSelected = selectedFaith === f;
+                    const v = FAITH_VARIANTS[f];
+                    return (
+                      <button
+                        key={f}
+                        type="button"
+                        onClick={() => setSelectedFaith(f)}
+                        className={`min-h-[36px] px-3.5 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                          isSelected
+                            ? "bg-gradient-to-r from-amber-400 to-amber-500 text-stone-950 font-bold shadow-md shadow-amber-500/20 ring-1 ring-amber-300/40"
+                            : "text-stone-300 hover:text-white hover:bg-white/5"
+                        }`}
+                        aria-pressed={isSelected}
+                      >
+                        <span>{f === "universal" ? "✦" : f === "hindu" ? "🕉️" : "☪️"}</span>
+                        <span>{v.label}</span>
+                        <span
+                          className={`text-[10px] uppercase font-bold px-1.5 py-0.5 rounded-full ${
+                            isSelected
+                              ? "bg-stone-950/20 text-stone-950 font-extrabold"
+                              : "bg-white/10 text-stone-400"
+                          }`}
+                        >
+                          {v.weddingType}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
                 <DemoPhoneFrame src={interactiveUrl} templateName={meta.name} />
               </motion.div>
 
@@ -368,6 +492,15 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
                   </Link>
                 );
               })}
+            </div>
+            <div className="mt-8">
+              <Link
+                href="/templates"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-stone-900 hover:bg-stone-850 text-white border border-stone-700 hover:border-amber-400/50 text-xs font-bold shadow-md transition-all group active:scale-95"
+              >
+                <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
+                <span>Browse All 16 Templates</span>
+              </Link>
             </div>
           </div>
         </section>

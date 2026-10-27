@@ -420,7 +420,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
   const hashtag =
     (data?.hashtag && !data.hashtag.toLowerCase().includes("alexander") && !data.hashtag.toLowerCase().includes("eleanor"))
       ? data.hashtag
-      : dynamicHashtag;
+      : (data?.hashtag?.trim() || dynamicHashtag);
 
   const venueName =
     data?.venueName || data?.venue?.name || defaultData.venue.name;
@@ -463,11 +463,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
@@ -539,7 +535,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
 
     if (heroVideoRef.current) {
       heroVideoRef.current.currentTime = 0;
-      heroVideoRef.current.play().catch(() => {});
+      heroVideoRef.current.play().catch(() => { });
     }
     if (audioRef.current) {
       const audio = audioRef.current;
@@ -567,7 +563,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
       audioRef.current.pause();
       setIsPlayingMusic(false);
     } else {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => { });
     }
   };
 
@@ -612,7 +608,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     setIsVideoStarted(true);
     if (heroVideoRef.current) {
       heroVideoRef.current.currentTime = 0;
-      heroVideoRef.current.play().catch(() => {});
+      heroVideoRef.current.play().catch(() => { });
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -705,11 +701,10 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
 
   return (
     <div
-      className={`imperial-template-root min-h-screen bg-[#E5D8C4] text-[#36281D] font-cormorant relative selection:bg-[#B89773]/40 selection:text-[#2C0F0D] ${
-        !isContentRevealed
+      className={`imperial-template-root min-h-screen bg-[#E5D8C4] text-[#36281D] font-cormorant relative selection:bg-[#B89773]/40 selection:text-[#2C0F0D] ${!isContentRevealed
           ? "h-[100dvh] max-h-screen overflow-hidden touch-none"
           : "overflow-x-hidden"
-      }`}
+        }`}
     >
       {/* Floating Rose Petals & Gold Dust System */}
       <ImperialPetalCanvas density={18} />
@@ -787,33 +782,30 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
             <div className="inline-flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 rounded-full bg-black/65 backdrop-blur-md border border-[#B89773]/40 shadow-md text-xs font-montserrat">
               <button
                 onClick={() => setSelectedReligion("universal")}
-                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                  selectedReligion === "universal"
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${selectedReligion === "universal"
                     ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
                     : "text-stone-300 hover:text-white"
-                }`}
+                  }`}
               >
                 <GlobeHemisphereWest size={11} weight="bold" />
                 Universal
               </button>
               <button
                 onClick={() => setSelectedReligion("hindu")}
-                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                  selectedReligion === "hindu"
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${selectedReligion === "hindu"
                     ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
                     : "text-stone-300 hover:text-white"
-                }`}
+                  }`}
               >
                 <FlowerLotus size={11} weight="bold" />
                 Hindu
               </button>
               <button
                 onClick={() => setSelectedReligion("muslim")}
-                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${
-                  selectedReligion === "muslim"
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full transition-all text-[9px] sm:text-[11px] font-semibold flex items-center gap-1 ${selectedReligion === "muslim"
                     ? "bg-[#B89773] text-[#2C0F0D] shadow-sm font-bold"
                     : "text-stone-300 hover:text-white"
-                }`}
+                  }`}
               >
                 <MoonStars size={11} weight="bold" />
                 Muslim
@@ -1012,634 +1004,648 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
           ==================================================== */}
       <main ref={contentSectionRef} className="relative z-10 overflow-hidden bg-[#E5D8C4]">
 
-      {/* ====================================================
+        {/* ====================================================
           SCENE 02: THE GRAND STAIRCASE & MULTI-PLANE SCROLL PARALLAX
           ==================================================== */}
-      <section
-        ref={staircaseRef}
-        className="relative w-full min-h-[100vh] py-20 sm:py-28 px-4 bg-[#2C0F0D] text-[#E5D8C4] overflow-hidden flex items-center justify-center"
-      >
-        {/* Background Staircase Layer with Deep Vertical & Scale Parallax */}
-        <motion.div
-          style={{ y: staircaseBgY, scale: staircaseBgScale }}
-          className="absolute inset-0 z-0"
+        <section
+          ref={staircaseRef}
+          className="relative w-full min-h-[100vh] py-20 sm:py-28 px-4 bg-[#2C0F0D] text-[#E5D8C4] overflow-hidden flex items-center justify-center"
         >
-          <img
-            src="/templates/imperial-palace/staircase.jpg"
-            alt="Monumental Staircase"
-            className="w-full h-full object-cover filter brightness-[0.65] contrast-[1.15]"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2C0F0D] via-[#2C0F0D]/40 to-[#2C0F0D]" />
-        </motion.div>
-
-        {/* Floating Crystal Chandelier with Pendulum Sway Parallax */}
-        <motion.div
-          style={{ y: chandelierY }}
-          animate={{ rotate: [-1.5, 1.5, -1.5] }}
-          transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-          className="absolute top-0 left-1/2 -translate-x-1/2 z-5 w-48 sm:w-64 opacity-70 pointer-events-none origin-top"
-        >
-          <div className="w-full h-24 bg-gradient-to-b from-[#D5BA97]/30 via-transparent to-transparent blur-xl" />
-        </motion.div>
-
-        {/* Foreground Multi-Plane Parallax Content */}
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
+          {/* Background Staircase Layer with Deep Vertical & Scale Parallax */}
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 1 }}
-            className="space-y-3"
+            style={{ y: staircaseBgY, scale: staircaseBgScale }}
+            className="absolute inset-0 z-0"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#B89773]/60 text-[#D5BA97] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-[0.25em] shadow-lg backdrop-blur-md">
-              <Crown size={14} weight="fill" />
-              <span>Act I · The Grand Staircase</span>
-              <Crown size={14} weight="fill" />
-            </div>
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-playfair font-bold text-[#E5D8C4] tracking-tight">
-              A Love Ascending in Grandeur
-            </h2>
-            <p className="text-sm sm:text-lg text-[#AEA290] font-cormorant italic max-w-xl mx-auto">
-              Beneath soaring gilded vaults and chandeliers suspended in time, two destinies intertwine forever.
-            </p>
+            <img
+              src="/templates/imperial-palace/staircase.jpg"
+              alt="Monumental Staircase"
+              className="w-full h-full object-cover filter brightness-[0.65] contrast-[1.15]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#2C0F0D] via-[#2C0F0D]/40 to-[#2C0F0D]" />
           </motion.div>
 
-          {/* Symmetrical Parallax Pedestals with Differential Scroll Offsets */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 text-left">
-            {/* Groom Pedestal */}
+          {/* Floating Crystal Chandelier with Pendulum Sway Parallax */}
+          <motion.div
+            style={{ y: chandelierY }}
+            animate={{ rotate: [-1.5, 1.5, -1.5] }}
+            transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 z-5 w-48 sm:w-64 opacity-70 pointer-events-none origin-top"
+          >
+            <div className="w-full h-24 bg-gradient-to-b from-[#D5BA97]/30 via-transparent to-transparent blur-xl" />
+          </motion.div>
+
+          {/* Foreground Multi-Plane Parallax Content */}
+          <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
             <motion.div
-              style={{ y: groomCardY }}
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="p-6 sm:p-8 rounded-3xl bg-[#36281D]/85 border border-[#B89773]/60 backdrop-blur-md space-y-2 shadow-2xl transition-shadow hover:shadow-[0_20px_50px_rgba(184,151,115,0.2)]"
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 1 }}
+              className="space-y-3"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#D5BA97] font-montserrat block">
-                  The Noble Groom
-                </span>
-                <Crown size={16} weight="fill" className="text-[#B89773]" />
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#B89773]/60 text-[#D5BA97] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-[0.25em] shadow-lg backdrop-blur-md">
+                <Crown size={14} weight="fill" />
+                <span>Act I · The Grand Staircase</span>
+                <Crown size={14} weight="fill" />
               </div>
-              <h3 className="text-2xl sm:text-3xl font-playfair font-bold text-white">
-                {groomName}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic leading-relaxed">
-                {groomParents}
+              <h2 className="text-3xl sm:text-5xl md:text-6xl font-playfair font-bold text-[#E5D8C4] tracking-tight">
+                A Love Ascending in Grandeur
+              </h2>
+              <p className="text-sm sm:text-lg text-[#AEA290] font-cormorant italic max-w-xl mx-auto">
+                Beneath soaring gilded vaults and chandeliers suspended in time, two destinies intertwine forever.
               </p>
-              {(groomEducation || groomProfession) && (
-                <div className="pt-2 border-t border-[#B89773]/30">
-                  <p className="text-[11px] text-[#D5BA97] font-montserrat font-medium">
-                    {groomEducation}
-                    {groomEducation && groomProfession && " · "}
-                    {groomProfession}
-                  </p>
-                </div>
-              )}
             </motion.div>
 
-            {/* Bride Pedestal */}
-            <motion.div
-              style={{ y: brideCardY }}
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="p-6 sm:p-8 rounded-3xl bg-[#36281D]/85 border border-[#B89773]/60 backdrop-blur-md space-y-2 shadow-2xl transition-shadow hover:shadow-[0_20px_50px_rgba(184,151,115,0.2)]"
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#D5BA97] font-montserrat block">
-                  The Noble Bride
-                </span>
-                <Crown size={16} weight="fill" className="text-[#B89773]" />
-              </div>
-              <h3 className="text-2xl sm:text-3xl font-playfair font-bold text-white">
-                {brideName}
-              </h3>
-              <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic leading-relaxed">
-                {brideParents}
-              </p>
-              {(brideEducation || brideProfession) && (
-                <div className="pt-2 border-t border-[#B89773]/30">
-                  <p className="text-[11px] text-[#D5BA97] font-montserrat font-medium">
-                    {brideEducation}
-                    {brideEducation && brideProfession && " · "}
-                    {brideProfession}
-                  </p>
+            {/* Symmetrical Parallax Pedestals with Differential Scroll Offsets */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 text-left">
+              {/* Groom Pedestal */}
+              <motion.div
+                style={{ y: groomCardY }}
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="p-6 sm:p-8 rounded-3xl bg-[#36281D]/85 border border-[#B89773]/60 backdrop-blur-md space-y-2 shadow-2xl transition-shadow hover:shadow-[0_20px_50px_rgba(184,151,115,0.2)]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#D5BA97] font-montserrat block">
+                    The Noble Groom
+                  </span>
+                  <Crown size={16} weight="fill" className="text-[#B89773]" />
                 </div>
-              )}
-            </motion.div>
+                <h3 className="text-2xl sm:text-3xl font-playfair font-bold text-white">
+                  {groomName}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic leading-relaxed">
+                  {groomParents}
+                </p>
+                {(groomEducation || groomProfession) && (
+                  <div className="pt-2 border-t border-[#B89773]/30">
+                    <p className="text-[11px] text-[#D5BA97] font-montserrat font-medium">
+                      {groomEducation}
+                      {groomEducation && groomProfession && " · "}
+                      {groomProfession}
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+
+              {/* Bride Pedestal */}
+              <motion.div
+                style={{ y: brideCardY }}
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -6, scale: 1.02 }}
+                className="p-6 sm:p-8 rounded-3xl bg-[#36281D]/85 border border-[#B89773]/60 backdrop-blur-md space-y-2 shadow-2xl transition-shadow hover:shadow-[0_20px_50px_rgba(184,151,115,0.2)]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#D5BA97] font-montserrat block">
+                    The Noble Bride
+                  </span>
+                  <Crown size={16} weight="fill" className="text-[#B89773]" />
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-playfair font-bold text-white">
+                  {brideName}
+                </h3>
+                <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic leading-relaxed">
+                  {brideParents}
+                </p>
+                {(brideEducation || brideProfession) && (
+                  <div className="pt-2 border-t border-[#B89773]/30">
+                    <p className="text-[11px] text-[#D5BA97] font-montserrat font-medium">
+                      {brideEducation}
+                      {brideEducation && brideProfession && " · "}
+                      {brideProfession}
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ====================================================
+        {/* ====================================================
           SCENE 03: THE ROYAL INVITATION PROCLAMATION (IVORY BREATHING SPACE)
           ==================================================== */}
-      <section
-        ref={proclamationRef}
-        className="py-20 sm:py-32 px-4 bg-[#E5D8C4] text-[#36281D] relative z-10 text-center"
-      >
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            style={{ scale: proclamationCardScale, y: proclamationCardY }}
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.9 }}
-            className="imperial-stationery-card rounded-[2.5rem] p-8 sm:p-14 md:p-18 space-y-6 text-center"
-          >
-            {/* Ornamental Corner Filigree */}
-            <div className="imperial-gold-corner-tl" />
-            <div className="imperial-gold-corner-tr" />
-            <div className="imperial-gold-corner-bl" />
-            <div className="imperial-gold-corner-br" />
+        <section
+          ref={proclamationRef}
+          className="py-20 sm:py-32 px-4 bg-[#E5D8C4] text-[#36281D] relative z-10 text-center"
+        >
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              style={{ scale: proclamationCardScale, y: proclamationCardY }}
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.9 }}
+              className="imperial-stationery-card rounded-[2.5rem] p-8 sm:p-14 md:p-18 space-y-6 text-center"
+            >
+              {/* Ornamental Corner Filigree */}
+              <div className="imperial-gold-corner-tl" />
+              <div className="imperial-gold-corner-tr" />
+              <div className="imperial-gold-corner-bl" />
+              <div className="imperial-gold-corner-br" />
 
-            <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-[#B89773]/20 border border-[#B89773]/60 text-[#551618] text-xs font-bold font-montserrat uppercase tracking-[0.2em]">
-              <Crown size={15} weight="fill" />
-              <span>{invocation.tag}</span>
-              <Crown size={15} weight="fill" />
-            </div>
-
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#551618] tracking-tight">
-              {invocation.title}
-            </h2>
-
-            <p className="font-amiri text-lg sm:text-2xl md:text-3xl text-[#593C28] italic leading-relaxed whitespace-pre-line max-w-2xl mx-auto">
-              {invocation.arabicOrSanskrit}
-            </p>
-
-            <div className="w-28 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-[#B89773] to-transparent mx-auto" />
-
-            <p className="font-cormorant text-base sm:text-xl md:text-2xl text-[#36281D] leading-relaxed max-w-xl mx-auto font-medium">
-              {invocation.english}
-            </p>
-
-            {/* Consecrated Matrimonial Muhurat & Date Callout */}
-            <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
-              <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#36281D] text-[#E5D8C4] text-xs font-montserrat font-bold shadow-md">
-                <CalendarCheck size={16} weight="bold" className="text-[#D5BA97]" />
-                <span>{dayStr}, {dateStr} {yearStr}</span>
+              <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-[#B89773]/20 border border-[#B89773]/60 text-[#551618] text-xs font-bold font-montserrat uppercase tracking-[0.2em]">
+                <Crown size={15} weight="fill" />
+                <span>{invocation.tag}</span>
+                <Crown size={15} weight="fill" />
               </div>
-              <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/70 border border-[#B89773] text-[#551618] text-xs font-montserrat font-bold shadow-sm">
-                <Clock size={16} weight="bold" className="text-[#B89773]" />
-                <span>{data?.weddingTime || defaultData.weddingTime}</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* ====================================================
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#551618] tracking-tight">
+                {invocation.title}
+              </h2>
+
+              <p className="font-amiri text-lg sm:text-2xl md:text-3xl text-[#593C28] italic leading-relaxed whitespace-pre-line max-w-2xl mx-auto">
+                {invocation.arabicOrSanskrit}
+              </p>
+
+              <div className="w-28 sm:w-36 h-[1.5px] bg-gradient-to-r from-transparent via-[#B89773] to-transparent mx-auto" />
+
+              <p className="font-cormorant text-base sm:text-xl md:text-2xl text-[#36281D] leading-relaxed max-w-xl mx-auto font-medium">
+                {invocation.english}
+              </p>
+
+              <div className="pt-6 border-t border-[#B89773]/40 space-y-2">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#551618] block">
+                  WITH THE BLESSINGS OF OUR FAMILIES &amp; ELDERS
+                </span>
+                <p className="font-cormorant text-xs sm:text-base text-[#593C28] max-w-lg mx-auto leading-relaxed">
+                  Together with their cherished parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence at the grand imperial wedding celebration of their children:
+                </p>
+                <p className="font-playfair text-2xl sm:text-4xl font-bold text-[#551618]">
+                  {brideName} <span className="text-[#B89773]">&amp;</span> {groomName}
+                </p>
+                <p className="font-cormorant italic text-xs sm:text-sm text-[#986E47] font-medium">
+                  &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+                </p>
+              </div>
+
+              {/* Consecrated Matrimonial Muhurat & Date Callout */}
+              <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
+                <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#36281D] text-[#E5D8C4] text-xs font-montserrat font-bold shadow-md">
+                  <CalendarCheck size={16} weight="bold" className="text-[#D5BA97]" />
+                  <span>{dayStr}, {dateStr} {yearStr}</span>
+                </div>
+                <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/70 border border-[#B89773] text-[#551618] text-xs font-montserrat font-bold shadow-sm">
+                  <Clock size={16} weight="bold" className="text-[#B89773]" />
+                  <span>{data?.weddingTime || defaultData.weddingTime}</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ====================================================
           SCENE 04: THE ROYAL SCRATCH CARD EXPERIENCE
           ==================================================== */}
-      <section className="py-16 sm:py-24 px-4 bg-[#AEA290]/30 text-center relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-3xl mx-auto space-y-3"
-        >
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#551618] font-bold font-montserrat block">
-            Interactive Imperial Reveal
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-playfair font-bold text-[#2C0F0D]">
-            The Sovereign Wedding Date
-          </h2>
-          <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic max-w-md mx-auto">
-            Gently rub the antique gold metallic foil beneath to unveil the official wedding date and matrimonial muhurat
-          </p>
-
-          <div className="pt-4">
-            <RoyalScratchRevealCard
-              brideName={brideName}
-              groomName={groomName}
-              dayStr={dayStr}
-              dateStr={dateStr}
-              yearStr={yearStr}
-              weddingTime={data?.weddingTime || defaultData.weddingTime}
-              venueName={venueName}
-            />
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ====================================================
-          SCENE 05: OUR STORY AS THE PALACE ART GALLERY (WITH PARALLAX FRAMES)
-          ==================================================== */}
-      <section
-        ref={galleryRef}
-        className="py-20 sm:py-32 px-4 bg-[#2C0F0D] text-[#E5D8C4] relative z-10 overflow-hidden"
-      >
-        {/* Gallery Corridor Background with Parallax */}
-        <motion.div
-          style={{ y: galleryBgY }}
-          className="absolute inset-0 z-0 opacity-25"
-        >
-          <img
-            src="/templates/imperial-palace/art-gallery.jpg"
-            alt="Art Gallery Corridor"
-            className="w-full h-full object-cover filter brightness-[0.7]"
-          />
-        </motion.div>
-
-        <div className="relative z-10 max-w-6xl mx-auto space-y-12">
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#B89773]/60 text-[#D5BA97] text-xs font-bold font-montserrat uppercase tracking-[0.2em]">
-              <Crown size={14} weight="fill" />
-              <span>The Imperial Art Gallery</span>
-              <Crown size={14} weight="fill" />
-            </div>
-            <h2 className="text-3xl sm:text-5xl font-playfair font-bold text-[#E5D8C4]">
-              Memoirs in Gilded Gold
-            </h2>
-            <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic max-w-md mx-auto">
-              Step through our private palace collection commemorating milestones of our union
-            </p>
-          </div>
-
-          {/* Grid of Gilded Picture Frames with Multi-plane Scroll Offsets */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {galleryImages.map((imgSrc, idx) => {
-              const frameY = idx % 3 === 0 ? galleryCard1Y : idx % 3 === 1 ? galleryCard2Y : galleryCard3Y;
-              return (
-                <motion.div
-                  key={idx}
-                  style={{ y: frameY }}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.7, delay: (idx % 3) * 0.15 }}
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  className="imperial-art-frame group cursor-pointer"
-                  onClick={() => handleOpenPhoto(imgSrc, idx)}
-                >
-                  <div className="relative h-80 sm:h-96 overflow-hidden rounded">
-                    <img
-                      src={imgSrc}
-                      alt="Palace gallery photograph"
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/70 border border-[#B89773] text-[#D5BA97] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <MagnifyingGlassPlus size={16} weight="bold" />
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ====================================================
-          SCENE 06: WEDDING EVENTS AS PALACE CHAMBERS
-          ==================================================== */}
-      <section className="py-20 sm:py-32 px-4 bg-[#E5D8C4] text-[#36281D] relative z-10">
-        <div className="max-w-5xl mx-auto space-y-10">
-          <div className="text-center space-y-3">
+        <section className="py-16 sm:py-24 px-4 bg-[#AEA290]/30 text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-3xl mx-auto space-y-3"
+          >
             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#551618] font-bold font-montserrat block">
-              Palace Itinerary
+              Interactive Imperial Reveal
             </span>
-            <h2 className="text-3xl sm:text-5xl font-playfair font-bold text-[#551618]">
-              Chambers of Celebration
+            <h2 className="text-2xl sm:text-4xl font-playfair font-bold text-[#2C0F0D]">
+              The Sovereign Wedding Date
             </h2>
             <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic max-w-md mx-auto">
-              Each ceremonial rite unfolds in a distinct architectural environment of our estate
+              Gently rub the antique gold metallic foil beneath to unveil the official wedding date and matrimonial muhurat
             </p>
 
-            {/* Chamber Selection Pills with Smooth Sliding Layout Pill */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
-              {events.map((evt: any, idx: number) => {
-                const isActive = selectedChamberIdx === idx;
+            <div className="pt-4">
+              <RoyalScratchRevealCard
+                brideName={brideName}
+                groomName={groomName}
+                dayStr={dayStr}
+                dateStr={dateStr}
+                yearStr={yearStr}
+                weddingTime={data?.weddingTime || defaultData.weddingTime}
+                venueName={venueName}
+              />
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ====================================================
+          SCENE 05: OUR STORY AS THE PALACE ART GALLERY (WITH PARALLAX FRAMES)
+          ==================================================== */}
+        <section
+          ref={galleryRef}
+          className="py-20 sm:py-32 px-4 bg-[#2C0F0D] text-[#E5D8C4] relative z-10 overflow-hidden"
+        >
+          {/* Gallery Corridor Background with Parallax */}
+          <motion.div
+            style={{ y: galleryBgY }}
+            className="absolute inset-0 z-0 opacity-25"
+          >
+            <img
+              src="/templates/imperial-palace/art-gallery.jpg"
+              alt="Art Gallery Corridor"
+              className="w-full h-full object-cover filter brightness-[0.7]"
+            />
+          </motion.div>
+
+          <div className="relative z-10 max-w-6xl mx-auto space-y-12">
+            <div className="text-center space-y-3">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-[#B89773]/60 text-[#D5BA97] text-xs font-bold font-montserrat uppercase tracking-[0.2em]">
+                <Crown size={14} weight="fill" />
+                <span>The Imperial Art Gallery</span>
+                <Crown size={14} weight="fill" />
+              </div>
+              <h2 className="text-3xl sm:text-5xl font-playfair font-bold text-[#E5D8C4]">
+                Memoirs in Gilded Gold
+              </h2>
+              <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic max-w-md mx-auto">
+                Step through our private palace collection commemorating milestones of our union
+              </p>
+            </div>
+
+            {/* Grid of Gilded Picture Frames with Multi-plane Scroll Offsets */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {galleryImages.map((imgSrc, idx) => {
+                const frameY = idx % 3 === 0 ? galleryCard1Y : idx % 3 === 1 ? galleryCard2Y : galleryCard3Y;
                 return (
-                  <button
+                  <motion.div
                     key={idx}
-                    onClick={() => setSelectedChamberIdx(idx)}
-                    className={`relative px-4 py-2 rounded-full text-xs font-montserrat font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                      isActive
-                        ? "text-[#E5D8C4] shadow-lg scale-105"
-                        : "bg-white/60 hover:bg-white text-[#593C28] border border-[#B89773]/50"
-                    }`}
+                    style={{ y: frameY }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.7, delay: (idx % 3) * 0.15 }}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="imperial-art-frame group cursor-pointer"
+                    onClick={() => handleOpenPhoto(imgSrc, idx)}
                   >
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-chamber-indicator"
-                        className="absolute inset-0 bg-[#551618] rounded-full z-0"
-                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                    <div className="relative h-80 sm:h-96 overflow-hidden rounded">
+                      <img
+                        src={imgSrc}
+                        alt="Palace gallery photograph"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
-                    )}
-                    <span className="relative z-10">0{idx + 1}</span>
-                    <span className="relative z-10">{evt.name}</span>
-                  </button>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/70 border border-[#B89773] text-[#D5BA97] flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                        <MagnifyingGlassPlus size={16} weight="bold" />
+                      </div>
+                    </div>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
+        </section>
 
-          {/* Active Chamber Card Details */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedChamberIdx}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
-              transition={{ duration: 0.4 }}
-              className="imperial-stationery-card rounded-3xl p-8 sm:p-12 space-y-6"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#B89773]/30 pb-4">
-                <span className="px-3.5 py-1 rounded-full bg-[#551618] text-[#E5D8C4] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-wider">
-                  {events[selectedChamberIdx]?.chamber || `Chamber 0${selectedChamberIdx + 1}`}
-                </span>
-                <span className="text-xs sm:text-sm font-bold text-[#551618] font-montserrat flex items-center gap-1.5">
-                  <Clock size={15} weight="bold" />
-                  {events[selectedChamberIdx]?.time}
-                </span>
+        {/* ====================================================
+          SCENE 06: WEDDING EVENTS AS PALACE CHAMBERS
+          ==================================================== */}
+        <section className="py-20 sm:py-32 px-4 bg-[#E5D8C4] text-[#36281D] relative z-10">
+          <div className="max-w-5xl mx-auto space-y-10">
+            <div className="text-center space-y-3">
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#551618] font-bold font-montserrat block">
+                Palace Itinerary
+              </span>
+              <h2 className="text-3xl sm:text-5xl font-playfair font-bold text-[#551618]">
+                Chambers of Celebration
+              </h2>
+              <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic max-w-md mx-auto">
+                Each ceremonial rite unfolds in a distinct architectural environment of our estate
+              </p>
+
+              {/* Chamber Selection Pills with Smooth Sliding Layout Pill */}
+              <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+                {events.map((evt: any, idx: number) => {
+                  const isActive = selectedChamberIdx === idx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedChamberIdx(idx)}
+                      className={`relative px-4 py-2 rounded-full text-xs font-montserrat font-bold transition-all cursor-pointer flex items-center gap-2 ${isActive
+                          ? "text-[#E5D8C4] shadow-lg scale-105"
+                          : "bg-white/60 hover:bg-white text-[#593C28] border border-[#B89773]/50"
+                        }`}
+                    >
+                      {isActive && (
+                        <motion.div
+                          layoutId="active-chamber-indicator"
+                          className="absolute inset-0 bg-[#551618] rounded-full z-0"
+                          transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                        />
+                      )}
+                      <span className="relative z-10">0{idx + 1}</span>
+                      <span className="relative z-10">{evt.name}</span>
+                    </button>
+                  );
+                })}
               </div>
+            </div>
+
+            {/* Active Chamber Card Details */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedChamberIdx}
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.98 }}
+                transition={{ duration: 0.4 }}
+                className="imperial-stationery-card rounded-3xl p-8 sm:p-12 space-y-6"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#B89773]/30 pb-4">
+                  <span className="px-3.5 py-1 rounded-full bg-[#551618] text-[#E5D8C4] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-wider">
+                    {events[selectedChamberIdx]?.chamber || `Chamber 0${selectedChamberIdx + 1}`}
+                  </span>
+                  <span className="text-xs sm:text-sm font-bold text-[#551618] font-montserrat flex items-center gap-1.5">
+                    <Clock size={15} weight="bold" />
+                    {events[selectedChamberIdx]?.time}
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-2xl sm:text-4xl font-playfair font-bold text-[#551618]">
+                    {events[selectedChamberIdx]?.name}
+                  </h3>
+                  <p className="text-sm sm:text-base text-[#593C28] font-cormorant leading-relaxed">
+                    {events[selectedChamberIdx]?.description}
+                  </p>
+                </div>
+
+                {/* Chamber Attributes */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                  <div className="p-4 rounded-2xl bg-white/70 border border-[#B89773]/40 space-y-1">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#986E47] font-montserrat flex items-center gap-1">
+                      <CalendarCheck size={14} weight="bold" /> Date &amp; Timing
+                    </span>
+                    <p className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant">
+                      {events[selectedChamberIdx]?.date} · {events[selectedChamberIdx]?.time}
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-2xl bg-white/70 border border-[#B89773]/40 space-y-1">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#986E47] font-montserrat flex items-center gap-1">
+                      <MapPin size={14} weight="bold" /> Ceremonial Venue
+                    </span>
+                    <p className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant truncate">
+                      {events[selectedChamberIdx]?.venue || venueName}
+                    </p>
+                  </div>
+                </div>
+
+                {events[selectedChamberIdx]?.dress && (
+                  <div className="p-4 rounded-2xl bg-[#551618]/10 border border-[#B89773]/40 flex items-center justify-between gap-2">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-[#551618] font-montserrat">
+                      Dress Code:
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant">
+                      {events[selectedChamberIdx]?.dress}
+                    </span>
+                  </div>
+                )}
+
+                <div className="pt-2">
+                  <a
+                    href={
+                      venueMapUrl ||
+                      `https://maps.google.com/?q=${encodeURIComponent(
+                        events[selectedChamberIdx]?.venue || venueName
+                      )}`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-full imperial-btn-gold text-xs font-bold font-montserrat shadow-lg cursor-pointer"
+                  >
+                    <MapPin size={15} weight="bold" />
+                    <span>Get Directions to {events[selectedChamberIdx]?.venue || venueName}</span>
+                    <ArrowSquareOut size={14} />
+                  </a>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </section>
+
+        {/* ====================================================
+          SCENE 07: THE ROYAL LOVE LETTER / IMPERIAL DECREE
+          ==================================================== */}
+        <section
+          ref={letterRef}
+          className="py-20 sm:py-32 px-4 bg-[#AEA290]/20 text-center relative z-10"
+        >
+          <motion.div
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="max-w-2xl mx-auto space-y-6"
+          >
+            <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#551618] font-bold font-montserrat block">
+              Personal Imperial Vow
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-[#2C0F0D]">
+              The Sealed Royal Letter
+            </h2>
+            <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic max-w-md mx-auto">
+              Tap the burgundy wax seal to unlock the personal letter written for our honoured guests
+            </p>
+
+            <div className="pt-4 flex justify-center">
+              <div className="w-full max-w-md imperial-stationery-card rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
+                {/* Wax Seal Toggle with Ripple Animation */}
+                <div className="flex justify-center">
+                  <motion.div
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.94 }}
+                    onClick={() => setIsLetterOpened(!isLetterOpened)}
+                    className="imperial-wax-seal cursor-pointer"
+                    title="Click to toggle letter"
+                  >
+                    <div className="imperial-wax-seal-inner font-cinzel text-xs font-bold">
+                      {isLetterOpened ? <EnvelopeOpen size={18} /> : <Envelope size={18} />}
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Unfolded Letter Content with 3D Origin Flip */}
+                <AnimatePresence>
+                  {isLetterOpened ? (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0, rotateX: -20 }}
+                      animate={{ opacity: 1, height: "auto", rotateX: 0 }}
+                      exit={{ opacity: 0, height: 0, rotateX: -20 }}
+                      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className="space-y-4 pt-2 border-t border-[#B89773]/40"
+                    >
+                      <span className="font-alex-brush text-2xl text-[#551618] block">
+                        Dearest Honoured Guests,
+                      </span>
+                      <p className="font-cormorant text-sm sm:text-base text-[#36281D] leading-relaxed italic">
+                        &ldquo;It is with hearts overflowing with gratitude and reverence that we invite you to share in the consecration of our marriage. Each of you has shaped our lives, and your presence will forever illuminate the halls of our union.&rdquo;
+                      </p>
+                      <div className="pt-2 text-right">
+                        <p className="font-great-vibes text-2xl text-[#551618]">
+                          {groomName} &amp; {brideName}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <div className="text-xs text-[#593C28] font-montserrat">
+                      ✦ Tap wax seal to unfold imperial message ✦
+                    </div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
+        </section>
+
+        {/* ====================================================
+          SCENE 08: THE ESTATE & IMPERIAL PAVILION (VENUE REVEAL)
+          ==================================================== */}
+        <section className="py-20 sm:py-32 px-4 bg-[#E5D8C4] text-[#36281D] text-center relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="imperial-stationery-card rounded-[2.5rem] p-8 sm:p-14 space-y-6"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
+                className="w-16 h-16 rounded-full bg-[#551618] text-[#D5BA97] flex items-center justify-center mx-auto shadow-lg border border-[#B89773]"
+              >
+                <MapPin size={28} weight="fill" />
+              </motion.div>
 
               <div className="space-y-2">
-                <h3 className="text-2xl sm:text-4xl font-playfair font-bold text-[#551618]">
-                  {events[selectedChamberIdx]?.name}
-                </h3>
-                <p className="text-sm sm:text-base text-[#593C28] font-cormorant leading-relaxed">
-                  {events[selectedChamberIdx]?.description}
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#986E47] font-bold font-montserrat">
+                  The Estate &amp; Grounds
+                </span>
+                <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#551618]">
+                  {venueName}
+                </h2>
+                <p className="text-xs sm:text-sm md:text-base text-[#593C28] max-w-lg mx-auto font-cormorant font-medium">
+                  {venueAddress}
                 </p>
               </div>
 
-              {/* Chamber Attributes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="p-4 rounded-2xl bg-white/70 border border-[#B89773]/40 space-y-1">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#986E47] font-montserrat flex items-center gap-1">
-                    <CalendarCheck size={14} weight="bold" /> Date &amp; Timing
-                  </span>
-                  <p className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant">
-                    {events[selectedChamberIdx]?.date} · {events[selectedChamberIdx]?.time}
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-2xl bg-white/70 border border-[#B89773]/40 space-y-1">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#986E47] font-montserrat flex items-center gap-1">
-                    <MapPin size={14} weight="bold" /> Ceremonial Venue
-                  </span>
-                  <p className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant truncate">
-                    {events[selectedChamberIdx]?.venue || venueName}
-                  </p>
-                </div>
-              </div>
-
-              {events[selectedChamberIdx]?.dress && (
-                <div className="p-4 rounded-2xl bg-[#551618]/10 border border-[#B89773]/40 flex items-center justify-between gap-2">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-[#551618] font-montserrat">
-                    Dress Code:
-                  </span>
-                  <span className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant">
-                    {events[selectedChamberIdx]?.dress}
-                  </span>
-                </div>
-              )}
-
-              <div className="pt-2">
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <a
-                  href={
-                    venueMapUrl ||
-                    `https://maps.google.com/?q=${encodeURIComponent(
-                      events[selectedChamberIdx]?.venue || venueName
-                    )}`
-                  }
+                  href={venueMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full imperial-btn-gold text-xs font-bold font-montserrat shadow-lg cursor-pointer"
+                  className="px-6 py-3.5 rounded-full imperial-btn-gold text-xs font-bold font-montserrat flex items-center gap-2 shadow-lg cursor-pointer"
                 >
-                  <MapPin size={15} weight="bold" />
-                  <span>Get Directions to {events[selectedChamberIdx]?.venue || venueName}</span>
-                  <ArrowSquareOut size={14} />
+                  <ArrowSquareOut size={16} weight="bold" />
+                  <span>Google Maps Navigation</span>
                 </a>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </section>
 
-      {/* ====================================================
-          SCENE 07: THE ROYAL LOVE LETTER / IMPERIAL DECREE
-          ==================================================== */}
-      <section
-        ref={letterRef}
-        className="py-20 sm:py-32 px-4 bg-[#AEA290]/20 text-center relative z-10"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-2xl mx-auto space-y-6"
-        >
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#551618] font-bold font-montserrat block">
-            Personal Imperial Vow
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-playfair font-bold text-[#2C0F0D]">
-            The Sealed Royal Letter
-          </h2>
-          <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic max-w-md mx-auto">
-            Tap the burgundy wax seal to unlock the personal letter written for our honoured guests
-          </p>
-
-          <div className="pt-4 flex justify-center">
-            <div className="w-full max-w-md imperial-stationery-card rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden">
-              {/* Wax Seal Toggle with Ripple Animation */}
-              <div className="flex justify-center">
-                <motion.div
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.94 }}
-                  onClick={() => setIsLetterOpened(!isLetterOpened)}
-                  className="imperial-wax-seal cursor-pointer"
-                  title="Click to toggle letter"
+                <button
+                  onClick={handleCopyAddress}
+                  className="px-6 py-3.5 rounded-full bg-white border border-[#B89773] hover:border-[#551618] text-[#36281D] text-xs font-bold font-montserrat flex items-center gap-2 cursor-pointer shadow-sm transition-all"
                 >
-                  <div className="imperial-wax-seal-inner font-cinzel text-xs font-bold">
-                    {isLetterOpened ? <EnvelopeOpen size={18} /> : <Envelope size={18} />}
-                  </div>
-                </motion.div>
+                  {copiedAddress ? (
+                    <>
+                      <CheckCircle size={16} weight="fill" className="text-emerald-700" />
+                      <span>Address Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={16} weight="bold" />
+                      <span>Copy Estate Address</span>
+                    </>
+                  )}
+                </button>
               </div>
-
-              {/* Unfolded Letter Content with 3D Origin Flip */}
-              <AnimatePresence>
-                {isLetterOpened ? (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0, rotateX: -20 }}
-                    animate={{ opacity: 1, height: "auto", rotateX: 0 }}
-                    exit={{ opacity: 0, height: 0, rotateX: -20 }}
-                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="space-y-4 pt-2 border-t border-[#B89773]/40"
-                  >
-                    <span className="font-alex-brush text-2xl text-[#551618] block">
-                      Dearest Honoured Guests,
-                    </span>
-                    <p className="font-cormorant text-sm sm:text-base text-[#36281D] leading-relaxed italic">
-                      &ldquo;It is with hearts overflowing with gratitude and reverence that we invite you to share in the consecration of our marriage. Each of you has shaped our lives, and your presence will forever illuminate the halls of our union.&rdquo;
-                    </p>
-                    <div className="pt-2 text-right">
-                      <p className="font-great-vibes text-2xl text-[#551618]">
-                        {groomName} &amp; {brideName}
-                      </p>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <div className="text-xs text-[#593C28] font-montserrat">
-                    ✦ Tap wax seal to unfold imperial message ✦
-                  </div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ====================================================
-          SCENE 08: THE ESTATE & IMPERIAL PAVILION (VENUE REVEAL)
-          ==================================================== */}
-      <section className="py-20 sm:py-32 px-4 bg-[#E5D8C4] text-[#36281D] text-center relative z-10">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="imperial-stationery-card rounded-[2.5rem] p-8 sm:p-14 space-y-6"
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
-              className="w-16 h-16 rounded-full bg-[#551618] text-[#D5BA97] flex items-center justify-center mx-auto shadow-lg border border-[#B89773]"
-            >
-              <MapPin size={28} weight="fill" />
             </motion.div>
+          </div>
+        </section>
 
-            <div className="space-y-2">
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#986E47] font-bold font-montserrat">
-                The Estate &amp; Grounds
-              </span>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-playfair font-bold text-[#551618]">
-                {venueName}
-              </h2>
-              <p className="text-xs sm:text-sm md:text-base text-[#593C28] max-w-lg mx-auto font-cormorant font-medium">
-                {venueAddress}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <a
-                href={venueMapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-6 py-3.5 rounded-full imperial-btn-gold text-xs font-bold font-montserrat flex items-center gap-2 shadow-lg cursor-pointer"
-              >
-                <ArrowSquareOut size={16} weight="bold" />
-                <span>Google Maps Navigation</span>
-              </a>
-
-              <button
-                onClick={handleCopyAddress}
-                className="px-6 py-3.5 rounded-full bg-white border border-[#B89773] hover:border-[#551618] text-[#36281D] text-xs font-bold font-montserrat flex items-center gap-2 cursor-pointer shadow-sm transition-all"
-              >
-                {copiedAddress ? (
-                  <>
-                    <CheckCircle size={16} weight="fill" className="text-emerald-700" />
-                    <span>Address Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy size={16} weight="bold" />
-                    <span>Copy Estate Address</span>
-                  </>
-                )}
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ====================================================
+        {/* ====================================================
           SCENE 09: RSVP — THE ROYAL GUEST REGISTER
           ==================================================== */}
-      <section className="py-20 sm:py-32 px-4 bg-[#2C0F0D] text-[#E5D8C4] text-center relative z-10">
-        <div className="max-w-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="p-8 sm:p-12 md:p-16 rounded-[2.5rem] bg-[#36281D] border border-[#B89773] shadow-2xl space-y-6"
-          >
-            <div className="w-16 h-16 rounded-full bg-[#551618] border border-[#B89773] flex items-center justify-center text-[#D5BA97] shadow-xl mx-auto">
-              <Heart size={30} weight="fill" />
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#D5BA97] font-bold font-montserrat block">
-                Your Gracious Presence
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-playfair font-bold text-white">
-                The Royal Guest Register
-              </h2>
-              <p className="text-xs sm:text-sm text-[#AEA290] max-w-md mx-auto font-cormorant italic leading-relaxed">
-                Kindly confirm your attendance and transmit your blessings for the official palace guest ledger.
-              </p>
-            </div>
-
-            <motion.button
-              type="button"
-              onClick={() => setIsRsvpOpen(true)}
-              whileHover={{ scale: 1.04, y: -2 }}
-              whileTap={{ scale: 0.96 }}
-              className="imperial-btn-gold w-full sm:w-auto sm:min-w-[280px] mx-auto px-8 py-4 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-2 cursor-pointer font-montserrat"
+        <section className="py-20 sm:py-32 px-4 bg-[#2C0F0D] text-[#E5D8C4] text-center relative z-10">
+          <div className="max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="p-8 sm:p-12 md:p-16 rounded-[2.5rem] bg-[#36281D] border border-[#B89773] shadow-2xl space-y-6"
             >
-              <Sparkle size={18} weight="fill" />
-              <span>✦ Sign Royal Guestbook ✦</span>
-            </motion.button>
-          </motion.div>
-        </div>
-      </section>
+              <div className="w-16 h-16 rounded-full bg-[#551618] border border-[#B89773] flex items-center justify-center text-[#D5BA97] shadow-xl mx-auto">
+                <Heart size={30} weight="fill" />
+              </div>
 
-      {/* ====================================================
+              <div className="space-y-2">
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#D5BA97] font-bold font-montserrat block">
+                  Your Gracious Presence
+                </span>
+                <h2 className="text-2xl sm:text-4xl font-playfair font-bold text-white">
+                  The Royal Guest Register
+                </h2>
+                <p className="text-xs sm:text-sm text-[#AEA290] max-w-md mx-auto font-cormorant italic leading-relaxed">
+                  Kindly confirm your attendance and transmit your blessings for the official palace guest ledger.
+                </p>
+              </div>
+
+              <motion.button
+                type="button"
+                onClick={() => setIsRsvpOpen(true)}
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.96 }}
+                className="imperial-btn-gold w-full sm:w-auto sm:min-w-[280px] mx-auto px-8 py-4 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-2 cursor-pointer font-montserrat"
+              >
+                <Sparkle size={18} weight="fill" />
+                <span>✦ Sign Royal Guestbook ✦</span>
+              </motion.button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ====================================================
           FOOTER & REPLAY
           ==================================================== */}
-      <footer className="pt-14 pb-0 bg-[#2C2019] border-t border-[#B89773]/30 text-center space-y-4 text-xs text-[#E5D8C4]/80">
-        <p className="font-cormorant italic text-base text-[#E5D8C4]">
-          With profound love and royal gratitude, <br />
-          {groomName} &amp; {brideName} and Families
-        </p>
-        <p className="text-[11px] font-montserrat tracking-widest text-[#D5BA97] font-semibold">
-          {hashtag}
-        </p>
-        <div className="flex items-center justify-center gap-4 pt-2 pb-10">
-          <button
-            onClick={handleReplayEntrance}
-            className="inline-flex items-center gap-1.5 text-xs text-[#D5BA97] hover:text-white font-semibold cursor-pointer transition-colors"
-          >
-            <ArrowsClockwise size={14} /> Replay Palace Entrance
-          </button>
-          <span>·</span>
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="inline-flex items-center gap-1.5 text-xs text-[#AEA290] hover:text-white font-semibold cursor-pointer transition-colors"
-          >
-            Back to Top
-          </button>
-        </div>
+        <footer className="pt-14 pb-0 bg-[#2C2019] border-t border-[#B89773]/30 text-center space-y-4 text-xs text-[#E5D8C4]/80">
+          <p className="font-cormorant italic text-base text-[#E5D8C4]">
+            With profound love and royal gratitude, <br />
+            {groomName} &amp; {brideName} and Families
+          </p>
+          <p className="text-[11px] font-montserrat tracking-widest text-[#D5BA97] font-semibold">
+            {hashtag}
+          </p>
+          <div className="flex items-center justify-center gap-4 pt-2 pb-10">
+            <button
+              onClick={handleReplayEntrance}
+              className="inline-flex items-center gap-1.5 text-xs text-[#D5BA97] hover:text-white font-semibold cursor-pointer transition-colors"
+            >
+              <ArrowsClockwise size={14} /> Replay Palace Entrance
+            </button>
+            <span>·</span>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className="inline-flex items-center gap-1.5 text-xs text-[#AEA290] hover:text-white font-semibold cursor-pointer transition-colors"
+            >
+              Back to Top
+            </button>
+          </div>
 
-        {/* ── Marketing Content At End of Template Footer ── */}
-        <div className="text-left">
-          <TemplateMarketingFooter
-            templateId="imperial-palace"
-            templateName="Imperial Palace"
-            brideName={brideName}
-            groomName={groomName}
-          />
-        </div>
-      </footer>
+          {/* ── Marketing Content At End of Template Footer ── */}
+          <div className="text-left">
+            <TemplateMarketingFooter
+              templateId="imperial-palace"
+              templateName="Imperial Palace"
+              brideName={brideName}
+              groomName={groomName}
+            />
+          </div>
+        </footer>
       </main>
 
       {/* ====================================================
@@ -1746,7 +1752,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
 
                 <button
                   type="button"
-                  className="w-10 h-10 rounded-full bg-[#551618] text-[#E5D8C4] flex items-center justify-center hover:bg-[#833624] transition-colors cursor-pointer flex-shrink-0 shadow-md border border-[#B89773]/50"
+                  className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-[#551618] text-[#E5D8C4] flex items-center justify-center hover:bg-[#833624] transition-colors cursor-pointer flex-shrink-0 shadow-md border border-[#B89773]/50 active:scale-95"
                   onClick={() => setIsRsvpOpen(false)}
                   aria-label="Close RSVP form"
                 >
@@ -1762,10 +1768,10 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                       <CheckCircle size={32} weight="fill" />
                     </div>
                     <h4 className="text-xl font-playfair font-bold text-[#551618]">
-                      Blessings Recorded
+                      Dhanyawad / JazakAllah!
                     </h4>
                     <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic leading-relaxed max-w-sm mx-auto">
-                      Your attendance has been formally recorded in the sovereign ledger. We eagerly await your gracious company.
+                      Thank you, <strong className="text-[#551618]">{rsvpName || "Honoured Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                     </p>
                     <button
                       type="button"
@@ -1830,22 +1836,20 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                         <button
                           type="button"
                           onClick={() => setRsvpAttending("yes")}
-                          className={`py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                            rsvpAttending === "yes"
+                          className={`py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${rsvpAttending === "yes"
                               ? "bg-[#551618] text-[#E5D8C4] shadow-md border-2 border-[#551618]"
                               : "bg-white border border-[#B89773] text-[#593C28]"
-                          }`}
+                            }`}
                         >
                           Joyfully Attend
                         </button>
                         <button
                           type="button"
                           onClick={() => setRsvpAttending("no")}
-                          className={`py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
-                            rsvpAttending === "no"
+                          className={`py-2.5 sm:py-3 rounded-xl text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${rsvpAttending === "no"
                               ? "bg-[#551618] text-[#E5D8C4] shadow-md border-2 border-[#551618]"
                               : "bg-white border border-[#B89773] text-[#593C28]"
-                          }`}
+                            }`}
                         >
                           Regretfully Decline
                         </button>
@@ -1870,7 +1874,6 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                         type="submit"
                         className="w-full py-3.5 sm:py-4 rounded-xl imperial-btn-gold text-xs font-bold uppercase tracking-widest shadow-xl flex items-center justify-center gap-2 cursor-pointer"
                       >
-                        <Sparkle size={16} weight="fill" />
                         <span>✦ Stamp &amp; Seal RSVP ✦</span>
                       </button>
                     </div>

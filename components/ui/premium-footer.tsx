@@ -68,11 +68,11 @@ export function PremiumFooter() {
               Join hundreds of modern couples who turned their wedding stationery into an interactive 3D digital masterpiece.
             </p>
 
-            <div className="pt-2 flex flex-col items-center justify-center gap-3">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto">
+            <div className="pt-2 flex flex-col items-center justify-center gap-3.5 w-full">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 w-full">
                 <Link
                   href="/templates"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold tracking-widest uppercase font-sans transition-all duration-300 shadow-[0_15px_40px_rgba(200,164,94,0.35)] hover:scale-105 active:scale-95 cursor-pointer"
+                  className="w-full sm:w-auto h-[50px] sm:h-[52px] inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 rounded-full bg-gradient-to-r from-[#C8A45E] via-[#E1C98E] to-[#C8A45E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold tracking-widest uppercase font-sans transition-all duration-300 shadow-[0_15px_40px_rgba(200,164,94,0.35)] hover:scale-[1.03] active:scale-95 cursor-pointer whitespace-nowrap shrink-0"
                 >
                   <span className="roll">
                     <span className="roll__a">Start My Invitation · From {siteConfig.startingPrice}</span>
@@ -81,26 +81,34 @@ export function PremiumFooter() {
                   <ArrowRight size={15} weight="bold" />
                 </Link>
 
-                <a
-                  href={siteConfig.getWhatsAppSupportUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/50 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer shadow-md"
-                >
-                  <WhatsappLogo size={18} weight="fill" className="text-emerald-400" />
-                  <span>WhatsApp: {siteConfig.phone}</span>
-                </a>
+                <div className="grid grid-cols-2 sm:flex items-center gap-3 w-full sm:w-auto">
+                  <a
+                    href={siteConfig.getWhatsAppSupportUrl()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Chat on WhatsApp (${siteConfig.phone})`}
+                    aria-label={`WhatsApp Support ${siteConfig.phone}`}
+                    className="w-full sm:w-auto h-[50px] sm:h-[52px] inline-flex items-center justify-center gap-2 px-4 sm:px-6 rounded-full bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/50 text-white text-xs sm:text-sm font-semibold tracking-wide font-sans backdrop-blur-md transition-all duration-300 cursor-pointer shadow-md whitespace-nowrap shrink-0 hover:scale-[1.03] active:scale-95"
+                  >
+                    <WhatsappLogo size={18} weight="fill" className="text-emerald-400 shrink-0" />
+                    <span className="hidden sm:inline">WhatsApp Support</span>
+                    <span className="sm:hidden">WhatsApp</span>
+                  </a>
 
-                <a
-                  href={`mailto:${siteConfig.email.support}`}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wider font-sans backdrop-blur-md transition-all cursor-pointer"
-                >
-                  <EnvelopeSimple size={16} weight="fill" className="text-[#E1C98E]" />
-                  <span>Email Support</span>
-                </a>
+                  <a
+                    href={`mailto:${siteConfig.email.support}`}
+                    title={`Email Support (${siteConfig.email.support})`}
+                    aria-label={`Email Support at ${siteConfig.email.support}`}
+                    className="w-full sm:w-auto h-[50px] sm:h-[52px] inline-flex items-center justify-center gap-2 px-4 sm:px-6 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold tracking-wide font-sans backdrop-blur-md transition-all duration-300 cursor-pointer whitespace-nowrap shrink-0 hover:scale-[1.03] active:scale-95"
+                  >
+                    <EnvelopeSimple size={18} weight="fill" className="text-[#E1C98E] shrink-0" />
+                    <span className="hidden sm:inline">Email Support</span>
+                    <span className="sm:hidden">Email</span>
+                  </a>
+                </div>
               </div>
 
-              <p className="text-[11px] sm:text-xs text-[#E1C98E]/80 font-sans tracking-wide">
+              <p className="text-[11px] sm:text-xs text-[#E1C98E]/80 font-sans tracking-wide text-center">
                 ✦ Customize 100% free first · Instant WhatsApp delivery · Call/WhatsApp {siteConfig.phone}
               </p>
             </div>

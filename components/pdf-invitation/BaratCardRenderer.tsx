@@ -18,6 +18,8 @@ export interface PdfCardInvitationData {
   venueAddress?: string;
   hostNames?: string;
   hostRelation?: string;
+  groomParents?: string;
+  brideParents?: string;
   parentageDetails?: string;
   rsvpContact?: string;
   complimentsText?: string;
@@ -64,7 +66,7 @@ export function BaratCardRenderer({
           year: "numeric",
         });
       }
-    } catch (_) {}
+    } catch (_) { }
     return dateStr || "Monday, 12th October, 2026";
   };
 
@@ -185,7 +187,7 @@ export function BaratCardRenderer({
           </h1>
         </div>
 
-        {/* BOTTOM: Recipient Honor Section (Matching Screenshot 1 & Shah Husian.pdf) */}
+        {/* BOTTOM: Recipient Honor Section (Matching Screenshot 1 & Shah Hussain.pdf) */}
         <div className="space-y-3 mb-4">
           <span
             className="text-[11px] sm:text-xs uppercase tracking-[0.22em] font-serif font-bold block"

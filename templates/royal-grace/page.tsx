@@ -68,9 +68,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("aarav") && !data.hashtag.toLowerCase().includes("samaira"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -99,11 +97,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State (opens at ~6.0s)
   const [isVideoStarted, setIsVideoStarted] = useState(false);
@@ -467,7 +461,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
 
               {/* GROOM BLOCK */}
               <div className="space-y-0.5 pt-1">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#f3cf7a] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#f3cf7a] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight">
                   {groomName}
                 </h1>
                 {groomParents ? (
@@ -491,7 +485,7 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
 
               {/* BRIDE BLOCK */}
               <div className="space-y-0.5 pb-2">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#f3cf7a] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#f3cf7a] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight">
                   {brideName}
                 </h1>
                 {brideParents ? (
@@ -571,6 +565,21 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
               <p className="font-cormorant text-sm sm:text-base md:text-lg text-[#3C2F1D] leading-relaxed max-w-xl mx-auto font-medium">
                 {invocation.english}
               </p>
+
+              <div className="pt-5 border-t border-[#9A7A49]/30 space-y-2">
+                <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#9A7A49] block">
+                  WITH THE BLESSINGS OF OUR ELDERS
+                </span>
+                <p className="font-lora text-xs sm:text-sm text-[#4A3B24] max-w-lg mx-auto leading-relaxed">
+                  Together with their beloved parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence to celebrate the grand botanical royal wedding of their children:
+                </p>
+                <p className="font-playfair text-2xl sm:text-3xl font-bold text-[#3C2F1D]">
+                  {brideName} <span className="text-[#9A7A49]">&amp;</span> {groomName}
+                </p>
+                <p className="font-lora italic text-xs sm:text-sm text-[#9A7A49] font-medium">
+                  &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+                </p>
+              </div>
             </motion.div>
           </div>
         </section>
@@ -859,10 +868,10 @@ export default function RoyalGrace({ data }: RoyalGraceProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h4 className="text-2xl font-lora font-bold text-[#3C2F1D]">
-                    Heartfelt Gratitude!
+                    Dhanyawad / JazakAllah!
                   </h4>
                   <p className="text-sm text-[#4B4D34] font-lora leading-relaxed max-w-xs mx-auto font-medium">
-                    Thank you, <strong className="text-[#3C2F1D]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been lovingly recorded.
+                    Thank you, <strong className="text-[#3C2F1D]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <div className="pt-4 border-t border-[#9A7A49]/30">
                     <button

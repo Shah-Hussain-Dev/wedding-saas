@@ -66,25 +66,36 @@
 
 .gn-header-arch {
   text-align: center;
-  margin-bottom: 24px;
-  padding-top: 8px;
+  margin-bottom: 12px;
+  padding-top: 4px;
 }
 
 .gn-arch-bismillah {
   font-family: 'Amiri', serif;
-  font-size: clamp(24px, 4vw, 32px);
+  font-size: clamp(22px, 3.8vw, 30px);
   color: var(--gn-rose-light);
   text-shadow: 0 0 16px rgba(212, 132, 154, 0.5);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  line-height: 1.2;
 }
 
 .gn-arch-tag {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(9.5px, 1.4vw, 11.5px);
-  letter-spacing: 0.25em;
+  font-size: clamp(8.5px, 1.3vw, 11px);
+  letter-spacing: 0.22em;
   color: var(--gn-rose-primary);
   text-transform: uppercase;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.gn-arch-sparkle {
+  font-size: 8px;
+  color: var(--gn-rose-light);
+  opacity: 0.85;
 }
 
 /* ── Hero Stage Floating Elements (Hanging Rose-Gold Lanterns & Sparkles) ── */
@@ -351,170 +362,285 @@
 /* ── Seamless Ink-on-Paper Overlay on the Ivory/Rose Card ── */
 .gn-blank-card-overlay {
   position: absolute;
-  top: 13%;
-  height: 61%;
-  left: 14%;
-  right: 14%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: 20;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   pointer-events: none;
   box-sizing: border-box;
 }
 
-.gn-paper-print-content {
-  width: 100%;
+/* ── Zone 1: Upper Parchment Section (Calligraphy, Honor & Names) ── */
+.gn-card-zone-upper {
+  position: absolute;
+  top: 27%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 68%;
+  max-width: 270px;
+  height: 16.8%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 10px;
+  gap: 2px;
+  pointer-events: none;
 }
 
 .gn-print-header-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1px;
+  gap: 0;
 }
 
 .gn-print-bismillah {
   font-family: 'Amiri', serif;
-  font-size: 16.5px;
-  color: var(--gn-ink-bismillah);
+  font-size: clamp(16px, 4.4vw, 20px);
+  color: #26030D;
   line-height: 1.15;
   font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .gn-print-honor {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 7.5px;
-  font-weight: 700;
+  font-family: 'Cinzel', serif;
+  font-size: clamp(7.5px, 2vw, 9px);
+  font-weight: 800;
   letter-spacing: 0.22em;
-  color: var(--gn-ink-honor);
+  color: #6B172E;
   text-transform: uppercase;
-  margin: 0;
+  margin: 1px 0 0 0;
+  line-height: 1.1;
 }
 
 .gn-print-couple-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 1px;
+  margin-top: 1px;
 }
 
 .gn-print-couple-names {
   font-family: 'Playfair Display', serif;
-  font-size: 21px;
-  font-weight: 700;
-  color: var(--gn-ink-names);
-  line-height: 1.15;
-  margin: 0;
+  font-size: clamp(20px, 5.6vw, 25px);
+  font-weight: 800;
+  color: #1A0108;
+  line-height: 1.12;
+  margin: 1px 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .gn-couple-bride,
 .gn-couple-groom {
-  color: var(--gn-ink-names);
+  color: #1A0108;
+  font-weight: 800;
 }
 
 .gn-print-amp {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 16px;
-  color: var(--gn-ink-bismillah);
-  font-weight: 600;
+  font-size: clamp(18px, 5vw, 23px);
+  color: #8C1C38;
+  font-weight: 700;
 }
 
 .gn-print-subtext {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 9.5px;
-  color: var(--gn-ink-subtext);
+  font-size: clamp(9.5px, 2.5vw, 11.5px);
+  color: #4A0C1D;
+  font-weight: 700;
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.18;
 }
 
-.gn-print-details-group {
+/* ── Zone 2: Royal Floral Oval Medallion (Sacred Verse, Date, Venue) ── */
+.gn-card-zone-medallion {
+  position: absolute;
+  top: 45.5%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 38%;
+  max-width: 152px;
+  height: 39%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  width: 100%;
-  margin-top: 2px;
+  justify-content: space-evenly;
+  text-align: center;
+  pointer-events: none;
+  box-sizing: border-box;
+  padding: 2px 0;
 }
 
-.gn-print-date-badge {
-  display: inline-flex;
+.gn-medallion-date-badge {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  background: rgba(212, 132, 154, 0.16);
-  border: 1px solid rgba(212, 132, 154, 0.45);
+  justify-content: center;
+  gap: 1px;
+  background: rgba(255, 252, 248, 0.96);
+  border: 1.5px solid #821D38;
   border-radius: 999px;
-  padding: 2.5px 8px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 9px;
-  font-weight: 700;
-  color: var(--gn-ink-meta);
-  letter-spacing: 0.04em;
+  padding: 3.5px 12px;
+  box-shadow: 0 3px 8px rgba(70, 10, 25, 0.16);
+  max-width: 148px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.gn-print-venue-badge {
-  font-size: 8.5px;
-  color: var(--gn-ink-subtext);
-  display: inline-flex;
+.gn-medallion-date-badge .gn-date-primary {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(8px, 2.1vw, 9.5px);
+  font-weight: 800;
+  color: #24030B;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.gn-medallion-date-badge .gn-date-hijri {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(7.5px, 1.9vw, 8.5px);
+  font-weight: 700;
+  font-style: italic;
+  color: #781932;
+  white-space: nowrap;
+}
+
+.gn-medallion-verse-box {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  font-weight: 500;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  max-width: 148px;
+  margin: 1px 0;
+}
+
+.gn-medallion-arabic {
+  font-family: 'Amiri', serif;
+  font-size: clamp(14px, 3.8vw, 17px);
+  color: #26030D;
+  font-weight: 700;
+  line-height: 1.15;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.gn-medallion-verse {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(10px, 2.6vw, 12px);
+  font-weight: 700;
+  color: #1F020A;
+  line-height: 1.2;
+  margin: 0;
+  text-align: center;
+}
+
+.gn-medallion-verse-ref {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(6.5px, 1.7vw, 7.5px);
+  letter-spacing: 0.16em;
+  color: #7A1932;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+
+.gn-medallion-venue-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5px;
+  width: 100%;
+  max-width: 148px;
+  text-align: center;
+}
+
+.gn-print-venue-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(7.5px, 1.9vw, 8.5px);
+  font-weight: 800;
+  color: #24030B;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.gn-print-venue-city {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(7px, 1.8vw, 8px);
+  font-weight: 700;
+  color: #5B0E23;
+  line-height: 1.2;
 }
 
 .gn-print-time-text {
-  font-size: 8px;
-  color: var(--gn-ink-honor);
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-weight: 600;
-}
-
-/* ── Envelope Bottom Action Controls ── */
-.gn-envelope-actions-bar {
-  position: absolute;
-  bottom: 5.5%;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 25;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  width: 82%;
-  max-width: 320px;
-}
-
-.gn-print-btn-primary {
-  flex: 1.2;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(6.8px, 1.7vw, 7.8px);
+  font-weight: 700;
+  color: #781932;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  background: var(--gn-rose-gold);
-  color: #2E101A;
-  border: none;
+  gap: 3px;
+  margin-top: 1px;
+  white-space: nowrap;
+}
+
+/* ── Zone 3: Envelope Bottom Action Controls (Floating Dock) ── */
+.gn-envelope-actions-bar {
+  position: absolute;
+  bottom: 4.2%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 86%;
+  max-width: 290px;
+  pointer-events: auto;
+}
+
+.gn-print-btn-primary {
+  flex: 1.25;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #FFEBF0 0%, #E8A0B2 45%, #B84768 100%);
+  color: #1A0108;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 999px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   font-family: 'Cinzel', serif;
-  font-size: 9.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  box-shadow: 0 4px 12px rgba(212, 132, 154, 0.4);
+  font-size: clamp(10.5px, 2.5vw, 12px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  box-shadow: 0 4px 14px rgba(184, 71, 104, 0.45);
   cursor: pointer;
-  min-height: 36px;
+  min-height: 44px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.gn-print-btn-primary:active {
+  transform: scale(0.96);
 }
 
 .gn-print-btn-secondary {
@@ -522,32 +648,58 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  background: rgba(30, 8, 16, 0.85);
-  color: var(--gn-rose-light);
-  border: 1px solid rgba(212, 132, 154, 0.5);
+  gap: 6px;
+  background: rgba(22, 5, 11, 0.94);
+  color: #FFF0F4;
+  border: 1.5px solid rgba(212, 132, 154, 0.65);
   border-radius: 999px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   font-family: 'Cinzel', serif;
-  font-size: 9.5px;
-  font-weight: 600;
+  font-size: clamp(10.5px, 2.5vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  backdrop-filter: blur(4px);
-  min-height: 36px;
+  backdrop-filter: blur(10px);
+  min-height: 44px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gn-print-btn-secondary:active {
+  transform: scale(0.96);
 }
 
 .gn-print-btn-replay {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: rgba(30, 8, 16, 0.85);
-  border: 1px solid rgba(212, 132, 154, 0.5);
-  color: var(--gn-rose-light);
+  background: rgba(22, 5, 11, 0.94);
+  border: 1.5px solid rgba(212, 132, 154, 0.65);
+  color: #FFF0F4;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  backdrop-filter: blur(10px);
+  min-height: 44px;
+  min-width: 44px;
+  transition: transform 0.25s ease, background 0.2s ease;
+}
+
+.gn-print-btn-replay:active {
+  transform: rotate(-45deg) scale(0.94);
+}
+
+/* ── Seamless Bottom Watermark Dissolve Mask ── */
+.gn-video-watermark-mask {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: linear-gradient(to top, #120509 0%, rgba(18, 5, 9, 0.88) 45%, transparent 100%);
+  pointer-events: none;
+  z-index: 8;
 }
 
 .gn-scroll-cue {
@@ -1140,8 +1292,10 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   background: rgba(30, 8, 16, 0.75);
   border: 1px solid var(--gn-gold-border);
@@ -1236,8 +1390,10 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   background: rgba(26, 11, 16, 0.85);
   border: 1px solid var(--gn-rose-primary);
@@ -1384,6 +1540,17 @@
   backdrop-filter: blur(8px);
 }
 
+@media (max-width: 640px) {
+  .gn-music-toggle {
+    bottom: 14px;
+    right: 14px;
+    width: 46px;
+    height: 46px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
 .gn-modal-overlay {
   position: fixed;
   inset: 0;
@@ -1410,13 +1577,26 @@
 
 .gn-modal-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
+  top: 10px;
+  right: 10px;
   background: transparent;
   border: none;
   color: var(--gn-text-muted);
   cursor: pointer;
-  padding: 6px;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.gn-modal-close:hover {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .gn-modal-header {
@@ -1712,18 +1892,21 @@
     align-items: center;
     justify-content: center;
     pointer-events: auto;
+    gap: 16px;
   }
 
-  .gn-paper-print-content {
+  .gn-card-zone-upper {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 840px;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 14px;
-    max-width: 840px;
-    width: 100%;
-    margin: 0 auto;
+    gap: 6px;
   }
 
   .gn-print-bismillah {
@@ -1768,18 +1951,69 @@
     margin: 0;
   }
 
-  .gn-print-details-group {
+  .gn-card-zone-medallion {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: 780px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 0;
+  }
+
+  .gn-medallion-date-badge {
+    font-size: 13.5px;
+    padding: 6px 20px;
+    background: rgba(36, 14, 22, 0.7);
+    border: 1px solid rgba(212, 132, 154, 0.55);
+    color: #FFFDF8;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .gn-medallion-date-badge .gn-date-hijri {
+    color: var(--gn-rose-light);
+  }
+
+  .gn-medallion-verse-box {
+    margin: 4px 0;
+    gap: 3px;
+  }
+
+  .gn-medallion-arabic {
+    font-size: 22px;
+    color: #FCE7F3;
+    text-shadow: 0 0 12px rgba(212, 132, 154, 0.6);
+  }
+
+  .gn-medallion-verse {
+    font-size: 17px;
+    color: #FCE7F3;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    letter-spacing: 0.04em;
+  }
+
+  .gn-medallion-verse-ref {
+    font-size: 10px;
+    color: var(--gn-rose-light);
+    letter-spacing: 0.18em;
+  }
+
+  .gn-medallion-venue-group {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-top: 6px;
+    margin-top: 4px;
   }
 
-  .gn-print-date-badge,
-  .gn-print-venue-badge,
+  .gn-print-venue-name,
+  .gn-print-venue-city,
   .gn-print-time-text {
     font-size: 12.5px;
     padding: 7px 18px;
@@ -1797,7 +2031,7 @@
     left: auto;
     transform: none;
     z-index: 25;
-    max-width: 400px;
+    max-width: 420px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -2088,7 +2322,8 @@
   100% { transform: translateX(24px) rotate(25deg); }
 }
 
-/* ── Meet the Couple Story Section ── */
+/* ── Elders' Blessing & Meet the Couple Story Section ── */
+.gn-elders-blessing-card,
 .gn-couple-story-box {
   text-align: center;
   padding: 36px 24px;

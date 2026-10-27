@@ -5,15 +5,15 @@ import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import { Lottie } from "lottie-react";
 import confetti from "canvas-confetti";
 import { ScratchCard } from "@/components/invitation/ScratchCard";
-import { 
-  SpeakerHigh, 
-  SpeakerSlash, 
-  CalendarBlank, 
-  Clock, 
-  MapPin, 
-  Heart, 
-  Check, 
-  Sparkle, 
+import {
+  SpeakerHigh,
+  SpeakerSlash,
+  CalendarBlank,
+  Clock,
+  MapPin,
+  Heart,
+  Check,
+  Sparkle,
   ArrowSquareOut,
   CaretLeft,
   CaretRight,
@@ -99,16 +99,18 @@ export default function NoorNikah({ data }: NoorNikahProps) {
   // Template Data extraction with safe fallbacks from data.json
   const brideName = data?.brideName || data?.couple?.brideName || data?.bride_name || resolvedData.couple?.brideName || "Diya";
   const groomName = data?.groomName || data?.couple?.groomName || data?.groom_name || resolvedData.couple?.groomName || "Shaan";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || resolvedData.couple?.brideParents || "Mr. & Mrs. Tariq Anwar Khan";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || resolvedData.couple?.groomParents || "Mr. & Mrs. Imran Ahmed Mirza";
   const rawDate = data?.weddingDate || data?.date || resolvedData.weddingDate;
   const weddingDate = new Date(rawDate);
   const formattedDate = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      })
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    })
     : resolvedData.dateFormatted;
 
   const revealMonthDay = !isNaN(weddingDate.getTime())
@@ -122,6 +124,24 @@ export default function NoorNikah({ data }: NoorNikahProps) {
     : "2026";
 
   const islamicDate = data?.islamicDate || resolvedData.islamicDate || "13 Rabi' al-Thani 1448 AH";
+
+  // Faith Adaptation (Muslim Nikah, Hindu Vivah, Universal Wedding)
+  const faith = (data?.religion || data?.faith || "muslim").toLowerCase();
+  const isHindu = faith === "hindu";
+  const isUniversal = faith === "universal";
+
+  const weddingType = data?.weddingType || (isHindu ? "Vivah" : isUniversal ? "Wedding" : "Nikah");
+  const sacredInvocation = data?.sacredInvocation || data?.bismillah || (isHindu ? "॥ श्री गणेशाय नमः ॥" : isUniversal ? "✦ TWO HEARTS · ONE JOURNEY ✦" : "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ");
+  const envSub = isHindu ? "ROYAL VIVAH INVITATION" : isUniversal ? "ROYAL WEDDING INVITATION" : "ROYAL NIKAH INVITATION";
+  const heroEyebrow = isHindu ? "THE ROYAL VIVAH CELEBRATION" : isUniversal ? "THE ROYAL WEDDING CELEBRATION" : "THE ROYAL NIKAH CELEBRATION";
+
+  const eldersGraceMessage = isHindu ? (
+    <>With the divine grace of <strong>Lord Ganesha</strong> and the affectionate prayers of our beloved parents and elders:</>
+  ) : isUniversal ? (
+    <>With joyful hearts and the loving blessings of our beloved parents and elders:</>
+  ) : (
+    <>With the boundless grace of <strong>Almighty Allah (SWT)</strong> and the cherished prayers of our beloved parents and elders:</>
+  );
 
   const venueName = data?.venueName || data?.venue?.name || resolvedData.venue?.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || resolvedData.venue?.address;
@@ -138,12 +158,12 @@ export default function NoorNikah({ data }: NoorNikahProps) {
   const rawGallery = (data?.gallery && Array.isArray(data.gallery) && data.gallery.length > 0)
     ? data.gallery
     : (data?.slideshowImages && Array.isArray(data.slideshowImages) && data.slideshowImages.length > 0)
-    ? data.slideshowImages
-    : (data?.galleryImages && Array.isArray(data.galleryImages) && data.galleryImages.length > 0)
-    ? data.galleryImages
-    : data?.heroImageUrl
-    ? [data.heroImageUrl]
-    : resolvedData.gallery;
+      ? data.slideshowImages
+      : (data?.galleryImages && Array.isArray(data.galleryImages) && data.galleryImages.length > 0)
+        ? data.galleryImages
+        : data?.heroImageUrl
+          ? [data.heroImageUrl]
+          : resolvedData.gallery;
 
   const fallbackGallery = [
     "/templates/noor-e-nikah/hero-couple-mobile.jpg",
@@ -156,8 +176,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
   const parsedGalleryImages: string[] = (Array.isArray(rawGallery) && rawGallery.length > 0)
     ? rawGallery
-        .map((g: any) => (typeof g === "string" ? g : g?.url || g?.src || ""))
-        .filter(Boolean)
+      .map((g: any) => (typeof g === "string" ? g : g?.url || g?.src || ""))
+      .filter(Boolean)
     : [];
 
   const galleryImages: string[] = parsedGalleryImages.length > 0 ? parsedGalleryImages : fallbackGallery;
@@ -174,14 +194,14 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
   const galleryCaptions = (Array.isArray(rawGallery) && rawGallery.length > 0)
     ? rawGallery.map((g: any, i: number) => {
-        if (typeof g === "object" && g && (g.title || g.caption)) {
-          return {
-            title: g.title || g.caption || defaultGalleryCaptions[i % defaultGalleryCaptions.length]?.title || "Cherished Moments",
-            subtitle: g.subtitle || defaultGalleryCaptions[i % defaultGalleryCaptions.length]?.subtitle || `${brideName} & ${groomName}`,
-          };
-        }
-        return defaultGalleryCaptions[i % defaultGalleryCaptions.length] || defaultGalleryCaptions[0];
-      })
+      if (typeof g === "object" && g && (g.title || g.caption)) {
+        return {
+          title: g.title || g.caption || defaultGalleryCaptions[i % defaultGalleryCaptions.length]?.title || "Cherished Moments",
+          subtitle: g.subtitle || defaultGalleryCaptions[i % defaultGalleryCaptions.length]?.subtitle || `${brideName} & ${groomName}`,
+        };
+      }
+      return defaultGalleryCaptions[i % defaultGalleryCaptions.length] || defaultGalleryCaptions[0];
+    })
     : defaultGalleryCaptions;
 
   // Countdown timer logic
@@ -237,7 +257,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
   // Progressive Slow & Ultra-Smooth Envelope Unfolding Sequence
   const handleOpenInvitation = () => {
     if (isLighting || isFlapOpen || isOpening) return;
-    
+
     // 1. Slow golden energy radiance starts & music unlocks
     setIsLighting(true);
 
@@ -361,8 +381,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
             <div className="noor-env-container">
               {/* Header Inscription */}
               <div className="noor-env-top-bar">
-                <p className="noor-env-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
-                <p className="noor-env-sub">ROYAL NIKAH INVITATION</p>
+                <p className="noor-env-bismillah">{sacredInvocation}</p>
+                <p className="noor-env-sub">{envSub}</p>
               </div>
 
               {/* 3D Envelope Master Assembly */}
@@ -488,11 +508,11 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                   <div className="noor-env-card-insert">
                     <div className="noor-env-card-inner">
                       <div className="noor-card-content-wrap">
-                        {/* Top Islamic Invocation */}
+                        {/* Top Invocation */}
                         <div className="noor-card-arch-top">
-                          <span className="noor-card-bismillah-mini">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</span>
+                          <span className="noor-card-bismillah-mini">{sacredInvocation}</span>
                           <div className="noor-card-divider-line" />
-                          <span className="noor-card-tagline">THE WEDDING CELEBRATION OF</span>
+                          <span className="noor-card-tagline">THE {weddingType.toUpperCase()} CELEBRATION OF</span>
                         </div>
 
                         {/* Couple Names & Motifs */}
@@ -607,7 +627,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                     <div className="noor-wax-seal-body">
                       {/* Outer Golden Aura Ring */}
                       <div className="noor-seal-aura" />
-                      
+
                       {/* 3D Beveled Wax Seal Medallion */}
                       <div className="noor-seal-lacquer">
                         <div className="noor-seal-bezel">
@@ -719,10 +739,10 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
         >
-          <p className="noor-hero-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+          <p className="noor-hero-bismillah">{sacredInvocation}</p>
           <div className="noor-hero-top-divider">
             <span className="noor-card-divider-line" />
-            <span className="noor-hero-eyebrow">THE ROYAL NIKAH CELEBRATION</span>
+            <span className="noor-hero-eyebrow">{heroEyebrow}</span>
             <span className="noor-card-divider-line" />
           </div>
         </motion.div>
@@ -768,7 +788,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       {/* SECTION 2: BISMILLAH INVOCATION & MODERN BENTO COUNTDOWN           */}
       {/* =================================================================== */}
       <section className="noor-section noor-welcome-section">
-        <motion.div 
+        <motion.div
           className="noor-welcome-card"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -781,19 +801,51 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           </div>
 
           <p className="noor-bismillah-lg">
-            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+            {sacredInvocation}
           </p>
 
+          {/* Prophetic Dua / Sacred Blessing Banner */}
+          {data?.verse?.translation && (
+            <div className="my-4 px-4 py-3 rounded-2xl bg-[#D4AF37]/10 border border-[#D4AF37]/25 text-center">
+              <p className="text-base sm:text-xl font-serif text-[#D4AF37] leading-relaxed tracking-wide font-medium">
+                {data.verse.propheticDua || data.verse.arabic}
+              </p>
+              <p className="text-[11px] sm:text-xs text-stone-600 dark:text-stone-300 italic mt-1 max-w-md mx-auto">
+                &ldquo;{data.verse.propheticDuaTranslation || data.verse.translation}&rdquo;
+              </p>
+            </div>
+          )}
+
           <div className="noor-quote-lines">
-            <p>Two Souls · One Destiny</p>
+            <p>Two Souls · One Sacred Covenant</p>
             <span className="noor-quote-written">
-              A Lifetime written by Allah
+              A Lifetime Written in Love &amp; Grace
             </span>
           </div>
 
-          <p className="noor-welcome-msg">
-            With the divine blessings of Almighty Allah and our beloved families, we invite you to grace our auspicious Nikah celebrations with your presence, duas, and love.
-          </p>
+          {/* Formal Elders' & Parents' Blessing Invitation Block */}
+          <div className="my-5 p-5 sm:p-6 rounded-2xl bg-gradient-to-b from-[#FAF8F5]/90 to-[#F5EFE6]/70 border border-[#D4AF37]/35 shadow-sm text-center">
+            <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.25em] text-[#D4AF37] uppercase block mb-2">
+              ✦ WITH THE BLESSINGS OF OUR ELDERS ✦
+            </span>
+            <p className="text-xs sm:text-sm text-stone-700 leading-relaxed max-w-lg mx-auto">
+              {eldersGraceMessage}
+            </p>
+            <div className="my-3 py-2 flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-5 text-xs sm:text-sm font-serif font-bold text-[#1C2D23]">
+              <span className="tracking-wide">{brideParents}</span>
+              <span className="text-[#D4AF37] font-sans font-normal opacity-70 text-xs">❖ &amp; ❖</span>
+              <span className="tracking-wide">{groomParents}</span>
+            </div>
+            <p className="text-xs sm:text-sm text-stone-600 max-w-lg mx-auto leading-relaxed">
+              cordially request the honour of your gracious presence and heartfelt prayers to grace the auspicious {weddingType} celebrations of their beloved children:
+            </p>
+            <p className="font-serif text-lg sm:text-2xl font-bold text-[#1C2D23] mt-2 tracking-wide">
+              {brideName} <span className="text-[#D4AF37] font-normal">&amp;</span> {groomName}
+            </p>
+            <p className="text-[11px] sm:text-xs text-[#8C6D23] italic mt-3 font-medium">
+              &ldquo;{data?.couple?.culturalGreeting || data?.couple?.urduGreeting || "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."}&rdquo;
+            </p>
+          </div>
 
           {/* Modern Bento Countdown Card */}
           <div className="noor-countdown-bento">
@@ -830,7 +882,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
               <div className="noor-scratch-header">
                 <span className="noor-scratch-subtitle">INTERACTIVE INVITATION</span>
                 <h3 className="noor-scratch-title">Scratch Gold Foil to Reveal Date</h3>
-                <p className="noor-scratch-desc">Swipe across the 24K gold surface to unveil our sacred Nikah date</p>
+                <p className="noor-scratch-desc">Swipe across the 24K gold surface to unveil our sacred {weddingType} date</p>
               </div>
               <div className="noor-scratch-card-wrapper">
                 <ScratchCard
@@ -847,7 +899,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                         origin: { y: 0.65 },
                         colors: ["#D4AF37", "#FEF0C7", "#1E3A2F", "#FFFFFF"],
                       });
-                    } catch (_) {}
+                    } catch (_) { }
                   }}
                 />
               </div>
@@ -860,7 +912,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       {/* SECTION 3: CEREMONIES & NIKAH TIMELINE (Staggered Bento Grid)       */}
       {/* =================================================================== */}
       <section className="noor-section noor-timeline-section">
-        <motion.div 
+        <motion.div
           className="noor-section-header text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -874,8 +926,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
         <div className="noor-events-bento-grid">
           {events.map((evt, idx) => (
-            <motion.div 
-              key={idx} 
+            <motion.div
+              key={idx}
               className={`noor-event-bento-card ${idx === 0 ? "noor-card-featured" : ""}`}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -932,7 +984,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       {/* SECTION 4: CURATED PHOTO GALLERY (Interactive Bento Grid & Slider)  */}
       {/* =================================================================== */}
       <section className="noor-section noor-gallery-section">
-        <motion.div 
+        <motion.div
           className="noor-section-header text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -966,7 +1018,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
         {/* 4A. ADAPTIVE BENTO / GRID VIEW */}
         {galleryViewMode === "bento" && (
-          <motion.div 
+          <motion.div
             className={`noor-gallery-bento-grid ${galleryImages.length === 1 ? "is-single-photo" : galleryImages.length === 2 ? "is-two-photos" : ""}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1018,7 +1070,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
         {/* 4B. CINEMATIC INTERACTIVE SLIDER VIEW */}
         {galleryViewMode === "slider" && (
-          <motion.div 
+          <motion.div
             className="noor-gallery-slider-wrap"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -1060,14 +1112,14 @@ export default function NoorNikah({ data }: NoorNikahProps) {
               </AnimatePresence>
 
               {/* Slider Navigation Buttons */}
-              <button 
+              <button
                 className="noor-slider-nav-btn prev"
                 onClick={prevSlide}
                 aria-label="Previous photo"
               >
                 <CaretLeft size={20} weight="bold" />
               </button>
-              <button 
+              <button
                 className="noor-slider-nav-btn next"
                 onClick={nextSlide}
                 aria-label="Next photo"
@@ -1104,7 +1156,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
             exit={{ opacity: 0 }}
             onClick={() => setSelectedPhoto(null)}
           >
-            <motion.div 
+            <motion.div
               className="noor-lightbox-card"
               initial={{ scale: 0.88, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -1133,7 +1185,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       {/* SECTION 5: VENUE & DRESS CODE GUEST GUIDE BENTO                   */}
       {/* =================================================================== */}
       <section className="noor-section noor-venue-section">
-        <motion.div 
+        <motion.div
           className="noor-section-header text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1147,7 +1199,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
         <div className="noor-venue-bento-grid">
           {/* Card 1: Palace Location & GPS Navigation */}
-          <motion.div 
+          <motion.div
             className="noor-venue-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1197,7 +1249,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           </motion.div>
 
           {/* Card 2: Royal Dress Code & Harmony Palette */}
-          <motion.div 
+          <motion.div
             className="noor-dresscode-card"
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1244,7 +1296,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       {/* SECTION 6: RSVP & SACRED DUAS PORTAL                               */}
       {/* =================================================================== */}
       <section className="noor-section noor-rsvp-section">
-        <motion.div 
+        <motion.div
           className="noor-rsvp-box"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -1262,7 +1314,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
             </div>
 
             {isSubmitted ? (
-              <motion.div 
+              <motion.div
                 className="noor-rsvp-success-card text-center"
                 initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -1273,7 +1325,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                 </div>
                 <h3 className="noor-success-title">JazakAllah Khair!</h3>
                 <p className="noor-success-sub">
-                  Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your response and beautiful duas have been saved with immense gratitude.
+                  Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your response and sacred duas have been received with immense gratitude. <br className="hidden sm:inline" />
+                  <span className="italic text-[#8C6D23] font-medium block mt-1">Aapki duayein hamari nayi zindagi ke aaghaaz mein barkat ka sabab banengi.</span>
                 </p>
 
                 <div className="mt-5 pt-4 border-t border-[rgba(212,175,55,0.2)] flex flex-col gap-2.5 max-w-xs mx-auto">
@@ -1354,7 +1407,6 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                 <button type="submit" className="noor-btn-gold-submit">
                   <Heart size={18} weight="fill" />
                   <span>Send Blessings & RSVP</span>
-                  <Sparkle size={16} weight="fill" />
                 </button>
               </form>
             )}
@@ -1368,8 +1420,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       <footer className="noor-footer">
         <div className="noor-footer-inner text-center">
           {/* Back to top smooth jump button */}
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="noor-scroll-top-btn"
             onClick={scrollToTop}
             aria-label="Scroll back to top"

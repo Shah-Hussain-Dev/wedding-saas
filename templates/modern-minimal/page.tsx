@@ -46,9 +46,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("maya") && !data.hashtag.toLowerCase().includes("arjun"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -107,7 +105,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
   const handleOpenInvitation = () => {
     setIsOpening(true);
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsPlayingMusic(true)).catch(() => { });
     }
     confetti({
       particleCount: 65,
@@ -318,9 +316,8 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
               >
                 {/* Envelope Top Flap Triangle */}
                 <div
-                  className={`envelope-top-flap absolute top-0 left-0 right-0 h-1/2 bg-[#ede6dc] border-b border-[#d4af37]/40 shadow-md ${
-                    isOpening ? "open" : ""
-                  }`}
+                  className={`envelope-top-flap absolute top-0 left-0 right-0 h-1/2 bg-[#ede6dc] border-b border-[#d4af37]/40 shadow-md ${isOpening ? "open" : ""
+                    }`}
                   style={{
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                   }}
@@ -465,7 +462,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
                       className="w-full h-full object-cover object-top filter brightness-[0.98] contrast-[1.02]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                    
+
                     <div className="absolute bottom-4 left-4 right-4 text-center py-2 px-3 rounded-xl bg-white/90 backdrop-blur-md border border-[#d4af37]/40 shadow">
                       <span className="text-[10px] uppercase tracking-widest text-[#8c6d23] font-bold">
                         {hashtag}
@@ -550,13 +547,16 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
                 <Sparkle size={24} weight="fill" />
               </div>
               <p className="font-cormorant text-xl md:text-2xl text-[#6d5725] font-bold leading-relaxed tracking-wider italic mb-4">
-                {defaultData.vedicMantra}
+                {data?.vedicMantra || defaultData.vedicMantra}
               </p>
               <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#d4af37] to-transparent mx-auto my-4" />
               <p className="text-xs md:text-sm text-stone-600 font-light leading-relaxed max-w-2xl mx-auto">
-                {defaultData.quote}
+                {data?.quote || defaultData.quote}
               </p>
-              <div className="mt-6 text-[10px] uppercase tracking-[0.25em] text-[#8c7b64] font-bold">
+              <p className="text-xs text-[#8c6d23] italic font-medium mt-3">
+                &ldquo;Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.&rdquo;
+              </p>
+              <div className="mt-5 text-[10px] uppercase tracking-[0.25em] text-[#8c7b64] font-bold">
                 || सुमुहूर्त सावधान ||
               </div>
             </motion.div>
@@ -758,7 +758,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
                   href={venueMapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#1c1a17] text-[#fcfbfa] text-xs font-semibold hover:bg-[#333] transition-colors shadow-md"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-[#1c1a17] text-[#fcfbfa] text-xs font-semibold hover:bg-[#333] active:scale-95 transition-all shadow-md"
                 >
                   <ArrowSquareOut size={16} weight="bold" />
                   Get Google Maps Directions
@@ -766,7 +766,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
 
                 <button
                   onClick={handleCopyAddress}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-xs font-semibold text-[#1c1a17] border border-[#d4af37]/40 hover:bg-stone-50 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] rounded-full bg-white text-xs font-semibold text-[#1c1a17] border border-[#d4af37]/40 hover:bg-stone-50 active:scale-95 transition-all"
                 >
                   <Copy size={16} weight="bold" />
                   {copiedAddress ? "Copied to Clipboard!" : "Copy Address"}
@@ -872,7 +872,7 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-widest hover:bg-[#333] transition-colors shadow-lg mt-2"
+                className="w-full py-3.5 min-h-[44px] rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-widest hover:bg-[#333] active:scale-98 transition-all shadow-lg mt-2 flex items-center justify-center"
               >
                 Submit RSVP Confirmation
               </button>
@@ -898,14 +898,14 @@ export default function ModernMinimal({ data }: ModernMinimalProps) {
                     <CheckCircle size={32} weight="fill" />
                   </div>
                   <h3 className="text-2xl font-cormorant font-bold text-[#1c1a17] mb-2">
-                    RSVP Confirmed!
+                    Dhanyawad!
                   </h3>
                   <p className="text-xs text-stone-600 font-light leading-relaxed mb-6">
-                    Thank you, <strong className="font-semibold">{rsvpName}</strong>! Your RSVP and heartfelt blessings have been lovingly recorded.
+                    Thank you, <strong className="font-semibold">{rsvpName}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <button
                     onClick={() => setIsRsvpSubmitted(false)}
-                    className="w-full py-3 rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-wider"
+                    className="w-full py-3 min-h-[44px] rounded-xl bg-[#1c1a17] text-[#fcfbfa] text-xs font-bold uppercase tracking-wider active:scale-98 transition-all flex items-center justify-center"
                   >
                     Return to Invitation
                   </button>

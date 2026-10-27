@@ -2,25 +2,28 @@
   "templateId": "imperial-palace",
   "couple": {
     "groomName": "Kabir",
-    "groomParents": "",
-    "groomEducation": "",
-    "groomProfession": "",
+    "groomFullName": "Kabir Malhotra",
+    "groomParents": "Mrs. Sunaina & Mr. Vikramaditya Malhotra",
+    "groomEducation": "B.Tech, IIT Bombay · MBA, Wharton",
+    "groomProfession": "Managing Director",
     "brideName": "Tara",
-    "brideParents": "",
-    "brideEducation": "",
-    "brideProfession": ""
+    "brideFullName": "Tara Roy",
+    "brideParents": "Mrs. Sharmila & Mr. Devendra Roy",
+    "brideEducation": "BA (Hons), St. Stephen's College · MA, Oxford",
+    "brideProfession": "Creative Director",
+    "tagline": "The Grand Imperial Wedding Celebration Of"
   },
   "weddingDate": "2027-10-24T18:00:00.000Z",
-  "weddingTime": "06:00 PM CET",
-  "hashtag": "",
+  "weddingTime": "06:00 PM IST",
+  "hashtag": "#KabirWedsTara",
   "religion": "universal",
   "quote": "In the presence of our cherished families and under starlit skies, two souls unite in eternal devotion, honour, and love.",
   "videoUrl": "/videos/royal-elegance-royal.mp4",
   "musicTrack": "/templates/imperial-palace/music.mp3",
   "venue": {
     "name": "The Grand Imperial Palace & Sovereign Estate",
-    "address": "Imperial Estate Gardens & Sovereign Palace, London, UK",
-    "mapUrl": "https://maps.google.com/?q=Imperial+Palace+London"
+    "address": "Imperial Heritage Palace Estate, Jagmandir Island, Udaipur, Rajasthan 313001, India",
+    "mapUrl": "https://maps.google.com/?q=Jagmandir+Island+Palace+Udaipur"
   },
   "events": [
     {

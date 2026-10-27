@@ -29,6 +29,22 @@ interface InvitationData {
   id?: string;
   brideName?: string;
   groomName?: string;
+  brideParents?: string;
+  groomParents?: string;
+  couple?: {
+    brideName?: string;
+    groomName?: string;
+    brideParents?: string;
+    groomParents?: string;
+  };
+  sacred?: {
+    invocation?: string;
+    mantra?: string;
+    shloka?: string;
+    shlokaTranslation?: string;
+    tagline?: string;
+    [key: string]: any;
+  };
   weddingDate?: Date | string;
   weddingTime?: string;
   venueName?: string;
@@ -147,13 +163,13 @@ function RoyalLotusIntro({
     setIsLit(true);
 
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
 
     if (navigator.vibrate) {
       try {
         navigator.vibrate([14, 22, 88]);
-      } catch {}
+      } catch { }
     }
 
     const btn = ropeBtnRef.current;
@@ -187,7 +203,7 @@ function RoyalLotusIntro({
       setIsLit(true);
       setReveals({ names: true, date: true, venue: true, lotus: true });
       if (audioRef.current) {
-        audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+        audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
       }
     }
     if (!isLeaving) {
@@ -199,7 +215,7 @@ function RoyalLotusIntro({
   const handleLotusClick = () => {
     setIsLotusOpen(true);
     if (audioRef.current) {
-      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
     window.setTimeout(() => {
       setIsLeaving(true);
@@ -255,8 +271,8 @@ function RoyalLotusIntro({
             rawDelta <= springK1
               ? 0.92 * rawDelta
               : rawDelta <= springK2
-              ? 0.92 * springK1 + (rawDelta - springK1) * 0.58
-              : 0.92 * springK1 + (springK2 - springK1) * 0.58 + (rawDelta - springK2) * 0.3;
+                ? 0.92 * springK1 + (rawDelta - springK1) * 0.58
+                : 0.92 * springK1 + (springK2 - springK1) * 0.58 + (rawDelta - springK2) * 0.3;
 
           const progress = Math.min(rawDelta / limit, 1);
           const rotation = clamp((smoothY / limit) * 12, -13, 13);
@@ -371,7 +387,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
         origin: { y: 0.6 },
         colors: ["#FF9933", "#FFD700", "#138808", "#FFFFFF", "#D4AF37"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
 
 
@@ -399,9 +415,13 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const brideName = data?.brideName || "Siya";
-  const groomName = data?.groomName || "Kabir";
-  const weddingDateRaw = data?.weddingDate ? new Date(data.weddingDate) : new Date("2026-12-14T18:30:00");
+  const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple?.brideName || "Ananya";
+  const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple?.groomName || "Shubham";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || defaultData.couple?.brideParents || "Mrs. Sunita & Mr. Rajesh Sharma";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || defaultData.couple?.groomParents || "Mrs. Meenakshi & Mr. Alok Verma";
+  const vedicShloka = data?.sacred?.shloka || defaultData.sacred?.shloka || "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥";
+  const shlokaTranslation = data?.sacred?.shlokaTranslation || defaultData.sacred?.shlokaTranslation || "O Lord Ganesha, of colossal form and radiance of a million suns, remove all obstacles from our sacred journey forever.";
+  const weddingDateRaw = data?.weddingDate ? new Date(data.weddingDate) : new Date("2026-12-22T17:00:00");
   const venueName = data?.venueName || "The Maharaja Palace";
   const venueAddress = data?.venueAddress || "Lake Pichola Road, Udaipur, Rajasthan";
   const hashtag = `#${brideName}Weds${groomName}`;
@@ -415,36 +435,36 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
   const events: EventItem[] = data?.eventsJson && data.eventsJson.length > 0
     ? data.eventsJson
     : [
-        { id: "mehendi", name: "Mehendi", date: "12 December 2026", time: "4:00 PM", location: "Lotus Courtyard", detail: "Adorn yourself in fresh greens & blooms", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "haldi", name: "Haldi", date: "13 December 2026", time: "10:00 AM", location: "Poolside Courtyard", detail: "Come aglow in sunlit yellows & ivory", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "sangeet", name: "Sangeet", date: "13 December 2026", time: "7:30 PM", location: "Royal Ballroom", detail: "A night of music, dance & merriment", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "shaadi", name: "Shaadi", date: "14 December 2026", time: "6:30 PM", location: "Lake Mandap", detail: "Traditional attire, for our sacred vows", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "reception", name: "Reception", date: "14 December 2026", time: "9:00 PM", location: "Palace Lawns", detail: "An evening of feasting under candlelight", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-        { id: "vidaai", name: "Vidaai", date: "15 December 2026", time: "9:00 AM", location: "Main Courtyard", detail: "A tender farewell, wrapped in blessings", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
-      ];
+      { id: "mehendi", name: "Mehendi", date: "12 December 2026", time: "4:00 PM", location: "Lotus Courtyard", detail: "Adorn yourself in fresh greens & blooms", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "haldi", name: "Haldi", date: "13 December 2026", time: "10:00 AM", location: "Poolside Courtyard", detail: "Come aglow in sunlit yellows & ivory", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "sangeet", name: "Sangeet", date: "13 December 2026", time: "7:30 PM", location: "Royal Ballroom", detail: "A night of music, dance & merriment", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "shaadi", name: "Shaadi", date: "14 December 2026", time: "6:30 PM", location: "Lake Mandap", detail: "Traditional attire, for our sacred vows", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "reception", name: "Reception", date: "14 December 2026", time: "9:00 PM", location: "Palace Lawns", detail: "An evening of feasting under candlelight", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+      { id: "vidaai", name: "Vidaai", date: "15 December 2026", time: "9:00 AM", location: "Main Courtyard", detail: "A tender farewell, wrapped in blessings", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
+    ];
 
   // Authentic 6-item gallery photos from live template
   const rawLotusGallery = data?.gallery && data.gallery.length > 0 ? data.gallery : null;
   const galleryItems: GalleryItem[] = rawLotusGallery
     ? rawLotusGallery
-        .map((item: any, idx: number) => {
-          if (typeof item === "string") {
-            return { url: item, caption: `Wedding Moment ${idx + 1}` };
-          }
-          return {
-            url: item?.url || item?.src || "",
-            caption: item?.caption || item?.title || `Wedding Moment ${idx + 1}`,
-          };
-        })
-        .filter((item: GalleryItem) => Boolean(item.url))
+      .map((item: any, idx: number) => {
+        if (typeof item === "string") {
+          return { url: item, caption: `Wedding Moment ${idx + 1}` };
+        }
+        return {
+          url: item?.url || item?.src || "",
+          caption: item?.caption || item?.title || `Wedding Moment ${idx + 1}`,
+        };
+      })
+      .filter((item: GalleryItem) => Boolean(item.url))
     : [
-        { url: "/templates/crimson-royale/gallery-1.webp", caption: "The Royal Palace Courtyard" },
-        { url: "/templates/crimson-royale/gallery-2.webp", caption: "Intricate Bridal Mehendi" },
-        { url: "/templates/crimson-royale/gallery-3.webp", caption: "A Promise of Togetherness" },
-        { url: "/templates/crimson-royale/gallery-4.webp", caption: "Sunset at the Lake Palace" },
-        { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
-        { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
-      ];
+      { url: "/templates/crimson-royale/gallery-1.webp", caption: "The Royal Palace Courtyard" },
+      { url: "/templates/crimson-royale/gallery-2.webp", caption: "Intricate Bridal Mehendi" },
+      { url: "/templates/crimson-royale/gallery-3.webp", caption: "A Promise of Togetherness" },
+      { url: "/templates/crimson-royale/gallery-4.webp", caption: "Sunset at the Lake Palace" },
+      { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
+      { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
+    ];
 
   // Deterministic floating petals to guarantee 100% hydration match between SSR and client
   const petals = [
@@ -483,7 +503,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       audioRef.current.pause();
       setIsAudioPlaying(false);
     } else {
-      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
   };
 
@@ -626,11 +646,58 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           </motion.div>
         </motion.div>
 
-        <a className="invite__scroll-cue" href="#events" aria-label="Scroll down">
+        <a className="invite__scroll-cue" href="#sacred-blessing" aria-label="Scroll down">
           <svg width="18" height="11" viewBox="0 0 18 11" fill="none">
             <path d="M1 1.5 9 9.5 17 1.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </a>
+      </section>
+
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          SECTION 1B: SACRED SHLOKA & ELDERS' BLESSING CARD
+      ───────────────────────────────────────────────────────────────────────────── */}
+      <section id="sacred-blessing" className="section blessing-card-section py-12 px-4" style={{ background: "rgba(252, 249, 242, 0.96)" }}>
+        <motion.div
+          className="section-inner max-w-2xl mx-auto text-center p-8 sm:p-10 rounded-3xl border border-[#D4AF37]/40 shadow-xl"
+          style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #FAF6EE 100%)" }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="inline-block px-4 py-1 rounded-full bg-[#D4AF37]/15 border border-[#D4AF37]/30 text-[#8C6D23] font-bold text-sm tracking-widest mb-3">
+            || श्री गणेशाय नमः ||
+          </div>
+          <p className="font-serif text-lg sm:text-xl font-bold text-[#8C2836] leading-relaxed tracking-wide my-2">
+            {vedicShloka}
+          </p>
+          <p className="text-xs sm:text-sm text-[#735A42] italic max-w-lg mx-auto mb-5">
+            &ldquo;{shlokaTranslation}&rdquo;
+          </p>
+
+          <div className="w-16 h-[1.5px] bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto my-4" />
+
+          <p className="text-xs sm:text-sm text-[#5C4D3C] uppercase tracking-[0.2em] font-semibold mb-2">
+            WITH THE BLESSINGS OF OUR ELDERS
+          </p>
+          <p className="text-xs sm:text-sm text-[#4A3B2C] leading-relaxed mb-3">
+            With the divine grace of <strong>Lord Ganesha</strong> and the affectionate prayers of our beloved parents:
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 font-serif font-bold text-sm sm:text-base text-[#8C2836] my-2">
+            <span>{brideParents}</span>
+            <span className="text-[#D4AF37] text-xs">❖ &amp; ❖</span>
+            <span>{groomParents}</span>
+          </div>
+          <p className="text-xs sm:text-sm text-[#5C4D3C] mt-2">
+            cordially invite you to celebrate the auspicious Shubh Vivah and shower your warm blessings upon their children:
+          </p>
+          <p className="font-serif text-2xl sm:text-3xl font-bold text-[#8C2836] my-2 tracking-wide">
+            {brideName} <span className="text-[#D4AF37]">&amp;</span> {groomName}
+          </p>
+          <p className="text-xs sm:text-sm text-[#8C6D23] italic font-medium mt-3">
+            &ldquo;Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge.&rdquo;
+          </p>
+        </motion.div>
       </section>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
@@ -1046,9 +1113,9 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
               {isRsvpSubmitted ? (
                 <div className="rl-success-msg">
                   <CheckCircle size={48} className="text-[#D4AF37] mb-3 mx-auto" weight="fill" />
-                  <h4 className="text-xl font-serif text-[#D4AF37]">Graciously Received!</h4>
+                  <h4 className="text-xl font-serif text-[#D4AF37]">Dhanyawad!</h4>
                   <p className="text-xs text-[#F5E5A3] mt-1.5 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and blessings have been saved. We look forward to celebrating with you!
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(212,175,55,0.2)]">
@@ -1139,7 +1206,6 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
                   <button type="submit" className="rl-submit-btn">
                     <span>Send Royal RSVP</span>
-                    <Sparkle size={16} weight="fill" />
                   </button>
                 </form>
               )}

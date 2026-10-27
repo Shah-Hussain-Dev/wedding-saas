@@ -33,7 +33,7 @@ const SHOWCASE_THEMES = [
     receptionTitle: "Dawat-e-Walima",
     rsvp: "Peer Khan, Suhail Khan, Mohd, Kajf Khan\nMohd. Arif Khan, Mohd. Asif Khan, Anas Khan",
     compliments: "W.B.C.F.: All Relatives & Friends",
-    defaultRecipient: "Janab Shah Husian",
+    defaultRecipient: "Mr. Hashmat Husain",
     defaultCity: "Lucknow",
   },
   {
@@ -81,7 +81,7 @@ const SHOWCASE_THEMES = [
 export function ComplimentaryPdfShowcase() {
   const [activeThemeIndex, setActiveThemeIndex] = useState(0);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
-  const [guestName, setGuestName] = useState("Janab Shah Husian");
+  const [guestName, setGuestName] = useState("Mr. Hashmat Hussain");
   const [guestCity, setGuestCity] = useState("Lucknow");
 
   const currentTheme = SHOWCASE_THEMES[activeThemeIndex];
@@ -142,11 +142,10 @@ export function ComplimentaryPdfShowcase() {
                   if (theme.defaultRecipient) setGuestName(theme.defaultRecipient);
                   if (theme.defaultCity) setGuestCity(theme.defaultCity);
                 }}
-                className={`px-4 py-2 rounded-full text-xs font-sans font-bold transition-all duration-300 cursor-pointer ${
-                  activeThemeIndex === idx
-                    ? "bg-[#C8A45E] text-[#032A23] shadow-lg shadow-[#C8A45E]/30 scale-105"
-                    : "bg-white/10 hover:bg-white/15 text-stone-300 border border-white/10"
-                }`}
+                className={`px-4 py-2 rounded-full text-xs font-sans font-bold transition-all duration-300 cursor-pointer ${activeThemeIndex === idx
+                  ? "bg-[#C8A45E] text-[#032A23] shadow-lg shadow-[#C8A45E]/30 scale-105"
+                  : "bg-white/10 hover:bg-white/15 text-stone-300 border border-white/10"
+                  }`}
               >
                 <span>{theme.name}</span>
                 <span className="opacity-70 text-[10px] ml-1.5 hidden sm:inline">({theme.tag})</span>

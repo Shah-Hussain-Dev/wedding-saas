@@ -37,6 +37,7 @@ import {
 } from "@phosphor-icons/react";
 import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
 import { CulturalTradition } from "@/lib/pdf-theme-tokens";
+import { getTemplateDefaultData } from "@/templates";
 
 export interface EventItem {
   name: string;
@@ -125,8 +126,19 @@ export function InvitationCustomizerWizard({
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Form State
-  const defaultBride = initialData?.brideName || (templateId.includes("nikah") || templateId.includes("emerald") || templateId.includes("gul") ? "Diya" : "Ananya");
-  const defaultGroom = initialData?.groomName || (templateId.includes("nikah") || templateId.includes("emerald") || templateId.includes("gul") ? "Shaan" : "Shubham");
+  const templateDefault = getTemplateDefaultData(templateId);
+  const defaultBride =
+    initialData?.brideName ||
+    initialData?.couple?.brideName ||
+    templateDefault?.couple?.brideName ||
+    templateDefault?.brideName ||
+    (templateId.includes("nikah") || templateId === "emerald-qasr" || templateId === "gul-e-noor" ? "Diya" : "Ananya");
+  const defaultGroom =
+    initialData?.groomName ||
+    initialData?.couple?.groomName ||
+    templateDefault?.couple?.groomName ||
+    templateDefault?.groomName ||
+    (templateId.includes("nikah") || templateId === "emerald-qasr" || templateId === "gul-e-noor" ? "Shaan" : "Shubham");
 
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);

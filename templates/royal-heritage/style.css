@@ -400,10 +400,12 @@
 
 .heritage-modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 34px;
-  height: 34px;
+  top: 14px;
+  right: 14px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   background: rgba(49, 95, 107, 0.1);
   border: 1px solid rgba(119, 163, 174, 0.4);

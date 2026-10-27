@@ -59,7 +59,7 @@ export function LuxuryAudioDock({
       initial={{ opacity: 0, y: 30, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: 0.5, duration: 0.6 }}
-      className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-3.5 py-2 rounded-full backdrop-blur-xl border ${styles.pill} ${className}`}
+      className={`luxury-audio-dock fixed bottom-6 right-6 z-50 flex items-center gap-3 px-3.5 py-2 rounded-full backdrop-blur-xl border ${styles.pill} ${className}`}
       style={{ paddingBottom: "max(8px, env(safe-area-inset-bottom))" }}
     >
       {/* Animated Equalizer Waveform */}

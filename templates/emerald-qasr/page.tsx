@@ -114,6 +114,8 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
   // Extract Props / Data
   const brideName = data?.brideName || data?.couple?.brideName || resolvedData.couple?.brideName || "Zoya";
   const groomName = data?.groomName || data?.couple?.groomName || resolvedData.couple?.groomName || "Farhan";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || resolvedData.couple?.brideParents || "Mr. & Mrs. Tariq Anwar Khan";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || resolvedData.couple?.groomParents || "Mr. & Mrs. Imran Ahmed Qureshi";
   const weddingDateStr = data?.weddingDate || data?.date || resolvedData.weddingDate;
   const weddingDate = new Date(weddingDateStr);
   const formattedDate = !isNaN(weddingDate.getTime())
@@ -705,6 +707,51 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 <p className="eq-arabic-verse">{resolvedData.verse?.arabic || "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً"}</p>
                 <p className="eq-verse-translation">&ldquo;{resolvedData.verse?.translation || "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy."}&rdquo;</p>
                 <p className="eq-verse-ref">{resolvedData.verse?.reference || "Surah Ar-Rum · 30:21"}</p>
+
+                {/* Prophetic Dua Banner */}
+                <div className="eq-prophetic-dua-wrap mt-5 pt-4 border-t border-[rgba(212,175,55,0.25)] text-center">
+                  <p className="font-serif text-base sm:text-xl text-[#F5E5A3] leading-relaxed tracking-wide font-medium">
+                    بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-emerald-200/85 italic mt-1 max-w-md mx-auto">
+                    &ldquo;May Allah bless you, shower His blessings upon you, and unite you both in goodness and eternal love.&rdquo;
+                  </p>
+                </div>
+              </motion.section>
+
+              {/* ── 1A. Elders' & Parents' Blessing Invitation Card ── */}
+              <motion.section
+                className="eq-section eq-elders-blessing-card text-center"
+                initial={{ opacity: 0, y: 45, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.3 } }}
+              >
+                <div className="eq-section-corner-ornament top-left" aria-hidden="true" />
+                <div className="eq-section-corner-ornament top-right" aria-hidden="true" />
+                <div className="eq-section-corner-ornament bottom-left" aria-hidden="true" />
+                <div className="eq-section-corner-ornament bottom-right" aria-hidden="true" />
+                <span className="eq-section-subtitle">WITH THE BLESSINGS OF OUR ELDERS</span>
+                <h2 className="eq-section-title">Royal Nikah Invitation</h2>
+                <div className="eq-section-ornament">✦ ⚜ ✦</div>
+                <p className="eq-couple-story-text max-w-xl mx-auto leading-relaxed">
+                  With the divine grace of <strong>Almighty Allah (SWT)</strong> and the heartfelt prayers of our beloved parents and elders:
+                </p>
+                <div className="my-4 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm sm:text-base font-serif font-bold text-[#F5E5A3]">
+                  <span className="tracking-wide">{brideParents}</span>
+                  <span className="text-[#D4AF37] font-sans font-normal opacity-70 text-xs">❖ &amp; ❖</span>
+                  <span className="tracking-wide">{groomParents}</span>
+                </div>
+                <p className="eq-couple-story-text max-w-xl mx-auto text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+                  cordially request the honour of your gracious presence, prayers, and blessings to celebrate the auspicious Nikah union of their beloved children:
+                </p>
+                <p className="font-serif text-xl sm:text-3xl font-bold text-[#F5E5A3] mt-3 tracking-wide">
+                  {brideName} <span className="text-[#D4AF37] font-normal">&amp;</span> {groomName}
+                </p>
+                <p className="text-xs sm:text-sm text-[#F5E5A3] italic mt-3 font-medium opacity-90">
+                  &ldquo;Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi.&rdquo;
+                </p>
               </motion.section>
 
               {/* ── 1B. Meet the Couple ("The Royal Covenant of Two Souls") ── */}
@@ -1160,7 +1207,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                       <div className="eq-venue-visual-overlay">
                         <div className="eq-venue-badge-pill">
                           <Compass size={14} className="text-[#D4AF37]" weight="fill" />
-                          <span>Abu Dhabi, UAE</span>
+                          <span>{data?.venueCity || data?.venue?.city || resolvedData.venue?.city || "Hyderabad, India"}</span>
                         </div>
                       </div>
                     </div>
@@ -1293,7 +1340,8 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                   <CheckCircle size={48} className="text-[#D4AF37] mb-3 mx-auto" weight="fill" />
                   <h4 className="text-lg font-serif text-[#D4AF37]">JazakAllah Khair!</h4>
                   <p className="text-xs text-[#F5E5A3] mt-1 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been saved.
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and sacred duas have been received with immense gratitude. <br className="hidden sm:inline" />
+                    <span className="italic block mt-1 text-[#F5E5A3]/90 font-medium">Aapki duayein hamari nayi zindagi ke aaghaaz mein barkat ka sabab banengi.</span>
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(212,175,55,0.2)]">

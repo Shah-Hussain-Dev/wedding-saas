@@ -96,7 +96,7 @@ export default function GulENoor({ data }: GulENoorProps) {
             origin: { y: 0.55 },
             colors: ["#D4849A", "#FADEB8", "#E5A9B8", "#FFFDF8"],
           });
-        } catch (_) {}
+        } catch (_) { }
         setTimeout(() => setIsFlashing(false), 900);
       }, 1400);
       return () => clearTimeout(timer);
@@ -114,16 +114,18 @@ export default function GulENoor({ data }: GulENoorProps) {
   // Extract Props / Data
   const brideName = data?.brideName || data?.couple?.brideName || resolvedData.couple?.brideName || "Areesha";
   const groomName = data?.groomName || data?.couple?.groomName || resolvedData.couple?.groomName || "Hamza";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || resolvedData.couple?.brideParents || "Mr. & Mrs. Shakeel Ahmed Siddiqui";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || resolvedData.couple?.groomParents || "Mr. & Mrs. Rafiq Usman Memon";
   const weddingDateStr = data?.weddingDate || data?.date || resolvedData.weddingDate;
   const weddingDate = new Date(weddingDateStr);
   const formattedDate = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      })
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    })
     : resolvedData.dateFormatted;
 
   const revealMonthDay = !isNaN(weddingDate.getTime())
@@ -141,6 +143,48 @@ export default function GulENoor({ data }: GulENoorProps) {
   const venueMapUrl = data?.venueMapUrl || data?.venue?.mapUrl || resolvedData.venue?.mapUrl;
   const islamicDate = data?.islamicDate || resolvedData.islamicDate || "12 Ramadan 1448 AH";
 
+  // Faith Adaptation (Muslim Nikah, Hindu Vivah, Universal Wedding)
+  const faith = (data?.religion || data?.faith || "muslim").toLowerCase();
+  const isHindu = faith === "hindu";
+  const isUniversal = faith === "universal";
+  const isMuslim = !isHindu && !isUniversal;
+
+  const weddingType = data?.weddingType || (isHindu ? "Vivah" : isUniversal ? "Wedding" : "Nikah");
+  const sacredInvocation = data?.sacredInvocation || data?.bismillah || (isHindu ? "॥ श्री गणेशाय नमः ॥" : isUniversal ? "✦ TWO HEARTS · ONE JOURNEY ✦" : "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ");
+  const archTag = isHindu
+    ? "SHUBH VIVAH INVITATION · GUL-E-NOOR"
+    : isUniversal
+      ? "WEDDING CELEBRATION · GUL-E-NOOR"
+      : "SACRED NIKAH INVITATION · GUL-E-NOOR";
+
+  const verseData = data?.verse || resolvedData.verse || {
+    arabic: isHindu ? "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः" : isUniversal ? "✦ FOREVER & ALWAYS ✦" : "وَخَلَقْنَاكُمْ أَजْوَاجًا",
+    translation: isHindu ? "May the Divine Lord illuminate our sacred union with harmony, righteousness, and boundless joy." : isUniversal ? "Two lives, two hearts, joined together in friendship, united forever in love." : "And We created you in pairs.",
+    reference: isHindu ? "Vedic Mangalacharan" : isUniversal ? "Celebration of Love" : "Surah An-Naba · 78:8",
+  };
+
+  const timingsSummary = isHindu
+    ? "Shubh Vivah 4:00 PM • Grand Reception 7:00 PM"
+    : isUniversal
+      ? "Ceremony 4:00 PM • Gala Dinner 7:00 PM"
+      : "Nikah 4:00 PM • Walima 7:00 PM";
+
+  const eldersGraceMessage = isHindu ? (
+    <>With the divine grace of <strong>Lord Ganesha</strong> and the affectionate prayers of our beloved parents and elders:</>
+  ) : isUniversal ? (
+    <>With joyful hearts and the loving blessings of our beloved parents and elders:</>
+  ) : (
+    <>With the divine grace of <strong>Almighty Allah (SWT)</strong> and the heartfelt prayers of our beloved parents and elders:</>
+  );
+
+  const culturalGreeting = data?.couple?.culturalGreeting || data?.couple?.urduGreeting || (
+    isHindu
+      ? "Aapki upasthiti aur aashirwad hamare is vivah utsav ko mangalmay banayenge."
+      : isUniversal
+        ? "Your love, laughter, and presence will make our celebration truly unforgettable."
+        : "Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi."
+  );
+
   // Background / Hero Custom Image
   const heroImageSrc = data?.heroImageUrl || data?.backgroundImage || null;
 
@@ -148,16 +192,16 @@ export default function GulENoor({ data }: GulENoorProps) {
   const rawGallery: any[] = Array.isArray(data?.slideshowImages) && data.slideshowImages.length > 0
     ? data.slideshowImages
     : Array.isArray(data?.gallery) && data.gallery.length > 0
-    ? data.gallery
-    : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
-    ? data.galleryImages
-    : resolvedData.gallery || [
-        "/templates/gul-e-noor/poster.png",
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
-      ];
+      ? data.gallery
+      : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
+        ? data.galleryImages
+        : resolvedData.gallery || [
+          "/templates/gul-e-noor/poster.png",
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
+        ];
   const galleryPhotos: string[] = rawGallery
     .map((item: any) => (typeof item === "string" ? item : item?.url || item?.src || ""))
     .filter(Boolean);
@@ -238,7 +282,7 @@ export default function GulENoor({ data }: GulENoorProps) {
       videoRef.current.currentTime = 0;
       videoRef.current
         .play()
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.log("Video play error:", err);
           setVideoOpened(true);
@@ -290,7 +334,7 @@ export default function GulENoor({ data }: GulENoorProps) {
         origin: { y: 0.6 },
         colors: ["#D4849A", "#FADEB8", "#E5A9B8", "#FFFDF8"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
 
 
@@ -334,10 +378,9 @@ export default function GulENoor({ data }: GulENoorProps) {
   };
 
   const inkItemVariants: Variants = {
-    hidden: { opacity: 0, y: 12, filter: "blur(2px)" },
+    hidden: { opacity: 0, filter: "blur(3px)" },
     visible: {
       opacity: 1,
-      y: 0,
       filter: "blur(0px)",
       transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
     },
@@ -440,8 +483,12 @@ export default function GulENoor({ data }: GulENoorProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: "easeOut" }}
         >
-          <div className="gn-arch-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-          <div className="gn-arch-tag">SACRED NIKAH INVITATION · GUL-E-NOOR</div>
+          <div className="gn-arch-bismillah">{sacredInvocation}</div>
+          <div className="gn-arch-tag">
+            <span className="gn-arch-sparkle">✦</span>
+            {archTag}
+            <span className="gn-arch-sparkle">✦</span>
+          </div>
         </motion.header>
 
         {/* ── Grand Envelope Hero Stage (Centered on All Screen Sizes) ── */}
@@ -547,6 +594,9 @@ export default function GulENoor({ data }: GulENoorProps) {
                   }}
                 />
 
+                {/* Seamless Bottom Watermark Dissolve Mask */}
+                <div className="gn-video-watermark-mask" aria-hidden="true" />
+
                 {/* Seamless Stamped Initials on Envelope Wax Seal (Mobile Only) */}
                 {!isDesktop && (
                   <div className={`gn-seal-monogram-anchor ${isPlayingVideo ? "gn-seal-lifting" : ""}`}>
@@ -576,81 +626,93 @@ export default function GulENoor({ data }: GulENoorProps) {
                       initial="hidden"
                       animate="visible"
                     >
-                      <div className="gn-paper-print-content">
-                        {/* Top Sacred Header */}
-                        <motion.div className="gn-print-header-group" variants={inkItemVariants}>
-                          <div className="gn-print-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                      {/* Zone 1: Upper Parchment Section (Calligraphy, Honor & Names) */}
+                      <motion.div className="gn-card-zone-upper" variants={inkItemVariants}>
+                        <div className="gn-print-header-group">
+                          <div className="gn-print-bismillah">{sacredInvocation}</div>
                           <p className="gn-print-honor">TOGETHER WITH THEIR FAMILIES</p>
-                        </motion.div>
+                        </div>
 
-                        {/* Grand Couple Presentation */}
-                        <motion.div className="gn-print-couple-group" variants={inkItemVariants}>
+                        <div className="gn-print-couple-group">
                           <h1 className="gn-print-couple-names">
                             <span className="gn-couple-bride">{brideName}</span>
                             <span className="gn-print-amp">&amp;</span>
                             <span className="gn-couple-groom">{groomName}</span>
                           </h1>
                           <p className="gn-print-subtext">
-                            Invite you to celebrate their union and Nikah
+                            Invite you to celebrate their union and {weddingType}
                           </p>
-                        </motion.div>
+                        </div>
+                      </motion.div>
 
-                        {/* Auspicious Ceremony Timings & Venue Details */}
-                        <motion.div className="gn-print-details-group" variants={inkItemVariants}>
-                          <div className="gn-print-date-badge">
-                            <CalendarBlank size={13} className="text-[#A34360]" weight="fill" />
-                            <span>{formattedDate}</span>
-                          </div>
+                      {/* Zone 2: Royal Floral Oval Medallion (Sacred Verse, Date Badge, Venue & Timings) */}
+                      <motion.div className="gn-card-zone-medallion" variants={inkItemVariants}>
+                        {/* Auspicious Date Badge */}
+                        <div className="gn-medallion-date-badge">
+                          <span className="gn-date-primary">{formattedDate}</span>
+                          {islamicDate && <span className="gn-date-hijri">{islamicDate}</span>}
+                        </div>
 
-                          <div className="gn-print-venue-badge">
-                            <MapPin size={12} className="text-[#A34360]" weight="fill" />
-                            <span>{venueName}, {resolvedData.venue?.city || "Dubai"}</span>
-                          </div>
+                        {/* Sacred Verse Blessing */}
+                        <div className="gn-medallion-verse-box">
+                          <div className="gn-medallion-arabic">{verseData.arabic}</div>
+                          <p className="gn-medallion-verse">“{verseData.translation}”</p>
+                          <span className="gn-medallion-verse-ref">{verseData.reference}</span>
+                        </div>
 
-                          <div className="gn-print-time-text">
-                            <Clock size={12} className="text-[#A34360]" weight="fill" />
-                            <span>Nikah: 4:00 PM &nbsp;•&nbsp; Reception: 7:00 PM</span>
-                          </div>
-                        </motion.div>
-
-                        {/* Envelope Center Action Controls */}
-                        <motion.div
-                          className="gn-envelope-actions-bar"
-                          variants={inkItemVariants}
-                        >
-                          <button
-                            className="gn-print-btn-primary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setIsRsvpOpen(true);
-                            }}
-                          >
-                            <EnvelopeSimpleOpen size={14} weight="bold" />
-                            <span>RSVP</span>
-                          </button>
-
-                          <button
-                            className="gn-print-btn-secondary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              scrollToSection("gn-events-section");
-                            }}
-                          >
-                            <Clock size={14} weight="bold" />
-                            <span>Itinerary</span>
-                          </button>
-
-                          {!isDesktop && (
-                            <button
-                              className="gn-print-btn-replay"
-                              onClick={handleReplay}
-                              title="Replay Video Opening"
-                            >
-                              <ArrowsClockwise size={14} weight="bold" />
-                            </button>
+                        {/* Venue & Ceremony Timings */}
+                        <div className="gn-medallion-venue-group">
+                          <div className="gn-print-venue-name">{venueName}</div>
+                          {resolvedData.venue?.city && (
+                            <div className="gn-print-venue-city">{resolvedData.venue.city}</div>
                           )}
-                        </motion.div>
-                      </div>
+                          <div className="gn-print-time-text">
+                            <Clock size={10} weight="fill" className="text-[#8C1C38]" />
+                            <span>{timingsSummary}</span>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Zone 3: Bottom Floating Action Controls */}
+                      <motion.div
+                        className="gn-envelope-actions-bar"
+                        variants={inkItemVariants}
+                      >
+                        <button
+                          className="gn-print-btn-primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsRsvpOpen(true);
+                          }}
+                          aria-label="RSVP to Nikah"
+                        >
+                          <EnvelopeSimpleOpen size={13} weight="bold" />
+                          <span>RSVP</span>
+                        </button>
+
+                        <button
+                          className="gn-print-btn-secondary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            scrollToSection("gn-events-section");
+                          }}
+                          aria-label="View Wedding Itinerary"
+                        >
+                          <Clock size={13} weight="bold" />
+                          <span>Itinerary</span>
+                        </button>
+
+                        {!isDesktop && (
+                          <button
+                            className="gn-print-btn-replay"
+                            onClick={handleReplay}
+                            title="Replay Video Opening"
+                            aria-label="Replay invitation opening"
+                          >
+                            <ArrowsClockwise size={13} weight="bold" />
+                          </button>
+                        )}
+                      </motion.div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -719,6 +781,51 @@ export default function GulENoor({ data }: GulENoorProps) {
                 <p className="gn-arabic-verse">{resolvedData.verse?.arabic || "وَخَلَقْنَاكُمْ أَزْوَاجًا"}</p>
                 <p className="gn-verse-translation">&ldquo;{resolvedData.verse?.translation || "And We created you in pairs."}&rdquo;</p>
                 <p className="gn-verse-ref">{resolvedData.verse?.reference || "Surah An-Naba · 78:8"}</p>
+
+                {/* Prophetic Dua Banner */}
+                <div className="gn-prophetic-dua-wrap mt-5 pt-4 border-t border-[rgba(215,184,117,0.3)] text-center">
+                  <p className="font-serif text-base sm:text-xl text-[#FADEB8] leading-relaxed tracking-wide font-medium">
+                    بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-rose-100/85 italic mt-1 max-w-md mx-auto">
+                    &ldquo;May Allah bless you, shower His blessings upon you, and unite you both in goodness and eternal love.&rdquo;
+                  </p>
+                </div>
+              </motion.section>
+
+              {/* ── 1A. Elders' & Parents' Blessing Invitation Card ── */}
+              <motion.section
+                className="gn-section gn-elders-blessing-card text-center"
+                initial={{ opacity: 0, y: 45, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.3 } }}
+              >
+                <div className="gn-section-corner-ornament top-left" aria-hidden="true" />
+                <div className="gn-section-corner-ornament top-right" aria-hidden="true" />
+                <div className="gn-section-corner-ornament bottom-left" aria-hidden="true" />
+                <div className="gn-section-corner-ornament bottom-right" aria-hidden="true" />
+                <span className="gn-section-subtitle">WITH THE BLESSINGS OF OUR ELDERS</span>
+                <h2 className="gn-section-title">Royal {weddingType} Invitation</h2>
+                <div className="gn-section-ornament">✦ ⚜ ✦</div>
+                <p className="gn-couple-story-text max-w-xl mx-auto leading-relaxed">
+                  {eldersGraceMessage}
+                </p>
+                <div className="my-4 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm sm:text-base font-serif font-bold text-[#FADEB8]">
+                  <span className="tracking-wide">{brideParents}</span>
+                  <span className="text-[#D4849A] font-sans font-normal opacity-70 text-xs">❖ &amp; ❖</span>
+                  <span className="tracking-wide">{groomParents}</span>
+                </div>
+                <p className="gn-couple-story-text max-w-xl mx-auto text-xs sm:text-sm text-rose-100/90 leading-relaxed">
+                  cordially request the honour of your gracious presence, prayers, and blessings to celebrate the auspicious {weddingType} union of their beloved children:
+                </p>
+                <p className="font-serif text-xl sm:text-3xl font-bold text-[#FADEB8] mt-3 tracking-wide">
+                  {brideName} <span className="text-[#D4849A] font-normal">&amp;</span> {groomName}
+                </p>
+                <p className="text-xs sm:text-sm text-[#FADEB8] italic mt-3 font-medium opacity-90">
+                  &ldquo;{culturalGreeting}&rdquo;
+                </p>
               </motion.section>
 
               {/* ── 1B. Meet the Couple ("The Story of Two Souls") ── */}
@@ -818,7 +925,7 @@ export default function GulENoor({ data }: GulENoorProps) {
                               origin: { y: 0.7 },
                               colors: ["#D4849A", "#FADEB8", "#E5A9B8", "#FFFDF8"],
                             });
-                          } catch (_) {}
+                          } catch (_) { }
                         }}
                       />
                     </div>
@@ -1197,7 +1304,6 @@ export default function GulENoor({ data }: GulENoorProps) {
                     whileTap={{ scale: 0.97 }}
                   >
                     <span>Confirm Your RSVP</span>
-                    <Sparkle size={16} weight="fill" />
                   </motion.button>
                 </div>
               </motion.section>
@@ -1281,9 +1387,9 @@ export default function GulENoor({ data }: GulENoorProps) {
               </button>
 
               <div className="gn-modal-header">
-                <div className="gn-modal-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <div className="gn-modal-bismillah">{sacredInvocation}</div>
                 <h3 className="gn-modal-title">Confirm Attendance</h3>
-                <p className="gn-modal-sub">For {brideName} & {groomName}&apos;s Celebration</p>
+                <p className="gn-modal-sub">For {brideName} &amp; {groomName}&apos;s {weddingType} Celebration</p>
               </div>
 
               {isSubmitted ? (
@@ -1291,7 +1397,8 @@ export default function GulENoor({ data }: GulENoorProps) {
                   <CheckCircle size={48} className="text-[#D4849A] mb-3 mx-auto" weight="fill" />
                   <h4 className="text-lg font-serif text-[#D4849A]">JazakAllah Khair!</h4>
                   <p className="text-xs text-[#FCE7F3] mt-1 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt wishes have been saved.
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and sacred duas have been received with immense gratitude. <br className="hidden sm:inline" />
+                    <span className="italic block mt-1 text-[#FADEB8] font-medium">Aapki duayein hamari nayi zindagi ke aaghaaz mein barkat ka sabab banengi.</span>
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(212,132,154,0.2)]">

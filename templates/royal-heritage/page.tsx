@@ -68,9 +68,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
   const dateStr = weddingDateObj.toLocaleDateString("en-IN", { day: "numeric", month: "long" });
   const yearStr = weddingDateObj.getFullYear().toString();
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
-  const hashtag = (data?.hashtag && !data.hashtag.toLowerCase().includes("aarav") && !data.hashtag.toLowerCase().includes("samaira"))
-    ? data.hashtag
-    : dynamicHashtag;
+  const hashtag = data?.hashtag?.trim() || dynamicHashtag;
 
   const venueName = data?.venueName || data?.venue?.name || defaultData.venue.name;
   const venueAddress = data?.venueAddress || data?.venue?.address || defaultData.venue.address;
@@ -99,11 +97,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
     }
   }, [data?.religion]);
 
-  const hideReligionSwitcher = Boolean(
-    data?.hideReligionSwitcher ||
-    data?.isLive ||
-    data?.isOwned
-  );
+  const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
@@ -467,7 +461,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
 
               {/* GROOM BLOCK */}
               <div className="space-y-0.5 pt-1">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {groomName}
                 </h1>
                 {groomParents ? (
@@ -493,7 +487,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
 
               {/* BRIDE BLOCK */}
               <div className="space-y-0.5">
-                <h1 className="font-great-vibes text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-none font-normal">
+                <h1 className="font-great-vibes text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-[#FAF8F5] drop-shadow-[0_4px_28px_rgba(0,0,0,0.95)] leading-tight font-normal">
                   {brideName}
                 </h1>
                 {brideParents ? (
@@ -580,6 +574,21 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
             <p className="font-cormorant text-sm sm:text-base md:text-lg text-[#4C4D31] leading-relaxed max-w-xl mx-auto font-medium">
               {invocation.english}
             </p>
+
+            <div className="pt-5 border-t border-[#77A3AE]/30 space-y-2">
+              <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] font-bold text-[#D95147] block">
+                WITH THE BLESSINGS OF OUR ELDERS
+              </span>
+              <p className="font-lora text-xs sm:text-sm text-[#4C4D31] max-w-lg mx-auto leading-relaxed">
+                Together with their cherished parents, <strong>{brideParents}</strong> &amp; <strong>{groomParents}</strong>, cordially request the honour of your presence to celebrate the sacred wedding of their children:
+              </p>
+              <p className="font-playfair text-2xl sm:text-3xl font-bold text-[#153E4B]">
+                {brideName} <span className="text-[#D95147]">&amp;</span> {groomName}
+              </p>
+              <p className="font-lora italic text-xs sm:text-sm text-[#315F6B] font-medium">
+                &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+              </p>
+            </div>
           </motion.div>
         </section>
 
@@ -860,10 +869,10 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h4 className="text-2xl font-lora font-bold text-[#153E4B]">
-                    Heartfelt Gratitude!
+                    Dhanyawad / JazakAllah!
                   </h4>
                   <p className="text-sm text-[#315F6B] font-lora leading-relaxed max-w-xs mx-auto font-medium">
-                    Thank you, <strong className="text-[#153E4B]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been lovingly recorded.
+                    Thank you, <strong className="text-[#153E4B]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
                   </p>
                   <div className="pt-4 border-t border-[#77A3AE]/30">
                     <button
@@ -1657,7 +1666,7 @@ function PanoramicArchGallery({
             <button
               onClick={handlePrev}
               aria-label="Previous photograph"
-              className="w-10 h-10 rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
             >
               <CaretLeft size={20} weight="bold" />
             </button>
@@ -1669,7 +1678,7 @@ function PanoramicArchGallery({
             <button
               onClick={handleNext}
               aria-label="Next photograph"
-              className="w-10 h-10 rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white/10 border border-[#77A3AE]/50 text-[#FAF8F5] flex items-center justify-center active:scale-95 cursor-pointer shadow-md"
             >
               <CaretRight size={20} weight="bold" />
             </button>

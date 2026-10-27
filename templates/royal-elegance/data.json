@@ -5,14 +5,16 @@
   "couple": {
     "brideName": "Pooja",
     "groomName": "Rohan",
+    "brideFullName": "Pooja Mittal",
+    "groomFullName": "Rohan Agrawal",
     "tagline": "The Auspicious Shubh Vivah Of",
-    "brideParents": "",
-    "groomParents": ""
+    "brideParents": "Mrs. Vandana & Mr. Kailash Mittal",
+    "groomParents": "Mrs. Sarita & Mr. Narendra Agrawal"
   },
   "weddingDate": "2027-03-12T17:30:00",
   "weddingTime": "05:30 PM onwards",
   "dateFormatted": "Friday, March 12, 2027",
-  "hashtag": "",
+  "hashtag": "#RohanWedsPooja",
   "vedicMantra": "|| मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः | मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ||",
   "quote": "United under the sacred Agni, bound by seven eternal vows of love, truth, and dharma in the divine presence of family and elders.",
   "venue": {

@@ -96,7 +96,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
             origin: { y: 0.55 },
             colors: ["#38BDF8", "#FDE047", "#93C5FD", "#FFFDF8"],
           });
-        } catch (_) {}
+        } catch (_) { }
         setTimeout(() => setIsFlashing(false), 900);
       }, 1400);
       return () => clearTimeout(timer);
@@ -114,16 +114,18 @@ export default function AzureNikah({ data }: AzureNikahProps) {
   // Extract Props / Data
   const brideName = data?.brideName || data?.couple?.brideName || resolvedData.couple?.brideName || "Samira";
   const groomName = data?.groomName || data?.couple?.groomName || resolvedData.couple?.groomName || "Zayd";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || resolvedData.couple?.brideParents || "Mr. & Mrs. Farooq Ahmed Siddiqui";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || resolvedData.couple?.groomParents || "Mr. & Mrs. Danish Al-Mansoor";
   const weddingDateStr = data?.weddingDate || data?.date || resolvedData.weddingDate;
   const weddingDate = new Date(weddingDateStr);
   const formattedDate = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        timeZone: "UTC",
-      })
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      timeZone: "UTC",
+    })
     : resolvedData.dateFormatted;
 
   const revealMonthDay = !isNaN(weddingDate.getTime())
@@ -148,16 +150,16 @@ export default function AzureNikah({ data }: AzureNikahProps) {
   const rawGallery: any[] = Array.isArray(data?.slideshowImages) && data.slideshowImages.length > 0
     ? data.slideshowImages
     : Array.isArray(data?.gallery) && data.gallery.length > 0
-    ? data.gallery
-    : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
-    ? data.galleryImages
-    : resolvedData.gallery || [
-        "/templates/azure-nikah/poster.png",
-        "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
-      ];
+      ? data.gallery
+      : Array.isArray(data?.galleryImages) && data.galleryImages.length > 0
+        ? data.galleryImages
+        : resolvedData.gallery || [
+          "/templates/azure-nikah/poster.png",
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop",
+        ];
   const galleryPhotos: string[] = rawGallery
     .map((item: any) => (typeof item === "string" ? item : item?.url || item?.src || ""))
     .filter(Boolean);
@@ -238,7 +240,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
       videoRef.current.currentTime = 0;
       videoRef.current
         .play()
-        .then(() => {})
+        .then(() => { })
         .catch((err) => {
           console.log("Video play error:", err);
           setVideoOpened(true);
@@ -318,7 +320,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
         origin: { y: 0.6 },
         colors: ["#38BDF8", "#FBBF24", "#DFB76C", "#FFFFFF"],
       });
-    } catch (_) {}
+    } catch (_) { }
 
 
 
@@ -721,9 +723,54 @@ export default function AzureNikah({ data }: AzureNikahProps) {
                 <div className="an-section-corner-ornament bottom-left" aria-hidden="true" />
                 <div className="an-section-corner-ornament bottom-right" aria-hidden="true" />
                 <div className="an-quran-glow-backdrop"></div>
-                <p className="an-arabic-verse">{resolvedData.verse?.arabic || "وَخَلَقْنَاكُمْ أَزْوَاجًا"}</p>
-                <p className="an-verse-translation">&ldquo;{resolvedData.verse?.translation || "And We created you in pairs."}&rdquo;</p>
-                <p className="an-verse-ref">{resolvedData.verse?.reference || "Surah An-Naba · 78:8"}</p>
+                <p className="an-arabic-verse">{resolvedData.verse?.arabic || "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا"}</p>
+                <p className="an-verse-translation">&ldquo;{resolvedData.verse?.translation || "Our Lord, grant us from among our spouses and offspring comfort to our eyes and make us an example for the righteous."}&rdquo;</p>
+                <p className="an-verse-ref">{resolvedData.verse?.reference || "Surah Al-Furqan · 25:74"}</p>
+
+                {/* Prophetic Dua Banner */}
+                <div className="an-prophetic-dua-wrap mt-5 pt-4 border-t border-[rgba(223,183,108,0.25)] text-center">
+                  <p className="font-serif text-base sm:text-xl text-[#F9E8B2] leading-relaxed tracking-wide font-medium">
+                    بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+                  </p>
+                  <p className="text-[11px] sm:text-xs text-blue-100/85 italic mt-1 max-w-md mx-auto">
+                    &ldquo;May Allah bless you, shower His blessings upon you, and unite you both in goodness and eternal love.&rdquo;
+                  </p>
+                </div>
+              </motion.section>
+
+              {/* ── 1A. Elders' & Parents' Blessing Invitation Card ── */}
+              <motion.section
+                className="an-section an-elders-blessing-card text-center"
+                initial={{ opacity: 0, y: 45, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                whileHover={{ y: -4, transition: { duration: 0.3 } }}
+              >
+                <div className="an-section-corner-ornament top-left" aria-hidden="true" />
+                <div className="an-section-corner-ornament top-right" aria-hidden="true" />
+                <div className="an-section-corner-ornament bottom-left" aria-hidden="true" />
+                <div className="an-section-corner-ornament bottom-right" aria-hidden="true" />
+                <span className="an-section-subtitle">WITH THE BLESSINGS OF OUR ELDERS</span>
+                <h2 className="an-section-title">Royal Nikah Invitation</h2>
+                <div className="text-[#DFB76C] text-sm my-2">✦ ✧ ✦</div>
+                <p className="an-couple-story-text max-w-xl mx-auto leading-relaxed">
+                  With the divine grace of <strong>Almighty Allah (SWT)</strong> and the cherished prayers of our beloved parents and elders:
+                </p>
+                <div className="my-4 py-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6 text-sm sm:text-base font-serif font-bold text-[#F9E8B2]">
+                  <span className="tracking-wide">{brideParents}</span>
+                  <span className="text-[#38BDF8] font-sans font-normal opacity-70 text-xs">❖ &amp; ❖</span>
+                  <span className="tracking-wide">{groomParents}</span>
+                </div>
+                <p className="an-couple-story-text max-w-xl mx-auto text-xs sm:text-sm text-blue-100/90 leading-relaxed">
+                  cordially invite you to celebrate the sacred bond of Nikah and shower your warm duas upon their beloved children:
+                </p>
+                <p className="font-serif text-xl sm:text-3xl font-bold text-[#F9E8B2] mt-3 tracking-wide">
+                  {brideName} <span className="text-[#38BDF8] font-normal">&amp;</span> {groomName}
+                </p>
+                <p className="text-xs sm:text-sm text-[#F9E8B2] italic mt-3 font-medium opacity-90">
+                  &ldquo;Aapki pur-khuloos shirkat aur duayein hamari khushiyon ko dobala karengi.&rdquo;
+                </p>
               </motion.section>
 
               {/* ── 1B. Meet the Couple ("The Story of Two Souls") ── */}
@@ -823,7 +870,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
                               origin: { y: 0.7 },
                               colors: ["#38BDF8", "#FDE047", "#93C5FD", "#FFFFFF"],
                             });
-                          } catch (_) {}
+                          } catch (_) { }
                         }}
                       />
                     </div>
@@ -1202,7 +1249,7 @@ export default function AzureNikah({ data }: AzureNikahProps) {
                     whileTap={{ scale: 0.97 }}
                   >
                     <span>Confirm Your RSVP</span>
-                    <Sparkle size={16} weight="fill" />
+
                   </motion.button>
                 </div>
               </motion.section>
@@ -1296,7 +1343,8 @@ export default function AzureNikah({ data }: AzureNikahProps) {
                   <CheckCircle size={48} className="text-[#38BDF8] mb-3 mx-auto" weight="fill" />
                   <h4 className="text-lg font-serif text-[#38BDF8]">JazakAllah Khair!</h4>
                   <p className="text-xs text-[#E0F2FE] mt-1 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and blessings have been saved.
+                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and sacred duas have been received with immense gratitude. <br className="hidden sm:inline" />
+                    <span className="italic block mt-1 text-[#38BDF8] font-medium">Aapki duayein hamari nayi zindagi ke aaghaaz mein barkat ka sabab banengi.</span>
                   </p>
 
                   <div className="mt-4 pt-3 border-t border-[rgba(56,189,248,0.2)]">

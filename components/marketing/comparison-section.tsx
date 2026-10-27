@@ -307,19 +307,17 @@ export function ComparisonSection() {
                   }`}
                 >
                   {/* Feature Label Col */}
-                  <div className="col-span-4 p-5 sm:p-6 flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#073D31]/8 text-[#073D31] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="col-span-4 p-5 sm:p-6 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-[#073D31]/8 text-[#073D31] flex items-center justify-center shrink-0">
                       <Icon size={17} weight="bold" />
                     </div>
-                    <div>
-                      <div className="text-sm font-semibold text-[#18211E] font-sans">
-                        {item.feature}
-                      </div>
+                    <div className="text-sm font-semibold text-[#18211E] font-sans leading-snug">
+                      {item.feature}
                     </div>
                   </div>
 
                   {/* Physical Card Col */}
-                  <div className="col-span-4 p-5 sm:p-6 bg-stone-100/40 border-x border-stone-200/80 space-y-1">
+                  <div className="col-span-4 p-5 sm:p-6 bg-stone-100/40 border-x border-stone-200/80 flex flex-col justify-center space-y-1">
                     <div className="flex items-center gap-2">
                       <XCircle size={16} weight="fill" className="text-rose-500/80 shrink-0" />
                       <span className="text-sm font-semibold text-stone-700 font-sans">
@@ -337,7 +335,7 @@ export function ComparisonSection() {
                   </div>
 
                   {/* WedInvites Digital Col (Elevated Winner) */}
-                  <div className="col-span-4 p-5 sm:p-6 bg-[#073D31]/[0.03] space-y-1 relative">
+                  <div className="col-span-4 p-5 sm:p-6 bg-[#073D31]/[0.03] flex flex-col justify-center space-y-1 relative">
                     <div className="flex items-center gap-2">
                       <CheckCircle size={17} weight="fill" className="text-[#073D31] shrink-0" />
                       <span className="text-sm font-bold text-[#073D31] font-sans">
