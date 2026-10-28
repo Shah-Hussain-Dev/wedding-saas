@@ -13,7 +13,7 @@ export const getRazorpayInstance = () => {
     key_id: keyId,
     key_secret: keySecret,
   });
-};
+}; 
 
 interface CreateOrderParams {
   amount: number; // in paise

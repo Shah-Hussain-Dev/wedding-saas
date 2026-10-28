@@ -12,7 +12,7 @@ export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
-  },
+  }, 
   providers: [
     CredentialsProvider({
       name: "Email & Password",
