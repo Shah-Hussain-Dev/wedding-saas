@@ -9,6 +9,7 @@ import { PremiumButton } from "@/components/ui/premium-button";
 import { fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
 import { Check, Lock, Crown, Sparkle } from "@phosphor-icons/react";
 import { siteConfig } from "@/config/site";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 
 const CLASSIC_FEATURES = [
   "6 Premium Animated Templates",
@@ -31,6 +32,10 @@ function PricingCard({
   title,
   description,
   price,
+  originalPrice,
+  discountPercent,
+  discountName,
+  savingsFormatted,
   features,
   featureVariant,
   headerLabel,
@@ -42,6 +47,10 @@ function PricingCard({
   title: string;
   description: string;
   price: string;
+  originalPrice?: string;
+  discountPercent?: number;
+  discountName?: string;
+  savingsFormatted?: string;
   features: string[];
   featureVariant: "emerald" | "gold";
   headerLabel: string;
@@ -87,11 +96,26 @@ function PricingCard({
         </div>
 
         {/* Price block — fixed min height */}
-        <div className="min-h-[72px] border-b border-black/[0.05] py-5">
-          <div className="flex items-baseline gap-2">
+        <div className="min-h-[84px] border-b border-black/[0.05] py-4">
+          <div className="flex items-baseline gap-2.5">
             <span className="font-serif text-4xl font-bold tracking-tight text-primary">{price}</span>
+            {originalPrice && (
+              <span className="text-sm text-stone-400 line-through font-mono">{originalPrice}</span>
+            )}
             <span className="text-xs text-stone-400">one-time</span>
           </div>
+          {discountPercent ? (
+            <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
+                {discountPercent}% OFF{savingsFormatted ? ` · Save ${savingsFormatted}` : ""}
+              </span>
+              {discountName && (
+                <span className="text-[10px] font-semibold text-[#C8A45E]">
+                  {discountName}
+                </span>
+              )}
+            </div>
+          ) : null}
         </div>
 
         {/* Features — grows to fill, pushes CTA down */}
@@ -127,6 +151,10 @@ function PricingCard({
 }
 
 export function PricingSection() {
+  const { getPricingDetails } = useTemplatePricing();
+  const pricingClassic = getPricingDetails("imperial-palace", "₹1,199");
+  const pricingRoyal = getPricingDetails("celestial-rose", "₹1,499");
+
   return (
     <DecorSection id="pricing" preset="pricing" className="section-padding bg-surface-muted">
       <div className="page-container max-w-4xl">
@@ -150,7 +178,11 @@ export function PricingSection() {
               headerAccent="text-stone-400"
               title={`${siteConfig.name} Classic`}
               description="Elegant animated invitations."
-              price="₹1,199"
+              price={pricingClassic.priceFormatted}
+              originalPrice={pricingClassic.isOnSale ? pricingClassic.originalPriceFormatted : undefined}
+              discountPercent={pricingClassic.isOnSale ? pricingClassic.discountPercent : undefined}
+              discountName={pricingClassic.isOnSale ? pricingClassic.discountName : undefined}
+              savingsFormatted={pricingClassic.isOnSale ? pricingClassic.savingsFormatted : undefined}
               features={CLASSIC_FEATURES}
               featureVariant="emerald"
               cta="Start with Classic"
@@ -172,7 +204,11 @@ export function PricingSection() {
               headerAccent="text-accent-gold"
               title={`${siteConfig.name} Royal`}
               description="Cinematic luxury motion experiences."
-              price="₹1,499"
+              price={pricingRoyal.priceFormatted}
+              originalPrice={pricingRoyal.isOnSale ? pricingRoyal.originalPriceFormatted : undefined}
+              discountPercent={pricingRoyal.isOnSale ? pricingRoyal.discountPercent : undefined}
+              discountName={pricingRoyal.isOnSale ? pricingRoyal.discountName : undefined}
+              savingsFormatted={pricingRoyal.isOnSale ? pricingRoyal.savingsFormatted : undefined}
               features={ROYAL_FEATURES}
               featureVariant="gold"
               cta="Unlock Royal Experience"

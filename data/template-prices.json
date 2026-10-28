@@ -1,11 +1,17 @@
 {
   "celestial-rose": {
     "priceInr": 1,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
     "isActive": true,
     "isPopular": false
   },
   "noor-e-nikah": {
-    "priceInr": 1,
+    "priceInr": 900,
+    "originalPriceInr": 2999,
+    "discountPercent": 70,
+    "discountName": "70% OFF Limited Deal",
     "isActive": true
   }
 }

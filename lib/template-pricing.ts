@@ -8,18 +8,36 @@ export interface TemplatePricingConfig {
   name: string;
   category: string;
   style: string;
-  priceInr: number;
-  priceFormatted: string;
+  priceInr: number; // Selling / discounted price (e.g. 1199)
+  originalPriceInr: number; // Original MRP / strikethrough price (e.g. 2999)
+  discountPercent: number; // Calculated or explicit discount rate (e.g. 60)
+  discountName: string; // Campaign / discount label (e.g. "Early Bird Launch")
+  priceFormatted: string; // "₹1,199"
+  originalPriceFormatted: string; // "₹2,999"
+  savingsAmountInr: number; // 1800
+  savingsFormatted: string; // "₹1,800"
+  isOnSale: boolean; // true if originalPriceInr > priceInr
   isActive: boolean;
   isPopular?: boolean;
   tag?: string;
   gradient?: string;
 }
 
-const DEFAULT_PRICE_INR = 1199;
+export interface CachedTemplateConfig {
+  priceInr: number;
+  originalPriceInr?: number;
+  discountPercent?: number;
+  discountName?: string;
+  isActive: boolean;
+  isPopular?: boolean;
+}
+
+export const DEFAULT_PRICE_INR = 1199;
+export const DEFAULT_ORIGINAL_PRICE_INR = 2999;
+export const DEFAULT_DISCOUNT_NAME = "Wedding Season Offer";
 
 // In-memory cache for fast reads
-let memoryPriceCache: Record<string, { priceInr: number; isActive: boolean; isPopular?: boolean }> = {};
+let memoryPriceCache: Record<string, CachedTemplateConfig> = {};
 let isCacheLoaded = false;
 
 const DATA_FILE_PATH = path.join(process.cwd(), "data", "template-prices.json");
@@ -33,7 +51,7 @@ function ensureDataDirectory() {
   } catch (_) {}
 }
 
-function loadPricesFromFile(): Record<string, { priceInr: number; isActive: boolean; isPopular?: boolean }> {
+function loadPricesFromFile(): Record<string, CachedTemplateConfig> {
   try {
     if (fs.existsSync(DATA_FILE_PATH)) {
       const content = fs.readFileSync(DATA_FILE_PATH, "utf8");
@@ -45,13 +63,81 @@ function loadPricesFromFile(): Record<string, { priceInr: number; isActive: bool
   return {};
 }
 
-function savePricesToFile(data: Record<string, { priceInr: number; isActive: boolean; isPopular?: boolean }>) {
+function savePricesToFile(data: Record<string, CachedTemplateConfig>) {
   try {
     ensureDataDirectory();
     fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2), "utf8");
   } catch (err) {
     console.warn("Could not write template prices to file:", err);
   }
+}
+
+/**
+ * Builds the full ecommerce pricing object with calculated discounts and formatted values
+ */
+export function buildTemplatePricingConfig(
+  id: TemplateId | string,
+  cached?: CachedTemplateConfig
+): TemplatePricingConfig {
+  const normalizedId = id.replace(/_/g, "-").toLowerCase();
+  const meta = TEMPLATE_META[normalizedId as TemplateId] || {
+    name: normalizedId,
+    religionLabel: "Universal",
+    style: "Luxury Wedding",
+    tag: undefined,
+    gradient: undefined,
+  };
+
+  const priceInr = cached?.priceInr !== undefined ? cached.priceInr : DEFAULT_PRICE_INR;
+  
+  // Resolve original price: if not explicitly set, default to 2999 or double the selling price
+  const originalPriceInr =
+    cached?.originalPriceInr && cached.originalPriceInr > 0
+      ? cached.originalPriceInr
+      : Math.max(DEFAULT_ORIGINAL_PRICE_INR, Math.round(priceInr * 2.2));
+
+  // Auto-calculate discount percentage if original price > priceInr
+  const computedPercent =
+    originalPriceInr > priceInr
+      ? Math.round(((originalPriceInr - priceInr) / originalPriceInr) * 100)
+      : 0;
+
+  const discountPercent =
+    cached?.discountPercent !== undefined && cached.discountPercent >= 0
+      ? cached.discountPercent
+      : computedPercent;
+
+  const discountName =
+    cached?.discountName && cached.discountName.trim().length > 0
+      ? cached.discountName
+      : discountPercent > 0
+      ? `${discountPercent}% OFF Launch Deal`
+      : "Standard Price";
+
+  const savingsAmountInr = Math.max(0, originalPriceInr - priceInr);
+  const isOnSale = originalPriceInr > priceInr && priceInr > 0;
+  const isActive = cached?.isActive ?? true;
+  const isPopular = cached?.isPopular ?? (meta.tag === "Best Seller" || meta.tag === "Trending");
+
+  return {
+    id: normalizedId,
+    name: meta.name,
+    category: meta.religionLabel,
+    style: meta.style,
+    priceInr,
+    originalPriceInr,
+    discountPercent,
+    discountName,
+    priceFormatted: `₹${priceInr.toLocaleString("en-IN")}`,
+    originalPriceFormatted: `₹${originalPriceInr.toLocaleString("en-IN")}`,
+    savingsAmountInr,
+    savingsFormatted: `₹${savingsAmountInr.toLocaleString("en-IN")}`,
+    isOnSale,
+    isActive,
+    isPopular,
+    tag: meta.tag,
+    gradient: meta.gradient,
+  };
 }
 
 export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfig[]> {
@@ -74,6 +160,9 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
         dbConfigs.forEach((cfg: any) => {
           memoryPriceCache[cfg.id] = {
             priceInr: cfg.priceInr ?? DEFAULT_PRICE_INR,
+            originalPriceInr: cfg.originalPriceInr ?? DEFAULT_ORIGINAL_PRICE_INR,
+            discountPercent: cfg.discountPercent ?? 60,
+            discountName: cfg.discountName ?? DEFAULT_DISCOUNT_NAME,
             isActive: cfg.isActive !== false,
             isPopular: cfg.isPopular || false,
           };
@@ -92,24 +181,8 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
   const templateIds = Object.keys(TEMPLATE_META) as TemplateId[];
 
   return templateIds.map((id) => {
-    const meta = TEMPLATE_META[id];
     const cached = memoryPriceCache[id];
-    const priceInr = cached?.priceInr ?? DEFAULT_PRICE_INR;
-    const isActive = cached?.isActive ?? true;
-    const isPopular = cached?.isPopular ?? (meta.tag === "Best Seller" || meta.tag === "Trending");
-
-    return {
-      id,
-      name: meta.name,
-      category: meta.religionLabel,
-      style: meta.style,
-      priceInr,
-      priceFormatted: `₹${priceInr.toLocaleString("en-IN")}`,
-      isActive,
-      isPopular,
-      tag: meta.tag,
-      gradient: meta.gradient,
-    };
+    return buildTemplatePricingConfig(id, cached);
   });
 }
 
@@ -125,6 +198,9 @@ export async function getTemplatePriceInr(templateId: string): Promise<number> {
       if (cfg && cfg.priceInr !== undefined && cfg.priceInr !== null) {
         memoryPriceCache[normalizedId] = {
           priceInr: cfg.priceInr,
+          originalPriceInr: cfg.originalPriceInr ?? DEFAULT_ORIGINAL_PRICE_INR,
+          discountPercent: cfg.discountPercent ?? 60,
+          discountName: cfg.discountName ?? DEFAULT_DISCOUNT_NAME,
           isActive: cfg.isActive !== false,
           isPopular: cfg.isPopular || false,
         };
@@ -148,21 +224,61 @@ export async function getTemplatePriceInr(templateId: string): Promise<number> {
   return found?.priceInr ?? DEFAULT_PRICE_INR;
 }
 
+export async function getTemplatePricingConfig(templateId: string): Promise<TemplatePricingConfig> {
+  const normalizedId = templateId.replace(/_/g, "-").toLowerCase();
+  if (!isCacheLoaded) {
+    await getAllTemplatesWithPricing();
+  }
+  return buildTemplatePricingConfig(normalizedId, memoryPriceCache[normalizedId]);
+}
+
 export async function updateTemplatePrice(
   templateId: string,
   priceInr: number,
-  options?: { isActive?: boolean; isPopular?: boolean }
+  options?: {
+    originalPriceInr?: number;
+    discountPercent?: number;
+    discountName?: string;
+    isActive?: boolean;
+    isPopular?: boolean;
+  }
 ): Promise<TemplatePricingConfig> {
   const normalizedId = templateId.replace(/_/g, "-").toLowerCase();
   const safePrice = Math.max(0, Math.round(Number(priceInr) ?? DEFAULT_PRICE_INR));
 
   const existing = memoryPriceCache[normalizedId] || {
     priceInr: DEFAULT_PRICE_INR,
+    originalPriceInr: DEFAULT_ORIGINAL_PRICE_INR,
+    discountPercent: 60,
+    discountName: DEFAULT_DISCOUNT_NAME,
     isActive: true,
   };
 
-  const updated = {
+  const safeOriginalPrice =
+    options?.originalPriceInr !== undefined
+      ? Math.max(0, Math.round(Number(options.originalPriceInr)))
+      : (existing.originalPriceInr ?? DEFAULT_ORIGINAL_PRICE_INR);
+
+  const computedDiscountPercent =
+    safeOriginalPrice > safePrice
+      ? Math.round(((safeOriginalPrice - safePrice) / safeOriginalPrice) * 100)
+      : 0;
+
+  const safeDiscountPercent =
+    options?.discountPercent !== undefined
+      ? Math.max(0, Math.min(100, Math.round(Number(options.discountPercent))))
+      : (existing.discountPercent ?? computedDiscountPercent);
+
+  const safeDiscountName =
+    options?.discountName !== undefined
+      ? options.discountName.trim()
+      : (existing.discountName || DEFAULT_DISCOUNT_NAME);
+
+  const updated: CachedTemplateConfig = {
     priceInr: safePrice,
+    originalPriceInr: safeOriginalPrice,
+    discountPercent: safeDiscountPercent,
+    discountName: safeDiscountName,
     isActive: options?.isActive !== undefined ? options.isActive : existing.isActive,
     isPopular: options?.isPopular !== undefined ? options.isPopular : existing.isPopular,
   };
@@ -173,43 +289,84 @@ export async function updateTemplatePrice(
   // Save to file backup immediately
   savePricesToFile(memoryPriceCache);
 
-  // Save to Supabase PostgreSQL database table
+  // Save to Supabase PostgreSQL database table (graceful async error handling)
   try {
     if ((prisma as any).templateConfig) {
       await (prisma as any).templateConfig.upsert({
         where: { id: normalizedId },
         update: {
           priceInr: safePrice,
+          originalPriceInr: safeOriginalPrice,
+          discountPercent: safeDiscountPercent,
+          discountName: safeDiscountName,
           isActive: updated.isActive,
           isPopular: updated.isPopular,
         },
         create: {
           id: normalizedId,
           priceInr: safePrice,
+          originalPriceInr: safeOriginalPrice,
+          discountPercent: safeDiscountPercent,
+          discountName: safeDiscountName,
           isActive: updated.isActive,
           isPopular: updated.isPopular,
         },
       });
-      console.log(`[Pricing] Successfully persisted template ${normalizedId} price = ₹${safePrice} to Supabase DB`);
+      console.log(
+        `[Pricing] Successfully persisted template ${normalizedId} (Selling: ₹${safePrice}, MRP: ₹${safeOriginalPrice}, ${safeDiscountPercent}% OFF "${safeDiscountName}")`
+      );
     }
   } catch (dbErr) {
-    console.error("Could not save price to DB table:", dbErr);
+    console.warn("Could not save price to DB table (safely cached in memory & file):", dbErr);
   }
 
-  const meta = TEMPLATE_META[normalizedId as TemplateId] || {
-    name: normalizedId,
-    religionLabel: "Universal",
-    style: "Luxury Wedding",
-  };
+  return buildTemplatePricingConfig(normalizedId, updated);
+}
 
-  return {
-    id: normalizedId,
-    name: meta.name,
-    category: meta.religionLabel,
-    style: meta.style,
-    priceInr: safePrice,
-    priceFormatted: `₹${safePrice.toLocaleString("en-IN")}`,
-    isActive: updated.isActive,
-    isPopular: updated.isPopular,
-  };
+export async function bulkUpdateTemplatePricing(options: {
+  templateIds?: string[];
+  priceInr?: number;
+  originalPriceInr?: number;
+  discountPercent?: number;
+  discountName?: string;
+  isActive?: boolean;
+}): Promise<TemplatePricingConfig[]> {
+  const allIds =
+    options.templateIds && options.templateIds.length > 0
+      ? options.templateIds
+      : (Object.keys(TEMPLATE_META) as string[]);
+
+  const results: TemplatePricingConfig[] = [];
+  for (const rawId of allIds) {
+    const id = rawId.replace(/_/g, "-").toLowerCase();
+    const existing = memoryPriceCache[id] || {
+      priceInr: DEFAULT_PRICE_INR,
+      originalPriceInr: DEFAULT_ORIGINAL_PRICE_INR,
+      discountPercent: 60,
+      discountName: DEFAULT_DISCOUNT_NAME,
+      isActive: true,
+    };
+
+    const effectiveOriginalPrice =
+      options.originalPriceInr !== undefined
+        ? options.originalPriceInr
+        : (existing.originalPriceInr ?? DEFAULT_ORIGINAL_PRICE_INR);
+
+    let effectivePrice = existing.priceInr;
+    if (options.priceInr !== undefined) {
+      effectivePrice = options.priceInr;
+    } else if (options.discountPercent !== undefined) {
+      effectivePrice = Math.round(effectiveOriginalPrice * (1 - options.discountPercent / 100));
+    }
+
+    const updated = await updateTemplatePrice(id, effectivePrice, {
+      originalPriceInr: effectiveOriginalPrice,
+      discountPercent: options.discountPercent,
+      discountName: options.discountName,
+      isActive: options.isActive,
+    });
+    results.push(updated);
+  }
+
+  return results;
 }

@@ -45,10 +45,11 @@ export function DemoBanner({
   isHeroTapped = false,
 }: DemoBannerProps) {
   const { data: session } = useSession();
-  const { getPriceFormatted, getPriceNumber } = useTemplatePricing();
+  const { getPriceFormatted, getPriceNumber, getPricingDetails } = useTemplatePricing();
   
   const dynamicPriceInr = getPriceNumber(templateId, 1199);
-  const dynamicPriceFormatted = getPriceFormatted(templateId, `₹${dynamicPriceInr.toLocaleString("en-IN")}`);
+  const pricing = getPricingDetails(templateId, dynamicPriceInr);
+  const dynamicPriceFormatted = pricing.priceFormatted;
   const effectiveAmountPaise = dynamicPriceInr * 100;
 
   const nameParts = (templateName || "").split("&").map(s => s.trim());
@@ -201,9 +202,21 @@ export function DemoBanner({
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-400"></span>
           </span>
-          <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-amber-300 whitespace-nowrap">
-            <span className="hidden sm:inline">Live Demo · </span>{dynamicPriceFormatted}
-          </span>
+          <div className="flex items-center gap-1.5 whitespace-nowrap">
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-amber-300">
+              <span className="hidden sm:inline">Live Demo · </span>{dynamicPriceFormatted}
+            </span>
+            {pricing.isOnSale && (
+              <span className="text-[9px] text-stone-400 line-through font-mono hidden sm:inline">
+                {pricing.originalPriceFormatted}
+              </span>
+            )}
+            {pricing.isOnSale && (
+              <span className="text-[8px] sm:text-[9px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-400/40 px-1.5 py-0.5 rounded-full">
+                {pricing.discountPercent}% OFF
+              </span>
+            )}
+          </div>
 
           <span className="text-white/20 text-xs">|</span>
 
@@ -249,9 +262,21 @@ export function DemoBanner({
 
       {/* ── Bottom Clean & Simple Floating Unlock CTA ── */}
       <div
-        className={`fixed bottom-3.5 left-3.5 right-[68px] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-auto z-[990] ${isHeroTapped ? "hidden" : "flex"} items-center justify-center pointer-events-none transition-all duration-300`}
+        className={`fixed bottom-3.5 left-3.5 right-[68px] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-auto z-[990] ${isHeroTapped ? "hidden" : "flex"} flex-col items-center justify-center pointer-events-none transition-all duration-300`}
         style={{ bottom: "max(14px, env(safe-area-inset-bottom, 14px))" }}
       >
+        {pricing.isOnSale && (
+          <div className="pointer-events-auto flex items-center gap-1.5 mb-1.5">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-600/95 text-white text-[10px] font-bold tracking-wide shadow-lg border border-emerald-400/30 backdrop-blur-md">
+              {pricing.discountPercent}% OFF · Save {pricing.savingsFormatted}
+            </span>
+            {pricing.discountName && (
+              <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-stone-950/85 text-[#E1C98E] text-[10px] font-medium border border-[#C8A45E]/40 backdrop-blur-md">
+                {pricing.discountName}
+              </span>
+            )}
+          </div>
+        )}
         <div className="pointer-events-auto w-full sm:w-auto">
           <RazorpayCheckoutButton
             invitationId={invitationId}
@@ -261,7 +286,11 @@ export function DemoBanner({
             groomName={effectiveGroomName}
             amount={dynamicPriceInr}
             amountPaise={effectiveAmountPaise}
-            buttonText={`Unlock Website · ${dynamicPriceFormatted}`}
+            buttonText={
+              pricing.isOnSale
+                ? `Unlock Website · ${dynamicPriceFormatted} (MRP ${pricing.originalPriceFormatted})`
+                : `Unlock Website · ${dynamicPriceFormatted}`
+            }
             className="!w-full sm:!w-auto !min-h-[44px] !py-2.5 sm:!py-3 !px-5 sm:!px-7 !text-xs sm:!text-sm !rounded-full !shadow-[0_10px_30px_rgba(245,158,11,0.35)] !border !border-amber-300/40 font-bold tracking-wide active:scale-98 transition-transform whitespace-nowrap"
             onSuccess={handleUnlockSuccess}
           />

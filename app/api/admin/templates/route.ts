@@ -3,6 +3,7 @@ import { verifyAdminSession } from "@/lib/admin";
 import {
   getAllTemplatesWithPricing,
   updateTemplatePrice,
+  bulkUpdateTemplatePricing,
 } from "@/lib/template-pricing";
 
 export const dynamic = "force-dynamic";
@@ -41,24 +42,58 @@ export async function PATCH(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { templateId, priceInr, isActive, isPopular } = body;
+
+    // Check if bulk discount update
+    if (body.action === "bulk" || body.bulk === true) {
+      const { templateIds, priceInr, originalPriceInr, discountPercent, discountName, isActive } = body;
+      const templates = await bulkUpdateTemplatePricing({
+        templateIds,
+        priceInr: priceInr !== undefined ? Number(priceInr) : undefined,
+        originalPriceInr: originalPriceInr !== undefined ? Number(originalPriceInr) : undefined,
+        discountPercent: discountPercent !== undefined ? Number(discountPercent) : undefined,
+        discountName: discountName !== undefined ? String(discountName) : undefined,
+        isActive: isActive !== undefined ? Boolean(isActive) : undefined,
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `Bulk discount updated for ${templates.length} templates`,
+        templates,
+      });
+    }
+
+    const {
+      templateId,
+      priceInr,
+      originalPriceInr,
+      discountPercent,
+      discountName,
+      isActive,
+      isPopular,
+    } = body;
 
     if (!templateId) {
       return NextResponse.json({ error: "Missing required templateId parameter" }, { status: 400 });
     }
 
     if (priceInr !== undefined && (isNaN(Number(priceInr)) || Number(priceInr) < 0)) {
-      return NextResponse.json({ error: "Invalid price value. Must be a positive number." }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid price value. Must be a positive number." },
+        { status: 400 }
+      );
     }
 
     const updated = await updateTemplatePrice(templateId, Number(priceInr), {
+      originalPriceInr: originalPriceInr !== undefined ? Number(originalPriceInr) : undefined,
+      discountPercent: discountPercent !== undefined ? Number(discountPercent) : undefined,
+      discountName: discountName !== undefined ? String(discountName) : undefined,
       isActive: isActive !== undefined ? Boolean(isActive) : undefined,
       isPopular: isPopular !== undefined ? Boolean(isPopular) : undefined,
     });
 
     return NextResponse.json({
       success: true,
-      message: `Updated price for ${updated.name} to ${updated.priceFormatted}`,
+      message: `Updated pricing for ${updated.name}: Selling ${updated.priceFormatted} (MRP ${updated.originalPriceFormatted}, ${updated.discountPercent}% OFF "${updated.discountName}")`,
       template: updated,
     });
   } catch (error: any) {

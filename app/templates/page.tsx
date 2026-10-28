@@ -307,7 +307,7 @@ const TEMPLATES = [
 ];
 
 export default function TemplatesPage() {
-  const { getPriceFormatted } = useTemplatePricing();
+  const { getPriceFormatted, getPricingDetails } = useTemplatePricing();
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSceneIndex, setActiveSceneIndex] = useState<Record<string, number>>({});
@@ -432,6 +432,7 @@ export default function TemplatesPage() {
               {filteredTemplates.map((item) => {
                 const currentScene = activeSceneIndex[item.id] || 0;
                 const isWish = wishlisted[item.id];
+                const pricing = getPricingDetails(item.id, item.price);
 
                 return (
                   <motion.div
@@ -459,6 +460,20 @@ export default function TemplatesPage() {
                           />
                         ))}
                       </div>
+
+                      {/* Top Left Discount Tag (E-commerce Style) */}
+                      {pricing.isOnSale && (
+                        <div className="absolute top-4 left-3 z-40 flex items-center gap-1.5 pointer-events-none">
+                          <span className="px-2.5 py-1 rounded-full bg-emerald-600/95 backdrop-blur-md text-[10px] font-bold text-white uppercase tracking-wider shadow-md border border-white/20">
+                            {pricing.discountPercent}% OFF
+                          </span>
+                          {pricing.discountName && (
+                            <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-stone-950/80 backdrop-blur-md text-[9px] font-semibold text-[#E1C98E] uppercase tracking-wide border border-[#C8A45E]/30">
+                              {pricing.discountName}
+                            </span>
+                          )}
+                        </div>
+                      )}
 
                       {/* Wishlist Button */}
                       <button
@@ -500,9 +515,16 @@ export default function TemplatesPage() {
                         <span className="px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-white/10">
                           {item.scenes[currentScene]?.title}
                         </span>
-                        <span suppressHydrationWarning className="text-[10px] font-bold text-white font-mono">
-                          {getPriceFormatted(item.id, item.price)}
-                        </span>
+                        <div suppressHydrationWarning className="flex items-center gap-1.5 font-mono">
+                          {pricing.isOnSale && (
+                            <span className="text-[9px] text-stone-300/80 line-through">
+                              {pricing.originalPriceFormatted}
+                            </span>
+                          )}
+                          <span className="text-[11px] font-bold text-white">
+                            {pricing.priceFormatted}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
@@ -525,8 +547,27 @@ export default function TemplatesPage() {
                         {item.desc}
                       </p>
 
+                      {/* E-COMMERCE PRICING ROW */}
+                      <div className="flex items-baseline justify-between pt-1 mt-0.5 border-t border-[#073D31]/6">
+                        <div className="flex items-baseline gap-2">
+                          <span suppressHydrationWarning className="text-base font-serif font-bold text-[#18211E]">
+                            {pricing.priceFormatted}
+                          </span>
+                          {pricing.isOnSale && (
+                            <span suppressHydrationWarning className="text-xs text-stone-400 line-through font-mono">
+                              {pricing.originalPriceFormatted}
+                            </span>
+                          )}
+                        </div>
+                        {pricing.isOnSale && (
+                          <span suppressHydrationWarning className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-sans">
+                            Save {pricing.savingsFormatted} ({pricing.discountPercent}% OFF)
+                          </span>
+                        )}
+                      </div>
+
                       {/* Action Links */}
-                      <div className="flex items-center gap-2 pt-3 mt-1 border-t border-[#073D31]/8">
+                      <div className="flex items-center gap-2 pt-2.5 mt-0.5 border-t border-[#073D31]/8">
                         <Link
                           href={`/preview/${item.id}`}
                           className="flex-1 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-all shadow-xs group-hover:shadow-md cursor-pointer"

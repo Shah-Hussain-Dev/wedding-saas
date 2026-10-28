@@ -127,7 +127,7 @@ const CATEGORY_TABS = [
 ];
 
 export function InteractiveTemplateGrid() {
-  const { getPriceFormatted } = useTemplatePricing();
+  const { getPriceFormatted, getPricingDetails } = useTemplatePricing();
   const [activeTab, setActiveTab] = useState<string>("all");
   const [activeSceneIndex, setActiveSceneIndex] = useState<Record<string, number>>({});
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
@@ -207,6 +207,7 @@ export function InteractiveTemplateGrid() {
             {filtered.map((item) => {
               const currentScene = activeSceneIndex[item.id] || 0;
               const isWish = wishlisted[item.id];
+              const pricing = getPricingDetails(item.id, item.price);
 
               return (
                 <motion.div
@@ -234,6 +235,20 @@ export function InteractiveTemplateGrid() {
                         />
                       ))}
                     </div>
+
+                    {/* Top Left Discount Tag (E-commerce Style) */}
+                    {pricing.isOnSale && (
+                      <div className="absolute top-4 left-3 z-40 flex items-center gap-1.5 pointer-events-none">
+                        <span className="px-2.5 py-1 rounded-full bg-emerald-600/95 backdrop-blur-md text-[10px] font-bold text-white uppercase tracking-wider shadow-md border border-white/20">
+                          {pricing.discountPercent}% OFF
+                        </span>
+                        {pricing.discountName && (
+                          <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-stone-950/80 backdrop-blur-md text-[9px] font-semibold text-[#E1C98E] uppercase tracking-wide border border-[#C8A45E]/30">
+                            {pricing.discountName}
+                          </span>
+                        )}
+                      </div>
+                    )}
 
                     {/* Wishlist Heart Action */}
                     <button
@@ -275,9 +290,16 @@ export function InteractiveTemplateGrid() {
                       <span className="px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-white/10">
                         {item.scenes[currentScene]?.title}
                       </span>
-                      <span suppressHydrationWarning className="text-[10px] font-bold text-white font-mono">
-                        {getPriceFormatted(item.id, item.price)}
-                      </span>
+                      <div suppressHydrationWarning className="flex items-center gap-1.5 font-mono">
+                        {pricing.isOnSale && (
+                          <span className="text-[9px] text-stone-300/80 line-through">
+                            {pricing.originalPriceFormatted}
+                          </span>
+                        )}
+                        <span className="text-[11px] font-bold text-white">
+                          {pricing.priceFormatted}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -299,6 +321,25 @@ export function InteractiveTemplateGrid() {
                     <p className="text-xs text-[#76766F] font-sans line-clamp-1">
                       {item.style}
                     </p>
+
+                    {/* E-COMMERCE PRICING ROW */}
+                    <div className="flex items-baseline justify-between pt-1 mt-0.5 border-t border-[#073D31]/6">
+                      <div className="flex items-baseline gap-2">
+                        <span suppressHydrationWarning className="text-base font-serif font-bold text-[#18211E]">
+                          {pricing.priceFormatted}
+                        </span>
+                        {pricing.isOnSale && (
+                          <span suppressHydrationWarning className="text-xs text-stone-400 line-through font-mono">
+                            {pricing.originalPriceFormatted}
+                          </span>
+                        )}
+                      </div>
+                      {pricing.isOnSale && (
+                        <span suppressHydrationWarning className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-sans">
+                          Save {pricing.savingsFormatted} ({pricing.discountPercent}% OFF)
+                        </span>
+                      )}
+                    </div>
 
                     {/* Complimentary Matching PDFs Badge */}
                     <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#C8A45E]/10 border border-[#C8A45E]/25 text-[10px] font-sans font-semibold text-[#8C6D23] mt-0.5">
