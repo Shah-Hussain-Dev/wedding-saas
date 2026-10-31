@@ -1,6 +1,6 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/
 
-# dependencies
+# --- Dependencies ---
 /node_modules
 /.pnp
 .pnp.*
@@ -9,35 +9,105 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+.pnpm-store
 
-# testing
-/coverage
-
-# next.js
+# --- Next.js ---
 /.next/
 /out/
+/.swc/
+next-env.d.ts
 
-# production
+# --- Build / output ---
 /build
+/dist
+*.tsbuildinfo
 
-# misc
-.DS_Store
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+!.env.template
 *.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+credentials.json
+secrets.json
 
-# debug
+# --- Database (local dev) ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Prisma generated client ---
+/app/generated/
+
+# --- Testing ---
+/coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# --- Caching / tooling ---
+.turbo
+.vercel
+.cache
+.eslintcache
+.stylelintcache
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+lerna-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# --- PM2 (local logs if used outside /var/log) ---
+logs/
+.pm2/
 
-# vercel
-.vercel
+# --- OS ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# --- Editors & IDEs ---
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.swp
+*.swo
+*~
 
-/app/generated/prisma
+# --- Cursor (local agent state; keep rules if you add .cursor/rules) ---
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+
+# --- Agent skills: mirrors from `npx skills add` (canonical copy: .agents/skills/) ---
+/agent/
+/.claude/
+/data/skills/
+
+# --- Local scratch & one-off experiments ---
+/scratch/
+
+# --- Misc local artifacts ---
+*.local
+*.orig
+*.bak
+
+
+.agents/
+.agent 
