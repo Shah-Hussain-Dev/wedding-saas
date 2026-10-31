@@ -113,6 +113,143 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
     }
   }, []);
 
+  // Smooth scroll controller: when user scrolls at the hero section,
+  // glide completely and smoothly to the letter casket section (#letter)
+  useEffect(() => {
+    let isTransitioning = false;
+    let touchStartY = 0;
+    let touchStartX = 0;
+
+    const scrollToLetter = () => {
+      // Do not trigger while transitioning or while gate is locked shut
+      if (isTransitioning) return;
+      if (typeof document !== "undefined" && document.documentElement.classList.contains("is-shut")) {
+        return;
+      }
+
+      const letterEl = document.getElementById("letter");
+      if (!letterEl) return;
+
+      isTransitioning = true;
+
+      // 1. Native smooth scrollIntoView (standard spec)
+      try {
+        letterEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      } catch (_) {}
+
+      // 2. Direct window.scrollTo calculation for broad mobile browser compatibility
+      try {
+        const docScrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop ||
+          0;
+        const rectTop = letterEl.getBoundingClientRect().top;
+        const targetY = rectTop + docScrollTop;
+        window.scrollTo({ top: targetY, behavior: "smooth" });
+      } catch (_) {}
+
+      // 3. Fallback for scrollable parent containers (like embed iframes / preview frames)
+      try {
+        let parent = letterEl.parentElement;
+        while (parent) {
+          if (parent.scrollHeight > parent.clientHeight && parent.clientHeight > 0) {
+            const overflowY = window.getComputedStyle(parent).overflowY;
+            if (overflowY === "auto" || overflowY === "scroll") {
+              parent.scrollTo({ top: letterEl.offsetTop, behavior: "smooth" });
+              break;
+            }
+          }
+          parent = parent.parentElement;
+        }
+      } catch (_) {}
+
+      setTimeout(() => {
+        isTransitioning = false;
+      }, 950);
+    };
+
+    // Helper: checks if user is currently viewing the Hero section
+    const isAtHero = () => {
+      const heroEl = document.getElementById("hero");
+      if (!heroEl) return false;
+      const rect = heroEl.getBoundingClientRect();
+      // Hero top is near screen top and bottom is still meaningfully visible
+      return rect.top >= -80 && rect.bottom > 120;
+    };
+
+    // 1. Mouse wheel downward scroll
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY > 8 && isAtHero()) {
+        scrollToLetter();
+      }
+    };
+
+    // 2. Mobile Touch Swipe Upward
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches && e.touches[0]) {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!e.touches || !e.touches[0]) return;
+      const currentY = e.touches[0].clientY;
+      const currentX = e.touches[0].clientX;
+      const deltaY = touchStartY - currentY; // Positive = swipe UP (scrolling DOWN)
+      const deltaX = Math.abs(currentX - touchStartX);
+
+      // Vertical swipe upward with greater vertical than horizontal movement
+      if (deltaY > 25 && deltaY > deltaX && isAtHero()) {
+        scrollToLetter();
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!e.changedTouches || !e.changedTouches[0]) return;
+      const currentY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY - currentY;
+      if (deltaY > 25 && isAtHero()) {
+        scrollToLetter();
+      }
+    };
+
+    // 3. Direct Click / Tap on scroll guide indicator (.h-scroll)
+    let removeGuideListeners: (() => void) | undefined;
+    const timer = setTimeout(() => {
+      const scrollGuide = document.querySelector(".h-scroll");
+      if (scrollGuide) {
+        const handleGuideTrigger = (e: Event) => {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollToLetter();
+        };
+        scrollGuide.addEventListener("click", handleGuideTrigger);
+        scrollGuide.addEventListener("touchend", handleGuideTrigger);
+        removeGuideListeners = () => {
+          scrollGuide.removeEventListener("click", handleGuideTrigger);
+          scrollGuide.removeEventListener("touchend", handleGuideTrigger);
+        };
+      }
+    }, 100);
+
+    // Attach listeners on window and document
+    window.addEventListener("wheel", handleWheel, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      if (removeGuideListeners) removeGuideListeners();
+    };
+  }, []);
+
   return (
     <main className="sheesh-mahal-root relative w-full min-h-[100dvh] flex flex-col bg-[#05140e] text-[#f5efe2]">
       {/* ─────────────────────────────────────────────────────────────

@@ -51,15 +51,18 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
     if (typeof document !== "undefined") {
       if (!isFullyOpen) {
         document.documentElement.classList.add("is-shut");
+        document.body.classList.add("is-shut");
         document.body.style.overflow = "hidden";
       } else {
         document.documentElement.classList.remove("is-shut");
+        document.body.classList.remove("is-shut");
         document.body.style.overflow = "";
       }
     }
     return () => {
       if (typeof document !== "undefined") {
         document.documentElement.classList.remove("is-shut");
+        document.body.classList.remove("is-shut");
         document.body.style.overflow = "";
       }
     };
@@ -81,6 +84,7 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
       setIsFullyOpen(true);
       if (typeof document !== "undefined") {
         document.documentElement.classList.remove("is-shut");
+        document.body.classList.remove("is-shut");
         document.body.style.overflow = "";
       }
       onOpen?.();
@@ -95,6 +99,7 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
       setIsOpening(false);
       if (typeof document !== "undefined") {
         document.documentElement.classList.remove("is-shut");
+        document.body.classList.remove("is-shut");
         document.body.style.overflow = "";
       }
       onOpen?.();

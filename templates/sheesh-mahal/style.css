@@ -265,6 +265,39 @@ body.is-shut {
   height: 100% !important;
 }
 
+/* Smooth Scrolling Across All Sections */
+html {
+  scroll-behavior: smooth;
+}
+
+.sheesh-mahal-root {
+  scroll-behavior: smooth;
+}
+
+.sheesh-mahal-root section {
+  scroll-margin-top: 0px;
+}
+
+/* Hero Scroll Guide Interactive Touch Target */
+.sheesh-mahal-root .h-scroll {
+  cursor: pointer;
+  pointer-events: auto !important;
+  min-width: var(--min-touch, 44px);
+  min-height: var(--min-touch, 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 25;
+}
+
+.sheesh-mahal-root .h-scroll:hover,
+.sheesh-mahal-root .h-scroll:focus-visible {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.12);
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    6. ALL 28 CSS KEYFRAMES (VERIFIED FROM REFERENCE SITE)
    ───────────────────────────────────────────────────────────────────────── */
@@ -877,7 +910,14 @@ body.is-shut {
 .sheesh-mahal-root .d-leaf-r.is-open {
   animation: d-open-r 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+.sheesh-mahal-root .lt-casket {
+  transform: none !important;
+}
 .sheesh-mahal-root .lt-casket.is-open {
+  transform: none !important;
+}
+.sheesh-mahal-root .c-lid.is-open,
+.sheesh-mahal-root .lt-casket .c-lid.is-open {
   animation: casket-open 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 .sheesh-mahal-root .win-leaf-l.is-open {

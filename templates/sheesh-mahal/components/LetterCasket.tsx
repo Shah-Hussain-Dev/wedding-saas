@@ -26,12 +26,40 @@ function sanitizeGuestParam(input?: string): string {
 }
 
 export default function LetterCasket({ data, guestName: guestNameProp }: LetterCasketProps) {
+  const [isBoxOpen, setIsBoxOpen] = useState(false);
+  const [isPoppedUp, setIsPoppedUp] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isSealStamped, setIsSealStamped] = useState(false);
   const [guestName, setGuestName] = useState("Family & Friends");
   const isTriggered = useRef(false);
   const casketRef = useRef<HTMLButtonElement | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
+
+  // Pre-load audio elements for zero latency instant playback
+  const sfxOpenAudio = useRef<HTMLAudioElement | null>(null);
+  const sfxLetterAudio = useRef<HTMLAudioElement | null>(null);
+  const sfxSealAudio = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const audioOpen = new Audio("/templates/sheesh-mahal/audio/sfx-open.mp3");
+        audioOpen.preload = "auto";
+        audioOpen.volume = 0.85;
+        sfxOpenAudio.current = audioOpen;
+
+        const audioLetter = new Audio("/templates/sheesh-mahal/audio/sfx-letter.mp3");
+        audioLetter.preload = "auto";
+        audioLetter.volume = 0.85;
+        sfxLetterAudio.current = audioLetter;
+
+        const audioSeal = new Audio("/templates/sheesh-mahal/audio/sfx-lock.mp3");
+        audioSeal.preload = "auto";
+        audioSeal.volume = 0.7;
+        sfxSealAudio.current = audioSeal;
+      } catch (_) {}
+    }
+  }, []);
 
   const groomName = data?.groomName || data?.couple?.groomName || "Zain";
   const brideName = data?.brideName || data?.couple?.brideName || "Anaya";
@@ -62,18 +90,54 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
     }
   }, [guestNameProp]);
 
-  // Handle casket opening
+  // Handle casket opening with choreographed multi-phase pop-up & unfold
   const handleToggleCasket = useCallback(() => {
     if (isTriggered.current || isOpen) return;
     isTriggered.current = true;
 
-    playSfx("/templates/sheesh-mahal/audio/sfx-letter.mp3");
-    setIsOpen(true);
+    // Phase 1: Play opening sound IMMEDIATELY upon tap (zero latency)
+    try {
+      if (sfxOpenAudio.current) {
+        sfxOpenAudio.current.currentTime = 0;
+        sfxOpenAudio.current.play().catch(() => {});
+      } else {
+        playSfx("/templates/sheesh-mahal/audio/sfx-open.mp3");
+      }
+    } catch (_) {}
 
-    // Stamp monogram wax seal after unfolding finishes
+    // Phase 2: Casket lid smoothly opens upright (reveals mirror & candles)
+    setTimeout(() => {
+      setIsBoxOpen(true);
+    }, 80);
+
+    // Phase 3: Folded royal letter pops up from the open casket cavity
+    setTimeout(() => {
+      setIsPoppedUp(true);
+      try {
+        if (sfxLetterAudio.current) {
+          sfxLetterAudio.current.currentTime = 0;
+          sfxLetterAudio.current.play().catch(() => {});
+        } else {
+          playSfx("/templates/sheesh-mahal/audio/sfx-letter.mp3");
+        }
+      } catch (_) {}
+    }, 550);
+
+    // Phase 4: Letter smoothly unfolds 3-panels (reveals Surah & invitation text)
+    setTimeout(() => {
+      setIsOpen(true);
+    }, 950);
+
+    // Phase 5: Monogram wax seal stamps firmly onto the bottom of the parchment
     setTimeout(() => {
       setIsSealStamped(true);
-    }, 900);
+      try {
+        if (sfxSealAudio.current) {
+          sfxSealAudio.current.currentTime = 0;
+          sfxSealAudio.current.play().catch(() => {});
+        }
+      } catch (_) {}
+    }, 1850);
   }, [isOpen]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -104,7 +168,7 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
         {/* Parchment Letter Slot */}
         <div className="lt-slot">
           <article
-            className={`lt-letter ${isOpen ? "is-open" : ""}`}
+            className={`lt-letter ${isPoppedUp ? "is-popped" : ""} ${isOpen ? "is-open" : ""}`}
             id="letterSheet"
             aria-label="Your letter"
           >
@@ -199,7 +263,7 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
         <div className="lt-keep">
           <button
             ref={casketRef}
-            className={`lt-casket ${isOpen ? "is-open" : ""}`}
+            className={`lt-casket ${isBoxOpen ? "is-box-open" : ""} ${isOpen ? "is-open" : ""}`}
             id="casket"
             type="button"
             aria-controls="letterSheet"
@@ -214,7 +278,7 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
             </span>
             <span className="c-body" aria-hidden="true" />
             <span className="c-front" aria-hidden="true" />
-            <span className="c-lid" aria-hidden="true">
+            <span className={`c-lid ${isBoxOpen ? "is-open" : ""}`} aria-hidden="true">
               <i className="c-glint" />
             </span>
             <span className="lt-sr sr-only">Open your letter</span>
@@ -298,8 +362,11 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
         .lt-slot {
           position: relative;
           width: 100%;
-          perspective: 1200px;
+          perspective: 1400px;
           z-index: 15;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
         .lt-letter {
           --pb: clamp(20px, 5.5cqi, 36px);
@@ -309,27 +376,80 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
           border: var(--pb) solid transparent;
           border-image: url("/templates/sheesh-mahal/assets/letter/paper.webp") 86 fill / var(--pb) round;
           color: #0b3d31;
-          box-shadow: 0 2px 8px rgba(60, 40, 10, 0.12), 0 16px 36px -8px rgba(50, 35, 10, 0.35);
+          box-shadow: 0 4px 16px rgba(60, 40, 10, 0.16), 0 24px 50px -8px rgba(50, 35, 10, 0.4);
           padding: clamp(18px, 5cqi, 34px) clamp(14px, 4cqi, 28px);
           box-sizing: border-box;
-          transform-origin: center bottom;
           transform-style: preserve-3d;
-          transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1),
-            opacity 0.8s ease, max-height 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
           max-height: 0;
           opacity: 0;
+          transform: translateY(80px) scale(0.65);
           overflow: hidden;
-          margin-bottom: 24px;
+          margin-bottom: 20px;
+          pointer-events: none;
+          transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+            opacity 0.5s ease,
+            max-height 1s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
-        .lt-letter.is-open {
-          max-height: 2200px;
+        /* Phase 1: Folded Letter Pops Up from inside the open casket */
+        .lt-letter.is-popped {
           opacity: 1;
-          transform: translateY(0) rotateX(0deg);
+          max-height: 280px;
+          transform: translateY(0) scale(0.92);
+          overflow: hidden;
+          pointer-events: auto;
         }
+        /* Phase 2: Letter fully unfolds smoothly in 3D */
+        .lt-letter.is-open {
+          max-height: 2400px;
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          overflow: visible;
+        }
+
+        /* 3D Fold Panels */
         .lt-panel {
           text-align: center;
           margin-bottom: 20px;
+          transform-style: preserve-3d;
         }
+        .lt-panel-top {
+          transform-origin: bottom center;
+          transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+        .lt-letter:not(.is-open) .lt-panel-top {
+          transform: rotateX(-90deg);
+          opacity: 0;
+          max-height: 0;
+          overflow: hidden;
+          margin: 0;
+        }
+        .lt-letter.is-open .lt-panel-top {
+          transform: rotateX(0deg);
+          opacity: 1;
+          max-height: 600px;
+        }
+
+        .lt-panel-mid {
+          transition: opacity 0.5s ease;
+        }
+
+        .lt-panel-bottom {
+          transform-origin: top center;
+          transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s, opacity 0.5s ease 0.25s;
+        }
+        .lt-letter:not(.is-open) .lt-panel-bottom {
+          transform: rotateX(90deg);
+          opacity: 0;
+          max-height: 0;
+          overflow: hidden;
+          margin: 0;
+        }
+        .lt-letter.is-open .lt-panel-bottom {
+          transform: rotateX(0deg);
+          opacity: 1;
+          max-height: 1200px;
+        }
+
         .lt-verse {
           font-family: "Amiri", "Amiri Quran", serif;
           font-size: clamp(18px, 5.5cqi, 24px);
@@ -454,7 +574,7 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
           position: relative;
           width: 64px;
           height: 64px;
-          margin: 0 auto;
+          margin: 16px auto 0;
           background-image: url("/templates/sheesh-mahal/assets/letter/seal.webp");
           background-size: cover;
           display: flex;
@@ -487,44 +607,65 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
           width: 100%;
           z-index: 20;
         }
-        .lt-casket {
+        .lt-casket,
+        .lt-casket.is-open,
+        .lt-casket.is-box-open {
           position: relative;
-          width: min(84vw, 380px);
-          aspect-ratio: 1.15064;
+          width: min(88vw, 360px);
+          aspect-ratio: 1000 / 869;
           background: transparent;
           border: none;
           cursor: pointer;
-          perspective: 1000px;
+          perspective: 1200px;
           transform-style: preserve-3d;
+          transform: none !important;
           min-width: 44px;
           min-height: 44px;
           padding: 0;
-          transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+          display: block;
+          margin: 0 auto;
         }
         .lt-casket.is-open {
-          width: min(56vw, 240px);
           cursor: default;
         }
         .c-body {
           position: absolute;
           inset: 0;
           background-image: url("/templates/sheesh-mahal/assets/letter/casket-open.webp");
-          background-size: 100% 100%;
+          background-size: contain;
+          background-position: center;
           background-repeat: no-repeat;
+          filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.4));
+          transition: clip-path 0.5s ease;
         }
+        /* When closed: clip open mirror lid so only the lower velvet body is visible */
+        .lt-casket:not(.is-box-open) .c-body {
+          clip-path: inset(44% 0 0 0);
+        }
+        /* When open: full casket is unclipped and displayed in all its glory */
+        .lt-casket.is-box-open .c-body {
+          clip-path: inset(0 0 0 0);
+        }
+
         .c-lid {
           position: absolute;
           inset: 0;
           background-image: url("/templates/sheesh-mahal/assets/letter/casket-lid.webp");
-          background-size: 100% 100%;
+          background-size: contain;
+          background-position: center;
           background-repeat: no-repeat;
-          transform-origin: center 48.216%;
+          transform-origin: center 48.5%;
           transform-style: preserve-3d;
-          transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+          transition: transform 0.85s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+          z-index: 5;
         }
-        .lt-casket.is-open .c-lid {
+        /* When box opens: closed lid swings open and fades into the upright mirror lid of c-body */
+        .lt-casket.is-box-open .c-lid {
           transform: rotateX(-120deg);
+          opacity: 0;
+          pointer-events: none;
         }
+
         .c-glint {
           position: absolute;
           inset: 0;
