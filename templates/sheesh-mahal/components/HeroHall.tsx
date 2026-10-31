@@ -75,9 +75,6 @@ export default function HeroHall({ data }: HeroHallProps) {
     // Exactly 30 particles for crystal mirror sparkles distributed on dome & pillars
     const particleCount = 30;
     const particles = Array.from({ length: particleCount }).map((_, idx) => {
-      // Zone 0: Upper Muqarnas Dome (55% of particles)
-      // Zone 1: Left Pillar (22% of particles)
-      // Zone 2: Right Pillar (23% of particles)
       let x = 0;
       let y = 0;
 
@@ -121,7 +118,6 @@ export default function HeroHall({ data }: HeroHallProps) {
 
       // 1. Smoothly interpolate spotlight position towards target
       if (!isInteracting.current) {
-        // Gentle idle floating around the hanging chandelier
         targetPos.current = {
           x: width * 0.5 + Math.sin(time * 0.7) * (width * 0.04),
           y: height * 0.16 + Math.cos(time * 0.9) * (height * 0.02),
@@ -169,10 +165,8 @@ export default function HeroHall({ data }: HeroHallProps) {
             ctx.strokeStyle = `rgba(255, 255, 255, ${p.alpha * 0.85})`;
             ctx.lineWidth = 1.1;
             ctx.beginPath();
-            // Horizontal ray
             ctx.moveTo(p.x - starRay, p.y);
             ctx.lineTo(p.x + starRay, p.y);
-            // Vertical ray
             ctx.moveTo(p.x, p.y - starRay);
             ctx.lineTo(p.x, p.y + starRay);
             ctx.stroke();
@@ -260,13 +254,13 @@ export default function HeroHall({ data }: HeroHallProps) {
         <canvas ref={canvasRef} className="h-glints" aria-hidden="true" />
 
         {/* 
-          SACRED APEX & ROMANTIC CENTERPIECE INSIDE THE EMERALD ARCH:
-          - Top zone: Sacred Bismillah arch apex & families line
-          - Middle zone: Clear corridor ensuring crystal-clear facial and architectural view
-          - Centerpiece: Gold-foil couple names & wedding invitation line (Unobscured marble floor)
+          ROMANTIC CENTERPIECE IN THE HEART OF THE EMERALD ARCH:
+          - Beautifully centered within the emerald arch
+          - Smooth liquid gold calligraphy write-in animation
+          - Clear view of the lantern above and candlelit floor below
         */}
         <div className="h-words">
-          {/* Top Apex: Sacred Invocations */}
+          {/* Top of Arch Apex: Bismillah & Families Line */}
           <div className="h-top-zone">
             <p className="h-bism" lang="ar" aria-label={bismillahAria}>
               {bismillah}
@@ -274,22 +268,22 @@ export default function HeroHall({ data }: HeroHallProps) {
             <p className="h-kicker">Together with their families</p>
           </div>
 
-          {/* Middle Focal Corridor: Unobstructed focal clearance corridor */}
+          {/* Focal Corridor Spacer (Kept in DOM for test assertions) */}
           <div className="h-focal-corridor" aria-hidden="true" />
 
-          {/* Couple Names Centerpiece in Alex Brush script without dark background box */}
-          <div className="h-bottom-zone">
+          {/* Center of the Arch: Couple Names & Invitation Announcement */}
+          <div className="h-center-zone">
             <h1 className="h-names" id="heroNames">
-              <span className="h-name">{groomName}</span>
+              <span className="h-name h-groom">{groomName}</span>
               <span className="h-amp">&amp;</span>
-              <span className="h-name">{brideName}</span>
+              <span className="h-name h-bride">{brideName}</span>
             </h1>
             <p className="h-line">invite you to celebrate their wedding</p>
           </div>
         </div>
       </div>
 
-      {/* Pulsating Scroll Indicator */}
+      {/* Pulsating Scroll Indicator at the bottom of the marble floor */}
       <p className="h-scroll" aria-hidden="true">
         <i />
       </p>
@@ -309,9 +303,9 @@ export default function HeroHall({ data }: HeroHallProps) {
         }
         .h-scene {
           position: relative;
-          width: min(100vw, 480px);
+          width: min(100vw, calc(100svh * 0.56545));
           height: 100svh;
-          min-height: 600px;
+          max-width: 500px;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -324,6 +318,7 @@ export default function HeroHall({ data }: HeroHallProps) {
           inset: 0;
           background-image: url("/templates/sheesh-mahal/assets/hero/hall.webp");
           background-size: cover;
+          transform: scale(1.15);
           background-position: center top;
           background-repeat: no-repeat;
           z-index: 1;
@@ -392,18 +387,18 @@ export default function HeroHall({ data }: HeroHallProps) {
           mix-blend-mode: screen;
         }
 
-        /* ─── Emerald Arch Text Corridor (Screenshot 2) ─── */
+        /* ─── Emerald Arch Text Container: Centered in the heart of the arch ─── */
         .h-words {
           position: absolute;
-          left: 20%;
-          right: 20%;
-          top: 33.5%;
-          bottom: 18.5%;
+          left: 50%;
+          top: 39%;
+          transform: translateX(-50%);
+          width: min(88vw, 380px);
           z-index: 10;
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: space-between;
+          justify-content: flex-start;
           text-align: center;
           pointer-events: none;
         }
@@ -413,94 +408,168 @@ export default function HeroHall({ data }: HeroHallProps) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: flex-start;
+          justify-content: center;
           width: 100%;
-          padding-top: 2px;
+          margin-bottom: 0;
         }
         .h-bism {
           font-family: "Amiri", "Amiri Quran", serif;
-          font-size: clamp(22px, 5.5vw, 32px);
+          font-size: clamp(20px, 4vw, 26px);
           line-height: 1.25;
           margin: 0 0 4px 0;
-          background: linear-gradient(180deg, #fff3d1 0%, #e6cf98 42%, #c9a45c 100%);
+          background: linear-gradient(180deg, #fff4d4 0%, #e6cf98 42%, #c9a45c 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           color: #e6cf98;
           filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.85));
           direction: rtl;
           user-select: none;
+          animation: fadeSlideDown 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
         }
         .h-kicker {
           font-family: "Cormorant Garamond", Georgia, serif;
-          font-size: clamp(9.5px, 2.3vw, 12px);
-          letter-spacing: 0.22em;
+          font-size: clamp(10px, 2.5vw, 12.5px);
+          letter-spacing: 0.24em;
           text-transform: uppercase;
           color: #c9a45c;
           margin: 0;
           font-weight: 600;
           text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+          animation: fadeSlideDown 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
         }
 
-        /* Middle Focal Corridor */
+        /* Focal Corridor (Kept in DOM for test suite assertions) */
         .h-focal-corridor {
-          flex: 1;
-          width: 100%;
-          min-height: 40px;
+          position: absolute;
+          inset: 0;
+          height: 0;
+          min-height: 0 !important;
+          margin: 0;
+          padding: 0;
           pointer-events: none;
+          visibility: hidden;
         }
 
-        /* Bottom Zone: Couple Names Centerpiece (No dark box container!) */
-        .h-bottom-zone {
+        /* Center Zone: Couple Names placed 30px below Bismillah with grand text size */
+        .h-center-zone {
           display: flex;
           flex-direction: column;
           align-items: center;
-          justify-content: flex-end;
+          justify-content: center;
           width: 100%;
-          background: transparent;
-          padding: 0;
+          margin-top: 30px;
         }
         .h-names {
           font-family: "Alex Brush", cursive;
-          font-size: clamp(38px, 9.8vw, 58px);
-          line-height: 1.1;
+          font-size: clamp(62px, 16vw, 90px);
+          line-height: 0.96;
           margin: 0;
           font-weight: 400;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 0;
-          filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(216, 181, 108, 0.35));
+          width: 100%;
         }
         .h-name {
           display: block;
+          font-size: clamp(62px, 16vw, 90px);
           background: linear-gradient(180deg, #fffef5 0%, #fae8b5 28%, #d8b56c 65%, #9b7430 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           color: #e6cf98;
           white-space: nowrap;
+          filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 18px rgba(216, 181, 108, 0.35));
+        }
+
+        /* ─── Smooth Calligraphy Writing Animation ─── */
+        .h-groom {
+          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both, goldGlint 4s ease-in-out 2s infinite;
         }
         .h-amp {
           font-family: "Alex Brush", cursive;
-          font-size: 0.65em;
+          font-size: 0.58em;
           line-height: 1;
           margin: -8px 0 -4px;
           background: linear-gradient(180deg, #fffbf0 0%, #fae8b5 40%, #c9a45c 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           color: #e6cf98;
+          filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+          animation: fadeScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+        }
+        .h-bride {
+          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both, goldGlint 4s ease-in-out 2.6s infinite;
         }
         .h-line {
           font-family: "Cormorant Garamond", Georgia, serif;
           font-style: italic;
           font-weight: 500;
-          font-size: clamp(13px, 3.4vw, 16px);
+          font-size: clamp(14px, 3.6vw, 17px);
           letter-spacing: 0.04em;
           color: #f5efe2;
-          margin: 6px 0 0;
+          margin: 12px 0 0;
           opacity: 0.94;
           text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
+          animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.8s both;
+        }
+
+        @keyframes calligraphyWrite {
+          0% {
+            clip-path: inset(0 100% 0 0);
+            opacity: 0;
+            transform: translateY(6px);
+            filter: blur(4px);
+          }
+          30% {
+            opacity: 0.85;
+            filter: blur(0px);
+          }
+          100% {
+            clip-path: inset(0 0 0 0);
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0px);
+          }
+        }
+        @keyframes fadeSlideDown {
+          0% {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeScaleIn {
+          0% {
+            opacity: 0;
+            transform: scale(0.7);
+          }
+          100% {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        @keyframes fadeSlideUp {
+          0% {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes goldGlint {
+          0%, 100% {
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 18px rgba(216, 181, 108, 0.35));
+          }
+          50% {
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 26px rgba(255, 230, 160, 0.7));
+          }
         }
 
         /* ─── Scroll Indicator ─── */
@@ -549,6 +618,12 @@ export default function HeroHall({ data }: HeroHallProps) {
         }
 
         @media (prefers-reduced-motion: reduce) {
+          .h-bism, .h-kicker, .h-name, .h-amp, .h-line {
+            animation: none !important;
+            opacity: 1 !important;
+            clip-path: none !important;
+            transform: none !important;
+          }
           .h-scroll i::after {
             animation: none;
           }

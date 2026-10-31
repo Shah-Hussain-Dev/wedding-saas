@@ -120,14 +120,13 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
       <div className="gate-inner" id="gateInner">
         <div className="doors" id="doors">
           <div className="stage" aria-hidden="true">
-            {/* Radiant Golden Sunburst Light Explosion behind the doors */}
+            {/* ONLY the radiant golden sunburst light explosion sits behind the opening leaves */}
             <div className="d-light">
               <i className="d-rays" />
               <i className="d-core" />
             </div>
 
-            {/* Left Frame & Door Leaf (swings open to -105deg) */}
-            <div className="d-frame d-frame-l d-art" />
+            {/* Left Door Leaf (swings open to -105deg in 3D perspective) */}
             <div className="d-leaf d-leaf-l">
               <div className="d-art" />
               <div className="d-glint">
@@ -152,8 +151,7 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
               <div className="d-shade" />
             </div>
 
-            {/* Right Frame & Door Leaf (swings open to 105deg) */}
-            <div className="d-frame d-frame-r d-art" />
+            {/* Right Door Leaf (swings open to 105deg in 3D perspective) */}
             <div className="d-leaf d-leaf-r">
               <div className="d-art" />
               <div className="d-glint">
@@ -200,12 +198,13 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
               </span>
             </span>
           </button>
+
+          {/* Gate hint placed directly below the medallion for zero overlap on mobile */}
+          <p className="gate-hint" aria-hidden="true">
+            Touch the medallion to enter
+          </p>
         </div>
       </div>
-
-      <p className="gate-hint" aria-hidden="true">
-        Touch the medallion to enter
-      </p>
 
       {/* Atmospheric flood light flare during opening transition */}
       <div className={`d-flood ${isOpening ? "is-active" : ""}`} aria-hidden="true" />
@@ -234,31 +233,24 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
           background: radial-gradient(circle at 50% 50%, #062a21 0%, #03170f 75%, #020c08 100%);
           z-index: 1;
         }
-        .gate-backdrop:after {
-          content: "";
-          position: absolute;
-          inset: -10%;
-          background-image: url("/templates/sheesh-mahal/assets/cover/doors.webp");
-          background-position: center;
-          background-size: cover;
-          filter: blur(40px) brightness(0.4) saturate(1.1);
-          opacity: 0.6;
-        }
         .gate-inner {
           position: relative;
           z-index: 2;
           width: 100%;
-          max-width: 520px;
           height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
+          padding: 0;
+          box-sizing: border-box;
         }
         .doors {
           position: relative;
-          width: min(92vw, 420px);
+          width: min(100vw, calc(100svh * 0.56545));
+          height: min(100svh, calc(100vw / 0.56545));
+          max-width: 480px;
+          max-height: 100svh;
           aspect-ratio: 0.56545;
-          max-height: 88vh;
           perspective: 1400px;
           transform-style: preserve-3d;
           --gx: 50%;
@@ -279,7 +271,7 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
           background-repeat: no-repeat;
         }
 
-        /* ─── Golden Sunburst & Light Explosion (Screenshot 1) ─── */
+        /* ─── Golden Sunburst & Light Explosion (Behind Opening Leaves) ─── */
         .d-light {
           position: absolute;
           inset: 0;
@@ -495,32 +487,37 @@ export default function EntranceGate({ onOpen, isOpen = false }: EntranceGatePro
           0%, 62% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }
         }
+
+        /* ─── Hint positioned directly below medallion ─── */
         .gate-hint {
           position: absolute;
-          bottom: max(28px, env(safe-area-inset-bottom, 28px));
+          top: calc(49.386% + 58px);
+          left: 50%;
+          transform: translateX(-50%);
           color: #e6cf98;
           font-family: "Cormorant Garamond", Georgia, serif;
-          font-size: 13px;
+          font-size: clamp(11px, 2.8vw, 13px);
           letter-spacing: 0.22em;
           text-transform: uppercase;
-          z-index: 10;
+          z-index: 25;
           opacity: 0.85;
-          padding: 8px 18px;
+          padding: 6px 16px;
           border: 1px solid rgba(201, 164, 92, 0.4);
           border-radius: 999px;
-          background: rgba(3, 23, 15, 0.65);
+          background: rgba(3, 23, 15, 0.75);
           backdrop-filter: blur(6px);
           -webkit-backdrop-filter: blur(6px);
           animation: h-float 2.8s ease-in-out infinite;
           pointer-events: none;
+          white-space: nowrap;
         }
         .gate.is-opening .gate-hint {
           opacity: 0;
           transition: opacity 0.3s ease;
         }
         @keyframes h-float {
-          0%, 100% { transform: translateY(0); opacity: 0.85; }
-          50% { transform: translateY(-4px); opacity: 0.6; }
+          0%, 100% { transform: translate(-50%, 0); opacity: 0.85; }
+          50% { transform: translate(-50%, -4px); opacity: 0.6; }
         }
 
         /* ─── Flood light transition flare ─── */

@@ -168,8 +168,8 @@
 /* Romantic Couple Names in Alex Brush Script */
 .sheesh-mahal-root .h-names {
   font-family: var(--font-script);
-  font-size: clamp(2.5rem, 8.5cqi, 4.25rem);
-  line-height: 1.05;
+  font-size: clamp(3.5rem, 14vw, 5.25rem);
+  line-height: 0.98;
   color: var(--sm-gold-soft);
   text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
 }
