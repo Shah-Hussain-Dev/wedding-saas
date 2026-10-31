@@ -27,3 +27,13 @@ All invitation templates, UI pages, and components in this project MUST strictly
    - Use fluid typography with `clamp()` and responsive line-heights to prevent text overflow or clumsy line wraps on narrow screens (down to 320px).
    - Enforce zero unwanted horizontal scroll (`overflow-x: hidden`).
 
+
+5. **Interactive Keepsakes & Audio-Motion Choreography**:
+   - **Zero-Latency Audio Preloading**: Always preload interaction sound effects (`new Audio()`, `.preload = "auto"`) in a component-level `useEffect` or shared audio hook rather than instantiating audio on-demand inside click handlers to eliminate mobile audio latency.
+   - **Multi-Phase Keepsake Unfolding**: Keepsake boxes, velvet caskets, and wax-sealed envelopes must follow authentic physical reveals (Lid opens -> folded capsule emerges -> document unfolds smoothly across 3D panels -> seal stamps). Never abruptly swap closed/open states or apply container-level flip transforms that invert entire keepsake models.
+   - **Fluid Section Navigation**: Never apply `scroll-snap-stop: always` on 100vh sections when programmatic smooth scrolling (`scrollIntoView`) or touch swipe is required, preventing browser snap engine locks.
+
+6. **3D Physics & Ornamental Asset Scaling Standards**:
+   - **Authentic Pendulum & Floating Physics**: Suspended ornaments (hanging lanterns, chandeliers, swinging bells) must rotate from their real physical anchor (`transform-origin: top center;`). Separate rotational sway (`rotate`) from vertical floating (`translateY`) using independent CSS properties or decoupled wrappers, with desynchronized periods and phase offsets for left and right objects.
+   - **Preserve Natural Aspect Ratios**: High-detail assets (e.g. 520x1614 lantern models) must be sized with their native `aspect-ratio` and proportional responsive width (`clamp(100px, 28vw, 132px)`), never squished or forced into miniature fixed boxes.
+   - **Tiled Textures vs. Overstretched Covers**: Seamless cultural wallpapers (e.g. Mughal mirror walls, damask lattices) must be repeated with explicit tile scaling (`background-repeat: repeat; background-size: 240px–280px auto;`), never distorted via `background-size: cover`.
