@@ -166,6 +166,8 @@ export function TemplateDemoPage({ templateId }: TemplateDemoPageProps) {
         .rgb-music-toggle,
         .celestial-audio-pill,
         .imperial-audio-pill,
+        .sheesh-audio-pill,
+        .sm-music-toggle,
         .luxury-audio-dock {
           display: none !important;
         }

@@ -1,0 +1,900 @@
+/* =========================================================================
+   SHEESH MAHAL (PALACE OF MIRRORS) — COMPREHENSIVE SCOPED THEME STYLES
+   All styles are strictly scoped under .sheesh-mahal-root to guarantee
+   100% isolation from existing templates and global application styling.
+   ========================================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ─────────────────────────────────────────────────────────────────────────
+   1. ROOT DESIGN TOKENS & CONTAINER CONFIGURATION
+   ───────────────────────────────────────────────────────────────────────── */
+
+.sheesh-mahal-root {
+  /* Core Color Palette Tokens */
+  --sm-emerald: #0b4a3b;
+  --sm-emerald-deep: #062a21;
+  --sm-emerald-night: #03170f;
+  --sm-base: #05140e;
+  --sm-gold: #c9a45c;
+  --sm-gold-soft: #e6cf98;
+  --sm-gold-deep: #86662a;
+  --sm-ivory: #f5efe2;
+  --sm-ink: #0b3d31;
+  --sm-soft-white: #eef3f0;
+  --sm-accent: #5fc79a;
+
+  /* Canonical Aliases for Component Compatibility */
+  --emerald: #0b4a3b;
+  --emerald-deep: #062a21;
+  --emerald-night: #03170f;
+  --gold: #c9a45c;
+  --gold-soft: #e6cf98;
+  --gold-deep: #86662a;
+  --ivory: #f5efe2;
+  --ink: #0b3d31;
+
+  /* Typography Font Stacks */
+  --font-arabic: 'Amiri', 'Amiri Quran', serif;
+  --font-script: 'Alex Brush', cursive;
+  --font-royal: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  --font-urdu: 'Noto Nastaliq Urdu', serif;
+  --font-body: 'Plus Jakarta Sans', Montserrat, sans-serif;
+
+  /* Dimensions & Ergonomic Boundaries */
+  --card-w: min(100%, max(75svh, 360px));
+  --min-touch: 44px;
+
+  /* Container Query Registration */
+  container-type: inline-size;
+  container-name: sheesh-mahal;
+
+  /* Layout Boundaries */
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: var(--sm-base);
+  color: var(--sm-ivory);
+  font-family: var(--font-body);
+  overflow-x: hidden !important;
+  max-width: 100vw;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   2. MOBILE-FIRST RESPONSIVE CANVAS & DESKTOP FRAMING
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Mobile Portrait Base (360px - 430px): 100vw, Zero Horizontal Overflow */
+@media (max-width: 639px) {
+  .sheesh-mahal-root {
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden !important;
+  }
+}
+
+/* Tablet & Desktop Framing (> 640px): Centered Imperial Container */
+@media (min-width: 640px) {
+  .sheesh-mahal-root {
+    max-width: 520px;
+    box-shadow:
+      0 0 80px rgba(0, 0, 0, 0.85),
+      0 0 30px rgba(201, 164, 92, 0.15);
+    border-left: 1px solid rgba(201, 164, 92, 0.15);
+    border-right: 1px solid rgba(201, 164, 92, 0.15);
+  }
+}
+
+@media (min-width: 1440px) {
+  .sheesh-mahal-root {
+    max-width: 540px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   3. MOBILE-FIRST & USER RULES: TOUCH TARGETS & FACIAL CLEARANCE
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Mandatory Minimum 44x44px Touch Targets on ALL Interactive Controls */
+.sheesh-mahal-root button,
+.sheesh-mahal-root a,
+.sheesh-mahal-root input,
+.sheesh-mahal-root select,
+.sheesh-mahal-root textarea,
+.sheesh-mahal-root [role="button"],
+.sheesh-mahal-root [role="switch"],
+.sheesh-mahal-root .medallion,
+.sheesh-mahal-root .sound-toggle,
+.sheesh-mahal-root .music-toggle,
+.sheesh-mahal-root .rs-step,
+.sheesh-mahal-root .cl-replay,
+.sheesh-mahal-root .sm-touch-target {
+  min-width: var(--min-touch, 44px);
+  min-height: var(--min-touch, 44px);
+  box-sizing: border-box;
+}
+
+/* Safe Area Inset Support */
+.sheesh-mahal-root .safe-top {
+  padding-top: max(16px, env(safe-area-inset-top, 16px));
+}
+
+.sheesh-mahal-root .safe-bottom {
+  padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+}
+
+/* Guaranteed Unobstructed Facial Focal Corridor (Middle 33%-68% Zone) */
+.sheesh-mahal-root .h-focal-corridor {
+  position: relative;
+  width: 100%;
+  min-height: 35svh;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   4. FLUID TYPOGRAPHY WITH CLAMP()
+   ───────────────────────────────────────────────────────────────────────── */
+
+.sheesh-mahal-root .font-arabic {
+  font-family: var(--font-arabic);
+}
+
+.sheesh-mahal-root .font-script {
+  font-family: var(--font-script);
+}
+
+.sheesh-mahal-root .font-royal {
+  font-family: var(--font-royal);
+}
+
+.sheesh-mahal-root .font-urdu {
+  font-family: var(--font-urdu);
+}
+
+/* Sacred Calligraphy Apex */
+.sheesh-mahal-root .h-bism {
+  font-family: var(--font-arabic);
+  font-size: clamp(2rem, 7cqi, 3.25rem);
+  line-height: 1.2;
+  color: var(--sm-gold);
+  text-shadow: 0 0 20px rgba(201, 164, 92, 0.4);
+}
+
+/* Romantic Couple Names in Alex Brush Script */
+.sheesh-mahal-root .h-names {
+  font-family: var(--font-script);
+  font-size: clamp(2.5rem, 8.5cqi, 4.25rem);
+  line-height: 1.05;
+  color: var(--sm-gold-soft);
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* Section Kickers */
+.sheesh-mahal-root .kicker,
+.sheesh-mahal-root .lt-kicker,
+.sheesh-mahal-root .fm-kicker,
+.sheesh-mahal-root .ev-kicker,
+.sheesh-mahal-root .cd-kicker,
+.sheesh-mahal-root .rs-kicker {
+  font-family: var(--font-royal);
+  font-size: clamp(0.7rem, 2.5cqi, 0.875rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sm-gold);
+}
+
+/* Section Headings */
+.sheesh-mahal-root .section-title,
+.sheesh-mahal-root .fm-title,
+.sheesh-mahal-root .ev-title,
+.sheesh-mahal-root .cd-title,
+.sheesh-mahal-root .rs-title {
+  font-family: var(--font-royal);
+  font-size: clamp(1.4rem, 4.5cqi, 2.25rem);
+  letter-spacing: 0.08em;
+  color: var(--sm-gold-soft);
+}
+
+/* Body Text */
+.sheesh-mahal-root p,
+.sheesh-mahal-root span {
+  font-size: clamp(0.85rem, 2.6cqi, 1rem);
+  line-height: 1.6;
+}
+
+/* Urdu Couplets & Blessings */
+.sheesh-mahal-root .urdu-text,
+.sheesh-mahal-root .lt-urdu {
+  font-family: var(--font-urdu);
+  font-size: clamp(1.1rem, 3.5cqi, 1.45rem);
+  line-height: 2.2;
+  color: var(--sm-gold-soft);
+  direction: rtl;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   5. VISUAL UTILITIES & GLASSMORPHISM
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Metallic Gold Gradient Clip */
+.sheesh-mahal-root .sm-gold-text {
+  background: linear-gradient(135deg, #e6cf98 0%, #c9a45c 50%, #86662a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Frosted Glass Pedestal Banner */
+.sheesh-mahal-root .sm-glass-pedestal {
+  background: rgba(6, 42, 33, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 164, 92, 0.35);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(201, 164, 92, 0.1);
+}
+
+/* Royal Handmade Ivory Parchment */
+.sheesh-mahal-root .sm-parchment {
+  background: var(--sm-ivory);
+  color: var(--sm-ink);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+/* Wax Monogram Seal */
+.sheesh-mahal-root .sm-wax-seal {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #b22222 0%, #800000 70%, #4a0000 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-script);
+  color: var(--sm-gold-soft);
+}
+
+/* Scroll Lock State */
+html.is-shut,
+body.is-shut {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   6. ALL 28 CSS KEYFRAMES (VERIFIED FROM REFERENCE SITE)
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 1. Ambient Sunburst Rays */
+@keyframes d-rays {
+  to {
+    rotate: 1turn;
+  }
+}
+
+/* 2. Door Light Sweep */
+@keyframes d-sweep {
+  0% {
+    transform: translate(-66.6667%);
+  }
+  55%, to {
+    transform: none;
+  }
+}
+
+/* 3. Door Sparkle Particle Twinkles */
+@keyframes d-twinkle {
+  0%, 68%, to {
+    opacity: 0;
+    transform: rotate(10deg) scale(0.2);
+  }
+  78% {
+    opacity: 1;
+    transform: rotate(35deg) scale(1);
+  }
+  88% {
+    opacity: 0.4;
+    transform: rotate(55deg) scale(0.45);
+  }
+}
+
+/* 4. Medallion Sheen Highlight */
+@keyframes m-sheen {
+  0%, 62% {
+    transform: translate(90%);
+  }
+  to {
+    transform: translate(-150%);
+  }
+}
+
+/* 5. Medallion Pulsing Outer Ring */
+@keyframes m-ring {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+/* 6. Hint Gentle Pulse */
+@keyframes hint-pulse {
+  0%, to {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* 7. Hint Button Flash */
+@keyframes hint-flash {
+  0%, to {
+    opacity: 0.85;
+  }
+  30% {
+    opacity: 1;
+    background: #0c3c2ecc;
+  }
+}
+
+/* 8. Initial Page Door Arrival */
+@keyframes arrive-doors {
+  0% {
+    opacity: 0;
+    transform: scale(1.05);
+    filter: brightness(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* 9. Medallion Arrival Scale */
+@keyframes arrive-med {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) rotate(-40deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 10. Background Fade In Arrival */
+@keyframes arrive-fade {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 11. Hero Scroll Guide Vertical Bobbing */
+@keyframes h-bob {
+  0%, to {
+    translate: 0 -3px;
+  }
+  50% {
+    translate: 0 3px;
+  }
+}
+
+/* 12. Letter Parchment Sheen Sweep */
+@keyframes lt-sheen {
+  0% {
+    transform: translate(98.4615%);
+  }
+  38%, to {
+    transform: translate(-160%);
+  }
+}
+
+/* 13. Letter Interaction Hint */
+@keyframes lt-hint {
+  0%, to {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 14. Family Lantern Sway Physics */
+@keyframes fm-sway {
+  0% {
+    rotate: -1.3deg;
+  }
+  to {
+    rotate: 1.3deg;
+  }
+}
+
+/* 15. Realistic Family Lantern Flame Flicker */
+@keyframes fm-flicker {
+  0% { opacity: 0.35; }
+  9% { opacity: 0.5; }
+  17% { opacity: 0.28; }
+  26% { opacity: 0.45; }
+  38% { opacity: 0.32; }
+  47% { opacity: 0.55; }
+  58% { opacity: 0.3; }
+  66% { opacity: 0.42; }
+  78% { opacity: 0.26; }
+  87% { opacity: 0.5; }
+  94% { opacity: 0.36; }
+  to { opacity: 0.35; }
+}
+
+/* 16. Family Section Interaction Hint */
+@keyframes fm-hint {
+  0%, to {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 17. Event Window Card Shimmer Shine */
+@keyframes ev-shine {
+  0% {
+    background-position: 0 100%;
+    opacity: 1;
+  }
+  22% {
+    background-position: 0 0;
+    opacity: 1;
+  }
+  23%, to {
+    background-position: 0 0;
+    opacity: 0;
+  }
+}
+
+/* 18. Event Shutter Seep Glow */
+@keyframes ev-seep {
+  0% {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.9;
+  }
+}
+
+/* 19. Event Card Tap Prompt */
+@keyframes ev-tap {
+  0%, to {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 20. Countdown Astrolabe Candle Drift */
+@keyframes cd-candle {
+  0%, to {
+    transform: translate(5%, 9.8182%);
+  }
+  30% {
+    transform: translate(28.3333%, 31.0909%);
+  }
+  62% {
+    transform: translate(10%, 72%);
+  }
+  82% {
+    transform: translate(25%, 57.2727%);
+  }
+}
+
+/* 21. Astrolabe Interaction Dial Hint */
+@keyframes cd-hint {
+  0%, to {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* 22. RSVP Dove Perch Fidget */
+@keyframes rs-perch {
+  0%, 86%, to {
+    transform: none;
+  }
+  89% {
+    transform: translateY(-5px) rotate(-3deg);
+  }
+  92% {
+    transform: none;
+  }
+  95% {
+    transform: rotate(2deg);
+  }
+}
+
+/* 23. RSVP Carrier Dove Wing Flap Sprite */
+@keyframes rs-flap {
+  0% {
+    background-position: 0 0;
+  }
+  to {
+    background-position: calc(var(--fly-frames, 4) / (var(--fly-frames, 4) - 1) * 100%) 0;
+  }
+}
+
+/* 24. Reflecting Pool Diya Sinusoidal Bobbing */
+@keyframes cl-bob {
+  0% {
+    transform: translateY(0) rotate(-1.6deg);
+  }
+  to {
+    transform: translateY(-2.2%) rotate(1.6deg);
+  }
+}
+
+/* 25. Floating Diya Flame Flicker */
+@keyframes cl-flicker {
+  0% {
+    opacity: 0.78;
+    scale: 0.94;
+  }
+  45% {
+    opacity: 1;
+    scale: 1.04;
+  }
+  70% {
+    opacity: 0.86;
+    scale: 0.98;
+  }
+  to {
+    opacity: 0.96;
+    scale: 1.02;
+  }
+}
+
+/* 26. Water Surface Gentle Wobble */
+@keyframes cl-wobble {
+  0% {
+    transform: skew(-3deg) scaleX(1.02);
+  }
+  to {
+    transform: skew(3deg) scaleX(0.98);
+  }
+}
+
+/* 27. Moonlight Glade Shimmer */
+@keyframes cl-glade {
+  0% {
+    transform: scale(0.78, 0.92);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.08, 1.04);
+    opacity: 1;
+  }
+  to {
+    transform: scaleX(0.9);
+    opacity: 0.85;
+  }
+}
+
+/* 28. Music Dock Disc Sway */
+@keyframes mu-sway {
+  0%, to {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   7. KEYFRAME ALIASES & 3D TRANSFORM MECHANICS
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 3D Gate Door Swing Left */
+@keyframes d-open-l {
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(-105deg);
+  }
+}
+
+/* 3D Gate Door Swing Right */
+@keyframes d-open-r {
+  0% {
+    transform: perspective(1000px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1000px) rotateY(105deg);
+  }
+}
+
+/* 3D Casket Lid Hinge Rotation */
+@keyframes casket-open {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-120deg);
+  }
+}
+
+/* 3D Jharokha Window Left Shutter Swing */
+@keyframes win-open-l {
+  0% {
+    transform: perspective(800px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(800px) rotateY(-85deg);
+  }
+}
+
+/* 3D Jharokha Window Right Shutter Swing */
+@keyframes win-open-r {
+  0% {
+    transform: perspective(800px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(800px) rotateY(85deg);
+  }
+}
+
+/* Astrolabe Glow Pulsing */
+@keyframes astro-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+/* Dove Flight Flap */
+@keyframes dove-flap {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 400% 0;
+  }
+}
+
+/* Water Ripple Rings Expansion */
+@keyframes cl-ripple {
+  0% {
+    transform: scale(0.2);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* SVG Confluence Bezier Thread Drawing */
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   8. ANIMATION SELECTOR BINDINGS (ALL 28 CANONICAL KEYFRAMES + ALIASES)
+   Binds all declared keyframes to concrete CSS selectors and components.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* 1. Ambient Sunburst Rays */
+.sheesh-mahal-root .d-rays,
+.sheesh-mahal-root .anim-rays {
+  animation: d-rays 30s linear infinite;
+}
+
+/* 2. Door Light Sweep */
+.sheesh-mahal-root .d-flood.is-active,
+.sheesh-mahal-root .d-sweep {
+  animation: d-sweep 1.8s ease-out forwards;
+}
+
+/* 3. Door Sparkle Particle Twinkles */
+.sheesh-mahal-root .d-twinkle,
+.sheesh-mahal-root .d-spark {
+  animation: d-twinkle 4s ease-in-out infinite;
+}
+
+/* 4. Medallion Sheen Highlight */
+.sheesh-mahal-root .m-sheen {
+  animation: m-sheen 3.5s ease-in-out infinite;
+}
+
+/* 5. Medallion Pulsing Outer Ring */
+.sheesh-mahal-root .m-ring {
+  animation: m-ring 2.4s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
+/* 6. Hint Gentle Pulse */
+.sheesh-mahal-root .gate-hint,
+.sheesh-mahal-root .hint-pulse {
+  animation: hint-pulse 2s ease-in-out infinite;
+}
+
+/* 7. Hint Button Flash */
+.sheesh-mahal-root .gate-hint.is-flashing,
+.sheesh-mahal-root .hint-flash {
+  animation: hint-flash 1.5s ease-in-out infinite;
+}
+
+/* 8. Initial Page Door Arrival */
+.sheesh-mahal-root .gate-doors.is-entering,
+.sheesh-mahal-root .d-frame.is-entering,
+.sheesh-mahal-root .arrive-doors {
+  animation: arrive-doors 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 9. Medallion Arrival Scale */
+.sheesh-mahal-root .medallion.is-entering,
+.sheesh-mahal-root .arrive-med {
+  animation: arrive-med 1.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* 10. Background Fade In Arrival */
+.sheesh-mahal-root .gate-backdrop.is-entering,
+.sheesh-mahal-root .arrive-fade {
+  animation: arrive-fade 1s ease-out forwards;
+}
+
+/* 11. Hero Scroll Guide Vertical Bobbing */
+.sheesh-mahal-root .h-bob,
+.sheesh-mahal-root .h-scroll-guide {
+  animation: h-bob 2s ease-in-out infinite alternate;
+}
+
+/* 12. Letter Parchment Sheen Sweep */
+.sheesh-mahal-root .lt-sheen,
+.sheesh-mahal-root .lt-letter .c-sheen {
+  animation: lt-sheen 4s ease-in-out infinite;
+}
+
+/* 13. Letter Interaction Hint */
+.sheesh-mahal-root .lt-hint {
+  animation: lt-hint 2s ease-in-out infinite alternate;
+}
+
+/* 14. Family Lantern Sway Physics */
+.sheesh-mahal-root .fm-lamp,
+.sheesh-mahal-root .fm-sway {
+  animation: fm-sway 4s ease-in-out infinite alternate;
+}
+
+/* 15. Realistic Family Lantern Flame Flicker */
+.sheesh-mahal-root .fm-flame,
+.sheesh-mahal-root .fm-flicker {
+  animation: fm-flicker 1.8s steps(1) infinite;
+}
+
+/* 16. Family Section Interaction Hint */
+.sheesh-mahal-root .fm-hint {
+  animation: fm-hint 2s ease-in-out infinite alternate;
+}
+
+/* 17. Event Window Card Shimmer Shine */
+.sheesh-mahal-root .ev-leaf-l,
+.sheesh-mahal-root .ev-leaf-r,
+.sheesh-mahal-root .ev-shine {
+  animation: ev-shine 3.5s ease-in-out infinite;
+}
+
+/* 18. Event Shutter Seep Glow */
+.sheesh-mahal-root .ev-shutter-glow,
+.sheesh-mahal-root .ev-seep {
+  animation: ev-seep 2.5s ease-in-out infinite alternate;
+}
+
+/* 19. Event Card Tap Prompt */
+.sheesh-mahal-root .ev-prompt,
+.sheesh-mahal-root .ev-tap {
+  animation: ev-tap 2s ease-in-out infinite;
+}
+
+/* 20. Countdown Astrolabe Candle Drift */
+.sheesh-mahal-root .cd-candle,
+.sheesh-mahal-root .cd-candle-drift {
+  animation: cd-candle 12s ease-in-out infinite;
+}
+
+/* 21. Astrolabe Interaction Dial Hint */
+.sheesh-mahal-root .cd-hint,
+.sheesh-mahal-root .cd-dial-hint {
+  animation: cd-hint 2s ease-in-out infinite alternate;
+}
+
+/* 22. RSVP Dove Perch Fidget */
+.sheesh-mahal-root .rs-perch,
+.sheesh-mahal-root .rs-dove-perch {
+  animation: rs-perch 6s ease-in-out infinite;
+}
+
+/* 23. RSVP Carrier Dove Wing Flap Sprite */
+.sheesh-mahal-root .rs-flyer,
+.sheesh-mahal-root .rs-flyer .rs-dove-sprite,
+.sheesh-mahal-root .rs-flap,
+.sheesh-mahal-root .dove-flap {
+  animation: dove-flap 0.6s steps(4) infinite, rs-flap 0.6s steps(4) infinite;
+}
+
+/* 24. Reflecting Pool Diya Sinusoidal Bobbing */
+.sheesh-mahal-root .cl-bob,
+.sheesh-mahal-root .cl-diya {
+  animation: cl-bob 3s ease-in-out infinite alternate;
+}
+
+/* 25. Floating Diya Flame Flicker */
+.sheesh-mahal-root .cl-flame,
+.sheesh-mahal-root .cl-flicker {
+  animation: cl-flicker 1.8s ease-in-out infinite alternate;
+}
+
+/* 26. Water Surface Gentle Wobble */
+.sheesh-mahal-root .cl-water,
+.sheesh-mahal-root .cl-wobble {
+  animation: cl-wobble 8s ease-in-out infinite alternate;
+}
+
+/* 27. Moonlight Glade Shimmer */
+.sheesh-mahal-root .cl-glade,
+.sheesh-mahal-root .cl-moonlight {
+  animation: cl-glade 5s ease-in-out infinite alternate;
+}
+
+/* 28. Music Dock Disc Sway */
+.sheesh-mahal-root .mu-sway,
+.sheesh-mahal-root .music-toggle:hover,
+.sheesh-mahal-root .sm-music-toggle.is-playing {
+  animation: mu-sway 3s ease-in-out infinite alternate;
+}
+
+/* Keyframe Aliases & 3D Transitions */
+.sheesh-mahal-root .d-leaf-l.is-open {
+  animation: d-open-l 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.sheesh-mahal-root .d-leaf-r.is-open {
+  animation: d-open-r 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.sheesh-mahal-root .lt-casket.is-open {
+  animation: casket-open 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.sheesh-mahal-root .win-leaf-l.is-open {
+  animation: win-open-l 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.sheesh-mahal-root .win-leaf-r.is-open {
+  animation: win-open-r 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.sheesh-mahal-root .astro-pulse,
+.sheesh-mahal-root .cd-dial.is-locked {
+  animation: astro-pulse 2s ease-in-out infinite;
+}
+.sheesh-mahal-root .cl-ripple {
+  animation: cl-ripple 1.5s ease-out forwards;
+}
+.sheesh-mahal-root .dash,
+.sheesh-mahal-root .fm-line-drawn {
+  animation: dash 1.5s ease-out forwards;
+}
+

@@ -14,7 +14,8 @@ export type TemplateId =
   | "royal-heritage"
   | "royal-majesty"
   | "imperial-palace"
-  | "celestial-rose";
+  | "celestial-rose"
+  | "sheesh-mahal";
 
 export type ReligionKey = "all" | "hindu" | "muslim";
 
@@ -206,6 +207,17 @@ export const TEMPLATE_META: Record<TemplateId, TemplateMeta> = {
       "An ultra-luxury living palace experience. Features monumental 3D double walnut doors opening into a grand staircase, swaying crystal chandeliers, velvet curtain transitions, antique gold scratch reveal, palace art gallery, and royal guest register.",
     gradient: "from-[#551618] via-[#E5D8C4] to-[#B89773]",
   },
+  "sheesh-mahal": {
+    id: "sheesh-mahal",
+    name: "Sheesh Mahal",
+    style: "Palace of Mirrors & Imperial Emerald",
+    tag: "Imperial Royale",
+    religion: ["muslim"],
+    religionLabel: "Muslim",
+    description:
+      "An authentic Mughal imperial palace of mirrors experience featuring 3D double-leaf doors, gold medallion seal trigger, Surah Ar-Rum blessings, interactive hanging family lamps, Jharokha window cards, celestial astrolabe countdown, and reflecting pool.",
+    gradient: "from-[#03170F] via-[#062A21] to-[#0B4A3B]",
+  },
 };
 
 export const INCLUDED_FEATURES = [
@@ -284,4 +296,5 @@ export const TEMPLATE_COMPONENTS = {
   "royal-heritage": () => import("@/templates/royal-heritage"),
   "royal-majesty": () => import("@/templates/royal-majesty"),
   "imperial-palace": () => import("@/templates/imperial-palace"),
+  "sheesh-mahal": () => import("@/templates/sheesh-mahal"),
 } as const;

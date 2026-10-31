@@ -1,0 +1,610 @@
+{
+  "audio": [
+    {
+      "name": "music.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/music/music.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/music.mp3",
+      "size": 2652413,
+      "valid": true
+    },
+    {
+      "name": "sfx-door-open.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/sfx-open.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-door-open.mp3",
+      "size": 56364,
+      "valid": true
+    },
+    {
+      "name": "sfx-letter.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/sfx-letter.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-letter.mp3",
+      "size": 49050,
+      "valid": true
+    },
+    {
+      "name": "sfx-light.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/sfx-light.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-light.mp3",
+      "size": 23815,
+      "valid": true
+    },
+    {
+      "name": "sfx-join.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/sfx-join.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-join.mp3",
+      "size": 56364,
+      "valid": true
+    },
+    {
+      "name": "sfx-window-open.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/sfx-open.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-window-open.mp3",
+      "size": 39907,
+      "valid": true
+    },
+    {
+      "name": "sfx-tick.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/sfx-tick.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-tick.mp3",
+      "size": 1925,
+      "valid": true
+    },
+    {
+      "name": "sfx-lock.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/sfx-lock.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-lock.mp3",
+      "size": 41004,
+      "valid": true
+    },
+    {
+      "name": "sfx-bangle.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-clink.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-bangle.mp3",
+      "size": 15091,
+      "valid": true
+    },
+    {
+      "name": "sfx-roll.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-roll.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-roll.mp3",
+      "size": 26010,
+      "valid": true
+    },
+    {
+      "name": "sfx-dove.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-dove.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-dove.mp3",
+      "size": 31861,
+      "valid": true
+    },
+    {
+      "name": "sfx-diya.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/sfx-float.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-diya.mp3",
+      "size": 25539,
+      "valid": true
+    },
+    {
+      "name": "sfx-shimmer.mp3",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/sfx-shimmer.mp3",
+      "dest": "public/templates/sheesh-mahal/audio/sfx-shimmer.mp3",
+      "size": 50617,
+      "valid": true
+    }
+  ],
+  "visual": [
+    {
+      "name": "doors.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/doors.webp",
+      "size": 533448,
+      "valid": true
+    },
+    {
+      "name": "doors-tab.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors-tab.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/doors-tab.webp",
+      "size": 718060,
+      "valid": true
+    },
+    {
+      "name": "doors-land.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors-land.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/doors-land.webp",
+      "size": 792984,
+      "valid": true
+    },
+    {
+      "name": "medallion.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/medallion.webp",
+      "size": 33700,
+      "valid": true
+    },
+    {
+      "name": "medallion-tab.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion-tab.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/medallion-tab.webp",
+      "size": 37532,
+      "valid": true
+    },
+    {
+      "name": "medallion-land.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion-land.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/medallion-land.webp",
+      "size": 20324,
+      "valid": true
+    },
+    {
+      "name": "mirrors.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/mirrors.webp",
+      "size": 85452,
+      "valid": true
+    },
+    {
+      "name": "mirrors-tab.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors-tab.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/mirrors-tab.webp",
+      "size": 105326,
+      "valid": true
+    },
+    {
+      "name": "mirrors-land.webp",
+      "section": "cover",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors-land.webp",
+      "dest": "public/templates/sheesh-mahal/assets/cover/mirrors-land.webp",
+      "size": 183466,
+      "valid": true
+    },
+    {
+      "name": "hall.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/hall.webp",
+      "size": 433402,
+      "valid": true
+    },
+    {
+      "name": "hall-tab.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall-tab.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/hall-tab.webp",
+      "size": 570634,
+      "valid": true
+    },
+    {
+      "name": "hall-land.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall-land.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/hall-land.webp",
+      "size": 718204,
+      "valid": true
+    },
+    {
+      "name": "mirrors.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/mirrors.webp",
+      "size": 77472,
+      "valid": true
+    },
+    {
+      "name": "mirrors-tab.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors-tab.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/mirrors-tab.webp",
+      "size": 106978,
+      "valid": true
+    },
+    {
+      "name": "mirrors-land.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors-land.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/mirrors-land.webp",
+      "size": 131558,
+      "valid": true
+    },
+    {
+      "name": "gold.webp",
+      "section": "hero",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/gold.webp",
+      "dest": "public/templates/sheesh-mahal/assets/hero/gold.webp",
+      "size": 84106,
+      "valid": true
+    },
+    {
+      "name": "casket-lid.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/casket-lid.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/casket-lid.webp",
+      "size": 115938,
+      "valid": true
+    },
+    {
+      "name": "casket-open.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/casket-open.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/casket-open.webp",
+      "size": 258520,
+      "valid": true
+    },
+    {
+      "name": "paper.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/paper.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/paper.webp",
+      "size": 180412,
+      "valid": true
+    },
+    {
+      "name": "paper-back.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/paper-back.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/paper-back.webp",
+      "size": 6276,
+      "valid": true
+    },
+    {
+      "name": "seal.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/seal.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/seal.webp",
+      "size": 39886,
+      "valid": true
+    },
+    {
+      "name": "band.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/band.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/band.webp",
+      "size": 17572,
+      "valid": true
+    },
+    {
+      "name": "marble.webp",
+      "section": "letter",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/marble.webp",
+      "dest": "public/templates/sheesh-mahal/assets/letter/marble.webp",
+      "size": 27172,
+      "valid": true
+    },
+    {
+      "name": "wall.webp",
+      "section": "families",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/wall.webp",
+      "dest": "public/templates/sheesh-mahal/assets/families/wall.webp",
+      "size": 16814,
+      "valid": true
+    },
+    {
+      "name": "wall-mirrors.webp",
+      "section": "families",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/wall-mirrors.webp",
+      "dest": "public/templates/sheesh-mahal/assets/families/wall-mirrors.webp",
+      "size": 8640,
+      "valid": true
+    },
+    {
+      "name": "lantern-unlit.webp",
+      "section": "families",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-unlit.webp",
+      "dest": "public/templates/sheesh-mahal/assets/families/lantern-unlit.webp",
+      "size": 210360,
+      "valid": true
+    },
+    {
+      "name": "lantern-lit.webp",
+      "section": "families",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-lit.webp",
+      "dest": "public/templates/sheesh-mahal/assets/families/lantern-lit.webp",
+      "size": 291926,
+      "valid": true
+    },
+    {
+      "name": "lantern-glow.webp",
+      "section": "families",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-glow.webp",
+      "dest": "public/templates/sheesh-mahal/assets/families/lantern-glow.webp",
+      "size": 158160,
+      "valid": true
+    },
+    {
+      "name": "chain.webp",
+      "section": "families",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/chain.webp",
+      "dest": "public/templates/sheesh-mahal/assets/families/chain.webp",
+      "size": 8770,
+      "valid": true
+    },
+    {
+      "name": "arch.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/arch.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/arch.webp",
+      "size": 6258,
+      "valid": true
+    },
+    {
+      "name": "shutters.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/shutters.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/shutters.webp",
+      "size": 69708,
+      "valid": true
+    },
+    {
+      "name": "frame.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/frame.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/frame.webp",
+      "size": 179140,
+      "valid": true
+    },
+    {
+      "name": "frame-mirrors.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/frame-mirrors.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/frame-mirrors.webp",
+      "size": 53136,
+      "valid": true
+    },
+    {
+      "name": "mehndi.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/mehndi.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/mehndi.webp",
+      "size": 109070,
+      "valid": true
+    },
+    {
+      "name": "nikah.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/nikah.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/nikah.webp",
+      "size": 119196,
+      "valid": true
+    },
+    {
+      "name": "baraat.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/baraat.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/baraat.webp",
+      "size": 123340,
+      "valid": true
+    },
+    {
+      "name": "walima.webp",
+      "section": "events",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/walima.webp",
+      "dest": "public/templates/sheesh-mahal/assets/events/walima.webp",
+      "size": 132414,
+      "valid": true
+    },
+    {
+      "name": "ceiling.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ceiling.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/ceiling.webp",
+      "size": 275172,
+      "valid": true
+    },
+    {
+      "name": "ceiling-mirrors.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ceiling-mirrors.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/ceiling-mirrors.webp",
+      "size": 154478,
+      "valid": true
+    },
+    {
+      "name": "frame.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/frame.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/frame.webp",
+      "size": 201002,
+      "valid": true
+    },
+    {
+      "name": "ring1.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring1.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/ring1.webp",
+      "size": 48106,
+      "valid": true
+    },
+    {
+      "name": "ring2.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring2.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/ring2.webp",
+      "size": 59746,
+      "valid": true
+    },
+    {
+      "name": "ring3.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring3.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/ring3.webp",
+      "size": 45008,
+      "valid": true
+    },
+    {
+      "name": "rete.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/rete.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/rete.webp",
+      "size": 90312,
+      "valid": true
+    },
+    {
+      "name": "tile-on.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/tile-on.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/tile-on.webp",
+      "size": 5898,
+      "valid": true
+    },
+    {
+      "name": "tile-off.webp",
+      "section": "countdown",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/tile-off.webp",
+      "dest": "public/templates/sheesh-mahal/assets/countdown/tile-off.webp",
+      "size": 5362,
+      "valid": true
+    },
+    {
+      "name": "dove.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/dove.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/dove.webp",
+      "size": 33676,
+      "valid": true
+    },
+    {
+      "name": "dove-fly.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/dove-fly.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/dove-fly.webp",
+      "size": 95044,
+      "valid": true
+    },
+    {
+      "name": "paper.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/paper.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/paper.webp",
+      "size": 45056,
+      "valid": true
+    },
+    {
+      "name": "stand.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/stand.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/stand.webp",
+      "size": 12290,
+      "valid": true
+    },
+    {
+      "name": "bangle-mehndi.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-mehndi.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/bangle-mehndi.webp",
+      "size": 25382,
+      "valid": true
+    },
+    {
+      "name": "bangle-nikah.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-nikah.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/bangle-nikah.webp",
+      "size": 26172,
+      "valid": true
+    },
+    {
+      "name": "bangle-baraat.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-baraat.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/bangle-baraat.webp",
+      "size": 23906,
+      "valid": true
+    },
+    {
+      "name": "bangle-walima.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-walima.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/bangle-walima.webp",
+      "size": 22484,
+      "valid": true
+    },
+    {
+      "name": "roll.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/roll.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/roll.webp",
+      "size": 21360,
+      "valid": true
+    },
+    {
+      "name": "ribbon.webp",
+      "section": "rsvp",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/ribbon.webp",
+      "dest": "public/templates/sheesh-mahal/assets/rsvp/ribbon.webp",
+      "size": 35286,
+      "valid": true
+    },
+    {
+      "name": "moon.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/moon.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/moon.webp",
+      "size": 6440,
+      "valid": true
+    },
+    {
+      "name": "scene.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/scene.webp",
+      "size": 300466,
+      "valid": true
+    },
+    {
+      "name": "scene-tab.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene-tab.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/scene-tab.webp",
+      "size": 309932,
+      "valid": true
+    },
+    {
+      "name": "scene-land.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene-land.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/scene-land.webp",
+      "size": 185558,
+      "valid": true
+    },
+    {
+      "name": "diya-0.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-0.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/diya-0.webp",
+      "size": 31480,
+      "valid": true
+    },
+    {
+      "name": "diya-1.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-1.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/diya-1.webp",
+      "size": 23168,
+      "valid": true
+    },
+    {
+      "name": "diya-2.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-2.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/diya-2.webp",
+      "size": 28052,
+      "valid": true
+    },
+    {
+      "name": "diya-3.webp",
+      "section": "closing",
+      "src": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-3.webp",
+      "dest": "public/templates/sheesh-mahal/assets/closing/diya-3.webp",
+      "size": 19972,
+      "valid": true
+    }
+  ],
+  "errors": []
+}

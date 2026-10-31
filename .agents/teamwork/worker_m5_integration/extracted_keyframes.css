@@ -1,0 +1,55 @@
+@keyframes d-rays{to{rotate:1turn}}
+
+@keyframes d-sweep{0%{transform:translate(-66.6667%)}55%,to{transform:none}}
+
+@keyframes d-twinkle{0%,68%,to{opacity:0;transform:rotate(10deg) scale(.2)}78%{opacity:1;transform:rotate(35deg) scale(1)}88%{opacity:.4;transform:rotate(55deg) scale(.45)}}
+
+@keyframes m-sheen{0%,62%{transform:translate(90%)}to{transform:translate(-150%)}}
+
+@keyframes m-ring{0%{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(1.5)}}
+
+@keyframes hint-pulse{0%,to{opacity:.85}50%{opacity:.55}}
+
+@keyframes hint-flash{0%,to{opacity:.85}30%{opacity:1;background:#0c3c2ecc}}
+
+@keyframes arrive-doors{0%{opacity:0;transform:scale(1.05);filter:brightness(.5)}to{opacity:1;transform:none;filter:none}}
+
+@keyframes arrive-med{0%{opacity:0;transform:scale(.7) rotate(-40deg)}to{opacity:1;transform:none}}
+
+@keyframes arrive-fade{0%{opacity:0}to{opacity:1}}
+
+@keyframes h-bob{0%,to{translate:0 -3px}50%{translate:0 3px}}
+
+@keyframes lt-sheen{0%{transform:translate(98.4615%)}38%,to{transform:translate(-160%)}}
+
+@keyframes lt-hint{0%,to{opacity:.55}50%{opacity:1}}
+
+@keyframes fm-sway{0%{rotate:-1.3deg}to{rotate:1.3deg}}
+
+@keyframes fm-flicker{0%{opacity:.35}9%{opacity:.5}17%{opacity:.28}26%{opacity:.45}38%{opacity:.32}47%{opacity:.55}58%{opacity:.3}66%{opacity:.42}78%{opacity:.26}87%{opacity:.5}94%{opacity:.36}to{opacity:.35}}
+
+@keyframes fm-hint{0%,to{opacity:.5}50%{opacity:1}}
+
+@keyframes ev-shine{0%{background-position:0 100%;opacity:1}22%{background-position:0 0;opacity:1}23%,to{background-position:0 0;opacity:0}}
+
+@keyframes ev-seep{0%{opacity:.35}to{opacity:.9}}
+
+@keyframes ev-tap{0%,to{opacity:.45}50%{opacity:1}}
+
+@keyframes cd-candle{0%,to{transform:translate(5%,9.8182%)}30%{transform:translate(28.3333%,31.0909%)}62%{transform:translate(10%,72%)}82%{transform:translate(25%,57.2727%)}}
+
+@keyframes cd-hint{0%,to{opacity:.5}50%{opacity:1}}
+
+@keyframes rs-perch{0%,86%,to{transform:none}89%{transform:translateY(-5px) rotate(-3deg)}92%{transform:none}95%{transform:rotate(2deg)}}
+
+@keyframes rs-flap{0%{background-position:0 0}to{background-position:calc(var(--fly-frames) / (var(--fly-frames) - 1) * 100%) 0}}
+
+@keyframes cl-bob{0%{transform:translateY(0) rotate(-1.6deg)}to{transform:translateY(-2.2%) rotate(1.6deg)}}
+
+@keyframes cl-flicker{0%{opacity:.78;scale:.94}45%{opacity:1;scale:1.04}70%{opacity:.86;scale:.98}to{opacity:.96;scale:1.02}}
+
+@keyframes cl-wobble{0%{transform:skew(-3deg) scaleX(1.02)}to{transform:skew(3deg) scaleX(.98)}}
+
+@keyframes cl-glade{0%{transform:scale(.78,.92);opacity:.75}50%{transform:scale(1.08,1.04);opacity:1}to{transform:scaleX(.9);opacity:.85}}
+
+@keyframes mu-sway{0%,to{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}

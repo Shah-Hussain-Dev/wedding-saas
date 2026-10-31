@@ -18,6 +18,7 @@ const TEMPLATE_SLUGS = [
   "emerald-noir",
   "royal-elegance",
   "modern-minimal",
+  "sheesh-mahal",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -346,7 +346,9 @@ export function getDefaultFaithForTemplate(templateId: string): PreviewFaith {
     norm.includes("gul-e-noor") ||
     norm.includes("noor-e-nikah") ||
     norm.includes("azure-nikah") ||
-    norm.includes("kitab-e-nikah")
+    norm.includes("kitab-e-nikah") ||
+    norm.includes("sheesh") ||
+    norm.includes("sheesh-mahal")
   ) {
     return "muslim";
   }

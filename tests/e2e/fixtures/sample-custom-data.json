@@ -1,0 +1,57 @@
+{
+  "brideName": "Fatima",
+  "groomName": "Hamza",
+  "brideParents": "Mr & Mrs Salman Farooq",
+  "groomParents": "Dr & Mrs Tariq Mansoor",
+  "weddingDate": "2026-11-20T20:00:00+05:00",
+  "weddingTime": "8:00 PM",
+  "venue": {
+    "name": "The Crystal Palace Marquee",
+    "address": "Karsaz Road, Karachi",
+    "mapUrl": "https://maps.google.com/?q=The+Crystal+Palace+Marquee+Karachi"
+  },
+  "events": [
+    {
+      "id": "mehndi",
+      "name": "Mehndi Night",
+      "date": "Thursday · 19 November 2026",
+      "time": "7:30 PM",
+      "venue": "Gulshan Lawn",
+      "address": "Block 4, Clifton, Karachi",
+      "dressCode": "Shades of Mustard & Pistachio",
+      "mapUrl": "https://maps.google.com/?q=Gulshan+Lawn+Clifton+Karachi"
+    },
+    {
+      "id": "nikah",
+      "name": "Nikah Ceremony",
+      "date": "Friday · 20 November 2026",
+      "time": "4:30 PM",
+      "venue": "Sultan Mosque",
+      "address": "DHA Phase 5, Karachi",
+      "dressCode": "Ivory & Champagne Gold",
+      "mapUrl": "https://maps.google.com/?q=Sultan+Mosque+Karachi"
+    },
+    {
+      "id": "baraat",
+      "name": "Baraat Reception",
+      "date": "Saturday · 21 November 2026",
+      "time": "8:00 PM",
+      "venue": "The Crystal Palace Marquee",
+      "address": "Karsaz Road, Karachi",
+      "dressCode": "Traditional Velvet & Maroon",
+      "mapUrl": "https://maps.google.com/?q=The+Crystal+Palace+Marquee+Karachi"
+    },
+    {
+      "id": "walima",
+      "name": "Walima Dinner",
+      "date": "Sunday · 22 November 2026",
+      "time": "8:30 PM",
+      "venue": "Beach Luxury Grand Lawn",
+      "address": "Moulvi Tamizuddin Khan Rd, Karachi",
+      "dressCode": "Pastel Pink & Silver",
+      "mapUrl": "https://maps.google.com/?q=Beach+Luxury+Hotel+Karachi"
+    }
+  ],
+  "musicTrack": "/templates/sheesh-mahal/audio/music.mp3",
+  "rsvpDeadline": "2026-11-15T23:59:59+05:00"
+}

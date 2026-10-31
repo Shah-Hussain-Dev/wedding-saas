@@ -182,6 +182,35 @@ export const PDF_THEME_TOKENS: Record<string, PdfCardStyleTokens> = {
     receptionEventTitle: "Walima Dawat",
   },
 
+  "sheesh-mahal": {
+    coverBg: "linear-gradient(135deg, #062a21 0%, #03170f 60%, #05140e 100%)",
+    coverBorderColor: "#c9a45c",
+    coverBorderInner: "rgba(201, 164, 92, 0.4)",
+    coverGoldAccent: "#e6cf98",
+    coverTextColor: "#f5efe2",
+    coverSubtextColor: "#e6cf98",
+    coverHighlight: "#eef3f0",
+    coverFiligreeStyle: "islamic-arabesque",
+
+    receptionBg: "#f5efe2",
+    receptionBorderColor: "#c9a45c",
+    receptionBorderInner: "rgba(201, 164, 92, 0.35)",
+    receptionPrimaryText: "#0b3d31",
+    receptionSecondaryText: "#0b4a3b",
+    receptionGoldAccent: "#86662a",
+    receptionDividerStyle: "arabesque",
+
+    coupleFont: "'Alex Brush', cursive",
+    headingFont: "'Amiri', 'Cinzel', serif",
+    bodyFont: "'Amiri', serif",
+
+    tradition: "muslim",
+    sacredInvocation: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    sacredTranslation: "In the name of Allah, the Most Gracious, the Most Merciful",
+    baratEventTitle: "The Sacred Nikah & Barat",
+    receptionEventTitle: "Dawat-e-Walima",
+  },
+
   // ── Hindu Royal & Vedic Templates ──
   "crimson-royale": {
     coverBg: "linear-gradient(135deg, #5A0E1A 0%, #38050D 60%, #1C0105 100%)",

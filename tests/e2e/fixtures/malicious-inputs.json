@@ -1,0 +1,24 @@
+{
+  "xssPayloads": [
+    "<script>alert('xss')</script>",
+    "\" onmouseover=\"alert(1)\"",
+    "<img src=x onerror=alert('img-xss')>",
+    "javascript:alert('proto-xss')",
+    "<svg/onload=alert('svg')>"
+  ],
+  "sqlInjectionPayloads": [
+    "' OR '1'='1",
+    "admin' --",
+    "'; DROP TABLE rsvps; --"
+  ],
+  "oversizedStrings": [
+    "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest Guest "
+  ],
+  "unicodeInputs": [
+    "جناب طارق صاحب اور اہلِ خانہ",
+    "श्री राजेश शर्मा एवं परिवार",
+    "Mr. O'Connor & Family 💍 ✨",
+    "🎉🎊 👰‍♀️🤵‍♂️ ❤️"
+  ]
+}

@@ -341,6 +341,25 @@ const TEMPLATE_THEMES: Record<string, Partial<TemplateThemeConfig>> = {
     bottomBorderColor: "rgba(224, 168, 153, 0.15)",
     logoVariant: "white",
   },
+  "sheesh-mahal": {
+    accentColor: "#c9a45c",
+    accentSoft: "#e6cf98",
+    headingColor: "#f5efe2",
+    bodyColor: "#eef3f0",
+    cardBg: "bg-white/[0.04]",
+    cardBorder: "border-[#c9a45c]/20",
+    cardHoverBorder: "#c9a45c",
+    chipBg: "bg-[#0b4a3b]/40",
+    chipBorder: "border-[#c9a45c]/35",
+    chipText: "#e6cf98",
+    secondaryBtnBg: "bg-white/[0.07] hover:bg-white/[0.12]",
+    secondaryBtnBorder: "border-[#c9a45c]/30 hover:border-[#c9a45c]/60",
+    secondaryBtnText: "#f5efe2",
+    trustTextColor: "#eef3f0",
+    bottomTextColor: "#c9a45c",
+    bottomBorderColor: "rgba(201, 164, 92, 0.15)",
+    logoVariant: "white",
+  },
 };
 
 const DEFAULT_THEME: TemplateThemeConfig = {

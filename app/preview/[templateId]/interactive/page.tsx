@@ -33,6 +33,7 @@ const ALL_16_TEMPLATES = [
   "emerald-noir",
   "royal-elegance",
   "modern-minimal",
+  "sheesh-mahal",
 ];
 
 function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
@@ -208,6 +209,8 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
         .rgb-music-toggle,
         .celestial-audio-pill,
         .imperial-audio-pill,
+        .sheesh-audio-pill,
+        .sm-music-toggle,
         .luxury-audio-dock {
           display: none !important;
         }

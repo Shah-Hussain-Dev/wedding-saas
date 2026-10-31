@@ -1,0 +1,860 @@
+{
+  "ok": [
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/gold.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/marble.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/band.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/paper.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/seal.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/casket-open.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/casket-lid.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/paper-back.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/wall.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/wall-mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/chain.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-unlit.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-lit.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-glow.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/arch.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/frame.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/frame-mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/shutters.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ceiling.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ceiling-mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/frame.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring1.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring2.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring3.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/rete.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/paper.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/stand.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-mehndi.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-nikah.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-baraat.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-walima.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/dove-fly.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/roll.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/ribbon.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/tile-on.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/moon.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-3.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-2.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-0.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/mehndi.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/baraat.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-1.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/tile-off.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/nikah.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/walima.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/dove.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/sfx-shimmer.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-roll.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-clink.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/sfx-open.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/sfx-tick.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/sfx-light.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/sfx-lock.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/sfx-letter.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/sfx-open.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/sfx-float.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/sfx-join.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-dove.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/music/music.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    }
+  ],
+  "webp": [
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/doors-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/mirrors-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/medallion-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/hall-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/mirrors-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/hero/gold.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/marble.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/band.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/paper.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/seal.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/casket-open.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/casket-lid.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/paper-back.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/wall.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/wall-mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/chain.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-unlit.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-lit.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/lantern-glow.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/arch.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/frame.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/frame-mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/shutters.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ceiling.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ceiling-mirrors.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/frame.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring1.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring2.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/ring3.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/rete.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/paper.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/stand.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-mehndi.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-nikah.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-baraat.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/bangle-walima.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/dove-fly.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/roll.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/ribbon.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene-tab.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/scene-land.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/tile-on.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/moon.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-3.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-2.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-0.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/mehndi.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/baraat.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/diya-1.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/tile-off.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/nikah.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/walima.webp",
+      "type": "image/webp",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/dove.webp",
+      "type": "image/webp",
+      "size": null
+    }
+  ],
+  "mp3": [
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/sfx-shimmer.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-roll.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-clink.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/events/sfx-open.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/sfx-tick.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/sfx-light.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/countdown/sfx-lock.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/letter/sfx-letter.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/cover/sfx-open.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/closing/sfx-float.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/families/sfx-join.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/rsvp/sfx-dove.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    },
+    {
+      "url": "https://aqdinvites.com/invites/sheesh-mahal/assets/music/music.mp3",
+      "type": "audio/mpeg",
+      "size": null
+    }
+  ],
+  "byDir": {
+    "cover": [
+      "doors-land.webp",
+      "doors-tab.webp",
+      "doors.webp",
+      "medallion-land.webp",
+      "medallion-tab.webp",
+      "medallion.webp",
+      "mirrors-land.webp",
+      "mirrors-tab.webp",
+      "mirrors.webp"
+    ],
+    "hero": [
+      "gold.webp",
+      "hall-land.webp",
+      "hall-tab.webp",
+      "hall.webp",
+      "mirrors-land.webp",
+      "mirrors-tab.webp",
+      "mirrors.webp"
+    ],
+    "letter": [
+      "band.webp",
+      "casket-lid.webp",
+      "casket-open.webp",
+      "marble.webp",
+      "paper-back.webp",
+      "paper.webp",
+      "seal.webp"
+    ],
+    "families": [
+      "chain.webp",
+      "lantern-glow.webp",
+      "lantern-lit.webp",
+      "lantern-unlit.webp",
+      "wall-mirrors.webp",
+      "wall.webp"
+    ],
+    "events": [
+      "arch.webp",
+      "baraat.webp",
+      "frame-mirrors.webp",
+      "frame.webp",
+      "mehndi.webp",
+      "nikah.webp",
+      "shutters.webp",
+      "walima.webp"
+    ],
+    "countdown": [
+      "ceiling-mirrors.webp",
+      "ceiling.webp",
+      "frame.webp",
+      "rete.webp",
+      "ring1.webp",
+      "ring2.webp",
+      "ring3.webp",
+      "tile-off.webp",
+      "tile-on.webp"
+    ],
+    "rsvp": [
+      "bangle-baraat.webp",
+      "bangle-mehndi.webp",
+      "bangle-nikah.webp",
+      "bangle-walima.webp",
+      "dove-fly.webp",
+      "dove.webp",
+      "paper.webp",
+      "ribbon.webp",
+      "roll.webp",
+      "stand.webp"
+    ],
+    "closing": [
+      "diya-0.webp",
+      "diya-1.webp",
+      "diya-2.webp",
+      "diya-3.webp",
+      "moon.webp",
+      "scene-land.webp",
+      "scene-tab.webp",
+      "scene.webp"
+    ]
+  }
+}

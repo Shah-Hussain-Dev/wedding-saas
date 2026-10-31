@@ -34,6 +34,7 @@ const KNOWN_TEMPLATE_IDS = [
   "emerald-noir",
   "royal-elegance",
   "modern-minimal",
+  "sheesh-mahal",
 ];
 
 interface CustomizedInvitationPreviewProps {
@@ -189,6 +190,8 @@ function CustomizedInvitationPreview({
         .rgb-music-toggle,
         .celestial-audio-pill,
         .imperial-audio-pill,
+        .sheesh-audio-pill,
+        .sm-music-toggle,
         .luxury-audio-dock {
           display: none !important;
         }

@@ -15,6 +15,7 @@ import RoyalHeritage, { defaultData as royalHeritageData } from "./royal-heritag
 import RoyalMajesty, { defaultData as royalMajestyData } from "./royal-majesty";
 import ImperialPalace, { defaultData as imperialPalaceData } from "./imperial-palace";
 import CelestialRose, { celestialRoseData } from "./celestial-rose";
+import SheeshMahal, { defaultData as sheeshMahalData } from "./sheesh-mahal";
 
 export {
   NoorNikah,
@@ -33,6 +34,7 @@ export {
   RoyalMajesty,
   ImperialPalace,
   CelestialRose,
+  SheeshMahal,
   noorNikahData,
   royalLotusData,
   crimsonRoyaleData,
@@ -49,6 +51,7 @@ export {
   royalMajestyData,
   imperialPalaceData,
   celestialRoseData,
+  sheeshMahalData,
 };
 
 export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> = {
@@ -68,6 +71,7 @@ export const TEMPLATES_MAP: Record<string, React.ComponentType<{ data?: any }>> 
   "royal-majesty": RoyalMajesty,
   "imperial-palace": ImperialPalace,
   "celestial-rose": CelestialRose,
+  "sheesh-mahal": SheeshMahal,
 };
 
 export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
@@ -87,6 +91,7 @@ export const TEMPLATE_DEFAULT_DATA: Record<string, any> = {
   "royal-majesty": royalMajestyData,
   "imperial-palace": imperialPalaceData,
   "celestial-rose": celestialRoseData,
+  "sheesh-mahal": sheeshMahalData,
 };
 
 export function getTemplateComponent(templateId: string): React.ComponentType<{ data?: any }> {

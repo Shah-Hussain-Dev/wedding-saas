@@ -304,6 +304,23 @@ const TEMPLATES = [
       { title: "Minimalist RSVP Form", image: "/templates/imperial-palace/ballroom.jpg" },
     ],
   },
+  {
+    id: "sheesh-mahal",
+    name: "Sheesh Mahal",
+    style: "Palace of Mirrors & Imperial Emerald",
+    tag: "New",
+    religion: ["muslim"],
+    religionLabel: "Muslim",
+    price: "₹1,199",
+    desc: "Mughal imperial palace of mirrors experience featuring 3D double-leaf doors, gold medallion seal, Surah Ar-Rum blessings, Jharokha window cards, celestial astrolabe countdown, and reflecting pool.",
+    image: "/templates/sheesh-mahal/assets/cover/doors.webp",
+    scenes: [
+      { title: "3D Mirrored Double Doors", image: "/templates/sheesh-mahal/assets/cover/doors.webp" },
+      { title: "Imperial Hero Hall", image: "/templates/sheesh-mahal/assets/hero/hall.webp" },
+      { title: "Mughal Jharokha Events", image: "/templates/sheesh-mahal/assets/events/arch.webp" },
+      { title: "Midnight Reflecting Pool", image: "/templates/sheesh-mahal/assets/closing/scene.webp" },
+    ],
+  },
 ];
 
 export default function TemplatesPage() {
