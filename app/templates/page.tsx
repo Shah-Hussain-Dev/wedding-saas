@@ -6,7 +6,10 @@ import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
 import { Sparkle, MagnifyingGlass } from "@phosphor-icons/react";
 import { TemplateCatalogCard } from "@/components/marketing/template-catalog-card";
-import { templateMatchesFaithCatalogFilter } from "@/lib/template-meta";
+import {
+  templateMatchesFaithCatalogFilter,
+  type TemplateMeta,
+} from "@/lib/template-meta";
 
 const FILTERS = [
   { id: "All", label: "All Masterpieces (16)" },
@@ -318,7 +321,10 @@ export default function TemplatesPage() {
       activeFilter === "Hindu" ||
       activeFilter === "Muslim"
     ) {
-      return templateMatchesFaithCatalogFilter(t.religion, activeFilter);
+      return templateMatchesFaithCatalogFilter(
+        t.religion as TemplateMeta["religion"],
+        activeFilter
+      );
     }
     if (activeFilter === "Best Sellers")
       return (

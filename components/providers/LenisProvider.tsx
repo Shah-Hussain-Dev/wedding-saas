@@ -4,10 +4,15 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
+type LenisWindow = Window & { __lenis?: Lenis };
+
+function getLenisWindow(): LenisWindow {
+  return window as unknown as LenisWindow;
+}
+
 function clearLenisWindowRef() {
   if (typeof window === "undefined") return;
-  delete (window as Window & { __lenis?: Lenis; lenis?: Lenis }).__lenis;
-  delete (window as Window & { __lenis?: Lenis; lenis?: Lenis }).lenis;
+  delete getLenisWindow().__lenis;
 }
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
@@ -46,8 +51,7 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
 
       lenisRef.current = lenis;
       if (typeof window !== "undefined") {
-        (window as Window & { __lenis?: Lenis; lenis?: Lenis }).__lenis = lenis;
-        (window as Window & { __lenis?: Lenis; lenis?: Lenis }).lenis = lenis;
+        getLenisWindow().__lenis = lenis;
       }
 
       function raf(time: number) {

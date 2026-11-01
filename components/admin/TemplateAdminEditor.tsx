@@ -30,7 +30,7 @@ import type { CulturalTradition } from "@/lib/pdf-theme-tokens";
 import {
   buildAdminPreviewPayload,
   buildDefaultsJsonFromDraft,
-} from "@/lib/template-settings";
+} from "@/lib/template-settings-draft";
 import { writeCustomizerDraft } from "@/lib/customizer-preview-sync";
 
 const ADMIN_STEPS = [

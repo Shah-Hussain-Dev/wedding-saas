@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import type { TemplateCatalogEntry } from "@/lib/template-settings";
+import type { TemplateCatalogEntry } from "@/lib/template-settings-types";
 import { getTemplatePosterUrl } from "@/lib/template-trailer";
 import { getTemplateTrailerUrlOrEmpty } from "@/lib/template-trailer";
 

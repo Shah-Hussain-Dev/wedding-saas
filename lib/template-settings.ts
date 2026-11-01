@@ -12,92 +12,25 @@ import {
   getAllTemplatesWithPricing,
   type TemplatePricingConfig,
 } from "@/lib/template-pricing";
+import type {
+  TemplateCatalogEntry,
+  TemplateDefaultsJson,
+  TemplateMarketingJson,
+  TemplateSettingsRecord,
+} from "@/lib/template-settings-types";
 
-export interface TemplateDefaultsCouple {
-  brideName?: string;
-  groomName?: string;
-  slug?: string;
-}
-
-export interface TemplateDefaultsFaith {
-  religion?: "muslim" | "hindu" | "universal";
-  sacredInvocation?: string;
-  sacredVerse?: string;
-  sacredTranslation?: string;
-}
-
-export interface TemplateDefaultsDateVenue {
-  weddingDate?: string;
-  weddingTime?: string;
-  venueName?: string;
-  venueAddress?: string;
-  venueLat?: number;
-  venueLng?: number;
-}
-
-export interface TemplateDefaultsCeremonies {
-  eventsJson?: Array<{
-    name: string;
-    enabled: boolean;
-    venue: string;
-    date: string;
-    time: string;
-  }>;
-}
-
-export interface TemplateDefaultsMedia {
-  heroImageUrl?: string;
-  slideshowImages?: string[];
-  musicTrack?: string;
-}
-
-export interface TemplateDefaultsOptional {
-  showDressCode?: boolean;
-  dressCodeText?: string;
-  showTransport?: boolean;
-  transportText?: string;
-}
-
-export interface TemplateDefaultsJson {
-  couple?: TemplateDefaultsCouple;
-  faith?: TemplateDefaultsFaith;
-  dateVenue?: TemplateDefaultsDateVenue;
-  ceremonies?: TemplateDefaultsCeremonies;
-  media?: TemplateDefaultsMedia;
-  optional?: TemplateDefaultsOptional;
-  advanced?: Record<string, unknown>;
-}
-
-export interface TemplateMarketingJson {
-  descriptionOverride?: string;
-  sortWeight?: number;
-  isFeatured?: boolean;
-}
-
-export interface TemplateSettingsRecord {
-  id: string;
-  coverImageUrl: string | null;
-  trailerVideoUrl: string | null;
-  defaultMusicTrack: string | null;
-  defaultsJson: TemplateDefaultsJson;
-  marketingJson: TemplateMarketingJson;
-  updatedBy: string | null;
-  updatedAt: string | null;
-}
-
-export interface TemplateCatalogEntry {
-  id: string;
-  name: string;
-  style: string;
-  coverImageUrl: string;
-  trailerVideoUrl: string;
-  defaultMusicTrack: string;
-  hasCustomDefaults: boolean;
-  priceInr: number;
-  priceFormatted: string;
-  originalPriceFormatted: string;
-  isActive: boolean;
-}
+export type {
+  TemplateCatalogEntry,
+  TemplateDefaultsCeremonies,
+  TemplateDefaultsCouple,
+  TemplateDefaultsDateVenue,
+  TemplateDefaultsFaith,
+  TemplateDefaultsJson,
+  TemplateDefaultsMedia,
+  TemplateDefaultsOptional,
+  TemplateMarketingJson,
+  TemplateSettingsRecord,
+} from "@/lib/template-settings-types";
 
 const DATA_FILE_PATH = path.join(process.cwd(), "data", "template-settings.json");
 
@@ -511,66 +444,4 @@ export async function updateTemplateSettings(
   }
 
   return merged;
-}
-
-/** Build customizer-shaped draft from admin form state for preview + save */
-export function buildDefaultsJsonFromDraft(draft: Record<string, unknown>): TemplateDefaultsJson {
-  return {
-    couple: {
-      brideName: String(draft.brideName ?? ""),
-      groomName: String(draft.groomName ?? ""),
-      slug: typeof draft.slug === "string" ? draft.slug : undefined,
-    },
-    faith: {
-      religion:
-        draft.religion === "muslim" || draft.religion === "hindu" || draft.religion === "universal"
-          ? draft.religion
-          : undefined,
-      sacredInvocation: String(draft.sacredInvocation ?? ""),
-      sacredVerse: String(draft.sacredVerse ?? ""),
-      sacredTranslation: String(draft.sacredTranslation ?? ""),
-    },
-    dateVenue: {
-      weddingDate: String(draft.weddingDate ?? ""),
-      weddingTime: String(draft.weddingTime ?? ""),
-      venueName: String(draft.venueName ?? ""),
-      venueAddress: String(draft.venueAddress ?? ""),
-      venueLat: typeof draft.venueLat === "number" ? draft.venueLat : undefined,
-      venueLng: typeof draft.venueLng === "number" ? draft.venueLng : undefined,
-    },
-    ceremonies: {
-      eventsJson: Array.isArray(draft.eventsJson)
-        ? (draft.eventsJson as TemplateDefaultsCeremonies["eventsJson"])
-        : Array.isArray(draft.events)
-          ? (draft.events as TemplateDefaultsCeremonies["eventsJson"])
-          : [],
-    },
-    media: {
-      heroImageUrl: String(draft.heroImageUrl ?? ""),
-      slideshowImages: Array.isArray(draft.slideshowImages)
-        ? (draft.slideshowImages as string[])
-        : [],
-      musicTrack: String(draft.musicTrack ?? ""),
-    },
-    optional: {
-      showDressCode: Boolean(draft.showDressCode),
-      dressCodeText: String(draft.dressCodeText ?? ""),
-      showTransport: Boolean(draft.showTransport),
-      transportText: String(draft.transportText ?? ""),
-    },
-  };
-}
-
-export function buildAdminPreviewPayload(
-  templateId: string,
-  draft: Record<string, unknown>
-): Record<string, unknown> {
-  const id = normalizeId(templateId);
-  return {
-    id: `admin-preview-${id}`,
-    templateId: id,
-    slug: draft.slug ?? "demo-couple",
-    ...draft,
-    updatedAt: new Date().toISOString(),
-  };
 }
