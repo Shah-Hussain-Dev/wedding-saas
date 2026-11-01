@@ -86,6 +86,12 @@ export function InfiniteReelsTicker() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <Link
+            href="/reels"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#073D31] px-4 text-xs font-semibold uppercase tracking-wider text-[#F7F4ED] hover:bg-[#032A23] focus-visible:ring-2 focus-visible:ring-[#073D31] focus-visible:ring-offset-2"
+          >
+            See all template reels
+          </Link>
           <button
             type="button"
             className="min-h-[44px] min-w-[44px] px-4 rounded-full border border-[#073D31]/15 bg-white/60 text-xs font-semibold uppercase tracking-wider text-[#073D31] hover:border-[#C8A45E]/50 focus-visible:ring-2 focus-visible:ring-[#073D31] focus-visible:ring-offset-2"

@@ -13,6 +13,8 @@ interface ShapedScratchCardProps {
   timeStr: string;
   badgeText?: string;
   className?: string;
+  /** Reel autoplay: reveal date without user scratch */
+  autoReveal?: boolean;
 }
 
 export function ShapedScratchCard({
@@ -24,6 +26,7 @@ export function ShapedScratchCard({
   timeStr,
   badgeText = "✦ Shubh Vivah Muhurat ✦",
   className = "",
+  autoReveal = false,
 }: ShapedScratchCardProps) {
   const uniqueId = useId().replace(/:/g, "");
   const clipPathId = `scratch-clip-${uniqueId}`;
@@ -34,6 +37,10 @@ export function ShapedScratchCard({
   const isDrawingRef = useRef(false);
   const scratchedPixelsRef = useRef(0);
   const confettiFiredRef = useRef(false);
+
+  useEffect(() => {
+    if (autoReveal) setIsScratched(true);
+  }, [autoReveal]);
 
   const getThemeColors = () => {
     switch (theme) {

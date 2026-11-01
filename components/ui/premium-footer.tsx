@@ -215,6 +215,11 @@ export function PremiumFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/reels" className="hover:text-[#E1C98E] transition-colors">
+                  Template Reels
+                </Link>
+              </li>
+              <li>
                 <Link href="/#how-it-works" className="hover:text-[#E1C98E] transition-colors">
                   How It Works
                 </Link>

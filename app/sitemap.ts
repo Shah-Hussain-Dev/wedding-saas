@@ -41,6 +41,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: [`${baseUrl}/images/hero-bg.png`],
     },
     {
+      url: `${baseUrl}/reels`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/reels/rose-gold-blush`,
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority: 0.82,
+    },
+    {
       url: `${baseUrl}/about`,
       lastModified: now,
       changeFrequency: "monthly",

@@ -28,6 +28,7 @@ import { FloatingPetals } from "@/components/invitation/FloatingPetals";
 import { ShapedScratchCard } from "@/components/invitation/ShapedScratchCard";
 import defaultData from "./data.json";
 import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
+import { ReelBeatEntrance } from "@/components/reels/reel-beat-entrance";
 import "./style.css";
 
 // Helper to safely resolve audio track URLs
@@ -43,9 +44,21 @@ function resolveAudioTrack(track?: string | null): string {
 
 interface RoseGoldBlushProps {
   data?: any;
+  reelMode?: boolean;
+  onReelHeroRevealed?: () => void;
+  reelScratchReveal?: boolean;
+  reelActiveBeatId?: string;
+  reelEnterEpoch?: number;
 }
 
-export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
+export default function RoseGoldBlush({
+  data,
+  reelMode = false,
+  onReelHeroRevealed,
+  reelScratchReveal = false,
+  reelActiveBeatId,
+  reelEnterEpoch = 0,
+}: RoseGoldBlushProps) {
   const isCustomized = Boolean(
     (data?.brideName && data.brideName !== defaultData.couple?.brideName) ||
     (data?.groomName && data.groomName !== defaultData.couple?.groomName) ||
@@ -100,8 +113,8 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
   const hideReligionSwitcher = true;
 
   // Video Gate Timing & Content Reveal State
-  const [isVideoStarted, setIsVideoStarted] = useState(false);
-  const [isContentRevealed, setIsContentRevealed] = useState(false);
+  const [isVideoStarted, setIsVideoStarted] = useState(reelMode);
+  const [isContentRevealed, setIsContentRevealed] = useState(reelMode);
   const [videoCurrentTime, setVideoCurrentTime] = useState(0);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
   const [activePhotoIdx, setActivePhotoIdx] = useState<number | null>(null);
@@ -116,8 +129,9 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
   const [rsvpWishes, setRsvpWishes] = useState("");
   const [isRsvpSubmitted, setIsRsvpSubmitted] = useState(false);
 
-  // Lock page and body scrolling until video completes and gate opens
+  // Lock page and body scrolling until video completes and gate opens (skip in reel — outer mockup scrolls)
   useEffect(() => {
+    if (reelMode) return;
     if (!isContentRevealed) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
@@ -129,7 +143,18 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
       document.body.style.overflow = "unset";
       document.documentElement.style.overflow = "unset";
     };
-  }, [isContentRevealed]);
+  }, [isContentRevealed, reelMode]);
+
+  useEffect(() => {
+    if (!reelMode || isVideoStarted) return;
+    const t = window.setTimeout(() => handleStartGateExperience(), 350);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- one-shot reel gate
+  }, [reelMode, isVideoStarted]);
+
+  useEffect(() => {
+    if (reelMode && isContentRevealed) onReelHeroRevealed?.();
+  }, [reelMode, isContentRevealed, onReelHeroRevealed]);
 
   const heroVideoRef = useRef<HTMLVideoElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -193,6 +218,17 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
   // Initial user start interaction
   const handleStartGateExperience = () => {
     setIsVideoStarted(true);
+
+    if (reelMode) {
+      setIsContentRevealed(true);
+      if (heroVideoRef.current) {
+        heroVideoRef.current.currentTime = 0;
+        heroVideoRef.current.muted = true;
+        heroVideoRef.current.play().catch(() => {});
+      }
+      return;
+    }
+
     setIsContentRevealed(false);
 
     if (heroVideoRef.current) {
@@ -312,8 +348,17 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
 
   const invocation = getInvocation();
 
+  const motionInView = reelMode ? { once: false, amount: 0.4 as const } : { once: true as const };
+  const beatFrame = reelMode ? "reel-beat-frame w-full" : "";
+
   return (
-    <div className={`min-h-screen bg-[#102A43] text-[#F5EFE3] font-lora relative selection:bg-[#C5A46A]/30 selection:text-[#F5EFE3] ${!isContentRevealed ? "h-[100dvh] max-h-screen overflow-hidden touch-none" : "overflow-x-hidden"}`}>
+    <div
+      className={`bg-[#102A43] text-[#F5EFE3] font-lora relative selection:bg-[#C5A46A]/30 selection:text-[#F5EFE3] ${
+        reelMode
+          ? "flex flex-col overflow-x-hidden"
+          : `min-h-screen ${!isContentRevealed ? "h-[100dvh] max-h-screen overflow-hidden touch-none" : "overflow-x-hidden"}`
+      }`}
+    >
       {/* Ambient Starlight Gold Petals */}
       <FloatingPetals density={16} theme="gold-dust" />
 
@@ -333,6 +378,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
       </audio>
 
       {/* Floating Audio Toggle */}
+      {!reelMode ? (
       <motion.button
         type="button"
         id="rgb-music-toggle-btn"
@@ -355,11 +401,24 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
           <SpeakerSlash size={19} weight="fill" />
         )}
       </motion.button>
+      ) : null}
 
       {/* ----------------------------------------------------
           1. CINEMATIC HERO SECTION (SYNCHRONIZED GATE REVEAL)
           ---------------------------------------------------- */}
-      <section className="relative w-full h-screen min-h-[100dvh] overflow-hidden flex flex-col justify-between items-center text-center select-none bg-black">
+      <section
+        data-reel-beat="hero_gate"
+        className={`relative w-full overflow-hidden flex flex-col justify-between items-center text-center select-none bg-black ${beatFrame} ${
+          reelMode ? "" : "h-screen min-h-[100dvh]"
+        }`}
+      >
+        <ReelBeatEntrance
+          beatId="hero_gate"
+          activeBeatId={reelActiveBeatId}
+          enterEpoch={reelEnterEpoch}
+          reelMode={reelMode}
+          className="relative flex h-full min-h-0 w-full flex-1 flex-col justify-between"
+        >
         {/* Full-Screen Hero Background Video */}
         <video
           ref={heroVideoRef}
@@ -535,7 +594,7 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
 
         {/* Bottom SCROLL Indicator */}
         <AnimatePresence>
-          {isContentRevealed && (
+          {isContentRevealed && !reelMode && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -555,21 +614,35 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
             </motion.div>
           )}
         </AnimatePresence>
+        </ReelBeatEntrance>
       </section>
 
       {/* ----------------------------------------------------
           2. CONTINUOUS STORYTELLING CHAPTERS (ONE COHESIVE LUXURY JOURNEY)
           ---------------------------------------------------- */}
-      <main ref={contentSectionRef} className="relative z-10 overflow-hidden">
+      <main
+        ref={contentSectionRef}
+        className={reelMode ? "relative z-10 flex w-full flex-col" : "relative z-10 overflow-hidden"}
+      >
         {/* CHAPTER 1: SACRED BLESSINGS & INVOCATIONS (🤍 WARM IVORY SECTION) */}
-        <section className="py-14 sm:py-20 md:py-28 px-4 bg-rgb-ivory relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="rgb-card-ivory p-6 sm:p-8 md:p-14 rounded-[2rem] sm:rounded-[2.5rem] space-y-5 sm:space-y-6 shadow-2xl relative overflow-hidden max-w-3xl mx-auto"
+        <section
+          data-reel-beat="sacred_blessings"
+          className={`py-14 sm:py-20 md:py-28 px-4 bg-rgb-ivory relative z-10 text-center flex items-center justify-center ${beatFrame}`}
+        >
+          <ReelBeatEntrance
+            beatId="sacred_blessings"
+            activeBeatId={reelActiveBeatId}
+            enterEpoch={reelEnterEpoch}
+            reelMode={reelMode}
           >
+            <motion.div
+              initial={reelMode ? { opacity: 0, y: 24 } : { opacity: 0, y: 30 }}
+              whileInView={reelMode ? undefined : { opacity: 1, y: 0 }}
+              animate={reelMode ? { opacity: 1, y: 0 } : undefined}
+              viewport={motionInView}
+              transition={{ duration: 0.8 }}
+              className="rgb-card-ivory p-6 sm:p-8 md:p-14 rounded-[2rem] sm:rounded-[2.5rem] space-y-5 sm:space-y-6 shadow-2xl relative overflow-hidden max-w-3xl mx-auto w-full"
+            >
             <div className="inline-flex items-center gap-2 px-5 py-1.5 rounded-full bg-white/80 border border-[#B78C4E]/40 shadow-sm">
               <Sparkle size={14} weight="fill" className="text-[#B78C4E]" />
               <span className="font-jakarta text-xs md:text-sm font-bold tracking-[0.2em] text-[#B78C4E]">
@@ -606,18 +679,29 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
                 &ldquo;Aapki pur-khuloos upasthiti aur aashirwad hamare is utsav ko mangalmay banayenge.&rdquo;
               </p>
             </div>
-          </motion.div>
+            </motion.div>
+          </ReelBeatEntrance>
         </section>
 
         {/* CHAPTER 2: AUSPICIOUS DATE SCRATCH REVEAL (🕯️ ROMANTIC WARM IVORY AMBIENCE) */}
-        <section className="py-14 sm:py-20 md:py-24 px-4 bg-rgb-scratch text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="space-y-4 max-w-2xl mx-auto"
+        <section
+          data-reel-beat="muhurat"
+          className={`py-14 sm:py-20 md:py-24 px-4 bg-rgb-scratch text-center relative z-10 flex items-center justify-center ${beatFrame}`}
+        >
+          <ReelBeatEntrance
+            beatId="muhurat"
+            activeBeatId={reelActiveBeatId}
+            enterEpoch={reelEnterEpoch}
+            reelMode={reelMode}
           >
+            <motion.div
+              initial={reelMode ? { opacity: 0, y: 24 } : { opacity: 0, y: 30 }}
+              whileInView={reelMode ? undefined : { opacity: 1, y: 0 }}
+              animate={reelMode ? { opacity: 1, y: 0 } : undefined}
+              viewport={motionInView}
+              transition={{ duration: 0.8 }}
+              className="space-y-4 max-w-2xl mx-auto w-full"
+            >
             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#B78C4E] font-bold font-jakarta">
               Auspicious Wedding Muhurat
             </span>
@@ -637,9 +721,11 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
                 badgeText="✦ Sacred Vivah Muhurat ✦"
                 theme="champagne"
                 shape="heart"
+                autoReveal={reelMode && reelScratchReveal}
               />
             </div>
-          </motion.div>
+            </motion.div>
+          </ReelBeatEntrance>
         </section>
 
         {/* CHAPTER 3: CELESTIAL COUNTDOWN (🌌 MOONLIT ROYAL NAVY PARALLAX SHOWCASE) */}
@@ -648,34 +734,43 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
           dayStr={dayStr}
           dateStr={dateStr}
           yearStr={yearStr}
+          reelMode={reelMode}
+          beatFrameClass={beatFrame}
+          motionInView={motionInView}
         />
 
         {/* CHAPTER 4: ORDER OF CEREMONIES (🤍 WARM IVORY SECTION) */}
-        <section className="relative z-10 bg-rgb-ivory">
+        <section className={reelMode ? "relative z-10 flex w-full flex-col bg-rgb-ivory" : "relative z-10 bg-rgb-ivory"}>
           <CeremonyJourney
             events={events}
             venueName={venueName}
             venueMapUrl={venueMapUrl}
             dateStr={dateStr}
+            reelMode={reelMode}
+            beatFrameClass={beatFrame}
+            motionInView={motionInView}
           />
         </section>
 
         {/* CHAPTER 5: MEMORY GALLERY (🌌 MOONLIT ROYAL NAVY SECTION) */}
-        <section className="bg-rgb-midnight">
+        <section data-reel-beat="gallery" className={`bg-rgb-midnight ${beatFrame}`}>
           <ScatteredMemoriesGallery
             images={galleryImages}
             groomName={groomName}
             brideName={brideName}
-            onOpenPhoto={(idx) => setActivePhotoIdx(idx)}
+            onOpenPhoto={reelMode ? () => {} : (idx) => setActivePhotoIdx(idx)}
           />
         </section>
 
         {/* CHAPTER 6: DESTINATION & VENUE DIRECTIONS (🤍 WARM IVORY SECTION) */}
-        <section className="py-14 sm:py-20 md:py-28 px-4 bg-rgb-ivory relative z-10">
+        <section
+          data-reel-beat="venue"
+          className={`py-14 sm:py-20 md:py-28 px-4 bg-rgb-ivory relative z-10 ${beatFrame}`}
+        >
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={motionInView}
             transition={{ duration: 0.8 }}
             className="rgb-card-ivory p-6 sm:p-8 md:p-14 rounded-[2rem] sm:rounded-[2.5rem] text-center space-y-5 sm:space-y-6 shadow-2xl max-w-4xl mx-auto"
           >
@@ -727,14 +822,17 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
         </section>
 
         {/* CHAPTER 7: RSVP (🌙 CINEMATIC MIDNIGHT BLUE ENVIRONMENT) */}
-        <section className="rsvp-section py-20 sm:py-28 md:py-32 px-4 relative z-10 text-center overflow-hidden">
+        <section
+          data-reel-beat="rsvp"
+          className={`rsvp-section py-20 sm:py-28 md:py-32 px-4 relative z-10 text-center overflow-hidden ${beatFrame}`}
+        >
           {/* Subtle warm golden glow aura behind center card */}
           <div className="rsvp-glow-aura" />
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={motionInView}
             transition={{ duration: 0.8 }}
             className="rsvp-card p-7 sm:p-10 md:p-14 rounded-[2rem] sm:rounded-[2.5rem] relative z-10 max-w-2xl mx-auto text-center"
           >
@@ -760,9 +858,11 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
 
             <motion.button
               type="button"
-              onClick={() => setIsRsvpOpen(true)}
-              whileHover={{ scale: 1.04, y: -2 }}
-              whileTap={{ scale: 0.96 }}
+              onClick={() => {
+                if (!reelMode) setIsRsvpOpen(true);
+              }}
+              whileHover={reelMode ? undefined : { scale: 1.04, y: -2 }}
+              whileTap={reelMode ? undefined : { scale: 0.96 }}
               className="rsvp-button w-full sm:w-auto sm:min-w-[260px] mx-auto px-8 py-4 rounded-2xl text-xs sm:text-sm font-bold uppercase tracking-[0.2em] shadow-xl flex items-center justify-center gap-2 cursor-pointer font-montserrat"
             >
               <Sparkle size={18} weight="fill" className="text-[#102A43]" />
@@ -772,7 +872,10 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
         </section>
 
         {/* CHAPTER 8: FOOTER (🏛️ SEAMLESS DEEP NAVY #102A43 WITH ANTIQUE GOLD DETAIL) */}
-        <footer className="pt-14 pb-0 bg-rgb-footer border-t border-[#B78C4E]/25 text-center space-y-4 text-xs text-stone-300">
+        <footer
+          data-reel-beat="footer"
+          className={`pt-14 pb-0 bg-rgb-footer border-t border-[#B78C4E]/25 text-center space-y-4 text-xs text-stone-300 ${beatFrame}`}
+        >
           <p className="font-lora italic text-base text-[#F5EFE3]">
             With boundless love and gratitude, <br />
             {groomName} &amp; {brideName} and Families
@@ -799,14 +902,16 @@ export default function RoseGoldBlush({ data }: RoseGoldBlushProps) {
           </div>
 
           {/* ── Marketing Content At End of Template Footer ── */}
-          <div className="text-left">
-            <TemplateMarketingFooter
-              templateId="rose-gold-blush"
-              templateName="Rose Gold Blush"
-              brideName={brideName}
-              groomName={groomName}
-            />
-          </div>
+          {!reelMode ? (
+            <div className="text-left">
+              <TemplateMarketingFooter
+                templateId="rose-gold-blush"
+                templateName="Rose Gold Blush"
+                brideName={brideName}
+                groomName={groomName}
+              />
+            </div>
+          ) : null}
         </footer>
       </main>
 
@@ -1019,11 +1124,17 @@ function PalaceParallaxCountdownSection({
   dayStr,
   dateStr,
   yearStr,
+  reelMode = false,
+  beatFrameClass = "",
+  motionInView = { once: true as const },
 }: {
   targetDate: string;
   dayStr: string;
   dateStr: string;
   yearStr: string;
+  reelMode?: boolean;
+  beatFrameClass?: string;
+  motionInView?: { once: boolean; amount?: number };
 }) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const { scrollYProgress } = useScroll({
@@ -1065,7 +1176,10 @@ function PalaceParallaxCountdownSection({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[100vh] sm:min-h-[110vh] overflow-hidden flex items-center justify-center py-20 sm:py-28 px-4 select-none my-0"
+      data-reel-beat="countdown"
+      className={`relative w-full overflow-hidden flex items-center justify-center py-20 sm:py-28 px-4 select-none my-0 ${beatFrameClass} ${
+        reelMode ? "" : "min-h-[100vh] sm:min-h-[110vh]"
+      }`}
     >
       {/* FULL WIDTH & FULL HEIGHT CRAZY PARALLAX PALACE BACKGROUND IMAGE */}
       <motion.div
@@ -1101,7 +1215,7 @@ function PalaceParallaxCountdownSection({
         style={{ y: contentY }}
         initial={{ opacity: 0, scale: 0.92 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={motionInView}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-2xl mx-auto p-6 sm:p-10 md:p-14 rounded-[2.2rem] sm:rounded-[2.8rem] rgb-card-midnight text-center space-y-6 sm:space-y-8"
       >
@@ -1209,11 +1323,17 @@ function CeremonyJourney({
   venueName,
   venueMapUrl,
   dateStr,
+  reelMode = false,
+  beatFrameClass = "",
+  motionInView = { once: true as const },
 }: {
   events: any[];
   venueName: string;
   venueMapUrl?: string;
   dateStr: string;
+  reelMode?: boolean;
+  beatFrameClass?: string;
+  motionInView?: { once: boolean; amount?: number };
 }) {
   const [activeTab, setActiveTab] = useState(0);
 
@@ -1226,9 +1346,18 @@ function CeremonyJourney({
   };
 
   return (
-    <div className="py-16 sm:py-24 md:py-32 px-4 max-w-6xl mx-auto relative z-10">
+    <div
+      className={
+        reelMode
+          ? "relative z-10 flex w-full flex-col"
+          : "py-16 sm:py-24 md:py-32 px-4 max-w-6xl mx-auto relative z-10"
+      }
+    >
       {/* Section Header */}
-      <div className="text-center space-y-3 mb-12 md:mb-16">
+      <div
+        data-reel-beat="ceremony_intro"
+        className={`text-center space-y-3 px-4 flex flex-col items-center justify-center ${reelMode ? beatFrameClass : "mb-12 md:mb-16 max-w-6xl mx-auto"}`}
+      >
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/80 border border-[#B78C4E]/40 text-[#B78C4E] text-[10px] font-bold font-jakarta tracking-[0.25em] uppercase shadow-sm">
           <Sparkle size={12} weight="fill" className="text-[#B78C4E]" />
           <span>The Sacred Celebration Journey</span>
@@ -1259,14 +1388,14 @@ function CeremonyJourney({
       </div>
 
       {/* CONTINUOUS ROYAL GOLDEN SPINE JOURNEY */}
-      <div className="relative">
+      <div className={reelMode ? "relative flex w-full flex-col" : "relative"}>
         {/* Center Golden Spine Line on Desktop */}
         <div className="hidden md:block absolute left-1/2 top-10 bottom-10 -translate-x-1/2 w-[2px] bg-gradient-to-b from-[#B78C4E]/20 via-[#C5A46A] to-[#B78C4E]/20 shadow-[0_0_12px_rgba(197,164,106,0.3)]" />
 
         {/* Mobile Left Golden Spine Line */}
         <div className="block md:hidden ceremony-spine-line" />
 
-        <div className="space-y-12 md:space-y-24">
+        <div className={reelMode ? "flex w-full flex-col" : "space-y-12 md:space-y-24"}>
           {events.map((evt: any, idx: number) => {
             const theme = getEventTheme(evt.name, idx);
             const isEven = idx % 2 === 0;
@@ -1277,13 +1406,14 @@ function CeremonyJourney({
                 id={`ceremony-chapter-${idx}`}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.55 }}
+                viewport={motionInView}
                 transition={{ duration: 1.25, ease: [0.16, 1, 0.3, 1] }}
                 onViewportEnter={() => setActiveTab(idx)}
-                className="relative scroll-mt-28"
+                data-reel-beat={`ceremony_event_${idx}`}
+                className={`relative scroll-mt-28 flex items-center justify-center px-4 ${reelMode ? beatFrameClass : ""}`}
               >
                 {/* ── DESKTOP ALTERNATING ROYAL PEDESTAL LAYOUT ── */}
-                <div className="hidden md:grid grid-cols-12 gap-8 items-center">
+                <div className={reelMode ? "hidden" : "hidden md:grid grid-cols-12 gap-8 items-center"}>
                   {/* Left Column */}
                   <motion.div
                     initial={{ opacity: 0, x: -85 }}
@@ -1476,11 +1606,15 @@ function CeremonyJourney({
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.5 }}
                   transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
-                  className="block md:hidden pl-10 sm:pl-14"
+                  className={
+                    reelMode
+                      ? "block w-full max-w-md mx-auto px-2"
+                      : "block md:hidden pl-10 sm:pl-14"
+                  }
                 >
                   {/* Milestone Node Badge */}
                   <div
-                    className="ceremony-spine-node absolute -left-[40px] sm:-left-[46px] top-4"
+                    className={`ceremony-spine-node absolute top-4 ${reelMode ? "left-0" : "-left-[40px] sm:-left-[46px]"}`}
                     style={{ borderColor: "#C5A46A" }}
                   >
                     0{idx + 1}

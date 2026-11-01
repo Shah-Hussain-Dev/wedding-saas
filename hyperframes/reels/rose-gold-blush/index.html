@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #1a1210;
+        --ink: #ffffff;
+        --gold: #c8a45e;
+        --blush: #dda7a5;
+        --font-display: "Cormorant Garamond", Georgia, serif;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ground);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        font-family: var(--font-display);
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+      .slide-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center 28%;
+        transform: scale(1.05);
+      }
+      .slide-scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.35) 0%,
+          transparent 40%,
+          rgba(0, 0, 0, 0.78) 100%
+        );
+      }
+      .slide-card {
+        position: absolute;
+        left: 48px;
+        right: 48px;
+        bottom: 120px;
+        padding: 32px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(12px);
+      }
+      .slide-accent {
+        display: block;
+        width: 48px;
+        height: 3px;
+        border-radius: 999px;
+        margin-bottom: 16px;
+      }
+      .slide-title {
+        color: var(--ink);
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+      }
+      .slide-sub {
+        margin-top: 16px;
+        color: rgba(255, 255, 255, 0.88);
+        font-family: system-ui, sans-serif;
+        font-size: 28px;
+        line-height: 1.45;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="rose-gold-blush-reel"
+      data-start="0"
+      data-duration="29.5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Slide timings mirror config/template-reels.ts (seconds) -->
+      <section
+        class="slide clip"
+        id="s1"
+        data-start="0"
+        data-duration="4.5"
+        data-track-index="1"
+      >
+        <div
+          class="slide-bg"
+          style="background-image: url('../../../public/templates/rose-gold-blush/palace-arch.jpg')"
+        ></div>
+        <div class="slide-scrim"></div>
+        <div class="slide-card">
+          <span class="slide-accent" style="background: var(--blush)"></span>
+          <h1 class="slide-title">Ishaan &amp; Anaya</h1>
+          <p class="slide-sub">Rose Gold Blush Royal — your story begins at the palace arch</p>
+        </div>
+      </section>
+
+      <section
+        class="slide clip"
+        id="s2"
+        data-start="4.5"
+        data-duration="5.5"
+        data-track-index="1"
+      >
+        <div
+          class="slide-bg"
+          style="background-image: url('../../../public/templates/rose-gold-blush/palace-arch.jpg')"
+        ></div>
+        <div class="slide-scrim"></div>
+        <div class="slide-card">
+          <span class="slide-accent" style="background: var(--gold)"></span>
+          <h2 class="slide-title">Cinematic opening</h2>
+          <p class="slide-sub">Champagne silk &amp; gold inlay — ultra-smooth reveal</p>
+        </div>
+      </section>
+
+      <section
+        class="slide clip"
+        id="s3"
+        data-start="10"
+        data-duration="4.5"
+        data-track-index="1"
+      >
+        <div
+          class="slide-bg"
+          style="background-image: url('../../../public/templates/rose-gold-blush/palace-lanterns.jpg')"
+        ></div>
+        <div class="slide-scrim"></div>
+        <div class="slide-card">
+          <span class="slide-accent" style="background: #e8b8b8"></span>
+          <h2 class="slide-title">Falling petal shower</h2>
+          <p class="slide-sub">Romantic motion &amp; rose-gold foil typography</p>
+        </div>
+      </section>
+
+      <section
+        class="slide clip"
+        id="s4"
+        data-start="14.5"
+        data-duration="5"
+        data-track-index="1"
+      >
+        <div
+          class="slide-bg"
+          style="background-image: url('../../../public/templates/rose-gold-blush/gold-mandala.jpg')"
+        ></div>
+        <div class="slide-scrim"></div>
+        <div class="slide-card">
+          <span class="slide-accent" style="background: var(--gold)"></span>
+          <h2 class="slide-title">Soundtrack &amp; scratch reveal</h2>
+          <p class="slide-sub">Synchronized harp with a shaped scratch-card moment</p>
+        </div>
+      </section>
+
+      <section
+        class="slide clip"
+        id="s5"
+        data-start="19.5"
+        data-duration="4.5"
+        data-track-index="1"
+      >
+        <div
+          class="slide-bg"
+          style="background-image: url('../../../public/templates/rose-gold-blush/palace-arch.jpg')"
+        ></div>
+        <div class="slide-scrim"></div>
+        <div class="slide-card">
+          <span class="slide-accent" style="background: #073d31"></span>
+          <h2 class="slide-title">RSVP in one tap</h2>
+          <p class="slide-sub">Guests reply inside the invite — synced to your dashboard</p>
+        </div>
+      </section>
+
+      <section
+        class="slide clip"
+        id="s6"
+        data-start="24"
+        data-duration="5.5"
+        data-track-index="1"
+      >
+        <div
+          class="slide-bg"
+          style="background-image: url('../../../public/templates/rose-gold-blush/palace-arch.jpg')"
+        ></div>
+        <div class="slide-scrim"></div>
+        <div class="slide-card">
+          <span class="slide-accent" style="background: var(--gold)"></span>
+          <h2 class="slide-title">Make it yours</h2>
+          <p class="slide-sub">Edit names, music &amp; venues — share on WhatsApp in minutes</p>
+        </div>
+      </section>
+    </div>
+    <script>
+      const slideIds = ["s1", "s2", "s3", "s4", "s5", "s6"];
+      const tl = gsap.timeline({ paused: true });
+
+      slideIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        const start = Number(el.dataset.start);
+        const dur = Number(el.dataset.duration);
+        tl.set(el, { opacity: 0 }, start);
+        tl.fromTo(
+          el,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.35, ease: "power2.out" },
+          start
+        );
+        tl.fromTo(
+          el.querySelector(".slide-card"),
+          { y: 24, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" },
+          start + 0.12
+        );
+        if (i < slideIds.length - 1) {
+          tl.to(el, { opacity: 0, duration: 0.28, ease: "power2.in" }, start + dur - 0.28);
+        }
+      });
+
+      window.__timelines["rose-gold-blush-reel"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
