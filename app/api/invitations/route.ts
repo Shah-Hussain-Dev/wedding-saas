@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
 import { generateUniqueSlug } from "@/lib/slug";
 import { siteConfig } from "@/config/site";
 import { getTemplateDefaultData } from "@/templates";
@@ -154,6 +156,12 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const session = await getServerSession(authOptions);
+    const sessionEmail = session?.user?.email?.toLowerCase()?.trim();
+    if (!sessionEmail) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await req.json();
 
     const {
@@ -175,15 +183,13 @@ export async function POST(req: NextRequest) {
       transportText,
       eventsJson,
       templateId,
-      email,
-      userEmail,
       religion,
       sacredInvocation,
       sacredVerse,
       sacredTranslation,
     } = body;
 
-    const targetEmail = (userEmail || email || siteConfig.email.support).toLowerCase().trim();
+    const targetEmail = sessionEmail;
 
     // Generate collision-free unique slug
     const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`);

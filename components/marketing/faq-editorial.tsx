@@ -32,7 +32,10 @@ export function FaqEditorial() {
   const [expandedIdx, setExpandedIdx] = useState<number | null>(0);
 
   return (
-    <section className="py-24 md:py-32 bg-[#F7F4ED] text-[#18211E] relative overflow-hidden">
+    <section
+      id="faq"
+      className="scroll-mt-24 py-24 sm:scroll-mt-28 md:py-32 bg-[#F7F4ED] text-[#18211E] relative overflow-hidden"
+    >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 space-y-12">
         <div className="text-center space-y-3 max-w-xl mx-auto">
           <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#073D31] font-bold font-sans flex items-center justify-center gap-1.5">

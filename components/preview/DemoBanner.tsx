@@ -204,10 +204,11 @@ export function DemoBanner({
           </span>
           <div className="flex items-center gap-1.5 whitespace-nowrap">
             <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-wider text-amber-300">
-              <span className="hidden sm:inline">Live Demo · </span>{dynamicPriceFormatted}
+              <span className="hidden sm:inline">Live Demo · </span>
+              <span className="price-font normal-case tracking-normal">{dynamicPriceFormatted}</span>
             </span>
             {pricing.isOnSale && (
-              <span className="text-[9px] text-stone-400 line-through font-mono hidden sm:inline">
+              <span className="price-font text-[9px] font-normal text-stone-400 line-through hidden sm:inline">
                 {pricing.originalPriceFormatted}
               </span>
             )}
@@ -268,7 +269,7 @@ export function DemoBanner({
         {pricing.isOnSale && (
           <div className="pointer-events-auto flex items-center gap-1.5 mb-1.5">
             <span className="px-2.5 py-0.5 rounded-full bg-emerald-600/95 text-white text-[10px] font-bold tracking-wide shadow-lg border border-emerald-400/30 backdrop-blur-md">
-              {pricing.discountPercent}% OFF · Save {pricing.savingsFormatted}
+              {pricing.discountPercent}% OFF · Save <span className="price-font">{pricing.savingsFormatted}</span>
             </span>
             {pricing.discountName && (
               <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full bg-stone-950/85 text-[#E1C98E] text-[10px] font-medium border border-[#C8A45E]/40 backdrop-blur-md">

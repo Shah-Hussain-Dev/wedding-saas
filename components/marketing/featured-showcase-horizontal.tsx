@@ -139,7 +139,7 @@ export function FeaturedShowcaseHorizontal() {
         {/* Showcase Cinematic Display */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-4">
           {/* Visual Preview Window (Left 7 Cols) */}
-          <div className="lg:col-span-7 relative group" data-cursor="view">
+          <div className="lg:col-span-7 relative group">
             <Link href={`/preview/${activeTemplate.id}`} className="block">
               <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-3xl overflow-hidden bg-stone-900 border-2 border-white shadow-[0_25px_60px_rgba(7,61,49,0.18)]">
                 {activeTemplate.video ? (

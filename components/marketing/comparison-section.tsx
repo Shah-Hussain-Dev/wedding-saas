@@ -189,7 +189,7 @@ export function ComparisonSection() {
   return (
     <section
       id="comparison"
-      className="relative w-full py-20 sm:py-28 md:py-32 bg-[#FCFAF6] text-[#18211E] overflow-hidden border-y border-[#073D31]/10 selection:bg-[#C8A45E]/30 selection:text-[#073D31]"
+      className="scroll-mt-24 sm:scroll-mt-28 relative w-full py-20 sm:py-28 md:py-32 bg-[#FCFAF6] text-[#18211E] overflow-hidden border-y border-[#073D31]/10 selection:bg-[#C8A45E]/30 selection:text-[#073D31]"
     >
       {/* Ambient Lighting & Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[350px] bg-[radial-gradient(ellipse_at_top,rgba(200,164,94,0.12)_0%,transparent_70%)] pointer-events-none" />
@@ -221,7 +221,7 @@ export function ComparisonSection() {
               <CurrencyInr size={20} weight="bold" />
             </div>
             <div>
-              <div className="text-sm sm:text-base font-serif font-bold text-[#073D31]">₹35,000+ Average Saved</div>
+              <div className="text-sm sm:text-base price-font text-[#073D31]">₹35,000+ Average Saved</div>
               <div className="text-[11px] text-[#76766F] font-sans">Zero minimums & courier bills</div>
             </div>
           </div>
@@ -320,7 +320,9 @@ export function ComparisonSection() {
                   <div className="col-span-4 p-5 sm:p-6 bg-stone-100/40 border-x border-stone-200/80 flex flex-col justify-center space-y-1">
                     <div className="flex items-center gap-2">
                       <XCircle size={16} weight="fill" className="text-rose-500/80 shrink-0" />
-                      <span className="text-sm font-semibold text-stone-700 font-sans">
+                      <span
+                        className={`text-sm text-stone-700 font-sans ${item.id === "cost" ? "price-font" : "font-semibold"}`}
+                      >
                         {item.paper.title}
                       </span>
                     </div>
@@ -338,7 +340,9 @@ export function ComparisonSection() {
                   <div className="col-span-4 p-5 sm:p-6 bg-[#073D31]/[0.03] flex flex-col justify-center space-y-1 relative">
                     <div className="flex items-center gap-2">
                       <CheckCircle size={17} weight="fill" className="text-[#073D31] shrink-0" />
-                      <span className="text-sm font-bold text-[#073D31] font-sans">
+                      <span
+                        className={`text-sm text-[#073D31] font-sans ${item.id === "cost" ? "price-font" : "font-bold"}`}
+                      >
                         {item.digital.title}
                       </span>
                     </div>
@@ -389,7 +393,9 @@ export function ComparisonSection() {
                   </div>
                   <div className="flex items-center gap-1.5 pt-1">
                     <CheckCircle size={16} weight="fill" className="text-[#073D31] shrink-0" />
-                    <span className="text-xs font-bold text-[#073D31] font-sans">
+                    <span
+                      className={`text-xs text-[#073D31] font-sans ${item.id === "cost" ? "price-font" : "font-bold"}`}
+                    >
                       {item.digital.title}
                     </span>
                   </div>
@@ -410,7 +416,9 @@ export function ComparisonSection() {
                   </span>
                   <div className="flex items-center gap-1.5">
                     <XCircle size={15} weight="fill" className="text-rose-500/80 shrink-0" />
-                    <span className="text-xs font-medium text-stone-600 font-sans">
+                    <span
+                      className={`text-xs text-stone-600 font-sans ${item.id === "cost" ? "price-font font-semibold" : "font-medium"}`}
+                    >
                       {item.paper.title}
                     </span>
                   </div>
@@ -448,11 +456,12 @@ export function ComparisonSection() {
             </span>
 
             <h3 className="font-serif text-2xl sm:text-3.5xl md:text-4xl font-normal leading-snug text-[#F7F4ED]">
-              Why spend ₹40,000 on cards that get thrown away?
+              Why spend <span className="price-font">₹40,000</span> on cards that get thrown away?
             </h3>
 
             <p className="text-xs sm:text-sm text-stone-300 font-sans max-w-lg mx-auto">
-              Give your wedding guests an unforgettable 3D interactive entrance they’ll talk about forever — for just ₹1,199 one-time.
+              Give your wedding guests an unforgettable 3D interactive entrance they’ll talk about forever — for just{" "}
+              <span className="price-font text-stone-100">₹1,199</span> one-time.
             </p>
           </div>
 

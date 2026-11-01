@@ -233,6 +233,65 @@ export function getTemplateMeta(templateId: string): TemplateMeta {
   return TEMPLATE_META[templateId as TemplateId] ?? TEMPLATE_META["noor-e-nikah"];
 }
 
+export const RELIGION_FILTER_TABS: { id: ReligionKey; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "muslim", label: "Muslim Nikah" },
+  { id: "hindu", label: "Hindu Heritage" },
+];
+
+/** Multi-faith designs (Hindu + Muslim); not shown under Hindu-only or Muslim-only tabs. */
+export function isMultiFaithUniversalTemplate(
+  religion: TemplateMeta["religion"]
+): boolean {
+  return religion.includes("hindu") && religion.includes("muslim");
+}
+
+/** Locked tradition for customize / preview — derived from template catalog tags. */
+export function defaultCulturalTraditionForTemplate(
+  templateId: string
+): "muslim" | "hindu" | "universal" {
+  const meta = getTemplateMeta(templateId);
+  const { religion } = meta;
+  if (religion.includes("muslim") && !religion.includes("hindu")) return "muslim";
+  if (religion.includes("hindu") && !religion.includes("muslim")) return "hindu";
+  return "universal";
+}
+
+export function templateMatchesFaithCatalogFilter(
+  religion: TemplateMeta["religion"],
+  filter: "Universal" | "Hindu" | "Muslim"
+): boolean {
+  if (filter === "Universal") return isMultiFaithUniversalTemplate(religion);
+  if (filter === "Hindu")
+    return religion.includes("hindu") && !religion.includes("muslim");
+  return religion.includes("muslim") && !religion.includes("hindu");
+}
+
+export function filterTemplateIdsByReligion(
+  templateIds: TemplateId[],
+  tab: ReligionKey
+): TemplateMeta[] {
+  return templateIds
+    .map((id) => TEMPLATE_META[id])
+    .filter((meta): meta is TemplateMeta => Boolean(meta))
+    .filter((meta) => {
+      if (tab === "all") return true;
+      if (tab === "hindu")
+        return meta.religion.includes("hindu") && !meta.religion.includes("muslim");
+      if (tab === "muslim")
+        return meta.religion.includes("muslim") && !meta.religion.includes("hindu");
+      return false;
+    });
+}
+
+export function religionKeyFromFaith(
+  faith: "muslim" | "hindu" | "universal" | string | undefined
+): ReligionKey {
+  if (faith === "muslim") return "muslim";
+  if (faith === "hindu") return "hindu";
+  return "all";
+}
+
 export function getMockInvitationData(brideName = "Diya", groomName = "Shaan") {
   return {
     id: "preview-id",

@@ -5,6 +5,8 @@ import {
   updateTemplatePrice,
   bulkUpdateTemplatePricing,
 } from "@/lib/template-pricing";
+import { loadAllTemplateSettings, getTemplateCoverUrlSync } from "@/lib/template-settings";
+import { getTemplatePosterUrl } from "@/lib/template-trailer";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -16,9 +18,33 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 401 });
     }
 
-    const templates = await getAllTemplatesWithPricing();
+    const [templates, settingsMap] = await Promise.all([
+      getAllTemplatesWithPricing(),
+      loadAllTemplateSettings(),
+    ]);
+
+    const enriched = templates.map((t) => {
+      const settings = settingsMap[t.id];
+      const coverImageUrl =
+        settings?.coverImageUrl?.trim() || getTemplateCoverUrlSync(t.id) || getTemplatePosterUrl(t.id);
+      const defaultsJson = settings?.defaultsJson ?? {};
+      const hasCustomDefaults =
+        Boolean(settings?.coverImageUrl?.trim()) ||
+        Boolean(settings?.trailerVideoUrl?.trim()) ||
+        Boolean(settings?.defaultMusicTrack?.trim()) ||
+        (defaultsJson &&
+          typeof defaultsJson === "object" &&
+          Object.keys(defaultsJson as object).length > 0);
+
+      return {
+        ...t,
+        coverImageUrl,
+        hasCustomDefaults,
+      };
+    });
+
     return NextResponse.json(
-      { success: true, templates },
+      { success: true, templates: enriched },
       {
         headers: {
           "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0",

@@ -41,6 +41,11 @@
 - **`app/customize/[templateId]`**: Real-time interactive sandbox where couples customize text, dates, venues, and colors.
 - **`app/dashboard`**: Authenticated couple portal for real-time guestlist tracking, RSVP downloads, and ceremony edits.
 - **`app/admin`**: Restricted dashboard for super admins to view revenue metrics and invitation statuses.
+- **`app/admin/templates/[templateId]`**: Per-template admin settings (cover image, trailer, section-wise demo defaults) with live preview; persisted in `template_configs` and used for catalog cards, previews, and new customize sessions only.
+
+### Template catalog settings (`template_configs`)
+
+Admin-editable fields include `cover_image_url`, `trailer_video_url`, `default_music_track`, and `defaults_json` (couple, faith, venue, ceremonies, media). Public consumers read merged values via `GET /api/templates/catalog` and `GET /api/templates/[templateId]/defaults`. Live couple invitations are not retroactively overwritten.
 
 ---
 

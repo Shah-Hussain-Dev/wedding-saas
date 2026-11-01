@@ -152,14 +152,20 @@ model GuestMessage {
 
 // Dynamic Template Pricing & Configuration
 model TemplateConfig {
-  id               String   @id
-  priceInr         Int      @default(1199) @map("price_inr")
-  originalPriceInr Int?     @default(2999) @map("original_price_inr")
-  discountPercent  Int?     @default(60) @map("discount_percent")
-  discountName     String?  @default("Launch Offer") @map("discount_name")
-  isActive         Boolean  @default(true) @map("is_active")
-  isPopular        Boolean  @default(false) @map("is_popular")
-  updatedAt        DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  id                String   @id
+  priceInr          Int      @default(1199) @map("price_inr")
+  originalPriceInr  Int?     @default(2999) @map("original_price_inr")
+  discountPercent   Int?     @default(60) @map("discount_percent")
+  discountName      String?  @default("Launch Offer") @map("discount_name")
+  isActive          Boolean  @default(true) @map("is_active")
+  isPopular         Boolean  @default(false) @map("is_popular")
+  coverImageUrl     String?  @map("cover_image_url")
+  trailerVideoUrl   String?  @map("trailer_video_url")
+  defaultMusicTrack String?  @map("default_music_track")
+  defaultsJson      Json     @default("{}") @map("defaults_json")
+  marketingJson     Json     @default("{}") @map("marketing_json")
+  updatedBy         String?  @map("updated_by")
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   @@map("template_configs")
 }

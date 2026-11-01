@@ -482,7 +482,7 @@ export function RazorpayCheckoutButton({
               type="submit"
               className="w-full flex items-center justify-center gap-2 py-3.5 px-6 rounded-full bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#B89730] text-[#1B1202] font-serif font-bold text-xs transition-all shadow-lg hover:brightness-105 active:scale-95 mt-2"
             >
-              <span>Create Account &amp; Pay ₹{finalAmount}</span>
+              <span className="price-font">Create Account &amp; Pay ₹{finalAmount.toLocaleString("en-IN")}</span>
             </button>
 
             <div className="flex items-center justify-between text-[11px] text-stone-500 pt-1">
@@ -615,7 +615,7 @@ export function RazorpayCheckoutButton({
       <button
         onClick={handleInitialClick}
         disabled={loading || isSuccess}
-        className={`inline-flex items-center justify-center gap-2.5 px-6 py-3.5 min-h-[44px] rounded-full font-serif font-bold tracking-wide transition-all shadow-lg active:scale-95 disabled:opacity-75 disabled:pointer-events-none ${isSuccess
+        className={`inline-flex items-center justify-center gap-2.5 px-6 py-3.5 min-h-[44px] rounded-full font-sans font-bold tracking-wide transition-all shadow-lg active:scale-95 disabled:opacity-75 disabled:pointer-events-none ${isSuccess
           ? "bg-emerald-600 text-white shadow-emerald-500/25"
           : "bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#B89730] text-[#1B1202] hover:brightness-105 shadow-amber-500/30"
           } ${className}`}

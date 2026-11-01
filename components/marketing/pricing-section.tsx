@@ -98,16 +98,22 @@ function PricingCard({
         {/* Price block — fixed min height */}
         <div className="min-h-[84px] border-b border-black/[0.05] py-4">
           <div className="flex items-baseline gap-2.5">
-            <span className="font-serif text-4xl font-bold tracking-tight text-primary">{price}</span>
+            <span className="price-font text-4xl text-primary">{price}</span>
             {originalPrice && (
-              <span className="text-sm text-stone-400 line-through font-mono">{originalPrice}</span>
+              <span className="price-font text-sm font-normal text-stone-400 line-through">{originalPrice}</span>
             )}
             <span className="text-xs text-stone-400">one-time</span>
           </div>
           {discountPercent ? (
             <div className="flex items-center gap-2 mt-1.5 flex-wrap">
               <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full">
-                {discountPercent}% OFF{savingsFormatted ? ` · Save ${savingsFormatted}` : ""}
+                {discountPercent}% OFF
+                {savingsFormatted ? (
+                  <>
+                    {" · Save "}
+                    <span className="price-font">{savingsFormatted}</span>
+                  </>
+                ) : null}
               </span>
               {discountName && (
                 <span className="text-[10px] font-semibold text-[#C8A45E]">

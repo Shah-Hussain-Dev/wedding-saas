@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
+import { authOptions } from "@/lib/auth";
 import { generateUniqueSlug } from "@/lib/slug";
 
 export async function GET(
@@ -53,6 +55,12 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions);
+    const sessionEmail = session?.user?.email?.toLowerCase()?.trim();
+    if (!sessionEmail) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await params;
     const body = await req.json();
 
@@ -95,8 +103,16 @@ export async function PUT(
     try {
       const existing = await prisma.invitation.findUnique({
         where: { id },
-        include: { order: true },
+        include: { order: true, user: true },
       });
+
+      if (!existing) {
+        return NextResponse.json({ error: "Invitation not found." }, { status: 404 });
+      }
+
+      if (existing.user?.email?.toLowerCase() !== sessionEmail) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
 
       const isPaid = existing?.order?.status === "paid";
       const isPublished = isPaid ? Boolean(body.isPublished ?? existing?.isPublished ?? true) : false;

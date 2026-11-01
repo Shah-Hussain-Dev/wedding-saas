@@ -10,7 +10,9 @@ export default function PublicLayout({
   return (
     <div className="flex flex-col min-h-screen bg-[#FCFBF7] text-[#1A1A1A] font-sans">
       <GlassNav />
-      <main className="flex-grow">{children}</main>
+      <main id="main-content" tabIndex={-1} className="flex-grow scroll-mt-24">
+        {children}
+      </main>
       <PremiumFooter />
     </div>
   );

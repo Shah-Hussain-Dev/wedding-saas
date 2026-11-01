@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   Sparkle,
@@ -11,7 +12,13 @@ import {
   Printer,
   Gift,
 } from "@phosphor-icons/react";
-import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
+const PdfPreviewModal = dynamic(
+  () =>
+    import("@/components/pdf-invitation/PdfPreviewModal").then(
+      (m) => m.PdfPreviewModal
+    ),
+  { ssr: false }
+);
 
 const SAMPLE_PDF_DATA = {
   brideName: "Heena",
@@ -184,13 +191,15 @@ export function ComplimentaryPdfShowcase() {
       </div>
 
       {/* Fullscreen Sample Preview Modal (Read-Only) */}
-      <PdfPreviewModal
-        isOpen={isPreviewModalOpen}
-        onClose={() => setIsPreviewModalOpen(false)}
-        templateId="kitab-e-nikah"
-        initialData={SAMPLE_PDF_DATA}
-        isReadOnly={true}
-      />
+      {isPreviewModalOpen ? (
+        <PdfPreviewModal
+          isOpen={isPreviewModalOpen}
+          onClose={() => setIsPreviewModalOpen(false)}
+          templateId="kitab-e-nikah"
+          initialData={SAMPLE_PDF_DATA}
+          isReadOnly={true}
+        />
+      ) : null}
     </section>
   );
 }
