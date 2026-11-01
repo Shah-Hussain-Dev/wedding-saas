@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect, Suspense } from "react";
+import { use, useState, useEffect, Suspense, useLayoutEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
@@ -104,7 +104,7 @@ function CustomizeTemplateContent({ templateId }: { templateId: string }) {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-1 flex-col">
+    <div className="flex flex-1 flex-col lg:h-full lg:min-h-0">
       <InvitationCustomizerWizard
         templateId={initialData?.templateId || templateId}
         invitationId={editId || initialData?.id}
@@ -116,19 +116,44 @@ function CustomizeTemplateContent({ templateId }: { templateId: string }) {
   );
 }
 
+function useNativeMobileScroll() {
+  useLayoutEffect(() => {
+    const html = document.documentElement;
+    const { body } = document;
+    html.classList.remove("lenis", "lenis-smooth", "lenis-stopped", "lenis-scrolling");
+    html.classList.add("customize-native-scroll");
+    body.style.overflow = "";
+    body.style.touchAction = "";
+    html.style.overflow = "";
+    html.style.height = "";
+
+    return () => {
+      html.classList.remove("customize-native-scroll");
+      body.style.overflow = "";
+      body.style.touchAction = "";
+      html.style.overflow = "";
+      html.style.height = "";
+    };
+  }, []);
+}
+
 export default function CustomizeTemplatePage({ params }: CustomizePageProps) {
   const { templateId } = use(params);
+  useNativeMobileScroll();
 
   return (
     <div
       data-lenis-prevent
-      className="flex min-h-screen flex-col bg-[#FCFBF7] text-[#1A1A1A] lg:h-[100dvh] lg:max-h-[100dvh] lg:overflow-hidden lg:bg-[#E8E4DC]"
+      className="flex min-h-screen flex-col overflow-x-hidden bg-[#FCFBF7] text-[#1A1A1A] lg:h-[100dvh] lg:max-h-[100dvh] lg:overflow-hidden lg:bg-[#E8E4DC]"
     >
       <div className="lg:hidden">
         <GlassNav />
       </div>
-      <main className="flex min-h-0 flex-1 flex-col pt-28 pb-20 lg:h-full lg:overflow-hidden lg:pt-0 lg:pb-0">
-        <div className="flex min-h-0 flex-1 flex-col lg:h-full">
+      <main
+        id="main-content"
+        className="flex flex-1 flex-col pt-[4.25rem] pb-20 lg:min-h-0 lg:h-full lg:overflow-hidden lg:pt-0 lg:pb-0"
+      >
+        <div className="flex flex-1 flex-col lg:min-h-0 lg:h-full">
           <Suspense
             fallback={
               <div className="min-h-[60vh] flex flex-col items-center justify-center text-stone-900">

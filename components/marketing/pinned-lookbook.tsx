@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { motion, PanInfo, useReducedMotion } from "motion/react";
 import { ArrowRight, CaretLeft, CaretRight, Eye } from "@phosphor-icons/react";
 import { formatDemoCoupleLabel } from "@/lib/template-demo-couples";
@@ -180,7 +179,6 @@ function LookbookCard({
   onPanStart,
   onPanEnd,
 }: LookbookCardProps) {
-  const router = useRouter();
   const detailsHref = `/preview/${frame.templateId}`;
   const livePreviewHref = `/preview/${frame.templateId}/interactive`;
 
@@ -211,68 +209,54 @@ function LookbookCard({
         width: `${cardWidth}px`,
         pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
       }}
-      className={`h-[52dvh] min-h-[340px] max-h-[540px] sm:h-[56dvh] sm:min-h-[380px] sm:max-h-[580px] rounded-2xl sm:rounded-[1.75rem] p-2.5 sm:p-3 bg-gradient-to-b from-white/[0.08] to-black/40 border backdrop-blur-sm transition-colors duration-500 overflow-hidden touch-none ${
+      className={`h-[clamp(320px,49dvh,440px)] sm:h-[56dvh] sm:min-h-[380px] sm:max-h-[580px] rounded-[1.4rem] sm:rounded-[1.75rem] p-1.5 sm:p-3 bg-gradient-to-b from-white/[0.1] to-black/40 border backdrop-blur-sm transition-colors duration-500 overflow-hidden touch-none ${
         isFocused
           ? "border-[#C8A45E] shadow-[0_24px_60px_rgba(200,164,94,0.38)] ring-1 ring-[#C8A45E]/55 cursor-grab active:cursor-grabbing"
           : "border-white/15 shadow-lg cursor-grab active:cursor-grabbing hover:border-white/30"
       }`}
     >
-      <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-stone-900">
+      <div className="relative w-full h-full rounded-[1.15rem] sm:rounded-2xl overflow-hidden bg-stone-900">
         <CardMedia frame={frame} isActive={isFocused} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 via-35% to-transparent pointer-events-none" />
 
-        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[8.5px] sm:text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-[#C8A45E]/35 pointer-events-none">
+        <div className="absolute top-2.5 left-2.5 right-2.5 sm:top-3 sm:left-3 sm:right-auto px-2.5 py-1 sm:px-2.5 sm:py-1 rounded-full bg-black/70 backdrop-blur-md text-[8.5px] sm:text-[9px] font-bold tracking-[0.14em] text-[#E1C98E] uppercase border border-[#C8A45E]/35 pointer-events-none w-fit max-w-full truncate">
           {frame.tag}
         </div>
 
-        <div className="absolute bottom-3 left-3 right-3 z-20 space-y-2.5">
+        <div className="absolute bottom-2.5 left-2.5 right-2.5 sm:bottom-3 sm:left-3 sm:right-3 z-20 space-y-2 sm:space-y-2.5">
           <div className="pointer-events-none">
-            <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#C8A45E]">
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-[0.2em] text-[#C8A45E] line-clamp-1">
               {frame.chapter}
             </span>
-            <h3 className="font-serif text-lg sm:text-2xl font-bold text-white leading-snug line-clamp-2">
+            <h3 className="font-serif text-[clamp(1.05rem,4.6vw,1.35rem)] sm:text-2xl font-bold text-white leading-[1.15] line-clamp-2 mt-1 [text-shadow:0_2px_14px_rgba(0,0,0,0.55)]">
               {frame.title}
             </h3>
-            <p className="text-[11px] sm:text-xs text-stone-300 font-sans mt-1 line-clamp-1">
+            <p className="text-[11.5px] sm:text-xs text-stone-200/90 font-sans mt-1 line-clamp-1">
               {coupleLabel}
             </p>
           </div>
 
           {isFocused && (
-            <div className="flex flex-col sm:flex-row items-stretch gap-2 pt-1">
+            <div className="flex flex-row items-stretch gap-2 pt-0.5 sm:pt-1">
               <Link
                 href={livePreviewHref}
                 onPointerDown={stopNavBubble}
                 onClick={stopNavBubble}
-                className="flex-1 min-h-[44px] py-2.5 px-3 rounded-full bg-[#073D31]/95 hover:bg-[#032A23] text-[#F7F4ED] text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 border border-[#C8A45E]/40 transition-colors"
+                className="flex-1 min-h-[44px] min-w-0 px-3 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 text-white text-[10px] sm:text-[11px] font-bold tracking-wide sm:tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 border border-white/25 transition-colors"
               >
                 <Eye size={14} weight="bold" className="text-[#E1C98E] shrink-0" />
-                <span>Live Preview</span>
+                <span className="truncate">Preview</span>
               </Link>
               <Link
                 href={detailsHref}
                 onPointerDown={stopNavBubble}
                 onClick={stopNavBubble}
-                className="flex-1 min-h-[44px] py-2.5 px-3 rounded-full bg-[#C8A45E] hover:bg-[#E1C98E] text-[#032A23] text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-colors"
+                className="flex-1 min-h-[44px] min-w-0 px-3 rounded-full bg-[#C8A45E] hover:bg-[#E1C98E] text-[#032A23] text-[10px] sm:text-[11px] font-bold tracking-wide sm:tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-colors shadow-[0_6px_18px_rgba(200,164,94,0.28)]"
               >
-                <span>Explore</span>
-                <ArrowRight size={13} weight="bold" />
+                <span className="truncate">Explore</span>
+                <ArrowRight size={13} weight="bold" className="shrink-0" />
               </Link>
             </div>
-          )}
-
-          {!isFocused && (
-            <button
-              type="button"
-              onClick={(e) => {
-                stopNavBubble(e);
-                if (isDraggingRef.current) return;
-                router.push(detailsHref);
-              }}
-              className="w-full min-h-[44px] py-2 rounded-full bg-white/10 hover:bg-white/15 text-white text-[10px] font-bold tracking-wider uppercase border border-white/20 transition-colors"
-            >
-              View Template
-            </button>
           )}
         </div>
       </div>
@@ -327,8 +311,12 @@ export function PinnedLookbook() {
   const currentFrame = LOOKBOOK_FRAMES[activeIndex];
 
   const cardWidth =
-    viewportWidth < 640 ? Math.min(290, viewportWidth - 56) : viewportWidth < 1024 ? 340 : 400;
-  const cardGap = viewportWidth < 640 ? 18 : 28;
+    viewportWidth < 640
+      ? Math.min(Math.round(viewportWidth * 0.8), viewportWidth - 40)
+      : viewportWidth < 1024
+        ? 340
+        : 400;
+  const cardGap = viewportWidth < 640 ? 12 : 28;
   const cardStep = cardWidth + cardGap;
 
   const goToIndex = useCallback((index: number) => {
@@ -378,7 +366,7 @@ export function PinnedLookbook() {
   }, [activeIndex]);
 
   useEffect(() => {
-    if (isHovered) return;
+    if (isHovered || prefersReducedMotion) return;
 
     const tickMs = 40;
     const timer = window.setInterval(() => {
@@ -387,7 +375,7 @@ export function PinnedLookbook() {
     }, tickMs);
 
     return () => window.clearInterval(timer);
-  }, [isHovered, activeIndex]);
+  }, [isHovered, activeIndex, prefersReducedMotion]);
 
   const handlePanStart = () => {
     isDraggingRef.current = true;
@@ -411,7 +399,7 @@ export function PinnedLookbook() {
   return (
     <section
       id="lookbook"
-      className="scroll-mt-24 sm:scroll-mt-28 relative w-full overflow-x-hidden bg-[#032A23] text-[#F7F4ED] py-16 sm:py-20 px-4 sm:px-8 lg:px-12"
+      className="scroll-mt-24 sm:scroll-mt-28 relative w-full overflow-x-hidden bg-[#032A23] text-[#F7F4ED] py-12 sm:py-20 px-3 sm:px-8 lg:px-12"
     >
       <div className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-white/10 pb-4 mb-6 sm:mb-8">
         <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 sm:gap-3 min-w-0">
@@ -421,24 +409,32 @@ export function PinnedLookbook() {
           </h2>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 max-w-full">
-          {CHAPTERS.map((ch) => {
-            const isCurrentChapter = currentFrame.chapter === ch;
-            return (
-              <button
-                key={ch}
-                type="button"
-                onClick={() => goToChapter(ch)}
-                className={`relative py-1.5 px-2.5 sm:px-3 rounded-full text-[10.5px] sm:text-xs font-sans tracking-wide transition-all duration-300 whitespace-nowrap shrink-0 min-h-[44px] sm:min-h-0 flex items-center ${
-                  isCurrentChapter
-                    ? "bg-white/15 text-white font-bold border border-[#C8A45E]/50 shadow-[0_0_12px_rgba(200,164,94,0.25)]"
-                    : "text-white/45 border border-transparent hover:text-white/85 hover:border-white/15"
-                }`}
-              >
-                {ch}
-              </button>
-            );
-          })}
+        <div className="relative w-full min-w-0 sm:w-auto">
+          <div className="-mx-1 flex max-w-full items-center gap-1 overflow-x-auto no-scrollbar px-1 sm:gap-2">
+            {CHAPTERS.map((ch) => {
+              const isCurrentChapter = currentFrame.chapter === ch;
+              return (
+                <button
+                  key={ch}
+                  type="button"
+                  onClick={() => goToChapter(ch)}
+                  aria-pressed={isCurrentChapter}
+                  className="relative flex min-h-11 shrink-0 items-center justify-center sm:min-h-0"
+                >
+                  <span
+                    className={`whitespace-nowrap rounded-full text-[10px] sm:text-xs font-sans tracking-wide transition-all duration-300 px-3 py-1.5 sm:py-1 border ${
+                      isCurrentChapter
+                        ? "bg-white/15 text-white font-bold border-[#C8A45E]/50 shadow-[0_0_12px_rgba(200,164,94,0.25)]"
+                        : "text-white/50 border-transparent hover:text-white/85 hover:border-white/15"
+                    }`}
+                  >
+                    {ch}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-[#032A23] via-[#032A23]/85 to-transparent sm:hidden" />
         </div>
       </div>
 
@@ -451,7 +447,7 @@ export function PinnedLookbook() {
           type="button"
           onClick={goPrev}
           aria-label="Previous collection slide"
-          className="absolute -left-1 sm:-left-5 lg:-left-8 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#F7F4ED]/95 hover:bg-white text-[#032A23] border border-[#C8A45E]/60 shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+          className="absolute -left-1 sm:-left-5 lg:-left-8 top-1/2 -translate-y-1/2 z-40 hidden sm:flex w-12 h-12 rounded-full bg-[#F7F4ED]/95 hover:bg-white text-[#032A23] border border-[#C8A45E]/60 shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md items-center justify-center transition-all hover:scale-105 active:scale-95"
         >
           <CaretLeft size={20} weight="bold" className="text-[#8C6D23] -ml-0.5" />
         </button>
@@ -460,12 +456,12 @@ export function PinnedLookbook() {
           type="button"
           onClick={goNext}
           aria-label="Next collection slide"
-          className="absolute -right-1 sm:-right-5 lg:-right-8 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#F7F4ED]/95 hover:bg-white text-[#032A23] border border-[#C8A45E]/60 shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+          className="absolute -right-1 sm:-right-5 lg:-right-8 top-1/2 -translate-y-1/2 z-40 hidden sm:flex w-12 h-12 rounded-full bg-[#F7F4ED]/95 hover:bg-white text-[#032A23] border border-[#C8A45E]/60 shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md items-center justify-center transition-all hover:scale-105 active:scale-95"
         >
           <CaretRight size={20} weight="bold" className="text-[#8C6D23] -mr-0.5" />
         </button>
 
-        <div className="relative w-full h-[52dvh] min-h-[340px] max-h-[540px] sm:h-[56dvh] sm:min-h-[380px] sm:max-h-[580px] flex items-center justify-center select-none">
+        <div className="relative w-full h-[clamp(320px,49dvh,440px)] sm:h-[56dvh] sm:min-h-[380px] sm:max-h-[580px] flex items-center justify-center select-none">
           {LOOKBOOK_FRAMES.map((frame, idx) => {
             let diff = (idx - activeIndex + count) % count;
             if (diff > count / 2) diff -= count;
@@ -488,35 +484,44 @@ export function PinnedLookbook() {
           })}
         </div>
 
-        <div className="mt-5 flex items-center justify-center gap-2">
-          {LOOKBOOK_FRAMES.map((_, dotIdx) => (
-            <button
-              key={dotIdx}
-              type="button"
-              onClick={() => goToIndex(dotIdx)}
-              aria-label={`Go to slide ${dotIdx + 1}`}
-              aria-current={dotIdx === activeIndex ? "true" : undefined}
-              className={`h-1.5 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center sm:min-w-0 sm:min-h-0 ${
-                dotIdx === activeIndex ? "sm:w-5" : "sm:w-1.5"
-              }`}
-            >
-              <span
-                className={`block rounded-full transition-all duration-300 ${
-                  dotIdx === activeIndex ? "w-5 h-1.5 bg-[#C8A45E]" : "w-1.5 h-1.5 bg-white/25 hover:bg-white/45"
-                }`}
-              />
-            </button>
-          ))}
+        <div
+          role="group"
+          aria-label="Collection slides"
+          className="mt-3 sm:mt-5 flex items-center justify-center"
+        >
+          {LOOKBOOK_FRAMES.map((_, dotIdx) => {
+            const isActive = dotIdx === activeIndex;
+            return (
+              <button
+                key={dotIdx}
+                type="button"
+                onClick={() => goToIndex(dotIdx)}
+                aria-label={`Go to slide ${dotIdx + 1}`}
+                aria-current={isActive ? "true" : undefined}
+                className="group flex h-11 min-w-11 items-center justify-center"
+              >
+                <span
+                  className={`block rounded-full transition-all duration-300 ${
+                    isActive
+                      ? "h-1.5 w-4 sm:w-5 bg-[#C8A45E] shadow-[0_0_8px_rgba(200,164,94,0.65)]"
+                      : "h-1.5 w-1.5 bg-white/25 group-hover:bg-white/50"
+                  }`}
+                />
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 pointer-events-none">
-        <motion.div
-          animate={{ width: `${autoProgress}%` }}
-          transition={{ duration: 0.08, ease: "linear" }}
-          className="h-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] shadow-[0_0_10px_rgba(200,164,94,0.8)]"
-        />
-      </div>
+      {!prefersReducedMotion && (
+        <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 pointer-events-none">
+          <motion.div
+            animate={{ width: `${autoProgress}%` }}
+            transition={{ duration: 0.08, ease: "linear" }}
+            className="h-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] shadow-[0_0_10px_rgba(200,164,94,0.8)]"
+          />
+        </div>
+      )}
     </section>
   );
 }

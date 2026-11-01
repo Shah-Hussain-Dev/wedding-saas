@@ -36,6 +36,8 @@ export interface PreviewControlsDockProps {
   isHeroTapped?: boolean;
   /** Hide tradition tab (template-locked customize & marketing embed previews). */
   hideFaithSelector?: boolean;
+  /** Hide the controls button above the mute/unmute button (e.g. for clean interactive demo). */
+  hideControlsButton?: boolean;
   className?: string;
 }
 
@@ -88,6 +90,7 @@ export function PreviewControlsDock({
   slug,
   isHeroTapped = false,
   hideFaithSelector = false,
+  hideControlsButton = false,
   className = "",
 }: PreviewControlsDockProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -371,8 +374,8 @@ export function PreviewControlsDock({
           bottom: "max(14px, env(safe-area-inset-bottom, 14px))",
         }}
       >
-        {/* A. Controls Button (Sliders icon + Active tradition badge) - Hides on Tap to Open */}
-        {!isHeroTapped && (
+        {/* A. Controls Button (Sliders icon + Active tradition badge) - Hides on Tap to Open or when hideControlsButton is true */}
+        {!hideControlsButton && !isHeroTapped && (
           <motion.button
             type="button"
             id="preview-controls-btn"

@@ -177,7 +177,8 @@ export const CustomizerLivePreviewPanel = forwardRef<
             Live preview
           </span>
 
-          <div className="flex flex-wrap items-center gap-1 rounded-full border border-[#073D31]/10 bg-white p-0.5">
+          {/* Device Options — Hidden on mobile devices; only visible on desktop/laptop */}
+          <div className="hidden lg:flex items-center gap-1 rounded-full border border-[#073D31]/10 bg-white p-0.5">
             {DEVICE_OPTIONS.map(({ id, label, Icon }) => {
               const active = device === id;
               return (

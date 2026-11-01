@@ -60,6 +60,7 @@ import {
 } from "@/components/customizer/CustomizerSubmitSuccessModal";
 import { ShareInvitationModal } from "@/components/sharing/ShareInvitationModal";
 import { CustomizerTemplatePickerModal } from "@/components/customizer/CustomizerTemplatePickerModal";
+import { CustomizerMobilePreviewModal } from "@/components/customizer/CustomizerMobilePreviewModal";
 
 export interface EventItem {
   name: string;
@@ -274,6 +275,7 @@ export function InvitationCustomizerWizard({
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [savedInvite, setSavedInvite] = useState<CustomizerSuccessInvite | null>(null);
   const [savedInvitationId, setSavedInvitationId] = useState<string | null>(
     invitationId && !invitationId.startsWith("demo-") ? invitationId : null
@@ -527,15 +529,25 @@ export function InvitationCustomizerWizard({
 
   const scrollToCustomizerStep = useCallback((step: number) => {
     requestAnimationFrame(() => {
-      const scroller = sidebarScrollRef.current;
       const el = document.getElementById(`customizer-step-${step}`);
-      if (!scroller || !el) return;
-      const top =
-        scroller.scrollTop +
-        el.getBoundingClientRect().top -
-        scroller.getBoundingClientRect().top -
-        12;
-      scroller.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+      if (!el) return;
+
+      const useSidebarScroller =
+        typeof window !== "undefined" &&
+        window.matchMedia("(min-width: 1024px)").matches;
+      const scroller = sidebarScrollRef.current;
+
+      if (useSidebarScroller && scroller) {
+        const top =
+          scroller.scrollTop +
+          el.getBoundingClientRect().top -
+          scroller.getBoundingClientRect().top -
+          12;
+        scroller.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        return;
+      }
+
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }, []);
 
@@ -590,13 +602,12 @@ export function InvitationCustomizerWizard({
     handleSectionContinue(activeStep);
   };
 
-  const handlePreviewFullscreen = () => {
+  const handleOpenPreviewModal = () => {
     writeCustomizerDraft(templateId, buildDraftPayload());
-    const faith =
-      religion === "muslim" ? "muslim" : religion === "hindu" ? "hindu" : "universal";
-    const href = `/preview/${templateId}/interactive?customizer=1&faith=${faith}&musicTrack=${encodeURIComponent(musicTrack)}`;
-    window.open(href, "_blank", "noopener,noreferrer");
+    setIsMobilePreviewOpen(true);
   };
+
+  const handlePreviewFullscreen = handleOpenPreviewModal;
 
   const requestSubmitFlow = () => {
     setValidationError(null);
@@ -776,16 +787,16 @@ export function InvitationCustomizerWizard({
   );
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col lg:grid lg:h-[100dvh] lg:max-h-[100dvh] lg:grid-cols-[minmax(min(100%,320px),26rem)_minmax(0,1fr)] lg:overflow-hidden lg:items-stretch">
+    <div className="flex w-full flex-col lg:grid lg:h-[100dvh] lg:max-h-[100dvh] lg:min-h-0 lg:grid-cols-[minmax(min(100%,320px),26rem)_minmax(0,1fr)] lg:overflow-hidden lg:items-stretch">
       <aside
         ref={sidebarScrollRef}
         data-lenis-prevent
         data-lenis-prevent-wheel
-        className="customizer-sidebar-scroll flex min-h-0 w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto overscroll-y-contain bg-[#FAFAF8] lg:max-h-[100dvh] lg:min-h-0 lg:border-r lg:border-[#073D31]/10 lg:h-[100dvh]"
+        className="customizer-sidebar-scroll flex w-full min-w-0 flex-col overflow-x-hidden bg-[#FAFAF8] lg:min-h-0 lg:max-h-[100dvh] lg:h-[100dvh] lg:overflow-y-auto lg:overscroll-y-contain lg:border-r lg:border-[#073D31]/10"
       >
-        <div className="shrink-0 border-b border-[#073D31]/8 px-3 pt-5 pb-4 sm:px-4 lg:px-4 lg:pt-4">
+        <div className="shrink-0 border-b border-[#073D31]/8 px-3 pt-3 pb-4 sm:px-4 lg:px-4 lg:pt-4">
       {/* Top Breadcrumbs / Back Navigation */}
-      <div className="mb-4 flex items-center justify-between gap-3">
+      <div className="mb-3 sm:mb-4 flex items-center justify-between gap-3">
         <Link
           href={isEdit ? "/dashboard" : `/preview/${templateId}`}
           className="inline-flex min-h-[44px] items-center gap-1.5 font-sans text-xs font-semibold text-[#76766F] transition-colors hover:text-[#18211E]"
@@ -1684,8 +1695,19 @@ export function InvitationCustomizerWizard({
         onSelectTemplate={handleSelectTemplate}
         activeReligion={religion}
       />
+
+      {/* Mobile Live Preview Modal — activated by the Preview buttons on mobile devices */}
+      <CustomizerMobilePreviewModal
+        isOpen={isMobilePreviewOpen}
+        onClose={() => setIsMobilePreviewOpen(false)}
+        templateId={templateId}
+        templateName={meta.name}
+        religion={religion}
+        musicTrack={musicTrack}
+      />
       </aside>
 
+      {/* Live Preview Panel — desktop only (lg+); on mobile devices, live preview is shown in a modal when clicking Preview */}
       <aside className="hidden lg:flex lg:min-h-0 lg:h-full lg:max-h-full lg:flex-col lg:overflow-hidden">
         <CustomizerLivePreviewPanel
           ref={previewPanelRef}

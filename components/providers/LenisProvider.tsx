@@ -31,6 +31,16 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
+      if (typeof document !== "undefined") {
+        document.documentElement.classList.remove(
+          "lenis",
+          "lenis-smooth",
+          "lenis-stopped",
+          "lenis-scrolling"
+        );
+        document.body.style.overflow = "";
+        document.body.style.touchAction = "";
+      }
       return;
     }
 

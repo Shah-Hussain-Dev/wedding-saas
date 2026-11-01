@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
@@ -306,6 +306,20 @@ export default function TemplatesPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const faith = params.get("faith") || params.get("filter");
+    if (faith) {
+      const match = FILTERS.find(
+        (f) => f.id.toLowerCase() === faith.toLowerCase()
+      );
+      if (match) {
+        setActiveFilter(match.id);
+      }
+    }
+  }, []);
+
   const filteredTemplates = TEMPLATES.filter((t) => {
     const matchesSearch =
       searchQuery.trim() === "" ||
@@ -421,7 +435,7 @@ export default function TemplatesPage() {
           {/* TEMPLATES SHOWROOM GRID - ALL 16 TEMPLATES */}
           <div
             key={`${activeFilter}-${searchQuery.trim()}`}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+            className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8"
           >
             {filteredTemplates.map((item) => (
               <TemplateCatalogCard

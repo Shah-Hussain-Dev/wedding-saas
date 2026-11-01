@@ -186,7 +186,7 @@ export function InteractiveTemplateGrid() {
           })}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 pt-4">
+        <div className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-8">
           <AnimatePresence mode="popLayout">
             {visibleCards.map((item) => (
               <TemplateCatalogCard

@@ -2,8 +2,8 @@
 
 import { use, useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Sliders, ArrowLeft, CreditCard } from "@phosphor-icons/react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { TEMPLATES_MAP, getTemplateDefaultData, NoorNikah } from "@/templates";
 import { PreviewControlsDock } from "@/components/preview/PreviewControlsDock";
 import {
@@ -21,26 +21,8 @@ interface InteractivePreviewProps {
   templateId: string;
 }
 
-const ALL_16_TEMPLATES = [
-  "celestial-rose",
-  "imperial-palace",
-  "royal-majesty",
-  "royal-heritage",
-  "royal-grace",
-  "rose-gold-blush",
-  "noor-e-nikah",
-  "emerald-qasr",
-  "gul-e-noor",
-  "azure-nikah",
-  "kitab-e-nikah",
-  "crimson-royale",
-  "royal-lotus",
-  "emerald-noir",
-  "royal-elegance",
-  "modern-minimal",
-];
-
 function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get("embed") === "1";
   const isCustomizerEmbed = searchParams.get("customizer") === "1";
@@ -157,7 +139,6 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);
   const [liveDraft, setLiveDraft] = useState<Record<string, unknown> | null>(null);
-  const [isOpenPanel, setIsOpenPanel] = useState(!isEmbed);
   const [submitValidationError, setSubmitValidationError] = useState<string | null>(null);
   const showCustomizerSubmitChrome = isCustomizerEmbed && !isEmbed && !isAdminPreview;
 
@@ -363,7 +344,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
         <SelectedTemplate data={sampleData} />
       </div>
 
-      {/* Unified Invitation Controls Dock: Floating Mute/Unmute + Floating Controls Button that opens bottom sheet */}
+      {/* Unified Invitation Controls Dock: Floating Mute/Unmute */}
       <PreviewControlsDock
         templateId={normalizedId}
         templateName={normalizedId.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ")}
@@ -373,6 +354,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
         currentFaith={selectedFaith}
         onSelectFaith={handleFaithChange}
         hideFaithSelector={hideFaithSelector}
+        hideControlsButton={true}
         isHeroTapped={isHeroTapped}
       />
 
@@ -399,103 +381,31 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
       ) : null}
 
       {!isEmbed && (
-        <>
-          {/* Top-Left: Back navigation */}
-          <div
-            className="fixed top-2.5 sm:top-4 left-3 sm:left-6 z-[999] pointer-events-auto"
-            style={{ top: "max(10px, env(safe-area-inset-top, 10px))" }}
+        <div
+          className="fixed top-2.5 sm:top-4 left-3 sm:left-6 z-[999] pointer-events-auto"
+          style={{ top: "max(10px, env(safe-area-inset-top, 10px))" }}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              if (showCustomizerSubmitChrome) {
+                router.push(customizeBackHref);
+                return;
+              }
+              if (typeof window !== "undefined" && window.history.length > 1) {
+                router.back();
+              } else {
+                router.push("/templates");
+              }
+            }}
+            id="interactive-back-btn"
+            aria-label="Go back"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 min-h-[38px] sm:min-h-[42px] rounded-full bg-stone-950/90 hover:bg-stone-900 text-stone-200 hover:text-amber-300 backdrop-blur-xl border border-white/20 hover:border-amber-400/50 text-[11px] sm:text-xs font-bold shadow-2xl transition-all active:scale-95 whitespace-nowrap cursor-pointer group"
           >
-            <Link
-              href={showCustomizerSubmitChrome ? customizeBackHref : "/templates"}
-              id="interactive-back-to-templates"
-              aria-label={showCustomizerSubmitChrome ? "Back to editor" : "Back to templates"}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 min-h-[38px] sm:min-h-[42px] rounded-full bg-stone-950/90 hover:bg-stone-900 text-stone-200 hover:text-amber-300 backdrop-blur-xl border border-white/20 hover:border-amber-400/50 text-[11px] sm:text-xs font-bold shadow-2xl transition-all active:scale-95 whitespace-nowrap cursor-pointer group"
-            >
-              <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
-              <span className="hidden sm:inline">
-                {showCustomizerSubmitChrome ? "Back to editor" : "Back to Templates"}
-              </span>
-              <span className="sm:hidden">{showCustomizerSubmitChrome ? "Editor" : "Templates"}</span>
-            </Link>
-          </div>
-
-          {!showCustomizerSubmitChrome ? (
-          <>
-          <div
-            className={`fixed bottom-6 left-6 z-50 transition-all duration-300 max-w-sm w-[90%] md:w-80 ${
-              isOpenPanel ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0 pointer-events-none"
-            }`}
-          >
-            <div className="bg-black/85 backdrop-blur-xl border border-white/10 rounded-2xl p-4 text-white shadow-2xl flex flex-col gap-3">
-              <div className="flex justify-between items-center pb-2 border-b border-white/10">
-                <div className="flex items-center gap-1.5 text-amber-400">
-                  <Sliders className="h-4 w-4" weight="bold" />
-                  <span className="text-xs uppercase font-bold tracking-widest">Sandbox</span>
-                </div>
-                <button onClick={() => setIsOpenPanel(false)} className="text-[10px] text-white/50 hover:text-white uppercase font-bold cursor-pointer">
-                  Hide
-                </button>
-              </div>
-              <div className="space-y-3">
-                <div>
-                  <label className="block text-[9px] uppercase tracking-wider text-white/40 font-bold mb-1">Bride</label>
-                  <input
-                    type="text"
-                    value={brideName}
-                    onChange={(e) => setBrideName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:border-amber-400 text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[9px] uppercase tracking-wider text-white/40 font-bold mb-1">Groom</label>
-                  <input
-                    type="text"
-                    value={groomName}
-                    onChange={(e) => setGroomName(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-2.5 py-1 text-xs focus:outline-none focus:border-amber-400 text-white"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-1.5 max-h-40 overflow-y-auto pr-1">
-                  {ALL_16_TEMPLATES.map((id) => (
-                    <Link href={`/preview/${id}/interactive`} key={id}>
-                      <button
-                        className={`w-full py-1 text-[8px] uppercase font-bold rounded cursor-pointer ${
-                          normalizedId === id ? "bg-amber-400 text-black" : "bg-white/5 text-white/80 hover:bg-white/10"
-                        }`}
-                      >
-                        {id.replace(/-/g, " ")}
-                      </button>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-              <div className="flex gap-2 pt-2">
-                <Link href={`/preview/${normalizedId}`} className="flex-1">
-                  <button className="w-full border border-white/20 text-white text-xs font-semibold py-2.5 rounded-full flex items-center justify-center gap-1 cursor-pointer hover:bg-white/5">
-                    <ArrowLeft className="h-3 w-3" /> Demo page
-                  </button>
-                </Link>
-                <Link href={`/customize/${normalizedId}?musicTrack=${encodeURIComponent(musicTrack)}`} className="flex-1">
-                  <button className="w-full bg-amber-400 text-black text-xs font-bold py-2.5 rounded-full flex items-center justify-center gap-1 cursor-pointer hover:bg-amber-300">
-                    <CreditCard className="h-3 w-3" /> Get Started
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {!isOpenPanel && (
-            <button
-              onClick={() => setIsOpenPanel(true)}
-              className="fixed bottom-6 left-6 z-50 bg-[#073D31] border border-[#C8A45E]/40 text-white p-3 rounded-full shadow-2xl flex items-center gap-1.5 hover:scale-105 transition-transform cursor-pointer"
-            >
-              <Sliders className="h-4 w-4 text-[#C8A45E]" weight="bold" />
-              <span className="text-[10px] font-bold tracking-widest uppercase pr-1">Customize</span>
-            </button>
-          )}
-          </>
-          ) : null}
-        </>
+            <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
+            <span>Back</span>
+          </button>
+        </div>
       )}
     </div>
   );

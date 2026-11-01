@@ -250,7 +250,7 @@ export function TemplatesPreviewSection() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-7"
         >
           {filtered.map((tpl) => (
             <motion.div key={tpl.id} variants={fadeUp} className="h-full">

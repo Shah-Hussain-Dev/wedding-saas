@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "motion/react";
-import { List, X, Sparkle, ArrowRight, Crown, MoonStars, FlowerLotus, CaretDown } from "@phosphor-icons/react";
+import { List, X, Sparkle, ArrowRight, CaretDown } from "@phosphor-icons/react";
 import { siteConfig } from "@/config/site";
+import { MobileNavDrawer } from "./mobile-nav-drawer";
 
 const NAV_LINKS = [
   { href: "/templates", label: "Templates", hasMega: true, hasCaret: true },
@@ -50,6 +51,14 @@ export function GlassNav() {
   const [hidden, setHidden] = useState(false);
   const lastScrollY = useRef(0);
   const { scrollY } = useScroll();
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
+  const handleToggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = lastScrollY.current;
@@ -98,9 +107,9 @@ export function GlassNav() {
         }}
         transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
         onMouseLeave={() => setMegaOpen(false)}
-        className={`fixed top-3 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full px-5 sm:px-7 py-2.5 sm:py-3 transition-all duration-300 flex items-center justify-between ${hidden ? "pointer-events-none" : "pointer-events-auto"
+        className={`fixed top-2.5 sm:top-5 left-1/2 z-50 w-[95%] max-w-6xl -translate-x-1/2 rounded-full px-4 sm:px-7 py-1.5 sm:py-3 transition-all duration-300 flex items-center justify-between ${hidden ? "pointer-events-none" : "pointer-events-auto"
           } ${scrolled
-            ? "glass-nav-shell-scrolled py-2 sm:py-2.5"
+            ? "glass-nav-shell-scrolled py-1 sm:py-2.5"
             : "glass-nav-shell"
           }`}
       >
@@ -120,7 +129,7 @@ export function GlassNav() {
             width={160}
             height={53}
             priority
-            className="h-8 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+            className="h-7 sm:h-9 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
           />
         </Link>
 
@@ -194,7 +203,8 @@ export function GlassNav() {
 
         {/* Mobile Hamburger */}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          type="button"
+          onClick={handleToggle}
           className="relative z-10 lg:hidden w-11 h-11 flex items-center justify-center text-[#073D31] rounded-full hover:bg-white/60 active:scale-95 transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#073D31]"
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={isOpen}
@@ -256,80 +266,12 @@ export function GlassNav() {
         </AnimatePresence>
       </motion.nav>
 
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/25 backdrop-blur-md lg:hidden"
-            onClick={() => setIsOpen(false)}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{ duration: 0.3, ease: [0.32, 0.72, 0, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="absolute top-20 left-4 right-4 rounded-3xl glass-nav-drawer p-6 flex flex-col gap-1 overflow-hidden"
-            >
-              {/* Specular highlight */}
-              <div className="pointer-events-none absolute inset-x-8 top-0 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent opacity-90" />
-
-              {NAV_LINKS.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="text-base font-medium py-3 px-2 border-b border-[#073D31]/8 text-[#18211E] hover:text-[#073D31] hover:bg-white/40 rounded-xl flex items-center justify-between transition-colors"
-                >
-                  <span>{link.label}</span>
-                  <ArrowRight size={14} className="text-[#C8A45E]" />
-                </Link>
-              ))}
-
-              {session ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setIsOpen(false)}
-                    className="text-base font-medium py-3 px-2 border-b border-[#073D31]/8 text-[#18211E] hover:text-[#073D31] hover:bg-white/40 rounded-xl transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut({ callbackUrl: "/login" });
-                      setIsOpen(false);
-                    }}
-                    className="text-left text-base font-medium py-3 px-2 text-rose-600 hover:bg-rose-50/50 rounded-xl transition-colors"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link
-                  href="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="text-base font-medium py-3 px-2 text-[#18211E] hover:text-[#073D31] hover:bg-white/40 rounded-xl transition-colors"
-                >
-                  Login
-                </Link>
-              )}
-
-              <Link
-                href="/templates"
-                onClick={() => setIsOpen(false)}
-                className="mt-4 w-full py-3.5 rounded-full bg-[#073D31] text-[#F7F4ED] text-xs font-bold uppercase tracking-wider font-sans flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(7,61,49,0.25),inset_0_1px_1px_rgba(255,255,255,0.3)] active:scale-95 transition-transform"
-              >
-                <span>Create Invitation</span>
-                <ArrowRight size={14} weight="bold" />
-              </Link>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile Sidebar Drawer */}
+      <MobileNavDrawer
+        isOpen={isOpen}
+        onClose={handleClose}
+        session={session}
+      />
     </>
   );
 }

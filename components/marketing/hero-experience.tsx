@@ -403,11 +403,11 @@ export function HeroExperience() {
 
       {/* 3. MAIN HERO GRID (SPLIT 2-COLUMN DESKTOP / MOBILE STACK — VERTICALLY CENTERED ON LAPTOP/DESKTOP) */}
       <div className="relative z-20 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4 lg:my-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 xl:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 xl:gap-12 items-center">
           {/* ========================================================= */}
           {/* LEFT COLUMN: EDITORIAL HEADLINE, CTAs & 4 PILLARS */}
           {/* ========================================================= */}
-          <div className="lg:col-span-7 xl:col-span-7 flex flex-col items-start text-left xl:pr-4">
+          <div className="lg:col-span-7 xl:col-span-7 flex flex-col items-center text-center lg:items-start lg:text-left xl:pr-4 order-2 lg:order-1 mt-2 lg:mt-0">
             {/* Eyebrow Pill */}
             <motion.div
               custom={0}
@@ -483,7 +483,7 @@ export function HeroExperience() {
               initial="hidden"
               animate="visible"
               variants={fadeUpVariant}
-              className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto"
+              className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-3.5 sm:gap-4 w-full sm:w-auto"
             >
               <div className="flex flex-wrap items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
                 {/* Primary: Create Your Invitation */}
@@ -516,7 +516,7 @@ export function HeroExperience() {
               </div>
 
               {/* Friction-Reducer Microcopy (High-Impact Conversion Trigger) */}
-              <div className="flex flex-col gap-1 text-[11px] sm:text-xs text-[#7A7366] font-sans font-medium">
+              <div className="flex flex-col items-center lg:items-start gap-1 text-[11px] sm:text-xs text-[#7A7366] font-sans font-medium">
                 <div className="flex items-center gap-2">
                   <span className="text-[#C49A5A]">✦</span>
                   <span className="font-semibold text-[#5C5348]">
@@ -582,7 +582,7 @@ export function HeroExperience() {
             id="hero-showcase"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="lg:col-span-5 xl:col-span-5 flex items-center justify-center relative mt-6 lg:mt-0"
+            className="lg:col-span-5 xl:col-span-5 flex items-center justify-center relative order-1 lg:order-2 mt-0 lg:mt-0"
           >
             {/* Flanking Side Carets for Instant Intuitive Control (Visible & Elevated) */}
             <button
