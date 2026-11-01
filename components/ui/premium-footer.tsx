@@ -75,8 +75,12 @@ export function PremiumFooter() {
                   className="w-full sm:w-auto h-[50px] sm:h-[52px] inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 rounded-full bg-gradient-to-r from-[#C8A45E] via-[#E1C98E] to-[#C8A45E] hover:from-[#E1C98E] hover:to-[#C8A45E] text-[#032A23] text-xs sm:text-sm font-bold tracking-widest uppercase font-sans transition-all duration-300 shadow-[0_15px_40px_rgba(200,164,94,0.35)] hover:scale-[1.03] active:scale-95 cursor-pointer whitespace-nowrap shrink-0"
                 >
                   <span className="roll">
-                    <span className="roll__a">Start My Invitation · From {siteConfig.startingPrice}</span>
-                    <span className="roll__b" aria-hidden="true">Start My Invitation · From {siteConfig.startingPrice}</span>
+                    <span className="roll__a">
+                      Start My Invitation · From <span className="price-font">{siteConfig.startingPrice}</span>
+                    </span>
+                    <span className="roll__b" aria-hidden="true">
+                      Start My Invitation · From <span className="price-font">{siteConfig.startingPrice}</span>
+                    </span>
                   </span>
                   <ArrowRight size={15} weight="bold" />
                 </Link>
@@ -211,7 +215,7 @@ export function PremiumFooter() {
               </li>
               <li>
                 <Link href="/#lookbook" className="hover:text-[#E1C98E] transition-colors">
-                  Lookbook Showcase
+                  Featured Collections
                 </Link>
               </li>
               <li>
@@ -221,7 +225,7 @@ export function PremiumFooter() {
               </li>
               <li>
                 <Link href="/#pricing" className="hover:text-[#E1C98E] transition-colors">
-                  Pricing Plans (₹1,199)
+                  Pricing Plans (<span className="price-font">₹1,199</span>)
                 </Link>
               </li>
             </ul>

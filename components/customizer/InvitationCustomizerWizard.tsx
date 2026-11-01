@@ -1,21 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { DoubleBezelCard } from "@/components/ui/double-bezel-card";
-import { PremiumButton } from "@/components/ui/premium-button";
 import { ImageUploader } from "@/components/media/ImageUploader";
 import { MultiImageUploader } from "@/components/media/MultiImageUploader";
 import { AudioTrackSelector } from "@/components/media/AudioTrackSelector";
-import { getTemplateMeta } from "@/lib/template-meta";
+import {
+  getTemplateMeta,
+  defaultCulturalTraditionForTemplate,
+  type TemplateId,
+} from "@/lib/template-meta";
 import { siteConfig } from "@/config/site";
 import {
   Sparkle,
   ArrowLeft,
-  ArrowRight,
   Calendar,
   Clock,
   MapPin,
@@ -29,7 +31,6 @@ import {
   Crown,
   Camera,
   Info,
-  FloppyDisk,
   Eye,
   Lock,
   ArrowsClockwise,
@@ -38,6 +39,27 @@ import {
 import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
 import { CulturalTradition } from "@/lib/pdf-theme-tokens";
 import { getTemplateDefaultData } from "@/templates";
+import {
+  writeCustomizerDraft,
+  readCustomizerDraft,
+  persistCustomizerPendingSubmit,
+  consumeCustomizerResumeSubmit,
+  migrateCustomizerDraftToTemplate,
+} from "@/lib/customizer-preview-sync";
+import {
+  CustomizerLivePreviewPanel,
+  type CustomizerLivePreviewPanelHandle,
+} from "@/components/customizer/CustomizerLivePreviewPanel";
+import { CustomizerStepAccordion } from "@/components/customizer/CustomizerStepAccordion";
+import { CustomizerFloatingActionBar } from "@/components/customizer/CustomizerFloatingActionBar";
+import { CustomizerAuthModal } from "@/components/customizer/CustomizerAuthModal";
+import { CustomizerSubmitConfirmModal } from "@/components/customizer/CustomizerSubmitConfirmModal";
+import {
+  CustomizerSubmitSuccessModal,
+  type CustomizerSuccessInvite,
+} from "@/components/customizer/CustomizerSubmitSuccessModal";
+import { ShareInvitationModal } from "@/components/sharing/ShareInvitationModal";
+import { CustomizerTemplatePickerModal } from "@/components/customizer/CustomizerTemplatePickerModal";
 
 export interface EventItem {
   name: string;
@@ -100,6 +122,8 @@ export interface InvitationCustomizerWizardProps {
   invitationId?: string | null;
   initialData?: any | null;
   isEditMode?: boolean;
+  /** Admin-resolved demo defaults for new customize sessions (not edit mode). */
+  demoDefaults?: Record<string, unknown> | null;
 }
 
 const STEPS = [
@@ -115,15 +139,21 @@ export function InvitationCustomizerWizard({
   invitationId,
   initialData,
   isEditMode: initialIsEditMode = false,
+  demoDefaults = null,
 }: InvitationCustomizerWizardProps) {
-  const { data: session } = useSession();
   const router = useRouter();
+  const { data: session, status: sessionStatus } = useSession();
+  const previewPanelRef = useRef<CustomizerLivePreviewPanelHandle>(null);
+  const draftHydratedRef = useRef(false);
 
   const isEdit = initialIsEditMode || Boolean(invitationId && !invitationId.startsWith("demo-"));
   const meta = getTemplateMeta(templateId);
 
-  // Multi-step state
-  const [currentStep, setCurrentStep] = useState<number>(1);
+  const sidebarScrollRef = useRef<HTMLDivElement>(null);
+  const [openSteps, setOpenSteps] = useState<number[]>([1]);
+  const [activeStep, setActiveStep] = useState<number>(1);
+
+  const isStepOpen = useCallback((stepId: number) => openSteps.includes(stepId), [openSteps]);
 
   // Form State
   const templateDefault = getTemplateDefaultData(templateId);
@@ -205,34 +235,27 @@ export function InvitationCustomizerWizard({
     { name: "Grand Reception & Feast", enabled: true, venue: "The Grand Ballroom", date: "Dec 22, 2026", time: "08:00 PM" },
   ];
 
-  const initialReligion: CulturalTradition =
-    initialData?.religion === "muslim" || initialData?.religion === "hindu" || initialData?.religion === "universal"
-      ? initialData.religion
-      : templateId.includes("nikah") || templateId.includes("emerald") || templateId.includes("gul")
-      ? "muslim"
-      : templateId.includes("lotus") || templateId.includes("royale") || templateId.includes("haveli") || templateId.includes("elegance")
-      ? "hindu"
-      : "universal";
+  const templateLockedReligion = defaultCulturalTraditionForTemplate(templateId);
 
-  const [religion, setReligion] = useState<CulturalTradition>(initialReligion);
+  const [religion, setReligion] = useState<CulturalTradition>(templateLockedReligion);
   const [sacredInvocation, setSacredInvocation] = useState(
-    initialData?.sacredInvocation || RELIGION_PRESETS[initialReligion]?.sacredInvocation || ""
+    initialData?.sacredInvocation ||
+      RELIGION_PRESETS[templateLockedReligion]?.sacredInvocation ||
+      ""
   );
   const [sacredVerse, setSacredVerse] = useState(
-    initialData?.sacredVerse || RELIGION_PRESETS[initialReligion]?.sacredVerse || ""
+    initialData?.sacredVerse || RELIGION_PRESETS[templateLockedReligion]?.sacredVerse || ""
   );
   const [sacredTranslation, setSacredTranslation] = useState(
-    initialData?.sacredTranslation || RELIGION_PRESETS[initialReligion]?.sacredTranslation || ""
+    initialData?.sacredTranslation ||
+      RELIGION_PRESETS[templateLockedReligion]?.sacredTranslation ||
+      ""
   );
   const [isCustomizingInvocation, setIsCustomizingInvocation] = useState(false);
 
-  const handleSelectReligion = (rel: CulturalTradition) => {
-    setReligion(rel);
-    const preset = RELIGION_PRESETS[rel];
-    setSacredInvocation(preset.sacredInvocation);
-    setSacredVerse(preset.sacredVerse);
-    setSacredTranslation(preset.sacredTranslation);
-  };
+  useEffect(() => {
+    setReligion(defaultCulturalTraditionForTemplate(templateId));
+  }, [templateId]);
 
   const [events, setEvents] = useState<EventItem[]>(
     Array.isArray(initialData?.eventsJson) && initialData.eventsJson.length > 0
@@ -246,10 +269,113 @@ export function InvitationCustomizerWizard({
   const [validationError, setValidationError] = useState<string | null>(null);
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
+  const [savedInvite, setSavedInvite] = useState<CustomizerSuccessInvite | null>(null);
+  const [savedInvitationId, setSavedInvitationId] = useState<string | null>(
+    invitationId && !invitationId.startsWith("demo-") ? invitationId : null
+  );
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const buildDraftPayload = useCallback(() => {
+    const normalizedSlug = (slug || `${brideName}-${groomName}`)
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    return {
+      id: invitationId || `demo-${Date.now()}`,
+      slug: normalizedSlug,
+      templateId,
+      brideName,
+      groomName,
+      weddingDate,
+      weddingTime,
+      venueName,
+      venueAddress,
+      religion,
+      sacredInvocation,
+      sacredVerse,
+      sacredTranslation,
+      heroImageUrl: heroBgChoice === "custom" ? heroImageUrl : "",
+      slideshowImages,
+      gallery: slideshowImages.length > 0 ? slideshowImages : heroImageUrl ? [heroImageUrl] : [],
+      galleryImages: slideshowImages.length > 0 ? slideshowImages : heroImageUrl ? [heroImageUrl] : [],
+      musicTrack,
+      eventsJson: events,
+      events,
+      updatedAt: new Date().toISOString(),
+    };
+  }, [
+    slug,
+    brideName,
+    groomName,
+    invitationId,
+    templateId,
+    weddingDate,
+    weddingTime,
+    venueName,
+    venueAddress,
+    religion,
+    sacredInvocation,
+    sacredVerse,
+    sacredTranslation,
+    heroBgChoice,
+    heroImageUrl,
+    slideshowImages,
+    musicTrack,
+    events,
+  ]);
+
+  useEffect(() => {
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    syncTimerRef.current = setTimeout(() => {
+      writeCustomizerDraft(templateId, buildDraftPayload());
+    }, 450);
+    return () => {
+      if (syncTimerRef.current) clearTimeout(syncTimerRef.current);
+    };
+  }, [buildDraftPayload, templateId]);
+
+  const handleSaveForLater = () => {
+    writeCustomizerDraft(templateId, buildDraftPayload());
+    setSaveSuccessMsg("Draft saved on this device — continue anytime.");
+  };
+
+  const handleSelectTemplate = useCallback(
+    (nextTemplateId: TemplateId) => {
+      if (nextTemplateId === templateId) {
+        setIsTemplatePickerOpen(false);
+        return;
+      }
+      const payload = buildDraftPayload();
+      migrateCustomizerDraftToTemplate(templateId, nextTemplateId, payload);
+
+      const params = new URLSearchParams(searchParams?.toString() ?? "");
+      if (musicTrack) {
+        params.set("musicTrack", musicTrack);
+      }
+      const query = params.toString();
+      setIsTemplatePickerOpen(false);
+      router.push(`/customize/${nextTemplateId}${query ? `?${query}` : ""}`);
+      setSaveSuccessMsg("Template changed — your details were kept.");
+    },
+    [buildDraftPayload, templateId, searchParams, musicTrack, router]
+  );
 
   // Sync initialData changes if loaded asynchronously
   useEffect(() => {
     if (initialData) {
+      if (
+        typeof initialData.templateId === "string" &&
+        initialData.templateId !== templateId
+      ) {
+        return;
+      }
       if (initialData.brideName) setBrideName(initialData.brideName);
       if (initialData.groomName) setGroomName(initialData.groomName);
       if (initialData.weddingDate) setWeddingDate(initialData.weddingDate.split("T")[0]);
@@ -260,12 +386,9 @@ export function InvitationCustomizerWizard({
         setSlug(initialData.slug);
         if (isEdit) setIsSlugManuallyEdited(true);
       }
-      if (initialData.religion) {
-        setReligion(initialData.religion);
-        if (initialData.sacredInvocation) setSacredInvocation(initialData.sacredInvocation);
-        if (initialData.sacredVerse) setSacredVerse(initialData.sacredVerse);
-        if (initialData.sacredTranslation) setSacredTranslation(initialData.sacredTranslation);
-      }
+      if (initialData.sacredInvocation) setSacredInvocation(initialData.sacredInvocation);
+      if (initialData.sacredVerse) setSacredVerse(initialData.sacredVerse);
+      if (initialData.sacredTranslation) setSacredTranslation(initialData.sacredTranslation);
       if (initialData.heroImageUrl) {
         setHeroImageUrl(initialData.heroImageUrl);
         setHeroBgChoice("custom");
@@ -282,7 +405,52 @@ export function InvitationCustomizerWizard({
         setEvents(initialData.events);
       }
     }
-  }, [initialData]);
+  }, [initialData, isEdit, templateId]);
+
+  useEffect(() => {
+    if (draftHydratedRef.current) return;
+    const draft = readCustomizerDraft(templateId);
+    const hydrateFrom = draft ?? (!isEdit && !initialData && demoDefaults ? demoDefaults : null);
+    if (!hydrateFrom) return;
+
+    if (isEdit && initialData && draft) {
+      const serverTemplate =
+        typeof initialData.templateId === "string" ? initialData.templateId : null;
+      if (!serverTemplate || serverTemplate === templateId) return;
+    } else if (initialData && !isEdit && draft) {
+      return;
+    }
+
+    draftHydratedRef.current = true;
+
+    const source = hydrateFrom;
+    if (typeof source.brideName === "string" && source.brideName) setBrideName(source.brideName);
+    if (typeof source.groomName === "string" && source.groomName) setGroomName(source.groomName);
+    if (typeof source.weddingDate === "string" && source.weddingDate) {
+      setWeddingDate(source.weddingDate.split("T")[0]);
+    }
+    if (typeof source.weddingTime === "string") setWeddingTime(source.weddingTime);
+    if (typeof source.venueName === "string") setVenueName(source.venueName);
+    if (typeof source.venueAddress === "string") setVenueAddress(source.venueAddress);
+    if (typeof source.slug === "string" && source.slug) {
+      setSlug(source.slug);
+      setIsSlugManuallyEdited(true);
+    }
+    if (typeof source.sacredInvocation === "string") setSacredInvocation(source.sacredInvocation);
+    if (typeof source.sacredVerse === "string") setSacredVerse(source.sacredVerse);
+    if (typeof source.sacredTranslation === "string") setSacredTranslation(source.sacredTranslation);
+    if (typeof source.heroImageUrl === "string" && source.heroImageUrl) {
+      setHeroImageUrl(source.heroImageUrl);
+      setHeroBgChoice("custom");
+    }
+    if (Array.isArray(source.slideshowImages)) setSlideshowImages(source.slideshowImages as string[]);
+    if (typeof source.musicTrack === "string") setMusicTrack(source.musicTrack);
+    if (Array.isArray(source.eventsJson)) setEvents(source.eventsJson as EventItem[]);
+    else if (Array.isArray(source.events)) setEvents(source.events as EventItem[]);
+    if (typeof source.id === "string" && source.id && !String(source.id).startsWith("demo-")) {
+      setSavedInvitationId(source.id);
+    }
+  }, [templateId, initialData, isEdit, demoDefaults]);
 
   // Auto-update slug live from bride & groom names unless user explicitly customized the slug
   useEffect(() => {
@@ -311,58 +479,163 @@ export function InvitationCustomizerWizard({
     setEvents(updated);
   };
 
-  // Step Validation & Navigation
-  const validateAndNext = () => {
+  const getStepValidationError = useCallback(
+    (step: number): string | null => {
+      if (step === 1) {
+        if (!brideName.trim()) return "Please enter the bride's name (The Couple section).";
+        if (!groomName.trim()) return "Please enter the groom's name (The Couple section).";
+        if (!slug.trim()) return "Please set your invitation web link (The Couple section).";
+      }
+      if (step === 2) {
+        if (!weddingDate) return "Please select your wedding date (Date & Venue section).";
+        if (!venueName.trim()) return "Please enter your venue name (Date & Venue section).";
+        if (!venueAddress.trim()) return "Please enter the venue address (Date & Venue section).";
+      }
+      return null;
+    },
+    [brideName, groomName, slug, weddingDate, venueName, venueAddress]
+  );
+
+  const findFirstInvalidStep = useCallback((): { step: number; message: string } | null => {
+    for (let s = 1; s <= 5; s += 1) {
+      const message = getStepValidationError(s);
+      if (message) return { step: s, message };
+    }
+    return null;
+  }, [getStepValidationError]);
+
+  const isFormComplete = useMemo(
+    () => findFirstInvalidStep() === null,
+    [findFirstInvalidStep]
+  );
+
+  const isLoggedIn = Boolean(session?.user?.email);
+
+  const persistBeforeAuth = useCallback(() => {
+    const payload = buildDraftPayload();
+    writeCustomizerDraft(templateId, payload);
+    persistCustomizerPendingSubmit(templateId, payload);
+  }, [buildDraftPayload, templateId]);
+
+  useEffect(() => {
+    if (sessionStatus !== "authenticated") return;
+    if (!consumeCustomizerResumeSubmit()) return;
+    if (findFirstInvalidStep() === null) {
+      setIsConfirmModalOpen(true);
+    }
+  }, [sessionStatus, findFirstInvalidStep]);
+
+  const scrollToCustomizerStep = useCallback((step: number) => {
+    requestAnimationFrame(() => {
+      const scroller = sidebarScrollRef.current;
+      const el = document.getElementById(`customizer-step-${step}`);
+      if (!scroller || !el) return;
+      const top =
+        scroller.scrollTop +
+        el.getBoundingClientRect().top -
+        scroller.getBoundingClientRect().top -
+        12;
+      scroller.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+    });
+  }, []);
+
+  const openCustomizerStep = useCallback(
+    (step: number) => {
+      setOpenSteps((prev) => (prev.includes(step) ? prev : [...prev, step]));
+      setActiveStep(step);
+      scrollToCustomizerStep(step);
+    },
+    [scrollToCustomizerStep]
+  );
+
+  const focusCustomizerStep = useCallback(
+    (step: number) => {
+      openCustomizerStep(step);
+    },
+    [openCustomizerStep]
+  );
+
+  const toggleCustomizerStep = useCallback(
+    (stepId: number) => {
+      setValidationError(null);
+      const opening = !openSteps.includes(stepId);
+      setOpenSteps((prev) =>
+        prev.includes(stepId) ? prev.filter((id) => id !== stepId) : [...prev, stepId]
+      );
+      if (opening) {
+        setActiveStep(stepId);
+        scrollToCustomizerStep(stepId);
+      }
+    },
+    [openSteps, scrollToCustomizerStep]
+  );
+
+  const handleSectionContinue = (stepId: number) => {
     setValidationError(null);
-
-    if (currentStep === 1) {
-      if (!brideName.trim()) {
-        setValidationError("Please enter Bride's name");
-        return;
-      }
-      if (!groomName.trim()) {
-        setValidationError("Please enter Groom's name");
-        return;
-      }
-      if (!slug.trim()) {
-        setValidationError("Please specify a custom link slug");
-        return;
-      }
+    setActiveStep(stepId);
+    const message = getStepValidationError(stepId);
+    if (message) {
+      setValidationError(message);
+      openCustomizerStep(stepId);
+      return;
     }
-
-    if (currentStep === 2) {
-      if (!weddingDate) {
-        setValidationError("Please select your wedding date");
-        return;
-      }
-      if (!venueName.trim()) {
-        setValidationError("Please enter your wedding venue name");
-        return;
-      }
-      if (!venueAddress.trim()) {
-        setValidationError("Please enter the venue address");
-        return;
-      }
-    }
-
-    if (currentStep < 5) {
-      setCurrentStep((prev) => prev + 1);
-      window.scrollTo({ top: 120, behavior: "smooth" });
+    if (stepId < 5) {
+      openCustomizerStep(stepId + 1);
+    } else {
+      scrollToCustomizerStep(5);
     }
   };
 
-  const handlePrev = () => {
-    setValidationError(null);
-    if (currentStep > 1) {
-      setCurrentStep((prev) => prev - 1);
-      window.scrollTo({ top: 120, behavior: "smooth" });
-    }
+  const handleFloatingSaveContinue = () => {
+    handleSectionContinue(activeStep);
   };
 
-  const handleSaveInvitation = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handlePreviewFullscreen = () => {
+    writeCustomizerDraft(templateId, buildDraftPayload());
+    const faith =
+      religion === "muslim" ? "muslim" : religion === "hindu" ? "hindu" : "universal";
+    const href = `/preview/${templateId}/interactive?customizer=1&faith=${faith}&musicTrack=${encodeURIComponent(musicTrack)}`;
+    window.open(href, "_blank", "noopener,noreferrer");
+  };
+
+  const requestSubmitFlow = () => {
+    setValidationError(null);
+    const invalid = findFirstInvalidStep();
+    if (invalid) {
+      setValidationError(invalid.message);
+      openCustomizerStep(invalid.step);
+      return;
+    }
+    if (!session?.user?.email) {
+      persistBeforeAuth();
+      setIsAuthModalOpen(true);
+      return;
+    }
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleAuthSuccess = () => {
+    consumeCustomizerResumeSubmit();
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleSaveInvitation = async () => {
+    setValidationError(null);
+
+    const invalid = findFirstInvalidStep();
+    if (invalid) {
+      setValidationError(invalid.message);
+      focusCustomizerStep(invalid.step);
+      return;
+    }
+
+    if (!session?.user?.email) {
+      persistBeforeAuth();
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     setIsSubmitting(true);
-    setValidationError(null);
 
     const normalizedSlug = (slug || `${brideName}-${groomName}`)
       .toLowerCase()
@@ -370,7 +643,7 @@ export function InvitationCustomizerWizard({
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    const targetEmail = session?.user?.email || (typeof window !== "undefined" ? localStorage.getItem("unfold_user_email") || undefined : undefined);
+    const targetEmail = session.user.email;
 
     const isAlreadyPaid = Boolean(
       initialData?.isPaid === true ||
@@ -379,82 +652,61 @@ export function InvitationCustomizerWizard({
     );
 
     const payload = {
-      id: invitationId || `demo-${Date.now()}`,
+      ...buildDraftPayload(),
       slug: normalizedSlug,
-      templateId,
-      brideName,
-      groomName,
-      weddingDate,
-      weddingTime,
-      venueName,
-      venueAddress,
-      religion,
-      sacredInvocation,
-      sacredVerse,
-      sacredTranslation,
-      heroImageUrl: heroBgChoice === "custom" ? heroImageUrl : "",
-      slideshowImages,
-      gallery: slideshowImages.length > 0 ? slideshowImages : (heroImageUrl ? [heroImageUrl] : []),
-      galleryImages: slideshowImages.length > 0 ? slideshowImages : (heroImageUrl ? [heroImageUrl] : []),
-      musicTrack,
-      eventsJson: events,
-      events: events,
       isPaid: isAlreadyPaid,
       isPublished: isAlreadyPaid && Boolean(initialData?.isPublished),
       userEmail: targetEmail,
       email: targetEmail,
       createdAt: initialData?.createdAt || initialData?.created_at || new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
-    // Save into localStorage for instant live preview synchronization
-    if (typeof window !== "undefined") {
+    const persistLocal = (record: Record<string, unknown>, slugKey: string, idKey?: string) => {
+      if (typeof window === "undefined") return;
       try {
-        const payloadStr = JSON.stringify(payload);
-        localStorage.setItem(`unfold_invitation_${normalizedSlug}`, payloadStr);
-        if (invitationId) {
-          localStorage.setItem(`unfold_invitation_${invitationId}`, payloadStr);
-        }
-        if (!isEdit) {
-          localStorage.setItem("unfold_pending_draft", payloadStr);
-          sessionStorage.setItem("unfold_pending_draft", payloadStr);
-        }
+        const payloadStr = JSON.stringify(record);
+        localStorage.setItem(`unfold_invitation_${slugKey}`, payloadStr);
+        if (idKey) localStorage.setItem(`unfold_invitation_${idKey}`, payloadStr);
+        localStorage.setItem("unfold_pending_draft", payloadStr);
+        sessionStorage.setItem("unfold_pending_draft", payloadStr);
       } catch (err) {
         console.warn("Local storage write error:", err);
       }
-    }
+    };
 
     let finalSlug = normalizedSlug;
+    let finalId = savedInvitationId || invitationId || payload.id;
 
-    // Backend sync: PUT if editing existing ID, POST if new
+    const activeId =
+      savedInvitationId && !savedInvitationId.startsWith("demo-")
+        ? savedInvitationId
+        : invitationId && !invitationId.startsWith("demo-")
+          ? invitationId
+          : null;
+
     try {
-      if (invitationId && !invitationId.startsWith("demo-")) {
-        const res = await fetch(`/api/invitations/${invitationId}`, {
+      if (activeId) {
+        const res = await fetch(`/api/invitations/${activeId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
 
+        if (res.status === 401 || res.status === 403) {
+          persistBeforeAuth();
+          setIsAuthModalOpen(true);
+          setIsSubmitting(false);
+          setIsConfirmModalOpen(false);
+          return;
+        }
+
         if (res.ok) {
           const updated = await res.json();
-          if (typeof window !== "undefined") {
-            const isResultPaid = Boolean(
-              updated.isPaid === true ||
-              updated.order?.status === "paid" ||
-              updated.orderStatus === "paid" ||
-              isAlreadyPaid
-            );
-            const fullRecord = JSON.stringify({
-              ...payload,
-              ...updated,
-              isPaid: isResultPaid,
-              isPublished: Boolean(updated.isPublished && isResultPaid),
-            });
-            localStorage.setItem(`unfold_invitation_${updated.slug || normalizedSlug}`, fullRecord);
-            if (invitationId) {
-              localStorage.setItem(`unfold_invitation_${invitationId}`, fullRecord);
-            }
-          }
+          finalSlug = updated.slug || normalizedSlug;
+          finalId = updated.id || activeId;
+          setSlug(finalSlug);
+          setSavedInvitationId(finalId);
+          persistLocal({ ...payload, ...updated }, finalSlug, finalId);
         } else {
           console.warn("PUT /api/invitations/[id] returned non-ok status:", res.status);
         }
@@ -464,185 +716,129 @@ export function InvitationCustomizerWizard({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+
+        if (res.status === 401) {
+          persistBeforeAuth();
+          setIsAuthModalOpen(true);
+          setIsSubmitting(false);
+          setIsConfirmModalOpen(false);
+          return;
+        }
+
         if (res.ok) {
           const created = await res.json();
-          if (created?.id) {
-            if (created.slug) {
-              setSlug(created.slug);
-              finalSlug = created.slug;
-            }
-            if (typeof window !== "undefined") {
-              const isResultPaid = Boolean(
-                created.isPaid === true ||
-                created.order?.status === "paid" ||
-                created.orderStatus === "paid" ||
-                isAlreadyPaid
-              );
-              const fullRecord = JSON.stringify({
-                ...payload,
-                ...created,
-                isPaid: isResultPaid,
-                isPublished: Boolean(created.isPublished && isResultPaid),
-              });
-              localStorage.setItem(`unfold_invitation_${created.slug || normalizedSlug}`, fullRecord);
-              localStorage.setItem(`unfold_invitation_${created.id}`, fullRecord);
-              localStorage.setItem("unfold_pending_draft", fullRecord);
-              sessionStorage.setItem("unfold_pending_draft", fullRecord);
-            }
+          if (created?.slug) {
+            finalSlug = created.slug;
+            setSlug(created.slug);
           }
+          if (created?.id) {
+            finalId = created.id;
+            setSavedInvitationId(created.id);
+          }
+          persistLocal({ ...payload, ...created }, finalSlug, finalId || undefined);
         }
       }
     } catch (err) {
       console.warn("Backend sync fallback:", err);
+      persistLocal(payload, normalizedSlug, activeId || undefined);
     }
 
-    setSaveSuccessMsg("Invitation updated successfully!");
+    if (targetEmail && typeof window !== "undefined") {
+      localStorage.setItem("unfold_user_email", targetEmail.toLowerCase());
+    }
+
+    const successRecord: CustomizerSuccessInvite = {
+      id: String(finalId || `local-${finalSlug}`),
+      slug: finalSlug,
+      brideName,
+      groomName,
+      weddingDate,
+      weddingTime,
+      venueName,
+      venueAddress,
+      templateId,
+    };
+    setSavedInvite(successRecord);
+    setIsConfirmModalOpen(false);
+    setIsSuccessModalOpen(true);
+    setSaveSuccessMsg("Invitation saved to your dashboard.");
     setIsSubmitting(false);
-
-    // Redirect to live preview
-    router.push(`/preview/${finalSlug}`);
   };
 
-  const getNextButtonLabel = () => {
-    switch (currentStep) {
-      case 1:
-        return "Next: Date & Venue →";
-      case 2:
-        return "Next: Ceremonies Itinerary →";
-      case 3:
-        return "Next: Photo & Audio →";
-      case 4:
-        return "Next: Review & Save →";
-      case 5:
-        return isEdit ? "💾 Save & View Live" : "✨ Generate Free Live Demo";
-      default:
-        return "Next Step →";
-    }
-  };
+  const editorTitle = useMemo(
+    () => (isEdit ? "Edit your invitation" : "Customize your invitation"),
+    [isEdit]
+  );
+
+  const isStepComplete = useCallback(
+    (stepId: number) => getStepValidationError(stepId) === null,
+    [getStepValidationError]
+  );
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
+    <div className="flex h-full min-h-0 w-full flex-col lg:grid lg:h-[100dvh] lg:max-h-[100dvh] lg:grid-cols-[minmax(min(100%,320px),26rem)_minmax(0,1fr)] lg:overflow-hidden lg:items-stretch">
+      <aside
+        ref={sidebarScrollRef}
+        data-lenis-prevent
+        data-lenis-prevent-wheel
+        className="customizer-sidebar-scroll flex min-h-0 w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto overscroll-y-contain bg-[#FAFAF8] lg:max-h-[100dvh] lg:min-h-0 lg:border-r lg:border-[#073D31]/10 lg:h-[100dvh]"
+      >
+        <div className="shrink-0 border-b border-[#073D31]/8 px-3 pt-5 pb-4 sm:px-4 lg:px-4 lg:pt-4">
       {/* Top Breadcrumbs / Back Navigation */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="mb-4 flex items-center justify-between gap-3">
         <Link
           href={isEdit ? "/dashboard" : `/preview/${templateId}`}
-          className="inline-flex items-center gap-1.5 text-xs text-stone-500 hover:text-stone-900 font-semibold transition-colors"
+          className="inline-flex min-h-[44px] items-center gap-1.5 font-sans text-xs font-semibold text-[#76766F] transition-colors hover:text-[#18211E]"
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>{isEdit ? "Back to Dashboard" : "Back to Template Overview"}</span>
+          <span>{isEdit ? "Dashboard" : "Template overview"}</span>
         </Link>
 
-        {isEdit && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-3 py-1 rounded-full">
+        {isEdit ? (
+          <span className="inline-flex items-center gap-1 rounded-full border border-[#C8A45E]/30 bg-[#C8A45E]/10 px-3 py-1 text-[11px] font-bold text-[#8B6914]">
             <Lock size={12} weight="bold" />
-            <span>Theme: {meta.name}</span>
+            <span className="max-w-[8rem] truncate sm:max-w-none">{meta.name}</span>
           </span>
-        )}
+        ) : null}
       </div>
 
-      {/* Header Banner */}
-      <div className="mb-8">
-        <div className="flex flex-wrap items-center gap-2 mb-2">
-          {isEdit ? (
-            <span className="bg-emerald-50 text-emerald-800 border border-emerald-200/90 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-xs">
-              <CheckCircle className="h-3 w-3 text-emerald-600" weight="fill" />
-              Editing Active Invitation
-            </span>
-          ) : (
-            <span className="bg-amber-400/20 text-amber-900 border border-amber-400/40 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-xs">
-              <Sparkle className="h-3 w-3 text-amber-600" weight="fill" />
-              100% Free Live Demo
-            </span>
-          )}
-          <span className="text-xs text-stone-500">
-            {isEdit
-              ? `Locked to chosen theme: ${meta.name} (${meta.style})`
-              : "No payment or credit card required"}
-          </span>
-        </div>
-
-        <h1 className="font-serif text-3xl sm:text-4xl text-stone-900 leading-tight">
-          {isEdit ? `Edit ${brideName} & ${groomName}'s Invitation` : `Personalize ${meta.name}`}
+      {/* Header Banner — reference-style */}
+      <div>
+        <h1 className="font-serif text-2xl font-medium leading-tight text-[#18211E] sm:text-3xl">
+          {editorTitle}
         </h1>
-        <p className="text-sm text-stone-600 mt-1">
-          {isEdit
-            ? "Update wedding details, couple portrait, gallery memories, or ceremony schedule below."
-            : "Complete the 5 simple steps below to craft your animated wedding invitation."}
+        <p className="mt-1 font-sans text-xs text-[#76766F]">
+          {meta.name} · {meta.style}
+          {!isEdit && " · Free live demo"}
         </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setIsTemplatePickerOpen(true)}
+            className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full border border-[#C8A45E]/35 bg-[#C8A45E]/10 px-4 font-sans text-xs font-bold text-[#8B6914] transition-colors hover:border-[#C8A45E]/55"
+          >
+            <ArrowsClockwise size={16} weight="bold" />
+            Change template
+          </button>
+          <button
+            type="button"
+            onClick={handleSaveForLater}
+            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#073D31]/15 bg-white px-4 font-sans text-xs font-bold text-[#073D31] transition-colors hover:border-[#073D31]/30"
+          >
+            Save for later
+          </button>
+        </div>
       </div>
-
-      {/* ── Multi-Step Progress Tracker Bar ── */}
-      <div className="mb-8 bg-white border border-stone-200/80 rounded-2xl p-4 shadow-sm">
-        <div className="flex items-center justify-between mb-3 px-1">
-          <div className="flex items-center gap-2">
-            <span className="h-6 w-6 rounded-full bg-amber-500 text-white text-xs font-bold flex items-center justify-center shadow-xs">
-              {currentStep}
-            </span>
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-700">
-              Step {currentStep} of 5 · {STEPS[currentStep - 1].title}
-            </span>
-          </div>
-          <span className="text-[11px] font-semibold text-stone-400 font-mono">
-            {Math.round((currentStep / 5) * 100)}% Complete
-          </span>
         </div>
 
-        {/* Progress Fill Line */}
-        <div className="w-full bg-stone-100 h-2 rounded-full overflow-hidden mb-4">
-          <motion.div
-            className="h-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 rounded-full"
-            initial={false}
-            animate={{ width: `${(currentStep / 5) * 100}%` }}
-            transition={{ duration: 0.35, ease: "easeInOut" }}
-          />
-        </div>
-
-        {/* Step Icons & Pills */}
-        <div className="grid grid-cols-5 gap-1 sm:gap-2">
-          {STEPS.map((step) => {
-            const isDone = currentStep > step.id;
-            const isCurrent = currentStep === step.id;
-            const StepIcon = step.icon;
-
-            return (
-              <button
-                key={step.id}
-                type="button"
-                onClick={() => {
-                  if (step.id < currentStep || isEdit) setCurrentStep(step.id);
-                }}
-                disabled={!isEdit && step.id > currentStep}
-                className={`flex flex-col items-center text-center p-2 rounded-xl transition-all ${
-                  isCurrent
-                    ? "bg-amber-500/10 border-2 border-amber-500 text-stone-900 shadow-sm"
-                    : isDone
-                    ? "bg-stone-50 border border-stone-200 text-stone-600 hover:bg-stone-100 cursor-pointer"
-                    : isEdit
-                    ? "bg-stone-50/60 border border-stone-200/60 text-stone-500 hover:bg-stone-100 cursor-pointer"
-                    : "opacity-40 border border-transparent text-stone-400 cursor-not-allowed"
-                }`}
-              >
-                <div
-                  className={`h-7 w-7 rounded-full flex items-center justify-center text-xs mb-1 font-bold ${
-                    isCurrent
-                      ? "bg-amber-500 text-white shadow-sm"
-                      : isDone
-                      ? "bg-emerald-600 text-white"
-                      : "bg-stone-200 text-stone-500"
-                  }`}
-                >
-                  {isDone ? <Check className="h-3.5 w-3.5" weight="bold" /> : step.id}
-                </div>
-                <span className="text-[10px] sm:text-xs font-bold leading-tight line-clamp-1">
-                  {step.title}
-                </span>
-                <span className="hidden sm:block text-[9px] text-stone-400 line-clamp-1 mt-0.5">
-                  {step.subtitle}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+      <div className="mx-auto w-full max-w-3xl shrink-0 px-3 pb-8 pt-2 sm:px-4 lg:mx-0 lg:max-w-none lg:px-4 lg:pb-10">
+      {/* ── Compact progress (mobile) ── */}
+      <div className="mb-4 rounded-xl border border-stone-200/80 bg-white px-3 py-2.5 shadow-sm lg:hidden">
+        <p className="font-sans text-[11px] font-semibold text-[#76766F]">
+          {openSteps.length} section{openSteps.length === 1 ? "" : "s"} open
+          {activeStep > 0 ? ` · Editing ${STEPS[activeStep - 1].title}` : ""}
+        </p>
       </div>
 
       {/* Validation Error Toast */}
@@ -669,19 +865,27 @@ export function InvitationCustomizerWizard({
         </motion.div>
       )}
 
-      {/* ── Dynamic Step Content Cards ── */}
-      <AnimatePresence mode="wait">
-        {/* STEP 1: The Couple */}
-        {currentStep === 1 && (
+      {/* ── Accordion sections (desktop) + steps (mobile) ── */}
+      <div className="space-y-2 lg:space-y-2.5">
+        <CustomizerStepAccordion
+          step={STEPS[0]}
+          isOpen={isStepOpen(1)}
+          isComplete={isStepComplete(1)}
+          canOpen
+          onToggle={() => toggleCustomizerStep(1)}
+          sectionId="customizer-step-1"
+        >
+        {isStepOpen(1) && (
           <motion.div
             key="step1"
+            className="min-w-0 max-w-full"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DoubleBezelCard className="bg-white border-stone-200/80 p-6 sm:p-8 space-y-6">
-              <div className="flex items-center gap-3 pb-4 border-b border-stone-150">
+            <DoubleBezelCard className="min-w-0 max-w-full overflow-hidden space-y-6 border-0 bg-transparent p-4 shadow-none sm:p-5 lg:border-stone-200/80 lg:bg-white lg:p-4 lg:shadow-sm">
+              <div className="flex items-center gap-3 border-b border-stone-150 pb-4 lg:hidden">
                 <div className="h-10 w-10 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
                   <Heart className="h-5 w-5" weight="fill" />
                 </div>
@@ -691,7 +895,7 @@ export function InvitationCustomizerWizard({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
                     Bride's First Name *
@@ -741,8 +945,8 @@ export function InvitationCustomizerWizard({
                     </button>
                   )}
                 </div>
-                <div className="flex rounded-xl overflow-hidden border border-stone-200 bg-stone-50/50 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20">
-                  <span className="bg-stone-100 px-3.5 py-3 text-xs text-stone-500 select-none flex items-center font-mono border-r border-stone-200">
+                <div className="flex flex-col overflow-hidden rounded-xl border border-stone-200 bg-stone-50/50 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-500/20 sm:flex-row lg:flex-col">
+                  <span className="bg-stone-100 px-3.5 py-2.5 text-xs text-stone-500 select-none flex items-center font-mono border-b border-stone-200 sm:border-b-0 sm:border-r sm:py-3 lg:border-b lg:border-r-0 lg:py-2.5">
                     {siteConfig.domain}/
                   </span>
                   <input
@@ -767,49 +971,15 @@ export function InvitationCustomizerWizard({
                 </p>
               </div>
 
-              {/* Religious & Cultural Tradition Selection */}
+              {/* Sacred blessings — tradition is set by this template ({meta.religionLabel}) */}
               <div className="pt-5 border-t border-stone-200/80 space-y-3.5">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
-                    Religious &amp; Cultural Tradition *
+                    Sacred invocations &amp; blessings
                   </label>
                   <p className="text-xs text-stone-500">
-                    Select your faith tradition to dynamically tailor sacred invocations (Arabic Duas, Vedic Mantras, or Romantic Love Quotes) across both your live website template and complimentary printable PDFs.
+                    This design uses {meta.religionLabel} wording. You can edit the blessing text below; it applies to your live invitation and complimentary PDFs.
                   </p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {(["muslim", "hindu", "universal"] as CulturalTradition[]).map((relKey) => {
-                    const preset = RELIGION_PRESETS[relKey];
-                    const isSelected = religion === relKey;
-                    return (
-                      <button
-                        key={relKey}
-                        type="button"
-                        onClick={() => handleSelectReligion(relKey)}
-                        className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer relative flex flex-col justify-between ${
-                          isSelected
-                            ? "border-amber-500 bg-amber-500/10 shadow-sm ring-2 ring-amber-500/20"
-                            : "border-stone-200 bg-stone-50/60 hover:bg-stone-100 hover:border-stone-300"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between w-full mb-1.5">
-                          <span className="text-xl">{preset.icon}</span>
-                          {isSelected ? (
-                            <span className="h-5 w-5 rounded-full bg-amber-500 text-stone-950 flex items-center justify-center">
-                              <Check size={12} weight="bold" />
-                            </span>
-                          ) : (
-                            <span className="h-5 w-5 rounded-full border border-stone-300" />
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-bold text-xs text-stone-900">{preset.name}</div>
-                          <div className="text-[11px] text-amber-800 font-medium">{preset.badge}</div>
-                        </div>
-                      </button>
-                    );
-                  })}
                 </div>
 
                 {/* Active Tradition Blessing Showcase Card */}
@@ -901,17 +1071,26 @@ export function InvitationCustomizerWizard({
             </DoubleBezelCard>
           </motion.div>
         )}
+        </CustomizerStepAccordion>
 
-        {/* STEP 2: Date & Venue */}
-        {currentStep === 2 && (
+        <CustomizerStepAccordion
+          step={STEPS[1]}
+          isOpen={isStepOpen(2)}
+          isComplete={isStepComplete(2)}
+          canOpen
+          onToggle={() => toggleCustomizerStep(2)}
+          sectionId="customizer-step-2"
+        >
+        {isStepOpen(2) && (
           <motion.div
             key="step2"
+            className="min-w-0 max-w-full"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DoubleBezelCard className="bg-white border-stone-200/80 p-6 sm:p-8 space-y-6">
+            <DoubleBezelCard className="min-w-0 max-w-full overflow-hidden bg-white border-stone-200/80 p-4 sm:p-6 lg:p-4 space-y-6">
               <div className="flex items-center gap-3 pb-4 border-b border-stone-150">
                 <div className="h-10 w-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
                   <Calendar className="h-5 w-5" weight="fill" />
@@ -922,7 +1101,7 @@ export function InvitationCustomizerWizard({
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-1">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
                     Wedding Day *
@@ -981,31 +1160,40 @@ export function InvitationCustomizerWizard({
             </DoubleBezelCard>
           </motion.div>
         )}
+        </CustomizerStepAccordion>
 
-        {/* STEP 3: Ceremonies Itinerary */}
-        {currentStep === 3 && (
+        <CustomizerStepAccordion
+          step={STEPS[2]}
+          isOpen={isStepOpen(3)}
+          isComplete={isStepComplete(3)}
+          canOpen
+          onToggle={() => toggleCustomizerStep(3)}
+          sectionId="customizer-step-3"
+        >
+        {isStepOpen(3) && (
           <motion.div
             key="step3"
+            className="min-w-0 max-w-full"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DoubleBezelCard className="bg-white border-stone-200/80 p-6 sm:p-8 space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-stone-150">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600">
+            <DoubleBezelCard className="min-w-0 max-w-full overflow-hidden bg-white border-stone-200/80 p-4 sm:p-6 lg:p-4 space-y-6">
+              <div className="flex flex-col gap-3 border-b border-stone-150 pb-4 lg:items-stretch sm:flex-row sm:items-start sm:justify-between lg:flex-col">
+                <div className="flex min-w-0 items-start gap-3">
+                  <div className="h-10 w-10 shrink-0 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600">
                     <Clock className="h-5 w-5" weight="fill" />
                   </div>
-                  <div>
-                    <h2 className="font-serif text-2xl text-stone-900 font-bold">Ceremonies Itinerary</h2>
+                  <div className="min-w-0">
+                    <h2 className="font-serif text-xl text-stone-900 font-bold sm:text-2xl">Ceremonies Itinerary</h2>
                     <p className="text-xs text-stone-500">Add or edit all wedding functions, times, and halls.</p>
                   </div>
                 </div>
                 <button
                   type="button"
                   onClick={handleAddEvent}
-                  className="inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 px-3 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs"
+                  className="inline-flex w-full shrink-0 items-center justify-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 px-3 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs sm:w-auto"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   <span>Add Ceremony</span>
@@ -1034,7 +1222,7 @@ export function InvitationCustomizerWizard({
                       )}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
                       <div>
                         <label className="block text-[10px] font-bold uppercase text-stone-500 mb-1">Ceremony Name</label>
                         <input
@@ -1082,17 +1270,26 @@ export function InvitationCustomizerWizard({
             </DoubleBezelCard>
           </motion.div>
         )}
+        </CustomizerStepAccordion>
 
-        {/* STEP 4: Photo & Audio */}
-        {currentStep === 4 && (
+        <CustomizerStepAccordion
+          step={STEPS[3]}
+          isOpen={isStepOpen(4)}
+          isComplete={isStepComplete(4)}
+          canOpen
+          onToggle={() => toggleCustomizerStep(4)}
+          sectionId="customizer-step-4"
+        >
+        {isStepOpen(4) && (
           <motion.div
             key="step4"
+            className="min-w-0 max-w-full"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DoubleBezelCard className="bg-white border-stone-200/80 p-6 sm:p-8 space-y-6">
+            <DoubleBezelCard className="min-w-0 max-w-full overflow-hidden bg-white border-stone-200/80 p-4 sm:p-6 lg:p-4 space-y-6">
               <div className="flex items-center gap-3 pb-4 border-b border-stone-150">
                 <div className="h-10 w-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
                   <ImageIcon className="h-5 w-5" weight="fill" />
@@ -1119,7 +1316,7 @@ export function InvitationCustomizerWizard({
                 </p>
 
                 {/* Choice Selector Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 mb-4">
                   {/* Option A: Template Default */}
                   <div
                     onClick={() => {
@@ -1276,17 +1473,26 @@ export function InvitationCustomizerWizard({
             </DoubleBezelCard>
           </motion.div>
         )}
+        </CustomizerStepAccordion>
 
-        {/* STEP 5: Review & Save */}
-        {currentStep === 5 && (
+        <CustomizerStepAccordion
+          step={STEPS[4]}
+          isOpen={isStepOpen(5)}
+          isComplete={isStepComplete(5)}
+          canOpen
+          onToggle={() => toggleCustomizerStep(5)}
+          sectionId="customizer-step-5"
+        >
+        {isStepOpen(5) && (
           <motion.div
             key="step5"
+            className="min-w-0 max-w-full"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
           >
-            <DoubleBezelCard className="bg-white border-stone-200/80 p-6 sm:p-8 space-y-6">
+            <DoubleBezelCard className="min-w-0 max-w-full overflow-hidden bg-white border-stone-200/80 p-4 sm:p-6 lg:p-4 space-y-6">
               <div className="flex items-center gap-3 pb-4 border-b border-stone-150">
                 <div className="h-10 w-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
                   <Sparkle className="h-5 w-5 text-amber-600" weight="fill" />
@@ -1304,35 +1510,35 @@ export function InvitationCustomizerWizard({
               </div>
 
               {/* Summary Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+              <div className="grid grid-cols-1 gap-3">
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Couple</span>
-                  <span className="font-serif text-lg font-bold text-stone-900 block">{brideName} & {groomName}</span>
-                  <span className="text-xs font-mono text-amber-700">{siteConfig.domain}/{slug}</span>
+                  <span className="font-serif text-lg font-bold text-stone-900 block break-words">{brideName} & {groomName}</span>
+                  <span className="mt-1 block break-all text-xs font-mono text-amber-700">{siteConfig.domain}/{slug}</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Tradition &amp; Blessings</span>
-                  <span className="font-serif text-base font-bold text-stone-900 flex items-center gap-1.5">
+                  <span className="font-serif text-base font-bold text-stone-900 flex flex-wrap items-center gap-1.5">
                     <span>{RELIGION_PRESETS[religion].icon}</span>
                     <span>{RELIGION_PRESETS[religion].name}</span>
                   </span>
-                  <span className="text-xs text-amber-800 truncate block mt-0.5">{sacredInvocation}</span>
+                  <span className="mt-1 block break-words text-xs leading-relaxed text-amber-900/90">{sacredInvocation}</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 sm:col-span-2">
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Date & Time</span>
                   <span className="font-serif text-lg font-bold text-stone-900 block">{weddingDate}</span>
                   <span className="text-xs text-stone-600">{weddingTime}</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 sm:col-span-2">
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Venue</span>
-                  <span className="font-serif text-base font-bold text-stone-900 block">{venueName}</span>
-                  <span className="text-xs text-stone-600">{venueAddress}</span>
+                  <span className="font-serif text-base font-bold text-stone-900 block break-words">{venueName}</span>
+                  <span className="text-xs text-stone-600 break-words">{venueAddress}</span>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 sm:col-span-2">
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Ceremonies ({events.length})</span>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {events.map((evt, idx) => (
@@ -1343,8 +1549,8 @@ export function InvitationCustomizerWizard({
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-stone-50 border border-stone-200/80 sm:col-span-2 flex items-center justify-between">
-                  <div>
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
                     <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-0.5">Photos Attached</span>
                     <span className="text-xs text-stone-700 font-medium">
                       {heroImageUrl ? "✓ Main Hero Portrait" : "Template Royal Artwork"} · {slideshowImages.length} Gallery Photo{slideshowImages.length !== 1 ? "s" : ""}
@@ -1357,7 +1563,7 @@ export function InvitationCustomizerWizard({
               </div>
 
                 {/* ── Complimentary PDF Benefit Showcase Card ── */}
-                <div className="p-5 rounded-2xl bg-gradient-to-br from-amber-500/10 via-[#073D31]/5 to-transparent border-2 border-[#C8A45E]/40 sm:col-span-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+                <div className="flex min-w-0 flex-col justify-between gap-4 rounded-2xl border-2 border-[#C8A45E]/40 bg-gradient-to-br from-amber-500/10 via-[#073D31]/5 to-transparent p-4 shadow-sm sm:flex-row sm:items-center lg:flex-col lg:items-stretch">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-[#C8A45E]" />
@@ -1400,61 +1606,27 @@ export function InvitationCustomizerWizard({
             </DoubleBezelCard>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      {/* ── Wizard Action Bar ── */}
-      <div className="mt-8 pt-4 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-        {/* Previous Button */}
-        {currentStep > 1 ? (
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="w-full sm:w-auto px-6 py-3 rounded-full border border-stone-300 text-stone-700 hover:bg-stone-100 text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span>Previous Step</span>
-          </button>
-        ) : (
-          <div className="hidden sm:block" />
-        )}
-
-        {/* Next / Finish Button */}
-        {currentStep < 5 ? (
-          <button
-            type="button"
-            onClick={validateAndNext}
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#082F27] hover:bg-[#0D4439] text-white text-xs font-bold uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2 border border-amber-400/40 cursor-pointer"
-          >
-            <span>{getNextButtonLabel()}</span>
-            <ArrowRight className="h-4 w-4 text-amber-300" weight="bold" />
-          </button>
-        ) : (
-          <PremiumButton
-            onClick={handleSaveInvitation}
-            disabled={isSubmitting}
-            className="w-full sm:w-auto px-10 py-4 text-sm font-bold flex items-center justify-center gap-2 shadow-2xl hover:scale-105 transition-all !bg-gradient-to-r !from-amber-600 !via-amber-500 !to-amber-600 !text-stone-950"
-          >
-            {isEdit ? (
-              <FloppyDisk className="h-5 w-5 text-stone-950" weight="fill" />
-            ) : (
-              <Sparkle className="h-5 w-5 text-stone-950" weight="fill" />
-            )}
-            <span>
-              {isSubmitting
-                ? "Saving Invitation..."
-                : isEdit
-                ? "💾 Save & View Live"
-                : "✨ Generate Free Live Demo"}
-            </span>
-          </PremiumButton>
-        )}
+        </CustomizerStepAccordion>
       </div>
+      </div>
+
+      <CustomizerFloatingActionBar
+        isFormComplete={isFormComplete}
+        isLoggedIn={isLoggedIn}
+        isEdit={isEdit}
+        isSubmitting={isSubmitting}
+        activeStep={activeStep}
+        onSaveContinue={handleFloatingSaveContinue}
+        onPreview={handlePreviewFullscreen}
+        onPrimaryAction={requestSubmitFlow}
+      />
 
       {/* ── Complimentary PDF Preview Modal ── */}
       <PdfPreviewModal
         isOpen={isPdfModalOpen}
         onClose={() => setIsPdfModalOpen(false)}
         templateId={templateId}
+        hideReligionSelector
         initialData={{
           brideName,
           groomName,
@@ -1469,6 +1641,60 @@ export function InvitationCustomizerWizard({
           sacredTranslation,
         }}
       />
+
+      <CustomizerAuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onAuthenticated={handleAuthSuccess}
+        defaultName={`${brideName} & ${groomName}`}
+        onBeforeAuth={persistBeforeAuth}
+      />
+
+      <CustomizerSubmitConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={() => void handleSaveInvitation()}
+        isSubmitting={isSubmitting}
+        coupleLabel={`${brideName} & ${groomName}`}
+      />
+
+      <CustomizerSubmitSuccessModal
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        invite={savedInvite}
+        onShare={() => {
+          setIsSuccessModalOpen(false);
+          setIsShareModalOpen(true);
+        }}
+        onOpenFullscreenPreview={handlePreviewFullscreen}
+      />
+
+      {savedInvite ? (
+        <ShareInvitationModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          invite={savedInvite}
+        />
+      ) : null}
+
+      <CustomizerTemplatePickerModal
+        isOpen={isTemplatePickerOpen}
+        onClose={() => setIsTemplatePickerOpen(false)}
+        currentTemplateId={templateId}
+        onSelectTemplate={handleSelectTemplate}
+        activeReligion={religion}
+      />
+      </aside>
+
+      <aside className="hidden lg:flex lg:min-h-0 lg:h-full lg:max-h-full lg:flex-col lg:overflow-hidden">
+        <CustomizerLivePreviewPanel
+          ref={previewPanelRef}
+          templateId={templateId}
+          templateName={meta.name}
+          religion={religion}
+          musicTrack={musicTrack}
+        />
+      </aside>
     </div>
   );
 }

@@ -1,15 +1,10 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useMotionValueEvent,
-  PanInfo,
-} from "motion/react";
-import { ArrowRight } from "@phosphor-icons/react";
+import { useRouter } from "next/navigation";
+import { motion, PanInfo } from "motion/react";
+import { ArrowRight, CaretLeft, CaretRight, Eye } from "@phosphor-icons/react";
 import { getTemplateDefaultData } from "@/templates";
 
 interface LookbookFrame {
@@ -33,6 +28,7 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
     title: "Imperial Palace Grand Ballroom",
     tag: "3D Double Palace Doors",
     image: "/templates/imperial-palace/ballroom.jpg",
+    video: "/videos/royal-prestige.mp4",
     description: "Ornate gold leaf arches, royal elephant procession, and regal velvet fanfare.",
     palette: ["#551618", "#C8A45E", "#E5D8C4"],
   },
@@ -92,16 +88,210 @@ const LOOKBOOK_FRAMES: LookbookFrame[] = [
 ];
 
 const CHAPTERS = ["Royal Palaces", "Sacred Nikahs", "Celestial Dreamscapes", "Modern Florals"];
+const AUTO_ADVANCE_MS = 5500;
+
+function stopNavBubble(e: React.MouseEvent | React.PointerEvent) {
+  e.stopPropagation();
+}
+
+function CardMedia({
+  frame,
+  isActive,
+}: {
+  frame: LookbookFrame;
+  isActive: boolean;
+}) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el || !frame.video) return;
+
+    el.defaultMuted = true;
+    el.muted = true;
+
+    if (isActive) {
+      const playPromise = el.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {});
+      }
+    } else {
+      el.pause();
+      el.currentTime = 0;
+    }
+  }, [frame.video, isActive]);
+
+  if (frame.video) {
+    return (
+      <div className="relative w-full h-full bg-black overflow-hidden">
+        <img
+          src={frame.image}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <video
+          ref={videoRef}
+          src={frame.video}
+          poster={frame.image}
+          autoPlay={isActive}
+          loop
+          muted
+          playsInline
+          preload={isActive ? "auto" : "metadata"}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            isActive ? "opacity-100 brightness-[0.92]" : "opacity-0"
+          }`}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="w-full h-full bg-cover bg-center brightness-[0.92]"
+      style={{ backgroundImage: `url(${frame.image})` }}
+    />
+  );
+}
+
+interface LookbookCardProps {
+  frame: LookbookFrame;
+  coupleLabel: string;
+  isFocused: boolean;
+  cardWidth: number;
+  diff: number;
+  cardStep: number;
+  isDraggingRef: React.MutableRefObject<boolean>;
+  onSelectSide: () => void;
+  onPanStart: () => void;
+  onPanEnd: (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => void;
+}
+
+function LookbookCard({
+  frame,
+  coupleLabel,
+  isFocused,
+  cardWidth,
+  diff,
+  cardStep,
+  isDraggingRef,
+  onSelectSide,
+  onPanStart,
+  onPanEnd,
+}: LookbookCardProps) {
+  const router = useRouter();
+  const detailsHref = `/preview/${frame.templateId}`;
+  const livePreviewHref = `/preview/${frame.templateId}/interactive`;
+
+  return (
+    <motion.article
+      onPanStart={onPanStart}
+      onPanEnd={onPanEnd}
+      animate={{
+        x: diff * cardStep,
+        scale: isFocused ? 1 : 0.88,
+        opacity: isFocused ? 1 : Math.abs(diff) === 1 ? 0.62 : 0,
+        zIndex: isFocused ? 30 : 10,
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 28,
+        mass: 0.85,
+      }}
+      onClick={() => {
+        if (isDraggingRef.current) return;
+        if (!isFocused) {
+          onSelectSide();
+        }
+      }}
+      style={{
+        position: "absolute",
+        width: `${cardWidth}px`,
+        pointerEvents: Math.abs(diff) <= 1 ? "auto" : "none",
+      }}
+      className={`h-[52dvh] min-h-[340px] max-h-[540px] sm:h-[56dvh] sm:min-h-[380px] sm:max-h-[580px] rounded-2xl sm:rounded-[1.75rem] p-2.5 sm:p-3 bg-gradient-to-b from-white/[0.08] to-black/40 border backdrop-blur-sm transition-colors duration-500 overflow-hidden touch-none ${
+        isFocused
+          ? "border-[#C8A45E] shadow-[0_24px_60px_rgba(200,164,94,0.38)] ring-1 ring-[#C8A45E]/55 cursor-grab active:cursor-grabbing"
+          : "border-white/15 shadow-lg cursor-grab active:cursor-grabbing hover:border-white/30"
+      }`}
+    >
+      <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-stone-900">
+        <CardMedia frame={frame} isActive={isFocused} />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-transparent pointer-events-none" />
+
+        <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[8.5px] sm:text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-[#C8A45E]/35 pointer-events-none">
+          {frame.tag}
+        </div>
+
+        <div className="absolute bottom-3 left-3 right-3 z-20 space-y-2.5">
+          <div className="pointer-events-none">
+            <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#C8A45E]">
+              {frame.chapter}
+            </span>
+            <h3 className="font-serif text-lg sm:text-2xl font-bold text-white leading-snug line-clamp-2">
+              {frame.title}
+            </h3>
+            <p className="text-[11px] sm:text-xs text-stone-300 font-sans mt-1 line-clamp-1">
+              {coupleLabel}
+            </p>
+          </div>
+
+          {isFocused && (
+            <div className="flex flex-col sm:flex-row items-stretch gap-2 pt-1">
+              <Link
+                href={livePreviewHref}
+                onPointerDown={stopNavBubble}
+                onClick={stopNavBubble}
+                className="flex-1 min-h-[44px] py-2.5 px-3 rounded-full bg-[#073D31]/95 hover:bg-[#032A23] text-[#F7F4ED] text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 border border-[#C8A45E]/40 transition-colors"
+              >
+                <Eye size={14} weight="bold" className="text-[#E1C98E] shrink-0" />
+                <span>Live Preview</span>
+              </Link>
+              <Link
+                href={detailsHref}
+                onPointerDown={stopNavBubble}
+                onClick={stopNavBubble}
+                className="flex-1 min-h-[44px] py-2.5 px-3 rounded-full bg-[#C8A45E] hover:bg-[#E1C98E] text-[#032A23] text-[10px] sm:text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <span>Explore</span>
+                <ArrowRight size={13} weight="bold" />
+              </Link>
+            </div>
+          )}
+
+          {!isFocused && (
+            <button
+              type="button"
+              onClick={(e) => {
+                stopNavBubble(e);
+                if (isDraggingRef.current) return;
+                router.push(detailsHref);
+              }}
+              className="w-full min-h-[44px] py-2 rounded-full bg-white/10 hover:bg-white/15 text-white text-[10px] font-bold tracking-wider uppercase border border-white/20 transition-colors"
+            >
+              View Template
+            </button>
+          )}
+        </div>
+      </div>
+    </motion.article>
+  );
+}
 
 export function PinnedLookbook() {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [activeFrameIndex, setActiveFrameIndex] = useState(0);
-  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(390);
+  const [isHovered, setIsHovered] = useState(false);
+  const [autoProgress, setAutoProgress] = useState(0);
   const isDraggingRef = useRef(false);
+  const autoplayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const progressStartRef = useRef(Date.now());
 
-  const [activeInvitations, setActiveInvitations] = useState<any[]>([]);
+  const [activeInvitations, setActiveInvitations] = useState<
+    { templateId?: string; brideName?: string; groomName?: string }[]
+  >([]);
 
   useEffect(() => {
     try {
@@ -109,415 +299,228 @@ export function PinnedLookbook() {
       if (stored) {
         setActiveInvitations(JSON.parse(stored));
       }
-    } catch (e) {
+    } catch {
       // ignore
     }
   }, []);
 
-  const getDynamicCouple = (templateId: string) => {
-    const custom = activeInvitations.find((item: any) => item.templateId === templateId);
-    if (custom?.brideName && custom?.groomName) {
-      return `${custom.groomName} & ${custom.brideName}`;
-    }
-    const def = getTemplateDefaultData(templateId);
-    const groom = def?.couple?.groomName || def?.groomName;
-    const bride = def?.couple?.brideName || def?.brideName;
-    if (groom && bride) {
-      return `${groom} & ${bride}`;
-    }
-    return "Wedding Celebration";
-  };
+  const getDynamicCouple = useCallback(
+    (templateId: string) => {
+      const custom = activeInvitations.find((item) => item.templateId === templateId);
+      if (custom?.brideName && custom?.groomName) {
+        return `${custom.groomName} & ${custom.brideName}`;
+      }
+      const def = getTemplateDefaultData(templateId);
+      const groom = def?.couple?.groomName || def?.groomName;
+      const bride = def?.couple?.brideName || def?.brideName;
+      if (groom && bride) {
+        return `${groom} & ${bride}`;
+      }
+      return "Wedding Celebration";
+    },
+    [activeInvitations]
+  );
 
   useEffect(() => {
-    const updateDims = () => {
-      setViewportWidth(window.innerWidth);
-      setIsMobile(window.innerWidth < 768);
-    };
+    const updateDims = () => setViewportWidth(window.innerWidth);
     updateDims();
     window.addEventListener("resize", updateDims);
     return () => window.removeEventListener("resize", updateDims);
   }, []);
 
-  // Desktop on-scroll sticky tracking (unchanged as it was earlier)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end end"],
-  });
-
-  const desktopTrackX = useTransform(scrollYProgress, [0, 1], ["0%", "-64%"]);
-  const desktopProgressWidth = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
-  useMotionValueEvent(scrollYProgress, "change", (latest) => {
-    if (!isMobile) {
-      const frameIndex = Math.min(
-        Math.floor(latest * LOOKBOOK_FRAMES.length * 0.999),
-        LOOKBOOK_FRAMES.length - 1
-      );
-      setActiveFrameIndex(frameIndex);
-    }
-  });
-
-  // Mobile dedicated swiper dimensions & handlers
   const count = LOOKBOOK_FRAMES.length;
-  const mobileCardWidth = Math.min(275, viewportWidth - 64);
-  const mobileGap = 16;
-  const mobileCardStep = mobileCardWidth + mobileGap;
+  const currentFrame = LOOKBOOK_FRAMES[activeIndex];
 
-  const handleMobilePanStart = () => {
+  const cardWidth =
+    viewportWidth < 640 ? Math.min(290, viewportWidth - 56) : viewportWidth < 1024 ? 340 : 400;
+  const cardGap = viewportWidth < 640 ? 18 : 28;
+  const cardStep = cardWidth + cardGap;
+
+  const goToIndex = useCallback((index: number) => {
+    setActiveIndex((index + count) % count);
+    progressStartRef.current = Date.now();
+    setAutoProgress(0);
+  }, [count]);
+
+  const goNext = useCallback(() => {
+    goToIndex(activeIndex + 1);
+  }, [activeIndex, goToIndex]);
+
+  const goPrev = useCallback(() => {
+    goToIndex(activeIndex - 1);
+  }, [activeIndex, goToIndex]);
+
+  const goToChapter = (chapter: string) => {
+    const foundIdx = LOOKBOOK_FRAMES.findIndex((f) => f.chapter === chapter);
+    if (foundIdx !== -1) {
+      goToIndex(foundIdx);
+    }
+  };
+
+  useEffect(() => {
+    if (autoplayTimerRef.current) {
+      clearInterval(autoplayTimerRef.current);
+      autoplayTimerRef.current = null;
+    }
+    if (!isHovered) {
+      autoplayTimerRef.current = setInterval(() => {
+        setActiveIndex((prev) => (prev + 1) % count);
+        progressStartRef.current = Date.now();
+        setAutoProgress(0);
+      }, AUTO_ADVANCE_MS);
+    }
+    return () => {
+      if (autoplayTimerRef.current) {
+        clearInterval(autoplayTimerRef.current);
+        autoplayTimerRef.current = null;
+      }
+    };
+  }, [isHovered, count]);
+
+  useEffect(() => {
+    progressStartRef.current = Date.now();
+    setAutoProgress(0);
+  }, [activeIndex]);
+
+  useEffect(() => {
+    if (isHovered) return;
+
+    const tickMs = 40;
+    const timer = window.setInterval(() => {
+      const elapsed = Date.now() - progressStartRef.current;
+      setAutoProgress(Math.min(100, (elapsed / AUTO_ADVANCE_MS) * 100));
+    }, tickMs);
+
+    return () => window.clearInterval(timer);
+  }, [isHovered, activeIndex]);
+
+  const handlePanStart = () => {
     isDraggingRef.current = true;
   };
 
-  const handleMobilePanEnd = (
-    _event: MouseEvent | TouchEvent | PointerEvent,
-    info: PanInfo
-  ) => {
+  const handlePanEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     setTimeout(() => {
       isDraggingRef.current = false;
-    }, 80);
+    }, 100);
 
-    const threshold = 25;
-    const velocityThreshold = 140;
+    const threshold = 30;
+    const velocityThreshold = 180;
 
     if (info.offset.x < -threshold || info.velocity.x < -velocityThreshold) {
-      setMobileActiveIndex((prev) => (prev + 1) % count);
+      goNext();
     } else if (info.offset.x > threshold || info.velocity.x > velocityThreshold) {
-      setMobileActiveIndex((prev) => (prev - 1 + count) % count);
+      goPrev();
     }
   };
-
-  const goToMobileChapter = (chapter: string) => {
-    const foundIdx = LOOKBOOK_FRAMES.findIndex((f) => f.chapter === chapter);
-    if (foundIdx !== -1) {
-      setMobileActiveIndex(foundIdx);
-    }
-  };
-
-  // -------------------------------------------------------------
-  // MOBILE VIEW: Standalone Dead-Center Infinite Touch Swiper
-  // -------------------------------------------------------------
-  if (isMobile) {
-    const currentMobileFrame = LOOKBOOK_FRAMES[mobileActiveIndex];
-
-    return (
-      <section
-        id="lookbook"
-        className="relative w-full min-h-[100dvh] bg-[#032A23] text-[#F7F4ED] overflow-hidden flex flex-col justify-between pt-20 pb-6 px-4 select-none"
-      >
-        {/* Mobile Header: Eyebrow + Clickable Chapter Badges */}
-        <div className="relative z-20 flex flex-col gap-2.5 border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-[#C8A45E] animate-ping" />
-            <h2 className="font-serif text-lg font-bold tracking-tight text-white uppercase">
-              The Lookbook
-            </h2>
-            <span className="text-[9.5px] font-mono uppercase text-[#E1C98E] tracking-widest">
-              Vol. 2026 Collection
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-            {CHAPTERS.map((ch) => {
-              const isCurrentChapter = currentMobileFrame.chapter === ch;
-              return (
-                <button
-                  key={ch}
-                  type="button"
-                  onClick={() => goToMobileChapter(ch)}
-                  className={`relative py-1 px-2.5 rounded-full text-[10.5px] font-sans tracking-wide transition-all duration-300 whitespace-nowrap cursor-pointer ${
-                    isCurrentChapter
-                      ? "bg-white/15 text-white font-bold border border-[#C8A45E]/50 shadow-[0_0_12px_rgba(200,164,94,0.3)]"
-                      : "text-white/40 border border-transparent hover:text-white/80"
-                  }`}
-                >
-                  <span>{ch}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Mobile Swiper Stage (100% Dead-Center, Infinite Loop, Smooth Springs) */}
-        <div className="relative z-10 w-full flex-1 my-auto flex items-center justify-center overflow-hidden py-4 touch-pan-y">
-          <motion.div
-            onPanStart={handleMobilePanStart}
-            onPanEnd={handleMobilePanEnd}
-            className="relative w-full h-[48dvh] flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
-          >
-            {LOOKBOOK_FRAMES.map((frame, idx) => {
-              let diff = (idx - mobileActiveIndex + count) % count;
-              if (diff > count / 2) diff -= count;
-
-              const isFocused = diff === 0;
-              const isPeek = Math.abs(diff) === 1;
-              const isVisible = Math.abs(diff) <= 1;
-
-              return (
-                <motion.div
-                  key={frame.id}
-                  animate={{
-                    x: diff * mobileCardStep,
-                    scale: isFocused ? 1 : 0.88,
-                    opacity: isFocused ? 1 : isPeek ? 0.6 : 0,
-                    zIndex: isFocused ? 30 : 10,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 240,
-                    damping: 26,
-                    mass: 0.8,
-                  }}
-                  onClick={() => {
-                    if (isDraggingRef.current) return;
-                    if (!isFocused) setMobileActiveIndex(idx);
-                  }}
-                  style={{
-                    position: "absolute",
-                    width: `${mobileCardWidth}px`,
-                    pointerEvents: isVisible ? "auto" : "none",
-                  }}
-                  className={`h-[48dvh] rounded-2xl p-2.5 bg-black/50 border transition-colors duration-500 overflow-hidden cursor-pointer ${
-                    isFocused
-                      ? "border-[#C8A45E] shadow-[0_20px_50px_rgba(200,164,94,0.35)] ring-1 ring-[#C8A45E]/50"
-                      : "border-white/10 hover:border-white/20"
-                  }`}
-                >
-                  {/* Media Content */}
-                  <div className="relative w-full h-full rounded-xl overflow-hidden bg-stone-900">
-                    {frame.video ? (
-                      <video
-                        src={frame.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover brightness-[0.9]"
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full bg-cover bg-center brightness-[0.9]"
-                        style={{ backgroundImage: `url(${frame.image})` }}
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent" />
-
-                    {/* Top Tag */}
-                    <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[8.5px] font-bold tracking-wider text-[#E1C98E] uppercase border border-[#C8A45E]/30">
-                      {frame.tag}
-                    </div>
-
-                    {/* Bottom Card Title */}
-                    <div className="absolute bottom-3.5 left-3.5 right-3.5 z-20">
-                      <span className="text-[9px] uppercase font-bold tracking-widest text-[#C8A45E]">
-                        {frame.chapter}
-                      </span>
-                      <h3 className="font-serif text-base font-bold text-white leading-snug line-clamp-1">
-                        {frame.title}
-                      </h3>
-                      <p className="text-[11px] text-stone-300 font-sans mt-0.5 line-clamp-1">
-                        {getDynamicCouple(frame.templateId)}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-
-        {/* Mobile Bottom Bar: Metadata + Pagination + CTA */}
-        <div className="relative z-20 flex flex-col gap-3 border-t border-white/10 pt-3">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-[9.5px] uppercase font-mono text-[#E1C98E] tracking-widest font-bold line-clamp-1">
-                Viewing [{mobileActiveIndex + 1} / {count}] · {currentMobileFrame.title}
-              </span>
-              <div className="flex items-center gap-1.5 shrink-0">
-                {LOOKBOOK_FRAMES.map((_, dotIdx) => (
-                  <button
-                    key={dotIdx}
-                    type="button"
-                    onClick={() => setMobileActiveIndex(dotIdx)}
-                    aria-label={`Jump to lookbook card ${dotIdx + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                      dotIdx === mobileActiveIndex
-                        ? "w-4 bg-[#C8A45E]"
-                        : "w-1.5 bg-white/20"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-            <p className="text-[11px] text-stone-300 font-sans line-clamp-1">
-              {currentMobileFrame.description}
-            </p>
-          </div>
-
-          <Link
-            href={`/preview/${currentMobileFrame.templateId}`}
-            className="w-full py-2.5 rounded-full bg-[#C8A45E] hover:bg-[#E1C98E] text-[#032A23] text-xs font-bold uppercase tracking-wider font-sans transition-all duration-300 shadow-md flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>View Experience</span>
-            <ArrowRight size={13} weight="bold" />
-          </Link>
-        </div>
-
-        {/* Mobile Progress Bar */}
-        <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10">
-          <motion.div
-            animate={{ width: `${((mobileActiveIndex + 1) / count) * 100}%` }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="h-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] shadow-[0_0_10px_rgba(200,164,94,0.8)]"
-          />
-        </div>
-      </section>
-    );
-  }
-
-  // -------------------------------------------------------------
-  // DESKTOP VIEW: EXACT ORIGINAL ON-SCROLL PINNED 400VH FEATURE
-  // -------------------------------------------------------------
-  const currentDesktopFrame = LOOKBOOK_FRAMES[activeFrameIndex];
 
   return (
     <section
-      ref={containerRef}
       id="lookbook"
-      className="relative w-full h-[400vh] bg-[#032A23] text-[#F7F4ED]"
+      className="scroll-mt-24 sm:scroll-mt-28 relative w-full overflow-x-hidden bg-[#032A23] text-[#F7F4ED] py-16 sm:py-20 px-4 sm:px-8 lg:px-12"
     >
-      {/* Sticky Fullscreen Stage (100dvh + sticky top-0 pins securely across scroll) */}
-      <div className="sticky top-0 w-full h-[100dvh] overflow-hidden flex flex-col justify-between pt-20 sm:pt-24 pb-5 px-4 sm:px-8 lg:px-12 select-none bg-[#032A23]">
-        {/* TOP HEADER: Eyebrow + Chapter Trackers */}
-        <div className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4 border-b border-white/10 pb-3">
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            <span className="w-2 h-2 rounded-full bg-[#C8A45E] animate-ping" />
-            <h2 className="font-serif text-lg sm:text-2xl font-bold tracking-tight text-white uppercase">
-              The Lookbook
-            </h2>
-            <span className="hidden sm:inline text-white/30">|</span>
-            <span className="text-[9.5px] sm:text-xs font-mono uppercase text-[#E1C98E] tracking-widest">
-              Vol. 2026 Collection
-            </span>
-          </div>
-
-          {/* Chapters Navigation */}
-          <div className="flex items-center gap-1.5 sm:gap-3 overflow-x-auto no-scrollbar py-0.5">
-            {CHAPTERS.map((ch) => {
-              const isCurrentChapter = currentDesktopFrame.chapter === ch;
-              return (
-                <div
-                  key={ch}
-                  className={`relative py-1 px-2.5 sm:px-3 rounded-full text-[10.5px] sm:text-xs font-sans tracking-wide transition-all duration-300 whitespace-nowrap ${
-                    isCurrentChapter
-                      ? "bg-white/15 text-white font-bold border border-[#C8A45E]/50"
-                      : "text-white/40 border border-transparent"
-                  }`}
-                >
-                  <span>{ch}</span>
-                </div>
-              );
-            })}
-          </div>
+      <div className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-white/10 pb-4 mb-6 sm:mb-8">
+        <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 sm:gap-3 min-w-0">
+          <span className="w-2 h-2 rounded-full bg-[#C8A45E] animate-ping shrink-0" />
+          <h2 className="font-serif text-xl sm:text-3xl font-bold tracking-tight text-white">
+            Featured Collections
+          </h2>
         </div>
 
-        {/* CENTER: SCROLL-SCRUBBED HORIZONTAL TRACK */}
-        <div className="relative z-10 w-full flex-1 my-auto flex items-center overflow-hidden py-2">
-          <motion.div
-            style={{ x: desktopTrackX }}
-            className="flex items-center gap-4 sm:gap-8 will-change-transform pl-2 sm:pl-6 pr-20"
-          >
-            {LOOKBOOK_FRAMES.map((frame, idx) => {
-              const isFocused = idx === activeFrameIndex;
-              return (
-                <div
-                  key={frame.id}
-                  className={`relative shrink-0 w-[270px] sm:w-[360px] md:w-[410px] h-[48dvh] sm:h-[52vh] rounded-2xl sm:rounded-3xl p-2 sm:p-3 bg-black/50 border transition-all duration-500 overflow-hidden ${
-                    isFocused
-                      ? "border-[#C8A45E] shadow-[0_20px_50px_rgba(200,164,94,0.35)] scale-100 opacity-100 ring-1 ring-[#C8A45E]/50"
-                      : "border-white/10 opacity-55 scale-95"
-                  }`}
-                >
-                  {/* Media Content */}
-                  <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-stone-900">
-                    {frame.video ? (
-                      <video
-                        src={frame.video}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover brightness-[0.9]"
-                      />
-                    ) : (
-                      <div
-                        className="w-full h-full bg-cover bg-center brightness-[0.9]"
-                        style={{ backgroundImage: `url(${frame.image})` }}
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent" />
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-0.5 max-w-full">
+          {CHAPTERS.map((ch) => {
+            const isCurrentChapter = currentFrame.chapter === ch;
+            return (
+              <button
+                key={ch}
+                type="button"
+                onClick={() => goToChapter(ch)}
+                className={`relative py-1.5 px-2.5 sm:px-3 rounded-full text-[10.5px] sm:text-xs font-sans tracking-wide transition-all duration-300 whitespace-nowrap shrink-0 min-h-[44px] sm:min-h-0 flex items-center ${
+                  isCurrentChapter
+                    ? "bg-white/15 text-white font-bold border border-[#C8A45E]/50 shadow-[0_0_12px_rgba(200,164,94,0.25)]"
+                    : "text-white/45 border border-transparent hover:text-white/85 hover:border-white/15"
+                }`}
+              >
+                {ch}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-                    {/* Top Tag */}
-                    <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[8.5px] sm:text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-[#C8A45E]/30">
-                      {frame.tag}
-                    </div>
+      <div
+        className="relative z-10 w-full max-w-6xl mx-auto"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <button
+          type="button"
+          onClick={goPrev}
+          aria-label="Previous collection slide"
+          className="absolute -left-1 sm:-left-5 lg:-left-8 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#F7F4ED]/95 hover:bg-white text-[#032A23] border border-[#C8A45E]/60 shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        >
+          <CaretLeft size={20} weight="bold" className="text-[#8C6D23] -ml-0.5" />
+        </button>
 
-                    {/* Bottom Card Title */}
-                    <div className="absolute bottom-3.5 left-3.5 right-3.5 z-20">
-                      <span className="text-[9px] sm:text-[10px] uppercase font-bold tracking-widest text-[#C8A45E]">
-                        {frame.chapter}
-                      </span>
-                      <h3 className="font-serif text-base sm:text-xl font-bold text-white leading-snug line-clamp-1">
-                        {frame.title}
-                      </h3>
-                      <p className="text-[11px] sm:text-xs text-stone-300 font-sans mt-0.5 line-clamp-1">
-                        {getDynamicCouple(frame.templateId)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </motion.div>
+        <button
+          type="button"
+          onClick={goNext}
+          aria-label="Next collection slide"
+          className="absolute -right-1 sm:-right-5 lg:-right-8 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#F7F4ED]/95 hover:bg-white text-[#032A23] border border-[#C8A45E]/60 shadow-[0_10px_28px_rgba(0,0,0,0.35)] backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+        >
+          <CaretRight size={20} weight="bold" className="text-[#8C6D23] -mr-0.5" />
+        </button>
+
+        <div className="relative w-full h-[52dvh] min-h-[340px] max-h-[540px] sm:h-[56dvh] sm:min-h-[380px] sm:max-h-[580px] flex items-center justify-center select-none">
+          {LOOKBOOK_FRAMES.map((frame, idx) => {
+            let diff = (idx - activeIndex + count) % count;
+            if (diff > count / 2) diff -= count;
+
+            return (
+              <LookbookCard
+                key={frame.id}
+                frame={frame}
+                coupleLabel={getDynamicCouple(frame.templateId)}
+                isFocused={diff === 0}
+                cardWidth={cardWidth}
+                diff={diff}
+                cardStep={cardStep}
+                isDraggingRef={isDraggingRef}
+                onSelectSide={() => goToIndex(idx)}
+                onPanStart={handlePanStart}
+                onPanEnd={handlePanEnd}
+              />
+            );
+          })}
         </div>
 
-        {/* BOTTOM METADATA & COMPACT NON-WRAPPING CTA BUTTON */}
-        <div className="relative z-20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-t border-white/10 pt-3">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-3">
-              <span className="text-[9.5px] sm:text-[10px] uppercase font-mono text-[#E1C98E] tracking-widest font-bold">
-                Viewing [{activeFrameIndex + 1} / {LOOKBOOK_FRAMES.length}] · {currentDesktopFrame.title}
-              </span>
-              <div className="flex items-center gap-1">
-                {currentDesktopFrame.palette.map((col, cIdx) => (
-                  <span
-                    key={cIdx}
-                    className="w-2.5 h-2.5 rounded-full border border-white/30"
-                    style={{ backgroundColor: col }}
-                  />
-                ))}
-              </div>
-            </div>
-            <p className="text-[11px] sm:text-xs text-stone-300 font-sans max-w-lg line-clamp-1">
-              {currentDesktopFrame.description}
-            </p>
-          </div>
-
-          {/* Clean 1-Line Action Button (Never Breaks or Overflows) */}
-          <Link
-            href={`/preview/${currentDesktopFrame.templateId}`}
-            className="w-full sm:w-auto px-6 py-2.5 rounded-full bg-[#C8A45E] hover:bg-[#E1C98E] text-[#032A23] text-xs font-bold uppercase tracking-wider font-sans transition-all duration-300 shadow-md hover:scale-105 active:scale-98 flex items-center justify-center gap-2 shrink-0 cursor-pointer"
-          >
-            <span>View Experience</span>
-            <ArrowRight size={13} weight="bold" />
-          </Link>
+        <div className="mt-5 flex items-center justify-center gap-2">
+          {LOOKBOOK_FRAMES.map((_, dotIdx) => (
+            <button
+              key={dotIdx}
+              type="button"
+              onClick={() => goToIndex(dotIdx)}
+              aria-label={`Go to slide ${dotIdx + 1}`}
+              aria-current={dotIdx === activeIndex ? "true" : undefined}
+              className={`h-1.5 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center sm:min-w-0 sm:min-h-0 ${
+                dotIdx === activeIndex ? "sm:w-5" : "sm:w-1.5"
+              }`}
+            >
+              <span
+                className={`block rounded-full transition-all duration-300 ${
+                  dotIdx === activeIndex ? "w-5 h-1.5 bg-[#C8A45E]" : "w-1.5 h-1.5 bg-white/25 hover:bg-white/45"
+                }`}
+              />
+            </button>
+          ))}
         </div>
+      </div>
 
-        {/* Gold Scrub Progress Bar at the very bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10">
-          <motion.div
-            style={{ width: desktopProgressWidth }}
-            className="h-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] shadow-[0_0_10px_rgba(200,164,94,0.8)]"
-          />
-        </div>
+      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white/10 pointer-events-none">
+        <motion.div
+          animate={{ width: `${autoProgress}%` }}
+          transition={{ duration: 0.08, ease: "linear" }}
+          className="h-full bg-gradient-to-r from-[#C8A45E] to-[#E1C98E] shadow-[0_0_10px_rgba(200,164,94,0.8)]"
+        />
       </div>
     </section>
   );

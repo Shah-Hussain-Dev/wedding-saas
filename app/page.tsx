@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import { siteConfig } from "@/config/site";
 import { JsonLd } from "@/components/seo/json-ld";
 import { GlassNav } from "@/components/ui/glass-nav";
-import { LuxuryCursor } from "@/components/ui/luxury-cursor";
 import { HeroExperience } from "@/components/marketing/hero-experience";
 import { BrandStatement } from "@/components/marketing/brand-statement";
 import { PinnedLookbook } from "@/components/marketing/pinned-lookbook";
 import { InteractiveTemplateGrid } from "@/components/marketing/interactive-template-grid";
+import { HowItWorksEditorial } from "@/components/marketing/how-it-works-editorial";
 import { CinematicFilmCanvas } from "@/components/marketing/cinematic-film-canvas";
 import { InteractiveCustomizerDemo } from "@/components/marketing/interactive-customizer-demo";
 import { ComplimentaryPdfShowcase } from "@/components/marketing/complimentary-pdf-showcase";
@@ -115,57 +115,60 @@ const homeStructuredData = {
   ],
 };
 
+/**
+ * Landing section order (digital product / PLG SaaS):
+ * 1 Hero → 2 Positioning → 3 Product catalog → 4 Social proof → 5 How it works
+ * → 6 Live demo → 7 Differentiator → 8 Feature grid → 9 Collections
+ * → 10 Comparison → 11 Brand film → 12 Pricing → 13 FAQ → Footer CTA
+ */
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F4ED] text-[#18211E] selection:bg-[#C8A45E]/30 selection:text-[#073D31]">
       <JsonLd data={homeStructuredData} />
 
-      {/* Desktop Magnetic Custom Cursor & Pointer Glow */}
-      <LuxuryCursor />
-
-      {/* Floating Luxury Navigation */}
       <GlassNav />
 
-      {/* Main Experience Stream */}
       <main className="flex-grow">
-        {/* Scene 1: The Showroom Runway Hero (Scroll & Drag Parallax Depth with Floating Capsule) */}
+        {/* 1. Above the fold — outcome, primary CTA */}
         <HeroExperience />
 
-        {/* Scene 2: Kinetic Editorial Brand Statement */}
+        {/* 2. Positioning — what you get (lightweight trust marquee) */}
         <BrandStatement />
 
-        {/* Scene 3: Exclusive USP - One Wedding Website. Two Beautiful Matching Invitations */}
-        <ComplimentaryPdfShowcase />
-
-        {/* Scene 4: The Pinned Lookbook with Active Chapter Trackers & Gold Progress Scrub */}
-        <PinnedLookbook />
-
-        {/* Scene 5: Multi-Scene Template Scrubber Catalogue */}
+        {/* 3. Product — template catalog (#showcase) */}
         <InteractiveTemplateGrid />
 
-        {/* Scene 6: Cinematic Ambient Film Canvas */}
-        <CinematicFilmCanvas />
-
-        {/* Scene 7: Live Real-Time Interactive Customization Playground */}
-        <InteractiveCustomizerDemo />
-
-        {/* Scene 8: Infinite Motion Reels Ticker (Live in Guest Hands) */}
+        {/* 4. Social proof — invitations in the wild */}
         <InfiniteReelsTicker />
 
-        {/* Scene 8: The Honest Comparison (Physical Paper Cards vs. WedInvites Digital) */}
-        <ComparisonSection />
+        {/* 5. Process — nav #how-it-works */}
+        <HowItWorksEditorial showBrowseCta />
 
-        {/* Scene 9: Transparent Luxury Pricing */}
-        <PricingEditorial />
+        {/* 6. Product-led growth — try the editor */}
+        <InteractiveCustomizerDemo />
 
-        {/* Scene 10: Minimalist Value Props */}
+        {/* 7. Key differentiator — website + matching PDF */}
+        <ComplimentaryPdfShowcase />
+
+        {/* 8. Feature benefits — before price decision */}
         <ValuePropsMinimal />
 
-        {/* Scene 11: Frequently Asked Questions */}
+        {/* 9. Deeper catalog — nav #lookbook */}
+        <PinnedLookbook />
+
+        {/* 10. Objection handling — nav #comparison */}
+        <ComparisonSection />
+
+        {/* 11. Emotional brand moment (heavy media, below fold) */}
+        <CinematicFilmCanvas />
+
+        {/* 12. Pricing — nav #pricing */}
+        <PricingEditorial />
+
+        {/* 13. FAQ — schema #faq */}
         <FaqEditorial />
       </main>
 
-      {/* Scene 12: Grand Finale Call to Action & Converging Footer */}
       <PremiumFooter />
     </div>
   );

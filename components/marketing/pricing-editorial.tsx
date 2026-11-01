@@ -26,7 +26,10 @@ export function PricingEditorial() {
   const startingPriceFormatted = `₹${startingPrice.toLocaleString("en-IN")}`;
 
   return (
-    <section id="pricing" className="py-24 md:py-32 bg-[#F7F4ED] text-[#18211E] relative overflow-hidden">
+    <section
+      id="pricing"
+      className="scroll-mt-24 sm:scroll-mt-28 py-24 md:py-32 bg-[#F7F4ED] text-[#18211E] relative overflow-hidden"
+    >
       <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 space-y-16">
         {/* Section Header */}
         <div className="text-center space-y-3 max-w-xl mx-auto">
@@ -39,7 +42,7 @@ export function PricingEditorial() {
             Infinite celebration.
           </h2>
           <p className="text-sm sm:text-base text-[#76766F] font-sans">
-            No tiered limitations, no per-guest costs. Everything you need for an unforgettable wedding experience.
+            See the real demo before you buy — then one flat fee covers everything. No tiered limits, no per-guest costs.
           </p>
         </div>
 
@@ -68,10 +71,10 @@ export function PricingEditorial() {
                   <span className="px-2.5 py-0.5 rounded-full bg-[#C8A45E]/20 text-[#073D31] text-[10px] font-bold font-sans tracking-wide uppercase">
                     Save 60% Today
                   </span>
-                  <span className="text-stone-400 line-through text-base sm:text-lg font-sans">₹2,999</span>
+                  <span className="price-font text-base sm:text-lg font-normal text-stone-400 line-through">₹2,999</span>
                 </div>
                 <div className="flex items-baseline gap-1.5">
-                  <span suppressHydrationWarning className="text-4xl sm:text-5xl font-serif font-bold text-[#073D31]">
+                  <span suppressHydrationWarning className="price-font text-4xl sm:text-5xl text-[#073D31]">
                     {startingPriceFormatted}
                   </span>
                   <span className="text-xs text-[#76766F] font-sans font-medium">/ complete wedding</span>

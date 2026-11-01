@@ -159,6 +159,8 @@ iframe *,
   padding: 0.3rem;
   border: 1px solid var(--border-light);
   background-color: rgba(0, 0, 0, 0.015);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .double-bezel-inner {
@@ -531,11 +533,32 @@ main,
   overflow-x: hidden !important;
 }
 
+/* Currency amounts — always plain sans (not serif/mono display fonts) */
+.price-font {
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
 /* Native Mobile Tap Feel: Active scale down */
 @media (hover: none) and (pointer: coarse) {
   button:active,
   a:active {
     opacity: 0.92;
   }
+}
+
+.customizer-sidebar-scroll {
+  overflow-x: clip;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+
+.customizer-sidebar-scroll input,
+.customizer-sidebar-scroll textarea,
+.customizer-sidebar-scroll select {
+  max-width: 100%;
 }
 

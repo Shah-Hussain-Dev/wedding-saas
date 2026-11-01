@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Play, Sparkle } from "@phosphor-icons/react";
+import { ArrowRight, Sparkle } from "@phosphor-icons/react";
 
 export function CinematicFilmCanvas() {
   return (

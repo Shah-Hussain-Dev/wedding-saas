@@ -34,6 +34,8 @@ export interface PreviewControlsDockProps {
   onSelectFaith: (faith: PreviewFaith) => void;
   slug?: string;
   isHeroTapped?: boolean;
+  /** Hide tradition tab (template-locked customize & marketing embed previews). */
+  hideFaithSelector?: boolean;
   className?: string;
 }
 
@@ -85,10 +87,13 @@ export function PreviewControlsDock({
   onSelectFaith,
   slug,
   isHeroTapped = false,
+  hideFaithSelector = false,
   className = "",
 }: PreviewControlsDockProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"tradition" | "soundtrack">("tradition");
+  const [activeTab, setActiveTab] = useState<"tradition" | "soundtrack">(
+    hideFaithSelector ? "soundtrack" : "tradition"
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
@@ -371,7 +376,11 @@ export function PreviewControlsDock({
           <motion.button
             type="button"
             id="preview-controls-btn"
-            aria-label="Invitation Controls: Religion filter, soundtrack selector and options"
+            aria-label={
+              hideFaithSelector
+                ? "Invitation Controls: soundtrack selector and options"
+                : "Invitation Controls: Religion filter, soundtrack selector and options"
+            }
             aria-haspopup="dialog"
             aria-expanded={isSheetOpen}
             onClick={(e) => {
@@ -380,7 +389,11 @@ export function PreviewControlsDock({
             }}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.94 }}
-            title="Invitation Controls (Tradition & Soundtrack)"
+            title={
+              hideFaithSelector
+                ? "Invitation Controls (Soundtrack)"
+                : "Invitation Controls (Tradition & Soundtrack)"
+            }
             className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-stone-950/85 hover:bg-stone-900 backdrop-blur-xl border border-amber-400/40 text-amber-300 shadow-[0_8px_24px_rgba(0,0,0,0.65)] flex items-center justify-center cursor-pointer select-none transition-colors"
           >
             {/* Subtle gold glow aura */}
@@ -388,10 +401,11 @@ export function PreviewControlsDock({
 
             <Sliders size={19} weight="bold" />
 
-            {/* Tiny active tradition badge */}
-            <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-stone-950 text-[10px] font-bold flex items-center justify-center shadow-sm select-none">
-              {activeFaithOption.symbol}
-            </span>
+            {!hideFaithSelector && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-stone-950 text-[10px] font-bold flex items-center justify-center shadow-sm select-none">
+                {activeFaithOption.symbol}
+              </span>
+            )}
           </motion.button>
         )}
 
@@ -494,7 +508,9 @@ export function PreviewControlsDock({
                       Invitation Controls
                     </h3>
                     <p className="text-[11px] text-stone-400">
-                      Customize wedding tradition & background soundtrack
+                      {hideFaithSelector
+                        ? "Choose background soundtrack"
+                        : "Customize wedding tradition & background soundtrack"}
                     </p>
                   </div>
                 </div>
@@ -511,6 +527,7 @@ export function PreviewControlsDock({
 
               {/* Tab Selector: Tradition vs Soundtrack */}
               <div className="px-5 pt-3 pb-2 flex gap-2 shrink-0">
+                {!hideFaithSelector && (
                 <button
                   type="button"
                   onClick={() => setActiveTab("tradition")}
@@ -532,11 +549,12 @@ export function PreviewControlsDock({
                     {activeFaithOption.label}
                   </span>
                 </button>
+                )}
 
                 <button
                   type="button"
                   onClick={() => setActiveTab("soundtrack")}
-                  className={`flex-1 py-2.5 px-3 min-h-[44px] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98 ${
+                  className={`${hideFaithSelector ? "w-full" : "flex-1"} py-2.5 px-3 min-h-[44px] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98 ${
                     activeTab === "soundtrack"
                       ? "bg-gradient-to-r from-amber-500 to-amber-600 text-stone-950 shadow-md"
                       : "bg-white/5 hover:bg-white/10 text-stone-300"

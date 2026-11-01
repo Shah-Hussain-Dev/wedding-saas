@@ -1,3 +1,5 @@
+import { defaultCulturalTraditionForTemplate } from "@/lib/template-meta";
+
 export type PreviewFaith = "universal" | "hindu" | "muslim";
 
 export interface FaithContentConfig {
@@ -336,30 +338,10 @@ export const FAITH_VARIANTS: Record<PreviewFaith, FaithContentConfig> = {
 };
 
 /**
- * Derives default faith from template ID
+ * Derives default faith from template catalog religion tags.
  */
 export function getDefaultFaithForTemplate(templateId: string): PreviewFaith {
-  const norm = (templateId || "").toLowerCase();
-  if (
-    norm.includes("nikah") ||
-    norm.includes("qasr") ||
-    norm.includes("gul-e-noor") ||
-    norm.includes("noor-e-nikah") ||
-    norm.includes("azure-nikah") ||
-    norm.includes("kitab-e-nikah")
-  ) {
-    return "muslim";
-  }
-  if (
-    norm.includes("lotus") ||
-    norm.includes("crimson") ||
-    norm.includes("emerald-noir") ||
-    norm.includes("royal-elegance") ||
-    norm.includes("modern-minimal")
-  ) {
-    return "hindu";
-  }
-  return "universal";
+  return defaultCulturalTraditionForTemplate(templateId);
 }
 
 /**
