@@ -3,9 +3,9 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, PanInfo } from "motion/react";
+import { motion, PanInfo, useReducedMotion } from "motion/react";
 import { ArrowRight, CaretLeft, CaretRight, Eye } from "@phosphor-icons/react";
-import { getTemplateDefaultData } from "@/templates";
+import { formatDemoCoupleLabel } from "@/lib/template-demo-couples";
 
 interface LookbookFrame {
   id: string;
@@ -281,6 +281,7 @@ function LookbookCard({
 }
 
 export function PinnedLookbook() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeIndex, setActiveIndex] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(390);
   const [isHovered, setIsHovered] = useState(false);
@@ -310,13 +311,7 @@ export function PinnedLookbook() {
       if (custom?.brideName && custom?.groomName) {
         return `${custom.groomName} & ${custom.brideName}`;
       }
-      const def = getTemplateDefaultData(templateId);
-      const groom = def?.couple?.groomName || def?.groomName;
-      const bride = def?.couple?.brideName || def?.brideName;
-      if (groom && bride) {
-        return `${groom} & ${bride}`;
-      }
-      return "Wedding Celebration";
+      return formatDemoCoupleLabel(templateId) ?? "Wedding Celebration";
     },
     [activeInvitations]
   );
@@ -362,7 +357,7 @@ export function PinnedLookbook() {
       clearInterval(autoplayTimerRef.current);
       autoplayTimerRef.current = null;
     }
-    if (!isHovered) {
+    if (!isHovered && !prefersReducedMotion) {
       autoplayTimerRef.current = setInterval(() => {
         setActiveIndex((prev) => (prev + 1) % count);
         progressStartRef.current = Date.now();
@@ -375,7 +370,7 @@ export function PinnedLookbook() {
         autoplayTimerRef.current = null;
       }
     };
-  }, [isHovered, count]);
+  }, [isHovered, count, prefersReducedMotion]);
 
   useEffect(() => {
     progressStartRef.current = Date.now();

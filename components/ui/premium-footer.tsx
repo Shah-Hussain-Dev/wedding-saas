@@ -177,8 +177,14 @@ export function PremiumFooter() {
                 </div>
               ) : (
                 <form onSubmit={handleSubscribe} className="flex items-center gap-2">
+                  <label htmlFor="footer-vip-email" className="sr-only">
+                    Email address for wedding invitation inspiration
+                  </label>
                   <input
+                    id="footer-vip-email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}

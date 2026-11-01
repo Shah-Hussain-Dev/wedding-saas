@@ -161,6 +161,8 @@ function PhoneMedia({
             src={image}
             alt=""
             aria-hidden="true"
+            decoding="async"
+            fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
@@ -172,7 +174,8 @@ function PhoneMedia({
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
+          aria-label="Preview of animated wedding invitation template"
           className="absolute inset-0 w-full h-full object-cover brightness-[0.98] contrast-[1.02]"
         />
       </div>

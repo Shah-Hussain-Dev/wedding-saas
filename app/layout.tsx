@@ -4,6 +4,7 @@ import { SessionProvider } from "@/components/providers/SessionProvider";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { siteConfig } from "@/config/site";
 import { JsonLd } from "@/components/seo/json-ld";
+import { SkipToMainLink } from "@/components/ui/skip-to-main-link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -19,8 +20,10 @@ const geistMono = Geist_Mono({
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-serif",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
+  display: "swap",
+  preload: true,
 });
 
 /**
@@ -176,6 +179,7 @@ export default function RootLayout({
         <JsonLd data={rootStructuredData} />
       </head>
       <body className="min-h-full flex flex-col bg-[#FCFBF7] text-[#1A1A1A]">
+        <SkipToMainLink />
         <SessionProvider>
           <LenisProvider>{children}</LenisProvider>
         </SessionProvider>

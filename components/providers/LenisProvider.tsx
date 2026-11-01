@@ -29,35 +29,53 @@ export function LenisProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      allowNestedScroll: true,
-    });
+    let cancelled = false;
+    let lenis: Lenis | null = null;
 
-    lenisRef.current = lenis;
-    if (typeof window !== "undefined") {
-      (window as Window & { __lenis?: Lenis; lenis?: Lenis }).__lenis = lenis;
-      (window as Window & { __lenis?: Lenis; lenis?: Lenis }).lenis = lenis;
-    }
+    const startLenis = () => {
+      if (cancelled) return;
 
-    function raf(time: number) {
-      lenis.raf(time);
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        allowNestedScroll: true,
+      });
+
+      lenisRef.current = lenis;
+      if (typeof window !== "undefined") {
+        (window as Window & { __lenis?: Lenis; lenis?: Lenis }).__lenis = lenis;
+        (window as Window & { __lenis?: Lenis; lenis?: Lenis }).lenis = lenis;
+      }
+
+      function raf(time: number) {
+        if (!lenis) return;
+        lenis.raf(time);
+        rafRef.current = requestAnimationFrame(raf);
+      }
+
       rafRef.current = requestAnimationFrame(raf);
-    }
+    };
 
-    rafRef.current = requestAnimationFrame(raf);
+    const idle = window.requestIdleCallback?.(() => startLenis(), {
+      timeout: 2200,
+    });
+    const fallback = window.setTimeout(startLenis, 2200);
 
     return () => {
+      cancelled = true;
+      if (idle !== undefined) {
+        window.cancelIdleCallback?.(idle);
+      }
+      window.clearTimeout(fallback);
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
       clearLenisWindowRef();
-      lenis.destroy();
+      lenis?.destroy();
       lenisRef.current = null;
     };
   }, [disableLenis]);

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Play, ArrowUpRight, InstagramLogo } from "@phosphor-icons/react";
 import { siteConfig } from "@/config/site";
+import { LazyAutoplayVideo } from "@/components/ui/lazy-autoplay-video";
 
 interface ReelItem {
   id: string;
@@ -19,18 +20,21 @@ const REELS_DATA: ReelItem[] = [
     title: "Regency Ballroom Waltz",
     templateId: "royal-majesty",
     video: "/videos/royal-majesty.mp4",
+    image: "/templates/royal-majesty/ballroom-terrace.jpg",
   },
   {
     id: "r2",
     title: "Falling Petal Shower",
     templateId: "rose-gold-blush",
     video: "/videos/rose-gold-blush.mp4",
+    image: "/templates/rose-gold-blush/palace-arch.jpg",
   },
   {
     id: "r3",
     title: "Starlight Terrace Flight",
     templateId: "celestial-rose",
     video: "/videos/royal-prestige.mp4",
+    image: "/templates/imperial-palace/ballroom.jpg",
   },
   {
     id: "r4",
@@ -49,6 +53,7 @@ const REELS_DATA: ReelItem[] = [
     title: "Instant WhatsApp RSVP",
     templateId: "celestial-rose",
     video: "/videos/royal-prestige.mp4",
+    image: "/templates/imperial-palace/ballroom.jpg",
   },
 ];
 
@@ -59,14 +64,20 @@ export function InfiniteReelsTicker() {
   const displayReels = [...REELS_DATA, ...REELS_DATA];
 
   return (
-    <section className="relative w-full py-16 sm:py-24 bg-[#EFE9DD] text-[#18211E] overflow-hidden">
+    <section
+      aria-labelledby="reels-ticker-heading"
+      className="relative w-full py-16 sm:py-24 bg-[#EFE9DD] text-[#18211E] overflow-hidden"
+    >
       {/* SECTION HEADER */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 sm:mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] text-[#073D31] font-semibold">
             Live in Guest Hands
           </span>
-          <h2 className="font-serif text-2xl sm:text-4xl font-medium tracking-tight text-[#18211E] mt-1">
+          <h2
+            id="reels-ticker-heading"
+            className="font-serif text-2xl sm:text-4xl font-medium tracking-tight text-[#18211E] mt-1"
+          >
             Experienced everywhere.
           </h2>
           <p className="text-xs sm:text-sm text-[#76766F] font-sans mt-1">
@@ -74,11 +85,20 @@ export function InfiniteReelsTicker() {
           </p>
         </div>
 
+        <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            type="button"
+            className="min-h-[44px] min-w-[44px] px-4 rounded-full border border-[#073D31]/15 bg-white/60 text-xs font-semibold uppercase tracking-wider text-[#073D31] hover:border-[#C8A45E]/50 focus-visible:ring-2 focus-visible:ring-[#073D31] focus-visible:ring-offset-2"
+            aria-pressed={isPaused}
+            onClick={() => setIsPaused((prev) => !prev)}
+          >
+            {isPaused ? "Play reel strip" : "Pause reel strip"}
+          </button>
         <Link
           href={siteConfig.social.instagram}
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#073D31] uppercase tracking-wider font-sans hover:text-[#C8A45E] transition-colors shrink-0"
+          className="group inline-flex items-center gap-2 min-h-[44px] text-xs sm:text-sm font-semibold text-[#073D31] uppercase tracking-wider font-sans hover:text-[#C8A45E] transition-colors"
         >
           <InstagramLogo size={16} weight="bold" />
           <span className="roll">
@@ -87,6 +107,7 @@ export function InfiniteReelsTicker() {
           </span>
           <ArrowUpRight size={14} weight="bold" className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
         </Link>
+        </div>
       </div>
 
       {/* INFINITE MARQUEE STRIP */}
@@ -96,7 +117,7 @@ export function InfiniteReelsTicker() {
         onMouseLeave={() => setIsPaused(false)}
       >
         <div
-          className={`flex gap-4 sm:gap-6 shrink-0 ${
+          className={`marquee-track flex gap-4 sm:gap-6 shrink-0 ${
             isPaused ? "animate-none" : "animate-[marquee_35s_linear_infinite]"
           }`}
         >
@@ -108,13 +129,12 @@ export function InfiniteReelsTicker() {
             >
               {/* Media */}
               {reel.video ? (
-                <video
+                <LazyAutoplayVideo
                   src={reel.video}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover brightness-[0.88] group-hover:scale-105 transition-transform duration-700"
+                  poster={reel.image}
+                  className="relative w-full h-full overflow-hidden group-hover:scale-105 transition-transform duration-700"
+                  videoClassName="absolute inset-0 w-full h-full object-cover brightness-[0.88]"
+                  rootMargin="160px 0px"
                 />
               ) : (
                 <div
