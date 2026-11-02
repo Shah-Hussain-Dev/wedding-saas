@@ -1,122 +1,233 @@
 "use client";
 
+import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Eye } from "@phosphor-icons/react";
-import { MiniPhoneMockup } from "@/components/marketing/mini-phone-mockup";
-import { cardHover } from "@/components/ui/motion-primitives";
-import { cn } from "@/lib/utils";
+import { ArrowUpRight, Eye, Heart } from "@phosphor-icons/react";
 import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
+import { useTemplateCatalog } from "@/lib/hooks/use-template-catalog";
+import { getTemplateTrailerUrlOrEmpty } from "@/lib/template-trailer";
+import Image from "next/image";
+import { PriceText } from "@/components/ui/price-text";
 
-export type TemplateTag = "Best Seller" | "New" | "Exclusive" | "Featured" | "Masterpiece" | "Awwwards Dreamscape";
-
-export type TemplateCatalogItem = {
+export interface TemplateCatalogCardProps {
   id: string;
   name: string;
+  categoryLabel: string;
+  tag?: string;
   description: string;
-  tag: TemplateTag;
-  gradient: string;
-  leftScreen: "hero" | "curtain";
-  accentClass?: string;
-  religion?: ("hindu" | "muslim" | "universal")[];
-  religionLabel?: string;
-};
+  priceFallback: string;
+  video?: string;
+  isWishlisted?: boolean;
+  onToggleWishlist?: (e: React.MouseEvent) => void;
+  layoutId?: string;
+}
 
-const TAG_STYLES: Record<TemplateTag, string> = {
-  "Best Seller": "bg-primary text-white",
-  New: "bg-[#2d6a6a] text-white",
-  Exclusive: "bg-accent-gold text-white",
-  Featured: "bg-[#8A6D3B] text-white",
-  Masterpiece: "bg-[#551618] text-[#E5D8C4] border border-[#B89773]",
-  "Awwwards Dreamscape": "bg-[#5898B8] text-[#F1E8E1] border border-[#E2B993]",
-};
+function stopActionBubble(e: React.MouseEvent) {
+  e.stopPropagation();
+}
 
-export function TemplateCatalogCard({ template }: { template: TemplateCatalogItem }) {
-  const { getPricingDetails } = useTemplatePricing();
-  const pricing = getPricingDetails(template.id, "₹1,199");
+function TrailerMedia({ src, poster }: { src: string; poster: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [usePosterOnly, setUsePosterOnly] = React.useState(!src);
+
+  useEffect(() => {
+    setUsePosterOnly(!src);
+  }, [src]);
+
+  useEffect(() => {
+    const root = containerRef.current;
+    const video = videoRef.current;
+    if (!root || !video || usePosterOnly) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => setUsePosterOnly(true));
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.25, rootMargin: "0px 0px -8% 0px" }
+    );
+
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, [src, usePosterOnly]);
 
   return (
-    <Link href={`/preview/${template.id}`} className="block h-full">
+    <div ref={containerRef} className="absolute inset-0 bg-stone-900">
+      {usePosterOnly ? (
+        <Image
+          src={poster}
+          alt=""
+          fill
+          className="object-cover brightness-[0.9] transition-transform duration-700 group-hover:scale-105"
+          sizes="(max-width: 768px) 50vw, 320px"
+        />
+      ) : (
+        <video
+          ref={videoRef}
+          src={src}
+          poster={poster}
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="h-full w-full object-cover brightness-[0.9] transition-transform duration-700 group-hover:scale-105"
+          onError={() => setUsePosterOnly(true)}
+        />
+      )}
+    </div>
+  );
+}
+
+export function TemplateCatalogCard({
+  id,
+  name,
+  categoryLabel,
+  tag,
+  description,
+  priceFallback,
+  video,
+  isWishlisted = false,
+  onToggleWishlist,
+  layoutId,
+}: TemplateCatalogCardProps) {
+  const { getPricingDetails } = useTemplatePricing();
+  const { getCoverUrl, getTrailerUrl } = useTemplateCatalog();
+  const pricing = getPricingDetails(id, priceFallback);
+  const trailerForCard =
+    getTrailerUrl(id) || getTemplateTrailerUrlOrEmpty(id, video);
+  const posterSrc = getCoverUrl(id);
+  const detailsHref = `/preview/${id}`;
+
+  return (
       <motion.article
-        initial="rest"
-        whileHover="hover"
-        variants={cardHover}
-        className="group flex h-full flex-col overflow-hidden rounded-[20px] border border-black/[0.06] bg-white shadow-[0_2px_16px_rgba(0,0,0,0.04)] transition-shadow hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+      layout={layoutId ? true : undefined}
+      layoutId={layoutId}
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.35 }}
+      className="group relative flex h-full flex-col justify-between overflow-hidden rounded-3xl border border-[#073D31]/10 bg-white p-3 shadow-sm transition-all duration-500 hover:border-[#073D31]/25 hover:shadow-xl"
+    >
+      <Link
+        href={detailsHref}
+        className="flex flex-col flex-1 rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-[#C8A45E] focus-visible:ring-offset-2 cursor-pointer"
+        aria-label={`View ${name} template details`}
       >
-        {/* Visual area */}
-        <div className="relative flex aspect-[4/3.2] items-end justify-center gap-2 bg-[#ebe8e2] px-4 pb-5 pt-8 sm:gap-3 sm:px-5">
-          <div className="absolute left-3 top-3 flex items-center gap-1.5 z-10 flex-wrap">
-            <span
-              className={cn(
-                "rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide",
-                TAG_STYLES[template.tag]
-              )}
-            >
-              {template.tag}
-            </span>
+        <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-black/5 bg-stone-900">
+          <TrailerMedia src={trailerForCard} poster={posterSrc} />
+
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-black/35" />
+
             {pricing.isOnSale && (
-              <span className="rounded-full bg-emerald-600 px-2 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider shadow-xs">
+            <div className="pointer-events-none absolute left-3 top-4 z-20 flex items-center gap-1.5">
+              <span className="rounded-full border border-white/20 bg-emerald-600/95 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white shadow-md backdrop-blur-md">
                 {pricing.discountPercent}% OFF
               </span>
-            )}
-            {template.religionLabel && (
-              <span className="rounded-full bg-white/90 backdrop-blur-sm border border-black/[0.06] px-2 py-0.5 text-[9px] font-bold text-stone-700 uppercase tracking-wider">
-                {template.religionLabel === "Hindu" ? "🕉️ Hindu" : template.religionLabel === "Muslim" ? "🌙 Muslim" : "✦ Universal"}
-              </span>
-            )}
-          </div>
-
-          <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.06] bg-white/90 text-stone-500 opacity-0 shadow-sm transition-opacity group-hover:opacity-100">
-            <Eye size={15} weight="light" />
-          </span>
-
-          <MiniPhoneMockup
-            variant={template.leftScreen}
-            templateName={template.name}
-            accentClass={template.accentClass}
-            bgGradient={template.gradient}
-            className="-rotate-6 translate-y-1"
-          />
-          <MiniPhoneMockup
-            variant="details"
-            templateName={template.name}
-            bgGradient="from-stone-50 to-stone-100"
-            className="rotate-3 translate-y-3"
-          />
-        </div>
-
-        {/* Content area */}
-        <div className="flex flex-1 flex-col bg-white p-5">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="font-serif text-xl text-[#1A1A1A]">{template.name}</h3>
-          </div>
-          <p className="mt-1 flex-1 text-sm leading-relaxed text-stone-500 line-clamp-2">
-            {template.description}
-          </p>
-
-          <div className="mt-4 flex items-center justify-between border-t border-black/[0.05] pt-3">
-            <div className="flex items-baseline gap-1.5">
-              <span suppressHydrationWarning className="font-serif font-bold text-base text-primary">
-                {pricing.priceFormatted}
-              </span>
-              {pricing.isOnSale && (
-                <span suppressHydrationWarning className="text-xs text-stone-400 line-through font-mono">
-                  {pricing.originalPriceFormatted}
+              {pricing.discountName && (
+                <span className="hidden rounded-full border border-[#C8A45E]/30 bg-stone-950/80 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-wide text-[#E1C98E] backdrop-blur-md sm:inline-block">
+                  {pricing.discountName}
                 </span>
               )}
             </div>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-primary transition-colors group-hover:text-accent-gold">
+          )}
+
+          <div className="pointer-events-none absolute bottom-3 right-3 z-20">
+            <div suppressHydrationWarning className="flex items-center gap-1.5">
               {pricing.isOnSale && (
-                <span suppressHydrationWarning className="rounded-full bg-emerald-50 border border-emerald-200/80 px-1.5 py-0.5 text-[9px] font-bold text-emerald-700">
-                  {pricing.discountPercent}% OFF
-                </span>
+                <PriceText className="text-[9px] font-normal text-stone-300/80 line-through">
+                  {pricing.originalPriceFormatted}
+                </PriceText>
               )}
-              View theme
-              <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
-            </span>
+              <PriceText className="text-[11px] text-white">{pricing.priceFormatted}</PriceText>
+            </div>
           </div>
         </div>
+
+        <div className="flex flex-col gap-1.5 p-3 pt-4">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#C8A45E]">
+              {categoryLabel}
+            </span>
+            {tag && (
+              <span className="shrink-0 rounded-full bg-[#073D31]/8 px-2 py-0.5 text-[9px] font-semibold text-[#073D31]">
+                {tag}
+              </span>
+            )}
+          </div>
+
+          <h3 className="font-serif text-lg font-bold text-[#18211E] transition-colors line-clamp-1 group-hover:text-[#073D31]">
+            {name}
+          </h3>
+
+          <p className="text-xs leading-relaxed text-[#76766F] font-sans line-clamp-2">
+            {description}
+          </p>
+
+          <div className="mt-0.5 flex items-baseline justify-between border-t border-[#073D31]/6 pt-1">
+            <div className="flex items-baseline gap-2">
+              <PriceText suppressHydrationWarning className="text-base text-[#18211E]">
+                {pricing.priceFormatted}
+              </PriceText>
+              {pricing.isOnSale && (
+                <PriceText suppressHydrationWarning className="text-xs font-normal text-stone-400 line-through">
+                  {pricing.originalPriceFormatted}
+                </PriceText>
+              )}
+            </div>
+              {pricing.isOnSale && (
+              <span
+                suppressHydrationWarning
+                className="rounded-full border border-emerald-200/80 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 font-sans"
+              >
+                Save <span className="price-font">{pricing.savingsFormatted}</span> ({pricing.discountPercent}% OFF)
+                </span>
+              )}
+          </div>
+        </div>
+      </Link>
+
+      {onToggleWishlist && (
+        <button
+          type="button"
+          onClick={onToggleWishlist}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Save to wishlist"}
+          className={`absolute right-6 top-6 z-30 flex h-8 w-8 items-center justify-center rounded-full backdrop-blur-md transition-transform active:scale-90 cursor-pointer ${
+            isWishlisted
+              ? "bg-rose-500 text-white shadow-md"
+              : "bg-black/40 text-white/80 hover:bg-black/60 hover:text-white"
+          }`}
+        >
+          <Heart size={14} weight={isWishlisted ? "fill" : "bold"} />
+        </button>
+      )}
+
+      <div className="relative z-20 mt-0.5 flex flex-col gap-2 border-t border-[#073D31]/8 px-3 pb-1 pt-2.5 sm:flex-row sm:items-center">
+        <Link
+          href={`/customize/${id}`}
+          onClick={stopActionBubble}
+          className="flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-full bg-[#073D31] px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-[#F7F4ED] font-sans transition-all hover:bg-[#032A23] group-hover:shadow-md"
+        >
+          <Eye size={13} weight="bold" className="text-[#E1C98E]" />
+          <span>Edit &amp; Buy</span>
+        </Link>
+
+        <Link
+          href={`/preview/${id}/interactive`}
+          onClick={stopActionBubble}
+          className="inline-flex min-h-[44px] flex-1 items-center justify-center gap-1.5 rounded-full border border-[#073D31]/20 bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-[#073D31] font-sans transition-all hover:bg-[#F7F4ED] sm:flex-none sm:px-3.5"
+        >
+          <span>View live demo</span>
+          <ArrowUpRight size={14} weight="bold" />
+        </Link>
+        </div>
       </motion.article>
-    </Link>
   );
 }

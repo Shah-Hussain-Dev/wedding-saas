@@ -392,7 +392,7 @@ export default function AdminDashboardPage() {
                     <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
                       Total Platform Revenue
                     </span>
-                    <h3 className="text-3xl font-bold text-stone-950 mt-1 font-mono">
+                    <h3 className="price-font text-3xl text-stone-950 mt-1">
                       ₹{(stats?.summary?.totalRevenueINR || 0).toLocaleString("en-IN")}
                     </h3>
                     <span className="text-[10px] text-emerald-700 font-semibold mt-1 inline-block">

@@ -161,6 +161,8 @@ function PhoneMedia({
             src={image}
             alt=""
             aria-hidden="true"
+            decoding="async"
+            fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover"
           />
         )}
@@ -172,7 +174,8 @@ function PhoneMedia({
           loop
           muted
           playsInline
-          preload="auto"
+          preload="metadata"
+          aria-label="Preview of animated wedding invitation template"
           className="absolute inset-0 w-full h-full object-cover brightness-[0.98] contrast-[1.02]"
         />
       </div>
@@ -513,9 +516,14 @@ export function HeroExperience() {
               </div>
 
               {/* Friction-Reducer Microcopy (High-Impact Conversion Trigger) */}
-              <div className="flex items-center gap-2 text-[11px] sm:text-xs text-[#7A7366] font-sans font-medium">
-                <span className="text-[#C49A5A]">✦</span>
-                <span>Try any template free · Instant WhatsApp delivery · No credit card required</span>
+              <div className="flex flex-col gap-1 text-[11px] sm:text-xs text-[#7A7366] font-sans font-medium">
+                <div className="flex items-center gap-2">
+                  <span className="text-[#C49A5A]">✦</span>
+                  <span className="font-semibold text-[#5C5348]">
+                    See the real demo before you buy — no credit card required
+                  </span>
+                </div>
+                <span className="pl-5 sm:pl-6">Try any template free · Instant WhatsApp delivery</span>
               </div>
             </motion.div>
 
@@ -1089,7 +1097,7 @@ export function HeroExperience() {
                       </span>
                     </div>
                     <div className="shrink-0 flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#C49A5A]/20 border border-[#C49A5A]/40">
-                      <span className="text-[11px] sm:text-xs font-mono font-bold text-[#F3D59B]">
+                      <span className="price-font text-[11px] sm:text-xs text-[#F3D59B]">
                         {currentModalTemplate.price}
                       </span>
                     </div>

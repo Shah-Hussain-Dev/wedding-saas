@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#comparison", label: "Compare" },
   { href: "/#pricing", label: "Pricing" },
-  { href: "/#lookbook", label: "Lookbook" },
+  { href: "/#lookbook", label: "Collections" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
@@ -90,6 +90,7 @@ export function GlassNav() {
   return (
     <>
       <motion.nav
+        aria-label="Main"
         initial={{ y: -20, opacity: 0 }}
         animate={{
           y: hidden ? -90 : 0,
@@ -229,6 +230,7 @@ export function GlassNav() {
                         loop
                         muted
                         playsInline
+                        preload="metadata"
                         className="w-full h-full object-cover brightness-[0.9] group-hover:scale-105 transition-transform duration-500"
                       />
                     ) : (

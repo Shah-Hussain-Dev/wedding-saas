@@ -1,22 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
-import { LuxuryCursor } from "@/components/ui/luxury-cursor";
+import { Sparkle, MagnifyingGlass } from "@phosphor-icons/react";
+import { TemplateCatalogCard } from "@/components/marketing/template-catalog-card";
 import {
-  Sparkle,
-  ArrowRight,
-  Eye,
-  Heart,
-  MagnifyingGlass,
-  Crown,
-  MoonStars,
-  FlowerLotus,
-} from "@phosphor-icons/react";
-import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
+  templateMatchesFaithCatalogFilter,
+  type TemplateMeta,
+} from "@/lib/template-meta";
 
 const FILTERS = [
   { id: "All", label: "All Masterpieces (16)" },
@@ -228,6 +221,7 @@ const TEMPLATES = [
     religionLabel: "Hindu",
     price: "₹1,199",
     desc: "Grand traditional double red doors opening into a royal courtyard with Ganesh Vandana, Sangeet & Pheras itinerary.",
+    video: "/templates/crimson-royale/bg-love.mp4",
     image: "/templates/crimson-royale/bg-welcome-desktop.jpg",
     scenes: [
       { title: "Velvet Red Double Doors", image: "/templates/crimson-royale/bg-welcome-desktop.jpg" },
@@ -245,6 +239,7 @@ const TEMPLATES = [
     religionLabel: "Hindu",
     price: "₹1,199",
     desc: "A grand Rajasthani palace experience with ivory canvas, 24K antique gold filigree, deep crimson accents, floating lotus petals, and a 3D royal palace gate reveal.",
+    video: "/videos/royal-majesty.mp4",
     image: "/templates/imperial-palace/ballroom.jpg",
     scenes: [
       { title: "Royal Haveli Gate Reveal", image: "/templates/imperial-palace/ballroom.jpg" },
@@ -324,10 +319,8 @@ const TEMPLATES = [
 ];
 
 export default function TemplatesPage() {
-  const { getPriceFormatted, getPricingDetails } = useTemplatePricing();
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeSceneIndex, setActiveSceneIndex] = useState<Record<string, number>>({});
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
 
   const filteredTemplates = TEMPLATES.filter((t) => {
@@ -340,9 +333,16 @@ export default function TemplatesPage() {
     if (!matchesSearch) return false;
 
     if (activeFilter === "All") return true;
-    if (activeFilter === "Universal") return t.religion.includes("universal");
-    if (activeFilter === "Hindu") return t.religion.includes("hindu");
-    if (activeFilter === "Muslim") return t.religion.includes("muslim");
+    if (
+      activeFilter === "Universal" ||
+      activeFilter === "Hindu" ||
+      activeFilter === "Muslim"
+    ) {
+      return templateMatchesFaithCatalogFilter(
+        t.religion as TemplateMeta["religion"],
+        activeFilter
+      );
+    }
     if (activeFilter === "Best Sellers")
       return (
         t.tag === "Best Seller" ||
@@ -354,14 +354,6 @@ export default function TemplatesPage() {
     return true;
   });
 
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const progress = Math.max(0, Math.min(1, x / rect.width));
-    const sceneIdx = Math.min(3, Math.floor(progress * 4));
-    setActiveSceneIndex((prev) => ({ ...prev, [id]: sceneIdx }));
-  };
-
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -370,7 +362,6 @@ export default function TemplatesPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F4ED] text-[#18211E] selection:bg-[#C8A45E]/30 selection:text-[#073D31]">
-      <LuxuryCursor />
       <GlassNav />
 
       <main className="flex-grow pt-28 sm:pt-36 pb-20 sm:pb-28">
@@ -402,7 +393,7 @@ export default function TemplatesPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xs sm:text-sm md:text-base text-[#76766F] font-sans max-w-xl mx-auto leading-relaxed"
             >
-              Explore our full collection of 16 interactive 3D digital wedding stationery templates. Move your cursor across any card to scrub through ceremony chapters.
+              Explore all 16 interactive wedding invitations. Each card autoplays its cinematic trailer so you can feel the opening before you customize.
             </motion.p>
 
             {/* SEARCH & FILTER CONTROLS */}
@@ -430,8 +421,9 @@ export default function TemplatesPage() {
               return (
                 <button
                   key={f.id}
+                  type="button"
                   onClick={() => setActiveFilter(f.id)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                  className={`min-h-[44px] px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 whitespace-nowrap cursor-pointer ${
                     isActive
                       ? "bg-[#073D31] text-white shadow-md border border-[#C8A45E]/40 scale-105"
                       : "bg-white/80 text-stone-600 hover:text-[#18211E] hover:bg-white border border-[#073D31]/10"
@@ -444,174 +436,31 @@ export default function TemplatesPage() {
           </div>
 
           {/* TEMPLATES SHOWROOM GRID - ALL 16 TEMPLATES */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            <AnimatePresence mode="popLayout">
-              {filteredTemplates.map((item) => {
-                const currentScene = activeSceneIndex[item.id] || 0;
-                const isWish = wishlisted[item.id];
-                const pricing = getPricingDetails(item.id, item.price);
-
-                return (
-                  <motion.div
-                    key={item.id}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.4 }}
-                    className="group relative rounded-3xl bg-white border border-[#073D31]/10 p-3 shadow-sm hover:shadow-xl hover:border-[#073D31]/25 transition-all duration-500 flex flex-col justify-between overflow-hidden"
-                    onMouseMove={(e) => handleCardMouseMove(e, item.id)}
-                    onMouseLeave={() =>
-                      setActiveSceneIndex((prev) => ({ ...prev, [item.id]: 0 }))
-                    }
-                  >
-                    {/* MEDIA CONTAINER WITH SEGMENTED BARS */}
-                    <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-stone-900 border border-black/5">
-                      {/* 4 Segmented Scrubber Bars */}
-                      <div className="pcard__bars">
-                        {[0, 1, 2, 3].map((barIdx) => (
-                          <div
-                            key={barIdx}
-                            className="pcard__bar"
-                            data-state={barIdx === currentScene ? "on" : "off"}
-                          />
-                        ))}
-                      </div>
-
-                      {/* Top Left Discount Tag (E-commerce Style) */}
-                      {pricing.isOnSale && (
-                        <div className="absolute top-4 left-3 z-40 flex items-center gap-1.5 pointer-events-none">
-                          <span className="px-2.5 py-1 rounded-full bg-emerald-600/95 backdrop-blur-md text-[10px] font-bold text-white uppercase tracking-wider shadow-md border border-white/20">
-                            {pricing.discountPercent}% OFF
-                          </span>
-                          {pricing.discountName && (
-                            <span className="hidden sm:inline-block px-2.5 py-1 rounded-full bg-stone-950/80 backdrop-blur-md text-[9px] font-semibold text-[#E1C98E] uppercase tracking-wide border border-[#C8A45E]/30">
-                              {pricing.discountName}
-                            </span>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Wishlist Button */}
-                      <button
-                        onClick={(e) => toggleWishlist(item.id, e)}
-                        aria-label="Save to wishlist"
-                        className={`absolute top-4 right-3 z-40 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-md transition-transform active:scale-90 cursor-pointer ${
-                          isWish
-                            ? "bg-rose-500 text-white shadow-md"
-                            : "bg-black/40 text-white/80 hover:text-white hover:bg-black/60"
-                        }`}
-                      >
-                        <Heart size={14} weight={isWish ? "fill" : "bold"} />
-                      </button>
-
-                      {/* Visual Content */}
-                      {item.video && currentScene === 0 ? (
-                        <video
-                          src={item.video}
-                          autoPlay
-                          loop
-                          muted
-                          playsInline
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-700"
-                          style={{
-                            backgroundImage: `url(${item.scenes[currentScene]?.image || item.image || item.scenes[0].image})`,
-                          }}
-                        />
-                      )}
-
-                      {/* Gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/15 to-black/35" />
-
-                      {/* Scene Title Hover Tag */}
-                      <div className="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between">
-                        <span className="px-2.5 py-1 rounded-full bg-black/65 backdrop-blur-md text-[9px] font-bold tracking-wider text-[#E1C98E] uppercase border border-white/10">
-                          {item.scenes[currentScene]?.title}
-                        </span>
-                        <div suppressHydrationWarning className="flex items-center gap-1.5 font-mono">
-                          {pricing.isOnSale && (
-                            <span className="text-[9px] text-stone-300/80 line-through">
-                              {pricing.originalPriceFormatted}
-                            </span>
-                          )}
-                          <span className="text-[11px] font-bold text-white">
-                            {pricing.priceFormatted}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* BOTTOM CARD DETAILS */}
-                    <div className="p-3 pt-4 flex flex-col gap-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#C8A45E]">
-                          {item.religionLabel}
-                        </span>
-                        <span className="text-[9px] font-semibold text-[#073D31] px-2 py-0.5 rounded-full bg-[#073D31]/8">
-                          {item.tag}
-                        </span>
-                      </div>
-
-                      <h3 className="font-serif text-lg font-bold text-[#18211E] group-hover:text-[#073D31] transition-colors line-clamp-1">
-                        {item.name}
-                      </h3>
-
-                      <p className="text-xs text-[#76766F] font-sans line-clamp-2">
-                        {item.desc}
-                      </p>
-
-                      {/* E-COMMERCE PRICING ROW */}
-                      <div className="flex items-baseline justify-between pt-1 mt-0.5 border-t border-[#073D31]/6">
-                        <div className="flex items-baseline gap-2">
-                          <span suppressHydrationWarning className="text-base font-serif font-bold text-[#18211E]">
-                            {pricing.priceFormatted}
-                          </span>
-                          {pricing.isOnSale && (
-                            <span suppressHydrationWarning className="text-xs text-stone-400 line-through font-mono">
-                              {pricing.originalPriceFormatted}
-                            </span>
-                          )}
-                        </div>
-                        {pricing.isOnSale && (
-                          <span suppressHydrationWarning className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full font-sans">
-                            Save {pricing.savingsFormatted} ({pricing.discountPercent}% OFF)
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Action Links */}
-                      <div className="flex items-center gap-2 pt-2.5 mt-0.5 border-t border-[#073D31]/8">
-                        <Link
-                          href={`/preview/${item.id}`}
-                          className="flex-1 py-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center gap-1.5 transition-all shadow-xs group-hover:shadow-md cursor-pointer"
-                        >
-                          <Eye size={13} weight="bold" className="text-[#E1C98E]" />
-                          <span className="roll">
-                            <span className="roll__a">Preview Live</span>
-                            <span className="roll__b" aria-hidden="true">Preview Live</span>
-                          </span>
-                        </Link>
-
-                        <Link
-                          href={`/customize/${item.id}`}
-                          className="px-4 py-2 rounded-full bg-white hover:bg-[#F7F4ED] text-[#073D31] border border-[#073D31]/20 text-[11px] font-bold tracking-wider uppercase font-sans flex items-center justify-center transition-all cursor-pointer"
-                        >
-                          <span className="roll">
-                            <span className="roll__a">Customize</span>
-                            <span className="roll__b" aria-hidden="true">Customize</span>
-                          </span>
-                        </Link>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+          <div
+            key={`${activeFilter}-${searchQuery.trim()}`}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
+          >
+            {filteredTemplates.map((item) => (
+              <TemplateCatalogCard
+                key={item.id}
+                id={item.id}
+                name={item.name}
+                categoryLabel={item.religionLabel}
+                tag={item.tag}
+                description={item.desc}
+                priceFallback={item.price}
+                video={item.video}
+                isWishlisted={wishlisted[item.id]}
+                onToggleWishlist={(e) => toggleWishlist(item.id, e)}
+              />
+            ))}
           </div>
+
+          {filteredTemplates.length === 0 ? (
+            <p className="py-16 text-center font-sans text-sm text-[#76766F]">
+              No templates match this filter. Try another category or clear your search.
+            </p>
+          ) : null}
         </div>
       </main>
 

@@ -6,7 +6,20 @@ import { motion } from "motion/react";
 import { DecorSection, HeaderDecor } from "@/components/decor/section-decor";
 import { SectionHeader } from "@/components/ui/section-header";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { TemplateCatalogCard, type TemplateCatalogItem } from "@/components/marketing/template-catalog-card";
+import { TemplateCatalogCard } from "@/components/marketing/template-catalog-card";
+import type { TemplateMeta } from "@/lib/template-meta";
+
+interface TemplateCatalogItem {
+  id: string;
+  name: string;
+  description: string;
+  tag?: string;
+  gradient: string;
+  leftScreen: string;
+  accentClass: string;
+  religion: TemplateMeta["religion"];
+  religionLabel: string;
+}
 import { WhatsappShareDemo } from "@/components/marketing/whatsapp-share-demo";
 import { staggerContainer, fadeUp, viewportOnce } from "@/components/ui/motion-primitives";
 import { TEMPLATE_META } from "@/lib/template-meta";
@@ -241,7 +254,14 @@ export function TemplatesPreviewSection() {
         >
           {filtered.map((tpl) => (
             <motion.div key={tpl.id} variants={fadeUp} className="h-full">
-              <TemplateCatalogCard template={tpl} />
+              <TemplateCatalogCard
+                id={tpl.id}
+                name={tpl.name}
+                categoryLabel={tpl.religionLabel}
+                tag={tpl.tag}
+                description={tpl.description}
+                priceFallback="₹1,199"
+              />
             </motion.div>
           ))}
         </motion.div>

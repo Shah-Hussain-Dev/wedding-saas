@@ -2,20 +2,23 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Play, Sparkle } from "@phosphor-icons/react";
+import { ArrowRight, Sparkle } from "@phosphor-icons/react";
+import { LazyAutoplayVideo } from "@/components/ui/lazy-autoplay-video";
 
 export function CinematicFilmCanvas() {
   return (
-    <section className="relative w-full min-h-[70vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden bg-black text-white select-none">
+    <section
+      aria-labelledby="cinematic-film-heading"
+      className="relative w-full min-h-[70vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden bg-black text-white select-none"
+    >
       {/* Background Atmospheric Video / Media */}
       <div className="absolute inset-0 w-full h-full">
-        <video
+        <LazyAutoplayVideo
           src="/videos/royal-prestige.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover brightness-[0.45] contrast-[1.15]"
+          poster="/templates/imperial-palace/ballroom.jpg"
+          className="relative w-full h-full overflow-hidden"
+          videoClassName="w-full h-full object-cover brightness-[0.45] contrast-[1.15]"
+          rootMargin="240px 0px"
         />
         {/* Soft Vignette Shade */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/80" />
@@ -30,7 +33,10 @@ export function CinematicFilmCanvas() {
           <Sparkle size={12} weight="fill" className="text-[#C8A45E]" />
         </div>
 
-        <h2 className="font-serif text-3.5xl sm:text-5.5xl md:text-6.5xl font-medium tracking-tight text-white leading-[1.08]">
+        <h2
+          id="cinematic-film-heading"
+          className="font-serif text-3.5xl sm:text-5.5xl md:text-6.5xl font-medium tracking-tight text-white leading-[1.08]"
+        >
           The first moment <br className="hidden sm:inline" />
           of <span className="italic text-[#E1C98E] font-normal underline decoration-[#C8A45E]/50 decoration-1 underline-offset-8">forever</span>.
         </h2>

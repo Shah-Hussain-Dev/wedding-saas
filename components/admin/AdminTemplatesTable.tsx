@@ -41,6 +41,8 @@ export interface TemplateItem {
   isPopular?: boolean;
   tag?: string;
   gradient?: string;
+  coverImageUrl?: string;
+  hasCustomDefaults?: boolean;
 }
 
 interface AdminTemplatesTableProps {
@@ -321,7 +323,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
             Avg. Selling Price
           </span>
           <div className="mt-1 flex items-baseline gap-1">
-            <span className="font-serif text-2xl sm:text-3xl font-bold text-[#073D31]">
+            <span className="price-font text-2xl sm:text-3xl text-[#073D31]">
               ₹{avgSellingPrice.toLocaleString("en-IN")}
             </span>
             <span className="text-[10px] text-stone-400 font-sans">checkout</span>
@@ -333,7 +335,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
             Avg. Reference MRP
           </span>
           <div className="mt-1 flex items-baseline gap-1">
-            <span className="font-serif text-2xl sm:text-3xl font-bold text-stone-400 line-through">
+            <span className="price-font text-2xl sm:text-3xl font-normal text-stone-400 line-through">
               ₹{avgOriginalPrice.toLocaleString("en-IN")}
             </span>
           </div>
@@ -347,8 +349,8 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
             <span className="font-serif text-2xl sm:text-3xl font-bold text-emerald-600">
               {avgDiscountRate}% OFF
             </span>
-            <span className="text-[10px] text-[#C8A45E] font-bold">
-              Save ₹{(avgOriginalPrice - avgSellingPrice).toLocaleString("en-IN")}
+            <span className="text-[10px] text-[#C8A45E] font-bold font-sans">
+              Save <span className="price-font">₹{(avgOriginalPrice - avgSellingPrice).toLocaleString("en-IN")}</span>
             </span>
           </div>
         </div>
@@ -426,8 +428,19 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     {/* Template Info */}
                     <td className="py-3.5 px-4 sm:px-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#18211E] border border-[#C8A45E]/30 flex items-center justify-center text-[#E1C98E] font-serif text-xs font-bold shadow-xs shrink-0">
-                          {template.name.slice(0, 2).toUpperCase()}
+                        <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-lg border border-[#C8A45E]/30 bg-[#18211E] shadow-xs">
+                          {template.coverImageUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              src={template.coverImageUrl}
+                              alt=""
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <span className="flex h-full w-full items-center justify-center font-serif text-[10px] font-bold text-[#E1C98E]">
+                              {template.name.slice(0, 2).toUpperCase()}
+                            </span>
+                          )}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
@@ -470,15 +483,15 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     </td>
 
                     {/* Selling Price */}
-                    <td className="py-3.5 px-4 font-mono">
-                      <span className="font-bold text-[#073D31] text-sm">
+                    <td className="py-3.5 px-4">
+                      <span className="price-font text-sm text-[#073D31]">
                         ₹{template.priceInr.toLocaleString("en-IN")}
                       </span>
                     </td>
 
                     {/* Original MRP */}
-                    <td className="py-3.5 px-4 font-mono">
-                      <span className="line-through text-stone-400 text-xs">
+                    <td className="py-3.5 px-4">
+                      <span className="price-font text-xs font-normal text-stone-400 line-through">
                         ₹{origPrice.toLocaleString("en-IN")}
                       </span>
                     </td>
@@ -497,8 +510,8 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                             </span>
                           )}
                           {savings > 0 && (
-                            <span className="text-[10px] text-stone-500 font-medium">
-                              (Save ₹{savings.toLocaleString("en-IN")})
+                            <span className="text-[10px] text-stone-500 font-medium font-sans">
+                              (Save <span className="price-font">₹{savings.toLocaleString("en-IN")}</span>)
                             </span>
                           )}
                         </div>
@@ -511,6 +524,13 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     {/* Actions */}
                     <td className="py-3.5 px-4 sm:px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        <Link
+                          href={`/admin/templates/${template.id}`}
+                          className="px-3 py-1.5 rounded-lg border border-[#C8A45E]/40 bg-[#C8A45E]/10 text-[#8B6914] font-medium text-xs flex items-center gap-1.5 cursor-pointer transition-all hover:bg-[#C8A45E]/20"
+                        >
+                          <Sliders size={13} weight="bold" />
+                          <span>Configure</span>
+                        </Link>
                         <button
                           type="button"
                           onClick={() => handleStartEdit(template)}
@@ -569,10 +589,10 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     Customer Experience Preview
                   </span>
                   <div className="mt-1 flex items-baseline gap-2">
-                    <span className="text-2xl font-bold font-serif text-[#073D31]">
+                    <span className="price-font text-2xl text-[#073D31]">
                       ₹{editSellingPrice.toLocaleString("en-IN")}
                     </span>
-                    <span className="text-sm font-medium text-stone-400 line-through">
+                    <span className="price-font text-sm font-normal text-stone-400 line-through">
                       ₹{editOriginalPrice.toLocaleString("en-IN")}
                     </span>
                     {editOriginalPrice > editSellingPrice && (
@@ -587,7 +607,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                 </div>
                 <div className="text-right">
                   <span className="text-[10px] uppercase font-bold text-stone-400 block">You Save</span>
-                  <span className="text-sm font-bold text-[#C8A45E]">
+                  <span className="price-font text-sm text-[#C8A45E]">
                     ₹{Math.max(0, editOriginalPrice - editSellingPrice).toLocaleString("en-IN")}
                   </span>
                 </div>
@@ -604,7 +624,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     type="number"
                     value={editSellingPrice}
                     onChange={(e) => setEditSellingPrice(Number(e.target.value))}
-                    className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-sm font-bold font-mono"
+                    className="price-font w-full pl-8 pr-4 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-sm"
                   />
                 </div>
                 <p className="text-[10.5px] text-stone-400 mt-1">This is the exact verified amount processed via Razorpay checkout.</p>
@@ -621,7 +641,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     type="number"
                     value={editOriginalPrice}
                     onChange={(e) => setEditOriginalPrice(Number(e.target.value))}
-                    className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-sm font-bold font-mono"
+                    className="price-font w-full pl-8 pr-4 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-sm"
                   />
                 </div>
                 <p className="text-[10.5px] text-stone-400 mt-1">Displayed with a strikethrough line to anchor value and drive conversion.</p>
@@ -722,7 +742,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     className="p-3 rounded-xl border border-stone-200 hover:border-[#073D31] bg-stone-50 hover:bg-amber-50/50 text-left transition-all cursor-pointer"
                   >
                     <span className="font-bold text-xs text-[#073D31] block">Wedding Season (60% OFF)</span>
-                    <span className="text-[11px] text-stone-500 font-mono">₹1,199 from ₹2,999</span>
+                    <span className="price-font text-[11px] font-normal text-stone-500">₹1,199 from ₹2,999</span>
                   </button>
 
                   <button
@@ -731,7 +751,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     className="p-3 rounded-xl border border-stone-200 hover:border-[#073D31] bg-stone-50 hover:bg-amber-50/50 text-left transition-all cursor-pointer"
                   >
                     <span className="font-bold text-xs text-[#073D31] block">Festive Royale (50% OFF)</span>
-                    <span className="text-[11px] text-stone-500 font-mono">₹1,499 from ₹2,999</span>
+                    <span className="price-font text-[11px] font-normal text-stone-500">₹1,499 from ₹2,999</span>
                   </button>
 
                   <button
@@ -740,7 +760,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     className="p-3 rounded-xl border border-stone-200 hover:border-[#073D31] bg-stone-50 hover:bg-amber-50/50 text-left transition-all cursor-pointer"
                   >
                     <span className="font-bold text-xs text-[#073D31] block">Flash Launch (70% OFF)</span>
-                    <span className="text-[11px] text-stone-500 font-mono">₹899 from ₹2,999</span>
+                    <span className="price-font text-[11px] font-normal text-stone-500">₹899 from ₹2,999</span>
                   </button>
 
                   <button
@@ -749,7 +769,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     className="p-3 rounded-xl border border-stone-200 hover:border-[#073D31] bg-stone-50 hover:bg-amber-50/50 text-left transition-all cursor-pointer"
                   >
                     <span className="font-bold text-xs text-[#073D31] block">Early Bird Special</span>
-                    <span className="text-[11px] text-stone-500 font-mono">₹999 from ₹2,499</span>
+                    <span className="price-font text-[11px] font-normal text-stone-500">₹999 from ₹2,499</span>
                   </button>
                 </div>
               </div>
@@ -765,7 +785,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     type="number"
                     value={bulkSellingPrice}
                     onChange={(e) => setBulkSellingPrice(Number(e.target.value))}
-                    className="w-full pl-8 pr-4 py-2 rounded-xl border border-stone-300 focus:border-[#073D31] outline-none text-sm font-bold font-mono"
+                    className="price-font w-full pl-8 pr-4 py-2 rounded-xl border border-stone-300 focus:border-[#073D31] outline-none text-sm"
                   />
                 </div>
               </div>
@@ -781,7 +801,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     type="number"
                     value={bulkOriginalPrice}
                     onChange={(e) => setBulkOriginalPrice(Number(e.target.value))}
-                    className="w-full pl-8 pr-4 py-2 rounded-xl border border-stone-300 focus:border-[#073D31] outline-none text-sm font-bold font-mono"
+                    className="price-font w-full pl-8 pr-4 py-2 rounded-xl border border-stone-300 focus:border-[#073D31] outline-none text-sm"
                   />
                 </div>
               </div>

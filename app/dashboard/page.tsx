@@ -762,8 +762,8 @@ export default function DashboardPage() {
                                 <h4 className="text-xs font-bold text-amber-950 uppercase tracking-wide">
                                   Payment Needed to Go Live
                                 </h4>
-                                <span className="text-xs font-mono font-extrabold text-amber-950 bg-amber-200/70 px-2 py-0.5 rounded-md border border-amber-300">
-                                  ₹{invite.orderAmount || 1499}
+                                <span className="price-font text-xs text-amber-950 bg-amber-200/70 px-2 py-0.5 rounded-md border border-amber-300">
+                                  ₹{(invite.orderAmount || 1499).toLocaleString("en-IN")}
                                 </span>
                               </div>
                               <p className="text-[11px] text-amber-800 mt-1 leading-snug">

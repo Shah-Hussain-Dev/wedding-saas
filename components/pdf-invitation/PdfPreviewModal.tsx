@@ -86,6 +86,8 @@ interface PdfPreviewModalProps {
   templateId: string;
   initialData: PdfCardInvitationData;
   isReadOnly?: boolean;
+  /** Template-locked customize flow — hide Muslim/Hindu/Universal pills. */
+  hideReligionSelector?: boolean;
 }
 
 export function PdfPreviewModal({
@@ -94,6 +96,7 @@ export function PdfPreviewModal({
   templateId,
   initialData,
   isReadOnly = false,
+  hideReligionSelector = false,
 }: PdfPreviewModalProps) {
   const [activeTab, setActiveTab] = useState<"barat" | "reception">("barat");
   const [data, setData] = useState<PdfCardInvitationData>(initialData);
@@ -424,6 +427,7 @@ export function PdfPreviewModal({
               </div>
 
               {/* Tradition Pills on Mobile */}
+              {!hideReligionSelector && (
               <div className="flex items-center justify-center gap-1.5 pt-0.5">
                 <button
                   type="button"
@@ -459,6 +463,7 @@ export function PdfPreviewModal({
                   💫 Universal
                 </button>
               </div>
+              )}
             </div>
           )}
 
@@ -543,6 +548,7 @@ export function PdfPreviewModal({
                     </div>
 
                     {/* Tradition Selector on Mobile */}
+                    {!hideReligionSelector && (
                     <div className="flex items-center justify-between gap-1 text-[10px]">
                       <span className="text-stone-400 font-bold uppercase text-[9px]">Tradition:</span>
                       <div className="flex items-center gap-1">
@@ -581,6 +587,7 @@ export function PdfPreviewModal({
                         </button>
                       </div>
                     </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -681,7 +688,7 @@ export function PdfPreviewModal({
                 </button>
               </div>
 
-              {/* Center: Cultural Tradition Selector */}
+              {!hideReligionSelector && (
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400 font-sans">
                   Cultural Theme:
@@ -724,6 +731,7 @@ export function PdfPreviewModal({
                   </button>
                 </div>
               </div>
+              )}
 
               {/* Right: Premium Badge */}
               <div className="flex items-center gap-1.5 text-[11px] text-[#E1C98E] font-sans bg-[#C8A45E]/10 border border-[#C8A45E]/30 px-3 py-1.5 rounded-full">
@@ -763,7 +771,7 @@ export function PdfPreviewModal({
                 </button>
               </div>
 
-              {/* Center: Tradition / Faith Selector */}
+              {!hideReligionSelector && (
               <div className="flex items-center gap-1 p-1 bg-white/5 rounded-full border border-white/10 text-xs">
                 <button
                   type="button"
@@ -801,6 +809,7 @@ export function PdfPreviewModal({
                   💫 Universal
                 </button>
               </div>
+              )}
 
               {/* Right: Edit Host & Full Details Toggle */}
               <button

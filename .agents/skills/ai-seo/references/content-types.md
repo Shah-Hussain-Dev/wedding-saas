@@ -8,7 +8,7 @@ For the cross-cutting strategy, see [SKILL.md](../SKILL.md).
 
 ## SaaS Product Pages
 
-**Goal:** Get cited in "What is [category]?" and "Best [category]" queries.
+**Goal:** Get cited in "What is [category]?" and "Best [category]" queries. (Citation is the realistic goal here; being *recommended* in the answer depends on offsite consensus — see [citations-vs-recommendations.md](citations-vs-recommendations.md).)
 
 **Optimize:**
 - Clear product description in first paragraph (what it does, who it's for)
@@ -44,6 +44,17 @@ For the cross-cutting strategy, see [SKILL.md](../SKILL.md).
 - Specific criteria with ratings or scores
 - Updated pricing and feature data
 - Cite the `competitors` skill for building these pages
+
+---
+
+## Industry / Segment Pages
+
+**Goal:** Get recommended when a prompt names an industry or company size ("email marketing software for e-commerce," "RFP software for government," "enterprise [category]"). Models increasingly sort brands into segments and personalize answers, so a generic page can lose to a competitor's segment page.
+
+**Optimize:**
+- One page per core industry or segment you actually serve, with industry-specific workflows, integrations, compliance, and customer proof
+- Start with core segments. Many pages are fine if each adds real, segment-specific value; templated pages that only swap the industry name are what the scaled-content policy targets (see the `programmatic-seo` skill)
+- Match the segment language used on your third-party profiles (see [positioning-and-consensus.md](positioning-and-consensus.md))
 
 ---
 

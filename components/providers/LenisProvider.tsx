@@ -1,42 +1,88 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 
+type LenisWindow = Window & { __lenis?: Lenis };
+
+function getLenisWindow(): LenisWindow {
+  return window as unknown as LenisWindow;
+}
+
+function clearLenisWindowRef() {
+  if (typeof window === "undefined") return;
+  delete getLenisWindow().__lenis;
+}
+
 export function LenisProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
+  const rafRef = useRef<number | null>(null);
+
+  const disableLenis = pathname?.startsWith("/customize");
 
   useEffect(() => {
-    // Initialize Lenis smooth scroll
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
+    if (disableLenis) {
+      lenisRef.current?.destroy();
+      lenisRef.current = null;
+      clearLenisWindowRef();
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      return;
+    }
+
+    let cancelled = false;
+    let lenis: Lenis | null = null;
+
+    const startLenis = () => {
+      if (cancelled) return;
+
+      lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // easeOutExpo
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        allowNestedScroll: true,
+      });
+
+      lenisRef.current = lenis;
+      if (typeof window !== "undefined") {
+        getLenisWindow().__lenis = lenis;
+      }
+
+      function raf(time: number) {
+        if (!lenis) return;
+        lenis.raf(time);
+        rafRef.current = requestAnimationFrame(raf);
+      }
+
+      rafRef.current = requestAnimationFrame(raf);
+    };
+
+    const idle = window.requestIdleCallback?.(() => startLenis(), {
+      timeout: 2200,
     });
-
-    lenisRef.current = lenis;
-    if (typeof window !== "undefined") {
-      (window as any).__lenis = lenis;
-      (window as any).lenis = lenis;
-    }
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
+    const fallback = window.setTimeout(startLenis, 2200);
 
     return () => {
-      if (typeof window !== "undefined") {
-        delete (window as any).__lenis;
-        delete (window as any).lenis;
+      cancelled = true;
+      if (idle !== undefined) {
+        window.cancelIdleCallback?.(idle);
       }
-      lenis.destroy();
+      window.clearTimeout(fallback);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
+      }
+      clearLenisWindowRef();
+      lenis?.destroy();
+      lenisRef.current = null;
     };
-  }, []);
+  }, [disableLenis]);
 
   return <>{children}</>;
 }

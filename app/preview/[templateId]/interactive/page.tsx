@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useState, useEffect, Suspense } from "react";
+import { use, useState, useEffect, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Sliders, ArrowLeft, CreditCard } from "@phosphor-icons/react";
@@ -11,6 +11,11 @@ import {
   getDefaultFaithForTemplate,
   getFaithAdjustedTemplateData,
 } from "@/lib/preview-faith-content";
+import {
+  CUSTOMIZER_DRAFT_EVENT,
+  customizerDraftKey,
+} from "@/lib/customizer-preview-sync";
+import { CustomizerSubmitFlow } from "@/components/customizer/CustomizerSubmitFlow";
 
 interface InteractivePreviewProps {
   templateId: string;
@@ -39,14 +44,44 @@ const ALL_16_TEMPLATES = [
 function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const searchParams = useSearchParams();
   const isEmbed = searchParams.get("embed") === "1";
+  const isCustomizerEmbed = searchParams.get("customizer") === "1";
+  const hideFaithSelector = isEmbed || isCustomizerEmbed;
+  const isAdminPreview = searchParams.get("adminPreview") === "1";
   const queryMusicTrack = searchParams.get("musicTrack");
   const queryFaith = searchParams.get("faith") as PreviewFaith | null;
 
   // Normalize underscores to hyphens
   const normalizedId = (templateId || "").trim().replace(/_/g, "-").toLowerCase();
 
-  const templateDefault = getTemplateDefaultData(normalizedId);
-  const fallbackTrack = templateDefault?.musicTrack || `/templates/${normalizedId}/music.mp3`;
+  const codeTemplateDefault = getTemplateDefaultData(normalizedId);
+  const [resolvedDemoDefaults, setResolvedDemoDefaults] = useState<Record<string, unknown> | null>(
+    null
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadResolved() {
+      try {
+        const res = await fetch(`/api/templates/${normalizedId}/defaults`, { cache: "no-store" });
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        if (!cancelled && data.defaults) setResolvedDemoDefaults(data.defaults);
+      } catch {
+        /* ignore */
+      }
+    }
+    void loadResolved();
+    return () => {
+      cancelled = true;
+    };
+  }, [normalizedId]);
+
+  const templateDefault = resolvedDemoDefaults
+    ? { ...codeTemplateDefault, ...resolvedDemoDefaults }
+    : codeTemplateDefault;
+  const fallbackTrack =
+    (typeof templateDefault?.musicTrack === "string" && templateDefault.musicTrack) ||
+    `/templates/${normalizedId}/music.mp3`;
 
   // Dynamic preview faith selection (Universal, Hindu, Muslim)
   const [selectedFaith, setSelectedFaith] = useState<PreviewFaith>(() => {
@@ -75,6 +110,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   }, []);
 
   const handleFaithChange = (newFaith: PreviewFaith) => {
+    if (hideFaithSelector) return;
     setSelectedFaith(newFaith);
     if (typeof window !== "undefined" && window.parent && window.parent !== window) {
       window.parent.postMessage({ type: "PREVIEW_FAITH_CHANGED", faith: newFaith }, "*");
@@ -121,34 +157,118 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
 
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);
+  const [liveDraft, setLiveDraft] = useState<Record<string, unknown> | null>(null);
   const [isOpenPanel, setIsOpenPanel] = useState(!isEmbed);
+  const [submitValidationError, setSubmitValidationError] = useState<string | null>(null);
+  const showCustomizerSubmitChrome = isCustomizerEmbed && !isEmbed && !isAdminPreview;
+
+  useEffect(() => {
+    if (!isCustomizerEmbed) return;
+
+    const readDraft = () => {
+      try {
+        const stored = localStorage.getItem(customizerDraftKey(normalizedId));
+        if (!stored) return;
+        const parsed = JSON.parse(stored) as Record<string, unknown>;
+        setLiveDraft(parsed);
+        if (typeof parsed.brideName === "string" && parsed.brideName.trim()) {
+          setBrideName(parsed.brideName);
+        }
+        if (typeof parsed.groomName === "string" && parsed.groomName.trim()) {
+          setGroomName(parsed.groomName);
+        }
+        if (typeof parsed.musicTrack === "string" && parsed.musicTrack.trim()) {
+          setMusicTrack(parsed.musicTrack);
+        }
+        if (
+          parsed.religion === "universal" ||
+          parsed.religion === "hindu" ||
+          parsed.religion === "muslim"
+        ) {
+          setSelectedFaith(parsed.religion);
+        }
+      } catch {
+        /* ignore */
+      }
+    };
+
+    readDraft();
+    window.addEventListener(CUSTOMIZER_DRAFT_EVENT, readDraft);
+    return () => window.removeEventListener(CUSTOMIZER_DRAFT_EVENT, readDraft);
+  }, [isCustomizerEmbed, normalizedId]);
 
   const SelectedTemplate = TEMPLATES_MAP[normalizedId] || NoorNikah;
   const activeGroom = groomName || defaultGroom;
   const activeBride = brideName || defaultBride;
+  const draft = liveDraft || {};
+  const draftBride =
+    (typeof draft.brideName === "string" && draft.brideName.trim()) || activeBride;
+  const draftGroom =
+    (typeof draft.groomName === "string" && draft.groomName.trim()) || activeGroom;
+
   const baseSampleData = {
     ...templateDefault,
+    ...draft,
     templateId: normalizedId,
-    brideName: activeBride,
-    groomName: activeGroom,
-    hashtag: (activeGroom && activeBride) ? `#${activeGroom}And${activeBride}`.replace(/[\s&]+/g, "") : "",
-    musicTrack,
+    brideName: draftBride,
+    groomName: draftGroom,
+    weddingDate:
+      (typeof draft.weddingDate === "string" && draft.weddingDate) ||
+      templateDefault?.weddingDate,
+    weddingTime:
+      (typeof draft.weddingTime === "string" && draft.weddingTime) ||
+      templateDefault?.weddingTime,
+    venueName:
+      (typeof draft.venueName === "string" && draft.venueName) || templateDefault?.venueName,
+    venueAddress:
+      (typeof draft.venueAddress === "string" && draft.venueAddress) ||
+      templateDefault?.venueAddress,
+    heroImageUrl:
+      (typeof draft.heroImageUrl === "string" && draft.heroImageUrl) ||
+      templateDefault?.heroImageUrl,
+    slideshowImages: Array.isArray(draft.slideshowImages)
+      ? (draft.slideshowImages as string[])
+      : templateDefault?.slideshowImages,
+    eventsJson: Array.isArray(draft.eventsJson)
+      ? draft.eventsJson
+      : Array.isArray(draft.events)
+        ? draft.events
+        : templateDefault?.eventsJson,
+    sacred: {
+      ...(templateDefault?.sacred || {}),
+      invocation:
+        (typeof draft.sacredInvocation === "string" && draft.sacredInvocation) ||
+        templateDefault?.sacred?.invocation,
+      mantra:
+        (typeof draft.sacredVerse === "string" && draft.sacredVerse) ||
+        templateDefault?.sacred?.mantra,
+      shlokaTranslation:
+        (typeof draft.sacredTranslation === "string" && draft.sacredTranslation) ||
+        templateDefault?.sacred?.shlokaTranslation,
+    },
+    hashtag:
+      draftGroom && draftBride
+        ? `#${draftGroom}And${draftBride}`.replace(/[\s&]+/g, "")
+        : "",
+    musicTrack:
+      (typeof draft.musicTrack === "string" && draft.musicTrack) || musicTrack,
     couple: {
       ...templateDefault?.couple,
-      brideName: activeBride,
-      groomName: activeGroom,
+      brideName: draftBride,
+      groomName: draftGroom,
     },
   };
 
-  const isNameCustomized = (brideName !== defaultBride && brideName.trim().length > 0) ||
-    (groomName !== defaultGroom && groomName.trim().length > 0);
+  const isNameCustomized =
+    (draftBride !== defaultBride && draftBride.trim().length > 0) ||
+    (draftGroom !== defaultGroom && draftGroom.trim().length > 0);
 
   const sampleData = {
     ...getFaithAdjustedTemplateData(
       baseSampleData,
       selectedFaith,
       normalizedId,
-      isNameCustomized ? { bride: brideName, groom: groomName } : undefined
+      isNameCustomized ? { bride: draftBride, groom: draftGroom } : undefined
     ),
     hideReligionSwitcher: true,
   };
@@ -178,6 +298,27 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
     if (target?.closest(".preview-faith-selector-wrapper")) return;
     setIsHeroTapped(true);
   };
+
+  const getDraftForSubmit = useCallback((): Record<string, unknown> => {
+    try {
+      const stored = localStorage.getItem(customizerDraftKey(normalizedId));
+      if (stored) {
+        return JSON.parse(stored) as Record<string, unknown>;
+      }
+    } catch {
+      /* ignore */
+    }
+    return {
+      ...(liveDraft || {}),
+      templateId: normalizedId,
+      brideName: draftBride,
+      groomName: draftGroom,
+      religion: selectedFaith,
+      musicTrack,
+    };
+  }, [liveDraft, normalizedId, draftBride, draftGroom, selectedFaith, musicTrack]);
+
+  const customizeBackHref = `/customize/${normalizedId}?musicTrack=${encodeURIComponent(musicTrack)}`;
 
   return (
     <div
@@ -234,28 +375,55 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
         onSelectTrack={handleTrackChange}
         currentFaith={selectedFaith}
         onSelectFaith={handleFaithChange}
+        hideFaithSelector={hideFaithSelector}
         isHeroTapped={isHeroTapped}
       />
 
+      {showCustomizerSubmitChrome ? (
+        <>
+          <CustomizerSubmitFlow
+            templateId={normalizedId}
+            getDraft={getDraftForSubmit}
+            customizeHref={customizeBackHref}
+            onValidationError={(message) => setSubmitValidationError(message)}
+          />
+          {submitValidationError ? (
+            <div
+              className="fixed bottom-24 left-3 z-[997] max-w-[11.5rem] rounded-lg border border-[#073D31]/10 bg-[#FAFAF8]/95 px-2 py-1.5 font-sans text-[9px] font-semibold leading-snug text-[#18211E] shadow-md backdrop-blur-sm sm:left-4"
+              style={{ bottom: "max(96px, calc(env(safe-area-inset-bottom, 0px) + 88px))" }}
+            >
+              {submitValidationError}{" "}
+              <Link href={customizeBackHref} className="font-bold text-[#073D31] underline underline-offset-2">
+                Editor
+              </Link>
+            </div>
+          ) : null}
+        </>
+      ) : null}
+
       {!isEmbed && (
         <>
-          {/* Top-Left: Back to Templates on all devices */}
+          {/* Top-Left: Back navigation */}
           <div
             className="fixed top-2.5 sm:top-4 left-3 sm:left-6 z-[999] pointer-events-auto"
             style={{ top: "max(10px, env(safe-area-inset-top, 10px))" }}
           >
             <Link
-              href="/templates"
+              href={showCustomizerSubmitChrome ? customizeBackHref : "/templates"}
               id="interactive-back-to-templates"
-              aria-label="Back to templates"
+              aria-label={showCustomizerSubmitChrome ? "Back to editor" : "Back to templates"}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 min-h-[38px] sm:min-h-[42px] rounded-full bg-stone-950/90 hover:bg-stone-900 text-stone-200 hover:text-amber-300 backdrop-blur-xl border border-white/20 hover:border-amber-400/50 text-[11px] sm:text-xs font-bold shadow-2xl transition-all active:scale-95 whitespace-nowrap cursor-pointer group"
             >
               <ArrowLeft size={14} weight="bold" className="group-hover:-translate-x-0.5 transition-transform text-amber-400" />
-              <span className="hidden sm:inline">Back to Templates</span>
-              <span className="sm:hidden">Templates</span>
+              <span className="hidden sm:inline">
+                {showCustomizerSubmitChrome ? "Back to editor" : "Back to Templates"}
+              </span>
+              <span className="sm:hidden">{showCustomizerSubmitChrome ? "Editor" : "Templates"}</span>
             </Link>
           </div>
 
+          {!showCustomizerSubmitChrome ? (
+          <>
           <div
             className={`fixed bottom-6 left-6 z-50 transition-all duration-300 max-w-sm w-[90%] md:w-80 ${
               isOpenPanel ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0 pointer-events-none"
@@ -328,6 +496,8 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
               <span className="text-[10px] font-bold tracking-widest uppercase pr-1">Customize</span>
             </button>
           )}
+          </>
+          ) : null}
         </>
       )}
     </div>
