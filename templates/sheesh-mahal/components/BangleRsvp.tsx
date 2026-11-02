@@ -21,30 +21,45 @@ export interface RsvpSubmission {
   timestamp: number;
 }
 
-const DEFAULT_RSVP_EVENTS: Array<{ id: string; name: string; bangleImg: string; colorHint: string }> = [
+const DEFAULT_RSVP_EVENTS: Array<{
+  id: string;
+  name: string;
+  bangleImg: string;
+  colorHint: string;
+  dayText: string;
+  dateText: string;
+}> = [
   {
     id: "mehndi",
     name: "Mehndi",
     bangleImg: "/templates/sheesh-mahal/assets/rsvp/bangle-mehndi.webp",
-    colorHint: "Yellow & Green Glass"
+    colorHint: "Yellow & Green Glass",
+    dayText: "Thursday, 10",
+    dateText: "December"
   },
   {
     id: "nikah",
     name: "Nikah",
     bangleImg: "/templates/sheesh-mahal/assets/rsvp/bangle-nikah.webp",
-    colorHint: "Ivory & Pearl Lac"
+    colorHint: "Ivory & Pearl Lac",
+    dayText: "Friday, 11",
+    dateText: "December"
   },
   {
     id: "baraat",
     name: "Baraat",
     bangleImg: "/templates/sheesh-mahal/assets/rsvp/bangle-baraat.webp",
-    colorHint: "Ruby & Gold Kangan"
+    colorHint: "Ruby & Gold Kangan",
+    dayText: "Saturday, 12",
+    dateText: "December"
   },
   {
     id: "walima",
     name: "Walima",
     bangleImg: "/templates/sheesh-mahal/assets/rsvp/bangle-walima.webp",
-    colorHint: "Silver & Turquoise Glass"
+    colorHint: "Silver & Turquoise Glass",
+    dayText: "Sunday, 13",
+    dateText: "December"
   }
 ];
 
@@ -56,7 +71,7 @@ export default function BangleRsvp({
   onSubmit,
   onPlaySfx
 }: BangleRsvpProps) {
-  const [selectedEvents, setSelectedEvents] = useState<string[]>(["baraat", "walima"]);
+  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const [guestCount, setGuestCount] = useState<number>(2);
   const [guestName, setGuestName] = useState<string>(guestNameDefault);
   const [wishes, setWishes] = useState<string>("");
@@ -111,7 +126,7 @@ export default function BangleRsvp({
     }
   }, [guestNameDefault, guestName]);
 
-  // Toggle bangle attendance
+  // Toggle bangle attendance with tactile audio
   const toggleEvent = (eventId: string) => {
     playSfx("sfx-bangle.mp3");
     setSelectedEvents((prev) => {
@@ -124,7 +139,7 @@ export default function BangleRsvp({
     setErrorMessage(null);
   };
 
-  // Stepper handlers
+  // Stepper handlers with defensive clamping
   const handleDecrement = () => {
     setGuestCount((prev) => Math.max(1, prev - 1));
     playSfx("sfx-bangle.mp3");
@@ -135,7 +150,7 @@ export default function BangleRsvp({
     playSfx("sfx-bangle.mp3");
   };
 
-  // Form submission
+  // Form submission handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -150,8 +165,9 @@ export default function BangleRsvp({
       return;
     }
 
-    // 3. Events selection check
-    if (selectedEvents.length === 0) {
+    // 3. Events selection check (unless sending regrets)
+    const isSendingRegrets = selectedEvents.length === 0;
+    if (selectedEvents.length === 0 && !isSendingRegrets) {
       setErrorMessage("Please select at least one celebration to attend");
       return;
     }
@@ -168,7 +184,7 @@ export default function BangleRsvp({
     const submission: RsvpSubmission = {
       guestName: guestName.trim(),
       attendingCount: Math.min(maxSeats, Math.max(1, guestCount)),
-      events: selectedEvents,
+      events: selectedEvents.length > 0 ? selectedEvents : ["regrets"],
       wishes: wishes.trim(),
       timestamp: Date.now()
     };
@@ -208,41 +224,62 @@ export default function BangleRsvp({
   return (
     <section
       id="rsvp"
-      className="rsvp relative w-full py-16 px-4 sm:px-6 flex flex-col items-center bg-[#05140e] text-[#0b3d31]"
+      className="rsvp relative w-full py-16 sm:py-24 px-3 sm:px-6 flex flex-col items-center overflow-hidden"
+      style={{
+        backgroundImage: "url('/templates/sheesh-mahal/assets/letter/marble.webp')",
+        backgroundRepeat: "repeat",
+        backgroundSize: "400px auto"
+      }}
     >
-      {/* Background Section Glow */}
-      <div className="absolute inset-0 bg-radial from-[#0b4a3b]/20 via-transparent to-transparent pointer-events-none" />
-
-      {/* Postal Desk Parchment Card */}
+      {/* Top Ornamental Gold Band Border */}
       <div
-        className="relative z-10 w-full max-w-xl rounded-3xl p-6 sm:p-10 border border-[#c9a45c]/50 bg-[#f5efe2] shadow-[0_20px_60px_rgba(3,23,15,0.45)] overflow-hidden"
+        className="absolute top-0 left-0 right-0 h-4 bg-repeat-x bg-contain bg-top z-10 pointer-events-none"
         style={{
-          backgroundImage: "url(/templates/sheesh-mahal/assets/rsvp/paper.webp)",
-          backgroundSize: "cover"
+          backgroundImage: "url('/templates/sheesh-mahal/assets/letter/band.webp')",
+          backgroundSize: "auto 16px"
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Royal Postal Desk Section Header */}
+      <div className="relative z-10 w-full max-w-xl mx-auto text-center mb-6 sm:mb-8">
+        <p className="font-serif text-[11px] sm:text-xs uppercase tracking-[0.28em] text-[#86662a] font-semibold mb-1">
+          KINDLY REPLY
+        </p>
+        <h2
+          className="font-script text-3xl sm:text-4xl lg:text-5xl text-[#c9a45c] text-center my-1 filter drop-shadow-[0_2px_4px_rgba(201,164,92,0.3)]"
+          style={{ fontFamily: "'Alex Brush', cursive" }}
+        >
+          Will You Be There?
+        </h2>
+        <p className="font-serif italic text-xs sm:text-sm text-[#61523f]">
+          by the 15th of November, 2026
+        </p>
+      </div>
+
+      {/* Postal Desk Parchment Card with Sliced Floral Border Frame */}
+      <div
+        className="rs-paper-frame relative z-10 w-full max-w-xl mx-auto rounded-none p-5 sm:p-9 shadow-[0_12px_40px_rgba(40,30,15,0.18)]"
+        style={{
+          borderStyle: "solid",
+          borderWidth: "clamp(18px, 4.5vw, 28px)",
+          borderImageSource: "url('/templates/sheesh-mahal/assets/rsvp/paper.webp')",
+          borderImageSlice: "78 fill",
+          borderImageWidth: "clamp(18px, 4.5vw, 28px)",
+          borderImageRepeat: "round",
+          backgroundColor: "#f7f2e7"
         }}
       >
-        {/* Ornate Gold Border Accent */}
-        <div className="absolute inset-3 border border-[#c9a45c]/30 rounded-2xl pointer-events-none" />
-
-        {/* Perched Dove Ornament Header */}
-        <div className="flex flex-col items-center text-center mb-6">
-          <div
-            className="rs-dove w-16 h-16 bg-contain bg-center bg-no-repeat mb-2"
-            style={{
-              backgroundImage: "url(/templates/sheesh-mahal/assets/rsvp/dove.webp)"
-            }}
-            aria-hidden="true"
+        {/* Perched Carrier Dove on Top-Right Corner of Border Frame */}
+        <div
+          className="rs-dove-perch absolute -top-12 sm:-top-16 right-2 sm:right-6 w-16 h-16 sm:w-20 sm:h-20 pointer-events-none z-20"
+          aria-hidden="true"
+        >
+          <img
+            src="/templates/sheesh-mahal/assets/rsvp/dove.webp"
+            alt=""
+            className="w-full h-full object-contain filter drop-shadow-[0_4px_6px_rgba(0,0,0,0.15)]"
           />
-          <p className="text-xs uppercase tracking-[0.25em] text-[#86662a] font-serif font-semibold mb-1">
-            Royal Postal Desk
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-serif text-[#0b3d31] font-semibold mb-2">
-            The Bangle Stand RSVP
-          </h2>
-          <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#c9a45c] to-transparent mb-2" />
-          <p className="text-xs sm:text-sm text-[#0b3d31]/80 font-serif italic max-w-sm">
-            Kindly slip your chosen bangles onto the velvet stand to confirm your gracious attendance
-          </p>
         </div>
 
         {/* PAST DEADLINE STATE */}
@@ -268,7 +305,9 @@ export default function BangleRsvp({
               Shukriya!
             </h3>
             <p className="text-sm font-serif text-[#86662a] italic mb-6">
-              Your gracious reply has been received with deep joy and gratitude.
+              {lastSubmission.events.includes("regrets")
+                ? "Your warm wishes and regrets have been received with love."
+                : "Your gracious reply has been received with deep joy and gratitude."}
             </p>
 
             <div className="bg-white/60 rounded-xl p-5 border border-[#c9a45c]/40 text-left mb-6 shadow-sm">
@@ -278,27 +317,35 @@ export default function BangleRsvp({
               <p className="text-base font-serif font-bold text-[#0b3d31] mb-2">
                 {lastSubmission.guestName}
               </p>
-              <p className="text-xs text-[#0b3d31]/90 mb-3">
-                <span className="font-semibold">Party Size:</span> {lastSubmission.attendingCount}{" "}
-                {lastSubmission.attendingCount === 1 ? "Guest" : "Guests"}
-              </p>
+              {!lastSubmission.events.includes("regrets") && (
+                <p className="text-xs text-[#0b3d31]/90 mb-3">
+                  <span className="font-semibold">Party Size:</span> {lastSubmission.attendingCount}{" "}
+                  {lastSubmission.attendingCount === 1 ? "Guest" : "Guests"}
+                </p>
+              )}
               <p className="text-xs uppercase tracking-wider text-[#86662a] font-semibold mb-1">
-                Attending Celebrations
+                Celebrations
               </p>
               <div className="flex flex-wrap gap-2">
-                {lastSubmission.events.map((evtId) => {
-                  const evName =
-                    eventConfigs.find((c) => c.id === evtId)?.name ||
-                    evtId.charAt(0).toUpperCase() + evtId.slice(1);
-                  return (
-                    <span
-                      key={evtId}
-                      className="px-3 py-1 rounded-full text-xs font-serif font-semibold border border-[#c9a45c] bg-[#e6cf98]/50 text-[#0b3d31]"
-                    >
-                      {evName}
-                    </span>
-                  );
-                })}
+                {lastSubmission.events.includes("regrets") ? (
+                  <span className="px-3 py-1 rounded-full text-xs font-serif font-semibold border border-[#c9a45c] bg-[#e6cf98]/50 text-[#0b3d31]">
+                    Sending heartfelt blessings from afar
+                  </span>
+                ) : (
+                  lastSubmission.events.map((evtId) => {
+                    const evName =
+                      eventConfigs.find((c) => c.id === evtId)?.name ||
+                      evtId.charAt(0).toUpperCase() + evtId.slice(1);
+                    return (
+                      <span
+                        key={evtId}
+                        className="px-3 py-1 rounded-full text-xs font-serif font-semibold border border-[#c9a45c] bg-[#e6cf98]/50 text-[#0b3d31]"
+                      >
+                        {evName}
+                      </span>
+                    );
+                  })
+                )}
               </div>
             </div>
 
@@ -306,7 +353,7 @@ export default function BangleRsvp({
             <button
               type="button"
               onClick={handleChangeReply}
-              className="rs-change min-h-[44px] min-w-[44px] px-6 py-2.5 rounded-xl border border-[#86662a] bg-[#0b4a3b] text-[#f5efe2] text-xs uppercase tracking-widest font-serif font-semibold hover:bg-[#062a21] active:scale-95 transition-all shadow-md cursor-pointer"
+              className="rs-change min-h-[44px] min-w-[44px] px-8 py-2.5 rounded-full border border-[#86662a] bg-[#0b4a3b] text-[#f5efe2] text-xs uppercase tracking-widest font-serif font-semibold hover:bg-[#062a21] active:scale-95 transition-all shadow-md cursor-pointer"
             >
               Change My Reply
             </button>
@@ -339,7 +386,7 @@ export default function BangleRsvp({
           </div>
         ) : (
           /* RSVP FORM VIEW */
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+          <form onSubmit={handleSubmit} className="flex flex-col" noValidate>
             {/* Hidden Spam Honeypot Field */}
             <input
               type="text"
@@ -351,13 +398,81 @@ export default function BangleRsvp({
               autoComplete="off"
             />
 
-            {/* 4 Interactive Bangle Stand Switches */}
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-[#86662a] font-serif font-semibold mb-3 text-center sm:text-left">
-                Select Your Celebrations (Slip Bangle on Stand)
-              </label>
+            {/* The favour of your reply */}
+            <p className="font-serif italic text-center text-[#735d3d] text-sm sm:text-base mb-5">
+              The favour of your reply
+            </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* Guest Name Underline Input */}
+            <div className="w-full max-w-md mx-auto mb-5">
+              <label
+                htmlFor="rs-name"
+                className="block text-center text-[11px] sm:text-xs tracking-[0.2em] font-serif uppercase text-[#86662a] font-semibold mb-1"
+              >
+                YOUR NAME
+              </label>
+              <input
+                id="rs-name"
+                type="text"
+                value={guestName}
+                onChange={(e) => {
+                  setGuestName(e.target.value);
+                  setErrorMessage(null);
+                }}
+                placeholder="as you would sign a card"
+                className="w-full text-center bg-transparent border-b border-[#c9a45c]/70 pb-2 text-[#0b3d31] font-serif text-base sm:text-lg placeholder:italic placeholder:text-[#8a7a65]/60 focus:outline-none focus:border-[#0b3d31] transition-colors"
+                required
+              />
+            </div>
+
+            {/* Subtle Party Size Stepper (.rs-stepper) */}
+            <div className="w-full max-w-md mx-auto flex items-center justify-between px-3 py-1.5 rounded-xl bg-white/40 border border-[#c9a45c]/30 mb-5">
+              <div className="text-left">
+                <label className="block text-[11px] uppercase tracking-wider text-[#86662a] font-serif font-semibold">
+                  Number of Guests
+                </label>
+                <p className="text-[10px] text-[#61523f]/80 font-serif italic">
+                  Allocated seats reserved in your honor
+                </p>
+              </div>
+
+              <div className="rs-stepper flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleDecrement}
+                  disabled={guestCount <= 1}
+                  className="rs-step min-h-[44px] min-w-[44px] w-11 h-11 rounded-full border border-[#c9a45c]/60 bg-white/90 text-[#0b3d31] font-bold text-base flex items-center justify-center hover:bg-[#e6cf98]/40 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
+                  aria-label="Decrease guest count"
+                >
+                  −
+                </button>
+
+                <span className="rs-count text-base font-serif font-bold text-[#0b3d31] min-w-[1.75rem] text-center tabular-nums">
+                  {guestCount}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={handleIncrement}
+                  disabled={guestCount >= maxSeats}
+                  className="rs-step min-h-[44px] min-w-[44px] w-11 h-11 rounded-full border border-[#c9a45c]/60 bg-white/90 text-[#0b3d31] font-bold text-base flex items-center justify-center hover:bg-[#e6cf98]/40 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
+                  aria-label="Increase guest count"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* 4 Interactive Bangle Stand Columns */}
+            <div className="w-full max-w-md mx-auto mb-6">
+              <h3 className="text-center font-serif text-[11px] sm:text-xs uppercase tracking-[0.2em] text-[#86662a] font-semibold mb-0.5">
+                WHICH CELEBRATIONS WILL YOU JOIN?
+              </h3>
+              <p className="text-center font-serif italic text-xs text-[#61523f] mb-4">
+                Slip on the bangle for each one you will be at
+              </p>
+
+              <div className="grid grid-cols-4 gap-1 sm:gap-2 items-end">
                 {eventConfigs.map((evt) => {
                   const isSelected = selectedEvents.includes(evt.id);
 
@@ -375,130 +490,99 @@ export default function BangleRsvp({
                           toggleEvent(evt.id);
                         }
                       }}
-                      className={`rs-toggle min-h-[44px] min-w-[44px] relative p-3 rounded-2xl border flex flex-col items-center justify-between cursor-pointer select-none transition-all duration-300 ${
-                        isSelected
-                          ? "border-[#c9a45c] bg-[#e6cf98]/40 shadow-[0_6px_20px_rgba(201,164,92,0.3)] scale-[1.02]"
-                          : "border-[#c9a45c]/30 bg-white/40 hover:bg-white/60 opacity-80"
-                      }`}
+                      className="rs-toggle group flex flex-col items-center cursor-pointer select-none focus:outline-none transition-transform active:scale-95"
                     >
-                      {/* Bangle Ring Graphic (.rs-bangle) */}
-                      <div
-                        className={`rs-bangle w-16 h-16 sm:w-20 sm:h-20 bg-contain bg-center bg-no-repeat transition-transform duration-500 ${
-                          isSelected ? "translate-y-1 scale-105 rotate-3" : "translate-y-0 opacity-70"
-                        }`}
-                        style={{ backgroundImage: `url(${evt.bangleImg})` }}
-                        aria-hidden="true"
-                      />
+                      {/* 3D Stand and Bangle Visual Area */}
+                      <div className="relative w-full max-w-[68px] sm:max-w-[80px] h-[78px] sm:h-[90px] flex items-end justify-center mb-1.5">
+                        {/* Brass Stand Asset */}
+                        <img
+                          src="/templates/sheesh-mahal/assets/rsvp/stand.webp"
+                          alt=""
+                          aria-hidden="true"
+                          className="absolute bottom-1 w-[28px] sm:w-[34px] aspect-[180/375] object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.12)] pointer-events-none"
+                        />
 
-                      <div className="text-center mt-2">
-                        <span className="block text-sm font-serif font-bold text-[#0b3d31]">
-                          {evt.name}
-                        </span>
-                        <span className="text-[10px] text-[#86662a] block font-serif">
-                          {isSelected ? "Attending ✓" : "Tap to Slip On"}
-                        </span>
+                        {/* Bangle Asset Encircling Stand Dome Base */}
+                        <img
+                          src={evt.bangleImg}
+                          alt={`${evt.name} bangle`}
+                          className={`rs-bangle relative z-10 w-[46px] sm:w-[54px] aspect-[300/162] object-contain transition-all duration-300 pointer-events-none ${
+                            isSelected
+                              ? "translate-y-0 scale-105 drop-shadow-[0_4px_10px_rgba(11,74,59,0.45)]"
+                              : "translate-y-0 opacity-85 hover:opacity-100"
+                          }`}
+                        />
                       </div>
+
+                      {/* Cursive Event Name in Alex Brush */}
+                      <span
+                        className="font-script text-xl sm:text-2xl text-[#0b3d31] leading-none mb-1 text-center"
+                        style={{ fontFamily: "'Alex Brush', cursive" }}
+                      >
+                        {evt.name}
+                      </span>
+
+                      {/* Date Subtitle */}
+                      <span className="block text-[10px] sm:text-[11px] font-serif text-[#61523f] leading-tight text-center">
+                        {evt.dayText}
+                      </span>
+                      <span className="block text-[10px] sm:text-[11px] font-serif text-[#61523f] leading-tight text-center mb-1">
+                        {evt.dateText}
+                      </span>
+
+                      {/* Attendance Hint / Status */}
+                      <span
+                        className={`block text-[10px] sm:text-[11px] font-serif text-center transition-colors ${
+                          isSelected
+                            ? "text-[#0b3d31] font-semibold"
+                            : "text-[#7a623d] italic"
+                        }`}
+                      >
+                        {isSelected ? "Attending ✓" : "Tap to attend"}
+                      </span>
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            {/* Party Size Stepper (.rs-stepper) */}
-            <div className="bg-white/50 p-4 rounded-2xl border border-[#c9a45c]/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <label className="block text-xs uppercase tracking-wider text-[#86662a] font-serif font-semibold">
-                  Number of Guests
-                </label>
-                <p className="text-[11px] text-[#0b3d31]/70 font-serif">
-                  Allocated seats reserved in your honor
-                </p>
-              </div>
-
-              <div className="rs-stepper flex items-center gap-3">
-                {/* Decrement Button (-) */}
-                <button
-                  type="button"
-                  onClick={handleDecrement}
-                  disabled={guestCount <= 1}
-                  className="rs-step min-h-[44px] min-w-[44px] w-11 h-11 rounded-full border border-[#c9a45c] bg-white text-[#0b3d31] font-bold text-lg flex items-center justify-center hover:bg-[#e6cf98]/40 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
-                  aria-label="Decrease guest count"
-                >
-                  −
-                </button>
-
-                {/* Count Display (.rs-count) */}
-                <span className="rs-count text-xl font-serif font-bold text-[#0b3d31] min-w-[2.5rem] text-center tabular-nums">
-                  {guestCount}
-                </span>
-
-                {/* Increment Button (+) */}
-                <button
-                  type="button"
-                  onClick={handleIncrement}
-                  disabled={guestCount >= maxSeats}
-                  className="rs-step min-h-[44px] min-w-[44px] w-11 h-11 rounded-full border border-[#c9a45c] bg-white text-[#0b3d31] font-bold text-lg flex items-center justify-center hover:bg-[#e6cf98]/40 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm cursor-pointer"
-                  aria-label="Increase guest count"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-
-            {/* Guest Name Input */}
-            <div>
-              <label
-                htmlFor="rs-name"
-                className="block text-xs uppercase tracking-wider text-[#86662a] font-serif font-semibold mb-1"
-              >
-                Honored Guest Name(s) *
-              </label>
-              <input
-                id="rs-name"
-                type="text"
-                value={guestName}
-                onChange={(e) => {
-                  setGuestName(e.target.value);
-                  setErrorMessage(null);
-                }}
-                placeholder="e.g. Mr & Mrs Tariq Siddiqui"
-                className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-[#c9a45c]/60 bg-white/80 text-[#0b3d31] text-sm font-serif placeholder-[#0b3d31]/40 focus:outline-none focus:ring-2 focus:ring-[#c9a45c] transition-all"
-                required
-              />
-            </div>
-
             {/* Heartfelt Wishes Textarea */}
-            <div>
+            <div className="w-full max-w-md mx-auto mb-5">
               <label
                 htmlFor="rs-wishes"
-                className="block text-xs uppercase tracking-wider text-[#86662a] font-serif font-semibold mb-1"
+                className="block text-center text-[11px] sm:text-xs tracking-[0.18em] font-serif uppercase text-[#86662a] font-semibold mb-0.5"
               >
-                Heartfelt Duas &amp; Wishes (Optional)
+                A NOTE OR DUA FOR ZAIN &amp; ANAYA
               </label>
+              <span className="block text-center text-[10px] sm:text-[11px] italic font-serif text-[#86662a]/80 mb-2">
+                (optional)
+              </span>
               <textarea
                 id="rs-wishes"
                 rows={3}
                 value={wishes}
                 onChange={(e) => setWishes(e.target.value)}
                 placeholder="Send your prayers, blessings & joyful wishes to the couple..."
-                className="w-full px-4 py-3 rounded-xl border border-[#c9a45c]/60 bg-white/80 text-[#0b3d31] text-sm font-serif placeholder-[#0b3d31]/40 focus:outline-none focus:ring-2 focus:ring-[#c9a45c] transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl border border-[#c9a45c]/50 bg-[#faf7f0] text-[#0b3d31] text-xs sm:text-sm font-serif placeholder:italic placeholder:text-[#8a7a65]/50 focus:outline-none focus:ring-1 focus:ring-[#0b4a3b] transition-all resize-none shadow-inner"
               />
             </div>
 
             {/* Validation Error Message */}
             {errorMessage && (
-              <div className="rs-error text-xs text-red-700 font-serif font-semibold text-center bg-red-100/80 py-2 px-3 rounded-lg border border-red-300">
+              <div className="rs-error w-full max-w-md mx-auto text-xs text-red-700 font-serif font-semibold text-center bg-red-100/80 py-2 px-3 rounded-lg border border-red-300 mb-4">
                 {errorMessage}
               </div>
             )}
 
-            {/* Submit Button (.rs-send) */}
-            <button
-              type="submit"
-              className="rs-send min-h-[44px] min-w-[44px] w-full py-3.5 px-6 rounded-xl border border-[#86662a] bg-[#0b4a3b] text-[#f5efe2] text-sm uppercase tracking-widest font-serif font-bold shadow-[0_8px_24px_rgba(11,74,59,0.35)] hover:bg-[#062a21] active:scale-95 transition-all cursor-pointer"
-            >
-              Send Royal Reply
-            </button>
+            {/* Dynamic CTA Submit Button (.rs-send) */}
+            <div className="flex justify-center mt-2">
+              <button
+                type="submit"
+                className="rs-send min-h-[44px] min-w-[44px] px-8 py-3 rounded-full border border-[#c9a45c]/40 bg-[#0d4837] text-[#f5efe2] text-xs sm:text-sm font-serif font-semibold tracking-wider shadow-[0_8px_20px_rgba(13,72,55,0.35)] hover:bg-[#073024] active:scale-95 transition-all cursor-pointer"
+              >
+                {selectedEvents.length === 0 ? "Send my regrets" : "Accept with pleasure"}
+              </button>
+            </div>
           </form>
         )}
       </div>

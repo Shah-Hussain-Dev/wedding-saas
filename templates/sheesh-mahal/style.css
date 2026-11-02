@@ -938,3 +938,27 @@ html {
   animation: dash 1.5s ease-out forwards;
 }
 
+/* 29. RSVP Miniature Illuminated Border Frame */
+.sheesh-mahal-root .rs-paper-frame {
+  border-style: solid;
+  border-width: clamp(18px, 4.5vw, 28px);
+  border-image-source: url('/templates/sheesh-mahal/assets/rsvp/paper.webp');
+  border-image-slice: 78 fill;
+  border-image-width: clamp(18px, 4.5vw, 28px);
+  border-image-repeat: round;
+  background-color: #f7f2e7;
+}
+
+/* 30. Midnight Palace Sparkle Twinkle */
+@keyframes palace-twinkle {
+  0%, 100% {
+    opacity: 0.25;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(255, 245, 210, 1));
+  }
+}
+
