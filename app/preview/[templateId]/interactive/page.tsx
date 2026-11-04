@@ -233,7 +233,12 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
       ? draft.eventsJson
       : Array.isArray(draft.events)
         ? draft.events
-        : templateDefault?.eventsJson,
+        : (templateDefault?.eventsJson || templateDefault?.events),
+    events: Array.isArray(draft.events)
+      ? draft.events
+      : Array.isArray(draft.eventsJson)
+        ? draft.eventsJson
+        : (templateDefault?.events || templateDefault?.eventsJson),
     sacred: {
       ...(templateDefault?.sacred || {}),
       invocation:

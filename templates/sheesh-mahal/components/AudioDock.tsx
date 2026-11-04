@@ -56,11 +56,34 @@ export default function AudioDock({
   useEffect(() => {
     if (isSuppressed || typeof window === "undefined") return;
 
-    const audio = new Audio(audioSrc);
+    const audio = audioRef.current || new Audio(audioSrc);
     audio.loop = true;
     audio.preload = "auto";
-    audio.volume = 0;
+    audio.volume = 0.6;
     audioRef.current = audio;
+
+    // Listen to play/pause on audio element to stay synchronized with platform controllers
+    const handleAudioPlay = () => {
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+      try {
+        localStorage.setItem("sm:music", "on");
+      } catch {}
+    };
+
+    const handleAudioPause = () => {
+      isPlayingRef.current = false;
+      setIsPlaying(false);
+    };
+
+    audio.addEventListener("play", handleAudioPlay);
+    audio.addEventListener("pause", handleAudioPause);
+
+    // Initial state check
+    if (!audio.paused && audio.currentTime > 0) {
+      isPlayingRef.current = true;
+      setIsPlaying(true);
+    }
 
     // Check stored preference
     let savedPref: string | null = null;
@@ -73,15 +96,20 @@ export default function AudioDock({
     // Setup Web Audio API gain node if available for smooth 2.5s ramp
     try {
       const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (AudioCtx) {
+      if (AudioCtx && !audioCtxRef.current) {
         const ctx = new AudioCtx();
-        const source = ctx.createMediaElementSource(audio);
-        const gain = ctx.createGain();
-        gain.gain.setValueAtTime(0, ctx.currentTime);
-        source.connect(gain);
-        gain.connect(ctx.destination);
+        if (!audio.dataset.webaudioConnected) {
+          try {
+            const source = ctx.createMediaElementSource(audio);
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.6, ctx.currentTime);
+            source.connect(gain);
+            gain.connect(ctx.destination);
+            gainNodeRef.current = gain;
+            audio.dataset.webaudioConnected = "true";
+          } catch {}
+        }
         audioCtxRef.current = ctx;
-        gainNodeRef.current = gain;
       }
     } catch {
       // Audio element fallback
@@ -117,19 +145,53 @@ export default function AudioDock({
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("sm:sfx", handleCustomSfx);
+      audio.removeEventListener("play", handleAudioPlay);
+      audio.removeEventListener("pause", handleAudioPause);
       if (fadeTimeoutRef.current) {
         clearTimeout(fadeTimeoutRef.current);
         fadeTimeoutRef.current = null;
       }
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.src = "";
       }
       if (audioCtxRef.current) {
         audioCtxRef.current.close().catch(() => {});
       }
     };
-  }, [audioSrc, isSuppressed]);
+  }, [isSuppressed]);
+
+  // Synchronize track when audioSrc prop updates (e.g. user selects a different song in dock or wizard)
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !audioSrc || isSuppressed) return;
+
+    const isSame = audio.src.endsWith(audioSrc) || audio.src === audioSrc;
+    if (!isSame) {
+      const shouldContinuePlaying = isPlayingRef.current || hasUserGestured.current || isGateOpen;
+      audio.src = audioSrc;
+      audio.muted = false;
+      audio.volume = 0.6;
+      audio.load();
+
+      if (shouldContinuePlaying) {
+        if (audioCtxRef.current?.state === "suspended") {
+          audioCtxRef.current.resume().catch(() => {});
+        }
+        audio
+          .play()
+          .then(() => {
+            isPlayingRef.current = true;
+            setIsPlaying(true);
+            try {
+              localStorage.setItem("sm:music", "on");
+            } catch {}
+          })
+          .catch((err) => {
+            console.warn("Track change play error:", err);
+          });
+      }
+    }
+  }, [audioSrc, isGateOpen, isSuppressed]);
 
   /**
    * Executes smooth 2.5s volume gain ramp to target volume (0.6)
@@ -185,7 +247,10 @@ export default function AudioDock({
       audioCtxRef.current.resume().catch(() => {});
     }
 
-    audioRef.current
+    const audio = audioRef.current;
+    audio.muted = false;
+    audio.volume = 0.6;
+    audio
       .play()
       .then(() => {
         isPlayingRef.current = true;
@@ -236,7 +301,10 @@ export default function AudioDock({
       if (audioCtxRef.current && audioCtxRef.current.state === "suspended") {
         audioCtxRef.current.resume().catch(() => {});
       }
-      audioRef.current
+      const audio = audioRef.current;
+      audio.muted = false;
+      audio.volume = 0.6;
+      audio
         .play()
         .then(() => {
           setIsPlaying(true);
@@ -256,6 +324,15 @@ export default function AudioDock({
 
   return (
     <>
+      <audio
+        ref={audioRef}
+        id="soundAudio"
+        className="sheesh-mahal-audio"
+        src={audioSrc}
+        loop
+        preload="auto"
+        playsInline
+      />
       <button
         id="soundToggle"
         type="button"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import {
   CURATED_AUDIO_TRACKS,
   AudioTrackItem,
@@ -265,16 +265,32 @@ export function AudioTrackSelector({
     }
   };
 
-  const filteredCuratedTracks =
-    activeTab === "all"
-      ? CURATED_AUDIO_TRACKS
-      : CURATED_AUDIO_TRACKS.filter((t) => {
-          if (activeTab === "indian") return t.category === "indian";
-          if (activeTab === "pakistani") return t.category === "pakistani";
-          if (activeTab === "sufi") return t.category === "sufi";
-          if (activeTab === "classical") return t.category === "classical" || t.category === "universal";
-          return true;
-        });
+    const isUrlEquivalent = (url1?: string, url2?: string) => {
+    if (!url1 || !url2) return false;
+    if (url1 === url2) return true;
+    const n1 = url1.replace("/audio/music.mp3", "/music.mp3");
+    const n2 = url2.replace("/audio/music.mp3", "/music.mp3");
+    return n1 === n2;
+  };
+
+  const sortedCuratedTracks = useMemo(() => {
+    if (!templateDefaultUrl) return CURATED_AUDIO_TRACKS;
+    const templateTrack = CURATED_AUDIO_TRACKS.find((t) => isUrlEquivalent(t.url, templateDefaultUrl));
+    if (!templateTrack) return CURATED_AUDIO_TRACKS;
+    return [templateTrack, ...CURATED_AUDIO_TRACKS.filter((t) => t.id !== templateTrack.id)];
+  }, [templateDefaultUrl]);
+
+  const filteredCuratedTracks = useMemo(() => {
+    const list = sortedCuratedTracks;
+    if (activeTab === "all") return list;
+    return list.filter((t) => {
+      if (activeTab === "indian") return t.category === "indian";
+      if (activeTab === "pakistani") return t.category === "pakistani";
+      if (activeTab === "sufi") return t.category === "sufi";
+      if (activeTab === "classical") return t.category === "classical" || t.category === "universal";
+      return true;
+    });
+  }, [sortedCuratedTracks, activeTab]);
 
   return (
     <div className="space-y-4">
@@ -366,7 +382,7 @@ export function AudioTrackSelector({
           {/* AUDIO TRACKS GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[380px] overflow-y-auto pr-1 py-1">
             {filteredCuratedTracks.map((track) => {
-              const isSelected = selectedTrackUrl === track.url;
+              const isSelected = isUrlEquivalent(selectedTrackUrl, track.url);
               const isCurrentPlaying = playingTrackId === track.id && isPlaying;
 
               return (

@@ -275,8 +275,12 @@ export default function EventWindows({
         {activeEvents.map((event, index) => {
           const isOpen = Boolean(openStates[event.id]);
           const isEven = index % 2 === 0; // Even: Window on Left, Odd: Window on Right
-          const artworkUrl = EVENT_ARTWORK[event.id] || "/templates/sheesh-mahal/assets/events/arch.webp";
-          const tones = EVENT_TONES[event.id] || {
+          const eventKeys = ["mehndi", "nikah", "baraat", "walima"];
+          const matchedKey =
+            eventKeys.find((k) => event.id?.toLowerCase().includes(k) || event.name?.toLowerCase().includes(k)) ||
+            eventKeys[index % eventKeys.length];
+          const artworkUrl = EVENT_ARTWORK[event.id] || EVENT_ARTWORK[matchedKey] || "/templates/sheesh-mahal/assets/events/arch.webp";
+          const tones = EVENT_TONES[event.id] || EVENT_TONES[matchedKey] || {
             color: "#c9a45c",
             ink: "#86662a",
             glow: "rgba(201, 164, 92, 0.4)",

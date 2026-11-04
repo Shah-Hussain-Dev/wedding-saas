@@ -24,6 +24,7 @@ const TEMPLATE_POSTER_MAP: Record<string, string> = {
   "crimson-royale": "/templates/crimson-royale/bg-welcome-desktop.jpg",
   "royal-lotus": "/templates/imperial-palace/staircase.jpg",
   "royal-elegance": "/templates/imperial-palace/doors-hero.jpg",
+  "sheesh-mahal": "/templates/sheesh-mahal/assets/cover/doors.webp",
 };
 
 export function getTemplatePosterUrl(templateId: string): string {

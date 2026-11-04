@@ -219,7 +219,11 @@ export function InvitationCustomizerWizard({
         if (previewMusic) return previewMusic;
       } catch (_) {}
     }
-    return `/templates/${templateId}/music.mp3`;
+    return (
+      (typeof templateDefault?.musicTrack === "string" && templateDefault.musicTrack) ||
+      (typeof demoDefaults?.musicTrack === "string" && demoDefaults.musicTrack) ||
+      `/templates/${templateId}/music.mp3`
+    );
   });
 
   useEffect(() => {
@@ -234,6 +238,27 @@ export function InvitationCustomizerWizard({
     { name: "Wedding Nuptials", enabled: true, venue: "Grand Mandap / Lake Lawn", date: "Dec 22, 2026", time: "04:30 PM" },
     { name: "Grand Reception & Feast", enabled: true, venue: "The Grand Ballroom", date: "Dec 22, 2026", time: "08:00 PM" },
   ];
+
+  const templateFallbackEvents: EventItem[] = useMemo(() => {
+    const rawEvents =
+      (Array.isArray(templateDefault?.eventsJson) && templateDefault.eventsJson.length > 0 ? templateDefault.eventsJson : null) ||
+      (Array.isArray(templateDefault?.events) && templateDefault.events.length > 0 ? templateDefault.events : null) ||
+      (Array.isArray(demoDefaults?.eventsJson) && demoDefaults.eventsJson.length > 0 ? demoDefaults.eventsJson : null) ||
+      (Array.isArray(demoDefaults?.events) && demoDefaults.events.length > 0 ? demoDefaults.events : null);
+
+    if (Array.isArray(rawEvents) && rawEvents.length > 0) {
+      return rawEvents.map((ev: any) => ({
+        id: ev.id,
+        name: String(ev.name ?? "Event"),
+        enabled: ev.enabled !== false,
+        venue: String(ev.venue ?? ""),
+        date: String(ev.date ?? ""),
+        time: String(ev.time ?? ""),
+        description: ev.description ? String(ev.description) : undefined,
+      }));
+    }
+    return defaultEvents;
+  }, [templateDefault, demoDefaults]);
 
   const templateLockedReligion = defaultCulturalTraditionForTemplate(templateId);
 
@@ -257,13 +282,32 @@ export function InvitationCustomizerWizard({
     setReligion(defaultCulturalTraditionForTemplate(templateId));
   }, [templateId]);
 
-  const [events, setEvents] = useState<EventItem[]>(
-    Array.isArray(initialData?.eventsJson) && initialData.eventsJson.length > 0
-      ? initialData.eventsJson
-      : Array.isArray(initialData?.events) && initialData.events.length > 0
-      ? initialData.events
-      : defaultEvents
-  );
+  const [events, setEvents] = useState<EventItem[]>(() => {
+    if (Array.isArray(initialData?.eventsJson) && initialData.eventsJson.length > 0) {
+      return initialData.eventsJson;
+    }
+    if (Array.isArray(initialData?.events) && initialData.events.length > 0) {
+      return initialData.events;
+    }
+    const rawEvents =
+      (Array.isArray(templateDefault?.eventsJson) && templateDefault.eventsJson.length > 0 ? templateDefault.eventsJson : null) ||
+      (Array.isArray(templateDefault?.events) && templateDefault.events.length > 0 ? templateDefault.events : null) ||
+      (Array.isArray(demoDefaults?.eventsJson) && demoDefaults.eventsJson.length > 0 ? demoDefaults.eventsJson : null) ||
+      (Array.isArray(demoDefaults?.events) && demoDefaults.events.length > 0 ? demoDefaults.events : null);
+
+    if (Array.isArray(rawEvents) && rawEvents.length > 0) {
+      return rawEvents.map((ev: any) => ({
+        id: ev.id,
+        name: String(ev.name ?? "Event"),
+        enabled: ev.enabled !== false,
+        venue: String(ev.venue ?? ""),
+        date: String(ev.date ?? ""),
+        time: String(ev.time ?? ""),
+        description: ev.description ? String(ev.description) : undefined,
+      }));
+    }
+    return defaultEvents;
+  });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -445,8 +489,19 @@ export function InvitationCustomizerWizard({
     }
     if (Array.isArray(source.slideshowImages)) setSlideshowImages(source.slideshowImages as string[]);
     if (typeof source.musicTrack === "string") setMusicTrack(source.musicTrack);
-    if (Array.isArray(source.eventsJson)) setEvents(source.eventsJson as EventItem[]);
-    else if (Array.isArray(source.events)) setEvents(source.events as EventItem[]);
+    const isGenericHinduEvents = (evts: any[]) =>
+      Array.isArray(evts) &&
+      evts.length === 4 &&
+      evts[0]?.name === "Haldi Ceremony" &&
+      evts[1]?.name === "Mehendi & Sangeet";
+
+    if (Array.isArray(source.eventsJson) && source.eventsJson.length > 0 && !(templateLockedReligion === "muslim" && isGenericHinduEvents(source.eventsJson))) {
+      setEvents(source.eventsJson as EventItem[]);
+    } else if (Array.isArray(source.events) && source.events.length > 0 && !(templateLockedReligion === "muslim" && isGenericHinduEvents(source.events))) {
+      setEvents(source.events as EventItem[]);
+    } else if (templateFallbackEvents.length > 0) {
+      setEvents(templateFallbackEvents);
+    }
     if (typeof source.id === "string" && source.id && !String(source.id).startsWith("demo-")) {
       setSavedInvitationId(source.id);
     }
@@ -1467,7 +1522,11 @@ export function InvitationCustomizerWizard({
                 <AudioTrackSelector
                   selectedTrackUrl={musicTrack}
                   onChange={(url) => setMusicTrack(url)}
-                  templateDefaultUrl={`/audio/wedding-ambience.mp3`}
+                  templateDefaultUrl={
+                    (typeof templateDefault?.musicTrack === "string" && templateDefault.musicTrack) ||
+                    (typeof demoDefaults?.musicTrack === "string" && demoDefaults.musicTrack) ||
+                    `/templates/${templateId}/music.mp3`
+                  }
                 />
               </div>
             </DoubleBezelCard>

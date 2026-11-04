@@ -18,6 +18,19 @@ import ReflectingPool from "./components/ReflectingPool";
 import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 
 /**
+ * Safely resolves platform audio track identifiers or URLs
+ */
+function resolveAudioTrack(track?: string | null): string {
+  if (!track || track === "track1" || track === "track2" || track === "track3" || track === "default" || track.trim() === "") {
+    return "/templates/sheesh-mahal/audio/music.mp3";
+  }
+  if (track.startsWith("/") || track.startsWith("http://") || track.startsWith("https://") || track.startsWith("blob:")) {
+    return track;
+  }
+  return `/audio/${track}.mp3`;
+}
+
+/**
  * Robust deep merge helper to overlay incoming customized user data
  * over canonical fallback template data without losing nested structure.
  */
@@ -72,7 +85,141 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
 
   // Deep-merge incoming customized props over canonical fallback dataset
   const resolvedData: SheeshMahalData = useMemo(() => {
-    return deepMergeData(defaultData, data);
+    const merged = deepMergeData(defaultData, data);
+
+    const bName =
+      data?.brideName ||
+      data?.couple?.brideName ||
+      merged.brideName ||
+      merged.couple?.brideName ||
+      "Anaya";
+
+    const gName =
+      data?.groomName ||
+      data?.couple?.groomName ||
+      merged.groomName ||
+      merged.couple?.groomName ||
+      "Zain";
+
+    const bParents =
+      data?.brideParents ||
+      data?.couple?.brideParents ||
+      merged.brideParents ||
+      merged.couple?.brideParents ||
+      "Mr & Mrs Faisal Chaudhry";
+
+    const gParents =
+      data?.groomParents ||
+      data?.couple?.groomParents ||
+      merged.groomParents ||
+      merged.couple?.groomParents ||
+      "Mr & Mrs Imran Siddiqui";
+
+    const vName =
+      data?.venueName ||
+      data?.venue?.name ||
+      merged.venue?.name ||
+      "Qasr-e-Aina Banquet Hall";
+
+    const vAddress =
+      data?.venueAddress ||
+      data?.venue?.address ||
+      merged.venue?.address ||
+      "Shahrah-e-Faisal, Karachi, Pakistan";
+
+    const vMap =
+      data?.venue?.mapUrl ||
+      merged.venue?.mapUrl ||
+      `https://maps.google.com/?q=${encodeURIComponent(`${vName} ${vAddress}`)}`;
+
+    const invocation =
+      data?.sacredInvocation ||
+      data?.bismillah ||
+      data?.sacred?.bismillah ||
+      data?.sacred?.invocation ||
+      merged.sacred?.bismillah ||
+      "﷽";
+
+    const verseText =
+      data?.sacredVerse ||
+      data?.sacred?.surahArRum ||
+      data?.sacred?.mantra ||
+      data?.sacred?.shloka ||
+      data?.verse?.translation ||
+      merged.sacred?.surahArRum ||
+      "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy.";
+
+    const verseArabic =
+      data?.sacred?.quranArabic ||
+      data?.verse?.arabic ||
+      merged.sacred?.quranArabic ||
+      "وَمِنْ ءَايَٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً";
+
+    const translation =
+      data?.sacredTranslation ||
+      data?.sacred?.bismillahTranslation ||
+      data?.sacred?.shlokaTranslation ||
+      data?.verse?.propheticDuaTranslation ||
+      merged.sacred?.bismillahTranslation ||
+      "In the name of Allah, the Most Gracious, the Most Merciful";
+
+    const rawEvents = data?.events || data?.eventsJson || merged.events || merged.eventsJson;
+    const resolvedEvents = (Array.isArray(rawEvents) && rawEvents.length > 0)
+      ? rawEvents.map((ev: any, idx: number) => {
+          const fallbackEv = defaultData.events[idx] || defaultData.events[0];
+          const eventKeys = ["mehndi", "nikah", "baraat", "walima"];
+          const id = ev.id || eventKeys[idx % eventKeys.length];
+          return {
+            id,
+            name: ev.name || fallbackEv.name,
+            date: ev.date || fallbackEv.date,
+            time: ev.time || fallbackEv.time,
+            venue: ev.venue || fallbackEv.venue,
+            address: ev.address || ev.location || fallbackEv.address,
+            dressCode: ev.dressCode || ev.dress || fallbackEv.dressCode,
+            mapUrl: ev.mapUrl || fallbackEv.mapUrl || `https://maps.google.com/?q=${encodeURIComponent((ev.venue || fallbackEv.venue) + " " + (ev.address || ev.location || fallbackEv.address))}`,
+            isoTarget: ev.isoTarget || fallbackEv.isoTarget,
+            description: ev.description || ev.detail || fallbackEv.description,
+            enabled: ev.enabled !== false,
+          };
+        })
+      : merged.events;
+
+    return {
+      ...merged,
+      brideName: bName,
+      groomName: gName,
+      brideParents: bParents,
+      groomParents: gParents,
+      hashtag:
+        data?.hashtag ||
+        merged.hashtag ||
+        `#${gName}And${bName}`.replace(/[\s&]+/g, ""),
+      couple: {
+        ...merged.couple,
+        brideName: bName,
+        groomName: gName,
+        brideParents: bParents,
+        groomParents: gParents,
+        fullTitle: `${gName} & ${bName}`,
+      },
+      venue: {
+        ...merged.venue,
+        name: vName,
+        address: vAddress,
+        mapUrl: vMap,
+      },
+      sacred: {
+        ...merged.sacred,
+        bismillah: invocation,
+        bismillahTranslation: translation,
+        surahArRum: verseText,
+        quranArabic: verseArabic,
+      },
+      events: resolvedEvents,
+      eventsJson: resolvedEvents,
+      musicTrack: resolveAudioTrack(data?.musicTrack || merged.musicTrack),
+    };
   }, [data]);
 
   const brideName =
@@ -90,9 +237,44 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
 
   // Resolve countdown target date from Baraat reception event or weddingDate
   const countdownTarget = useMemo(() => {
+    const isCustomDate = data?.weddingDate && data.weddingDate !== defaultData.weddingDate;
+    if (isCustomDate) {
+      return data.weddingDate.includes("T") ? data.weddingDate : `${data.weddingDate}T20:00:00+05:00`;
+    }
     const events = resolvedData.events || resolvedData.eventsJson || [];
     const baraat = events.find((e: any) => e.id === "baraat");
     return baraat?.isoTarget || resolvedData.weddingDate || "2026-12-12T20:00:00+05:00";
+  }, [data?.weddingDate, resolvedData]);
+
+  // Submit RSVP to platform API (/api/messages)
+  const handleRsvpSubmit = useCallback(async (submission: any) => {
+    try {
+      const targetSlug =
+        resolvedData.slug ||
+        (typeof window !== "undefined" ? window.location.pathname.split("/").filter(Boolean).pop() : undefined);
+      const targetId = resolvedData.id;
+      if (typeof window !== "undefined" && (targetId || targetSlug)) {
+        await fetch("/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            invitationId: targetId,
+            slug: targetSlug,
+            guestName: submission.guestName,
+            message: submission.wishes || "",
+            rsvpJson: {
+              attending: submission.events && !submission.events.includes("regrets"),
+              events: submission.events,
+              guests: submission.attendingCount,
+            },
+          }),
+        });
+      }
+      return true;
+    } catch (_) {
+      // Non-blocking: localStorage already safely saved the submission
+      return true;
+    }
   }, [resolvedData]);
 
   // Entrance gate opening handler
@@ -276,7 +458,7 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
           Features Bismillah calligraphy, Alex Brush script names,
           60fps mirror reflection canvas, and guaranteed facial clearance
           ───────────────────────────────────────────────────────────── */}
-      <HeroHall data={resolvedData} />
+      <HeroHall data={resolvedData} isGateOpen={isGateOpen} />
 
       {/* ─────────────────────────────────────────────────────────────
           SECTION 04: VELVET LETTER CASKET & ROYAL SHEET (#letter)
@@ -318,6 +500,7 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
         events={resolvedData.events || resolvedData.eventsJson}
         deadlineDate={resolvedData.rsvpDeadline || "2026-12-13T23:30:00+05:00"}
         guestNameDefault={guestName}
+        onSubmit={handleRsvpSubmit}
       />
 
       {/* ─────────────────────────────────────────────────────────────
@@ -327,6 +510,11 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
           ───────────────────────────────────────────────────────────── */}
       <ReflectingPool
         sacred={resolvedData.sacred}
+        familySignoff={
+          resolvedData.brideParents && resolvedData.groomParents && (resolvedData.brideParents !== defaultData.couple.brideParents || resolvedData.groomParents !== defaultData.couple.groomParents)
+            ? `the ${resolvedData.groomParents.replace(/^Mr\s*(?:&|and)\s*Mrs\.?\s*/i, "").split(" ").pop()} & ${resolvedData.brideParents.replace(/^Mr\s*(?:&|and)\s*Mrs\.?\s*/i, "").split(" ").pop()} families`
+            : undefined
+        }
         onReplay={handleReplay}
       />
 

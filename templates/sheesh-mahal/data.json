@@ -45,10 +45,22 @@
     "title": "Imperial Mughal & Royal Velvet",
     "description": "We invite our honored guests to grace the celebrations in regal eastern attire with shades of Emerald Green, Antique Gold, Soft Champagne, and Parchment Ivory.",
     "palette": [
-      { "name": "Emerald Green", "color": "#0b4a3b" },
-      { "name": "Antique Gold", "color": "#c9a45c" },
-      { "name": "Champagne Gold", "color": "#e6cf98" },
-      { "name": "Parchment Ivory", "color": "#f5efe2" }
+      {
+        "name": "Emerald Green",
+        "color": "#0b4a3b"
+      },
+      {
+        "name": "Antique Gold",
+        "color": "#c9a45c"
+      },
+      {
+        "name": "Champagne Gold",
+        "color": "#e6cf98"
+      },
+      {
+        "name": "Parchment Ivory",
+        "color": "#f5efe2"
+      }
     ]
   },
   "events": [
@@ -102,5 +114,56 @@
       "enabled": true
     }
   ],
-  "rsvpDeadline": "2026-11-25"
+  "rsvpDeadline": "2026-11-25",
+  "eventsJson": [
+    {
+      "id": "mehndi",
+      "name": "Mehndi",
+      "date": "Thursday · 10 December 2026",
+      "time": "7:30 pm onwards",
+      "venue": "Gul Bahar Lawn, Clifton, Karachi",
+      "address": "Gul Bahar Lawn, Clifton, Karachi, Pakistan",
+      "dressCode": "Yellow, green & marigold",
+      "mapUrl": "https://maps.google.com/?q=Gul+Bahar+Lawn+Clifton+Karachi",
+      "description": "An enchanting evening of intricate henna artistry, fragrant floral garlands, soulful melodies, and vibrant celebration.",
+      "enabled": true
+    },
+    {
+      "id": "nikah",
+      "name": "Nikah",
+      "date": "Friday · 11 December 2026",
+      "time": "4:30 pm, after Asr",
+      "venue": "Masjid-e-Rahmat, DHA Phase 6, Karachi",
+      "address": "Masjid-e-Rahmat, DHA Phase 6, Karachi, Pakistan",
+      "dressCode": "Soft pastels & ivory",
+      "mapUrl": "https://maps.google.com/?q=Masjid-e-Rahmat+DHA+Phase+6+Karachi",
+      "description": "Solemnization of marriage vows and Khutbah-e-Nikah under the sacred celestial arches, sealed with heartfelt duas and blessings.",
+      "enabled": true
+    },
+    {
+      "id": "baraat",
+      "name": "Baraat",
+      "date": "Saturday · 12 December 2026",
+      "time": "8:00 pm onwards",
+      "venue": "Qasr-e-Aina Banquet Hall, Shahrah-e-Faisal, Karachi",
+      "address": "Qasr-e-Aina Banquet Hall, Shahrah-e-Faisal, Karachi, Pakistan",
+      "dressCode": "Formal eastern, in reds & golds",
+      "isoTarget": "2026-12-12T20:00:00+05:00",
+      "mapUrl": "https://maps.google.com/?q=Qasr-e-Aina+Banquet+Hall+Shahrah-e-Faisal+Karachi",
+      "description": "The grand imperial wedding procession, welcoming the groom and celebrating the eternal union with royal Mughal splendor.",
+      "enabled": true
+    },
+    {
+      "id": "walima",
+      "name": "Walima",
+      "date": "Sunday · 13 December 2026",
+      "time": "8:30 pm onwards",
+      "venue": "The Pearl Marquee, Karsaz, Karachi",
+      "address": "The Pearl Marquee, Karsaz, Karachi, Pakistan",
+      "dressCode": "Silver, pearl & pastels",
+      "mapUrl": "https://maps.google.com/?q=The+Pearl+Marquee+Karsaz+Karachi",
+      "description": "Tender parental blessings followed by an opulent Mughal banquet reception celebrating eternal love with gourmet delicacies.",
+      "enabled": true
+    }
+  ]
 }

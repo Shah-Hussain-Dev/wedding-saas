@@ -150,6 +150,18 @@ export const CURATED_AUDIO_TRACKS: AudioTrackItem[] = [
 
   // ── 🌙 SACRED NIKAH & SUFI QAWWALI ──
   {
+    id: "sheesh-mahal-sitar",
+    title: "Sheesh Mahal (Imperial Sitar & Palace Santoor)",
+    artist: "Mughal Darbar Ensemble",
+    category: "sufi",
+    categoryLabel: "Sheesh Mahal Signature",
+    flag: "👑",
+    tag: "Palace Signature",
+    duration: "3:45",
+    url: "/templates/sheesh-mahal/audio/music.mp3",
+    description: "Authentic imperial court sitar, resonant Kashmiri santoor, and glistening palace reverb recorded for Sheesh Mahal.",
+  },
+  {
     id: "kun-faya-kun-qawwali",
     title: "Kun Faya Kun (Sacred Nikah Harp)",
     artist: "A.R. Rahman / Sacred Symphony",

@@ -213,8 +213,8 @@ export default function BangleRsvp({
     setErrorMessage(null);
   };
 
-  const eventConfigs = DEFAULT_RSVP_EVENTS.map((de) => {
-    const matched = events?.find((e) => e.id.toLowerCase() === de.id);
+  const eventConfigs = DEFAULT_RSVP_EVENTS.map((de, idx) => {
+    const matched = events?.find((e) => e.id?.toLowerCase() === de.id) || events?.[idx];
     return {
       ...de,
       name: matched?.name || de.name

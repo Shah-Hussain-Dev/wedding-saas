@@ -6,6 +6,7 @@ import { playSfx as triggerSfx } from "./AudioDock";
 
 export interface ReflectingPoolProps {
   sacred?: SheeshMahalSacred;
+  familySignoff?: string;
   onReplay?: () => void;
   onPlaySfx?: (sfxName: string) => void;
 }
@@ -40,6 +41,7 @@ const MAX_DIYAS = 20;
 
 export default function ReflectingPool({
   sacred,
+  familySignoff,
   onReplay,
   onPlaySfx
 }: ReflectingPoolProps) {
@@ -165,7 +167,7 @@ export default function ReflectingPool({
           className="font-script text-2xl sm:text-3xl text-[#e6cf98] leading-tight"
           style={{ fontFamily: "'Alex Brush', cursive" }}
         >
-          the Siddiqui &amp; Chaudhry families
+          {familySignoff || "the Siddiqui & Chaudhry families"}
         </p>
       </div>
 

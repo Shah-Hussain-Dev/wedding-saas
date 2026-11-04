@@ -70,8 +70,10 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
 
   const quranArabic =
     data?.sacred?.quranArabic ||
+    "وَمِنْ ءَايَٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً";
+  const surahArRum =
     data?.sacred?.surahArRum ||
-    "وَمِنْ ءَايَـٰتِهِۦٓ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَٰجًا لِّتَسْكُنُوٓا۟ إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً";
+    "And of His signs is that He created for you from yourselves mates that you may find tranquillity in them; and He placed between you affection and mercy.";
   const quranSurah = data?.sacred?.quranSurah || "Surah Ar-Rum · 30:21";
   const urduBlessing = data?.sacred?.urduBlessing || "آپ کی شرکت ہمارے لیے باعثِ مسرت ہوگی";
 
@@ -178,9 +180,7 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
                 {quranArabic}
               </p>
               <p className="lt-verse-en">
-                &ldquo;And of His signs is that He created for you from
-                yourselves mates that you may find tranquillity in them; and He
-                placed between you affection and mercy.&rdquo;
+                &ldquo;{surahArRum}&rdquo;
               </p>
               <p className="lt-verse-ref">{quranSurah}</p>
               <p className="lt-rule" aria-hidden="true">

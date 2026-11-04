@@ -126,6 +126,21 @@ export const FAITH_VARIANTS: Record<PreviewFaith, FaithContentConfig> = {
         enabled: true,
       },
       {
+        id: "baraat-procession",
+        name: "Grand Baraat & Imperial Welcome",
+        date: "Saturday, 20 March 2027",
+        time: "08:00 PM",
+        venue: "The Royal Gateway & Darbar Lawn",
+        location: "The Rosewood Palace Estate, Mehrauli",
+        dressCode: "Imperial Gold & Regal Velvet Sherwanis",
+        dress: "Imperial Gold & Regal Velvet Sherwanis",
+        description:
+          "The grand groom procession with traditional shehnai, royal welcome by the bride's family, and celebration of the lifelong bond.",
+        detail:
+          "The grand groom procession with traditional shehnai, royal welcome by the bride's family, and celebration of the lifelong bond.",
+        enabled: true,
+      },
+      {
         id: "walima-reception",
         name: "Rukhsati & Royal Dawat-e-Walima Banquet",
         date: "Sunday, 21 March 2027",
@@ -399,6 +414,18 @@ export function getFaithAdjustedTemplateData(
 
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
 
+  const baseEvents =
+    Array.isArray(baseData?.eventsJson) && baseData.eventsJson.length > 0
+      ? baseData.eventsJson
+      : Array.isArray(baseData?.events) && baseData.events.length > 0
+        ? baseData.events
+        : null;
+
+  const resolvedEvents =
+    isDefaultFaithForTemplate && baseEvents
+      ? baseEvents
+      : variant.events;
+
   const merged = {
     ...baseData,
     religion: faith,
@@ -420,8 +447,12 @@ export function getFaithAdjustedTemplateData(
     },
     verse: variant.verse,
     sacred: variant.sacred,
-    events: variant.events,
-    eventsJson: variant.events,
+    events: resolvedEvents,
+    eventsJson: resolvedEvents,
+    musicTrack:
+      (typeof baseData?.musicTrack === "string" && baseData.musicTrack)
+        ? baseData.musicTrack
+        : `/templates/${(templateId || "").replace(/_/g, "-").toLowerCase()}/music.mp3`,
     couple: {
       ...baseData?.couple,
       brideName,

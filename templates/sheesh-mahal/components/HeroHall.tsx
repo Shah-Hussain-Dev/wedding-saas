@@ -5,9 +5,11 @@ import { SheeshMahalData } from "../types";
 
 export interface HeroHallProps {
   data?: Partial<SheeshMahalData>;
+  isGateOpen?: boolean;
 }
 
-export default function HeroHall({ data }: HeroHallProps) {
+export default function HeroHall({ data, isGateOpen }: HeroHallProps) {
+  const isRevealed = isGateOpen === undefined ? true : isGateOpen;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const heroRef = useRef<HTMLElement | null>(null);
   const animFrameRef = useRef<number | null>(null);
@@ -272,11 +274,17 @@ export default function HeroHall({ data }: HeroHallProps) {
           <div className="h-focal-corridor" aria-hidden="true" />
 
           {/* Center of the Arch: Couple Names & Invitation Announcement */}
-          <div className="h-center-zone">
+          <div className={`h-center-zone ${isRevealed ? "is-revealed" : "is-hidden"}`}>
             <h1 className="h-names" id="heroNames">
-              <span className="h-name h-groom">{groomName}</span>
+              <span className="h-name h-groom">
+                {groomName}
+                <span className="h-quill-nib nib-groom" aria-hidden="true" />
+              </span>
               <span className="h-amp">&amp;</span>
-              <span className="h-name h-bride">{brideName}</span>
+              <span className="h-name h-bride">
+                {brideName}
+                <span className="h-quill-nib nib-bride" aria-hidden="true" />
+              </span>
             </h1>
             <p className="h-line">invite you to celebrate their wedding</p>
           </div>
@@ -472,7 +480,8 @@ export default function HeroHall({ data }: HeroHallProps) {
           width: 100%;
         }
         .h-name {
-          display: block;
+          position: relative;
+          display: inline-block;
           font-size: clamp(62px, 16vw, 90px);
           background: linear-gradient(180deg, #fffef5 0%, #fae8b5 28%, #d8b56c 65%, #9b7430 100%);
           -webkit-background-clip: text;
@@ -482,11 +491,36 @@ export default function HeroHall({ data }: HeroHallProps) {
           filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 18px rgba(216, 181, 108, 0.35));
         }
 
-        /* ─── Smooth Calligraphy Writing Animation ─── */
-        .h-groom {
-          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both, goldGlint 4s ease-in-out 2s infinite;
+        .h-quill-nib {
+          position: absolute;
+          top: 50%;
+          left: 0%;
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          background: radial-gradient(circle, #ffffff 15%, #ffd978 50%, rgba(216, 181, 108, 0.2) 80%);
+          box-shadow: 0 0 12px 4px rgba(255, 230, 140, 0.95), 0 0 24px 6px rgba(216, 181, 108, 0.6);
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0;
         }
-        .h-amp {
+
+        .h-center-zone.is-hidden .h-name,
+        .h-center-zone.is-hidden .h-amp,
+        .h-center-zone.is-hidden .h-line {
+          opacity: 0;
+          clip-path: inset(0 100% 0 0);
+          pointer-events: none;
+        }
+
+        /* ─── Smooth Calligraphy Writing Animation ─── */
+        .h-center-zone.is-revealed .h-groom {
+          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both, goldGlint 4s ease-in-out 2.2s infinite;
+        }
+        .h-center-zone.is-revealed .nib-groom {
+          animation: nibTrack 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+        }
+        .h-center-zone.is-revealed .h-amp {
           font-family: "Alex Brush", cursive;
           font-size: 0.58em;
           line-height: 1;
@@ -496,12 +530,15 @@ export default function HeroHall({ data }: HeroHallProps) {
           -webkit-text-fill-color: transparent;
           color: #e6cf98;
           filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
-          animation: fadeScaleIn 1s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+          animation: fadeScaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.7s both;
         }
-        .h-bride {
-          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1.2s both, goldGlint 4s ease-in-out 2.6s infinite;
+        .h-center-zone.is-revealed .h-bride {
+          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both, goldGlint 4s ease-in-out 3.8s infinite;
         }
-        .h-line {
+        .h-center-zone.is-revealed .nib-bride {
+          animation: nibTrack 1.4s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both;
+        }
+        .h-center-zone.is-revealed .h-line {
           font-family: "Cormorant Garamond", Georgia, serif;
           font-style: italic;
           font-weight: 500;
@@ -512,18 +549,51 @@ export default function HeroHall({ data }: HeroHallProps) {
           opacity: 0.94;
           text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
           white-space: nowrap;
-          animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.8s both;
+          animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 3.4s both;
+        }
+
+        /* Default fallback animations if is-revealed class is not present */
+        .h-center-zone:not(.is-hidden):not(.is-revealed) .h-groom {
+          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both, goldGlint 4s ease-in-out 2.2s infinite;
+        }
+        .h-center-zone:not(.is-hidden):not(.is-revealed) .h-amp {
+          font-family: "Alex Brush", cursive;
+          font-size: 0.58em;
+          line-height: 1;
+          margin: -8px 0 -4px;
+          background: linear-gradient(180deg, #fffbf0 0%, #fae8b5 40%, #c9a45c 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: #e6cf98;
+          filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.8));
+          animation: fadeScaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 1.7s both;
+        }
+        .h-center-zone:not(.is-hidden):not(.is-revealed) .h-bride {
+          animation: calligraphyWrite 1.4s cubic-bezier(0.22, 1, 0.36, 1) 2.1s both, goldGlint 4s ease-in-out 3.8s infinite;
+        }
+        .h-center-zone:not(.is-hidden):not(.is-revealed) .h-line {
+          font-family: "Cormorant Garamond", Georgia, serif;
+          font-style: italic;
+          font-weight: 500;
+          font-size: clamp(14px, 3.6vw, 17px);
+          letter-spacing: 0.04em;
+          color: #f5efe2;
+          margin: 12px 0 0;
+          opacity: 0.94;
+          text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+          white-space: nowrap;
+          animation: fadeSlideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 3.4s both;
         }
 
         @keyframes calligraphyWrite {
           0% {
             clip-path: inset(0 100% 0 0);
             opacity: 0;
-            transform: translateY(6px);
-            filter: blur(4px);
+            transform: translateY(4px);
+            filter: blur(3px);
           }
-          30% {
-            opacity: 0.85;
+          15% {
+            opacity: 1;
             filter: blur(0px);
           }
           100% {
@@ -531,6 +601,27 @@ export default function HeroHall({ data }: HeroHallProps) {
             opacity: 1;
             transform: translateY(0);
             filter: blur(0px);
+          }
+        }
+
+        @keyframes nibTrack {
+          0% {
+            left: 0%;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.3);
+          }
+          10% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+          }
+          90% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+          }
+          100% {
+            left: 100%;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.3);
           }
         }
         @keyframes fadeSlideDown {

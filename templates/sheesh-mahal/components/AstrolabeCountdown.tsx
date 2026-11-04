@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { playSfx as triggerSfx } from "./AudioDock";
 
 export interface AstrolabeCountdownProps {
@@ -190,6 +190,19 @@ export default function AstrolabeCountdown({
   const [isSpinning, setIsSpinning] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
   const [time, setTime] = useState<TimeRemaining>(() => calculateRemaining(targetDate));
+
+  const targetFormatted = useMemo(() => {
+    try {
+      const d = new Date(targetDate);
+      if (!isNaN(d.getTime())) {
+        const monthShort = d.toLocaleDateString("en-US", { month: "short" });
+        const day = d.getDate();
+        const year = d.getFullYear();
+        return `${monthShort} ${day}, ${year}`;
+      }
+    } catch {}
+    return "Dec 12, 2026";
+  }, [targetDate]);
 
   const dialRef = useRef<HTMLDivElement | null>(null);
   const lastAngleRef = useRef(45);
@@ -576,7 +589,7 @@ export default function AstrolabeCountdown({
         {isLocked ? (
           <div className="px-5 py-2 rounded-full border border-[#c9a45c] bg-[#032117]/85 text-[#f2dfb1] text-xs font-serif uppercase tracking-[0.16em] shadow-[0_0_16px_rgba(201,164,92,0.35)] flex items-center gap-1.5 animate-fadeIn">
             <span className="text-[#c9a45c]">✦</span>
-            <span>Celestial Conjunction Aligned · Baraat: Dec 12, 2026</span>
+            <span>Celestial Conjunction Aligned · Baraat: {targetFormatted}</span>
             <span className="text-[#c9a45c]">✦</span>
           </div>
         ) : (
