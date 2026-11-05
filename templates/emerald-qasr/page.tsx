@@ -24,7 +24,9 @@ import {
   MagnifyingGlassPlus,
   Compass,
   Star,
+  Copy,
   WhatsappLogo,
+  ShareNetwork,
 } from "@phosphor-icons/react";
 import defaultData from "./data.json";
 import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
@@ -60,16 +62,48 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
+  // Address Copy & Toast State
+  const [copiedAddress, setCopiedAddress] = useState(false);
+
   // References
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Hydration Mount & Desktop Auto-Reveal
+  // Preloaded Audio SFX Refs (Zero-Latency Audio Choreography)
+  const sfxOpenRef = useRef<HTMLAudioElement | null>(null);
+  const sfxLetterRef = useRef<HTMLAudioElement | null>(null);
+  const sfxShimmerRef = useRef<HTMLAudioElement | null>(null);
+
+  // Hydration Mount & Desktop Check
   const [mounted, setMounted] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
+  // 3D Tilt State for Hero Keepsake (Desktop cursor tracking, touch safe)
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     setMounted(true);
+
+    // Preload sound effects for instant zero-latency feedback on mobile & desktop
+    try {
+      const openAudio = new Audio("/templates/emerald-qasr/audio/sfx-open.mp3");
+      openAudio.preload = "auto";
+      openAudio.volume = 0.7;
+      sfxOpenRef.current = openAudio;
+
+      const letterAudio = new Audio("/templates/emerald-qasr/audio/sfx-letter.mp3");
+      letterAudio.preload = "auto";
+      letterAudio.volume = 0.6;
+      sfxLetterRef.current = letterAudio;
+
+      const shimmerAudio = new Audio("/templates/emerald-qasr/audio/sfx-shimmer.mp3");
+      shimmerAudio.preload = "auto";
+      shimmerAudio.volume = 0.55;
+      sfxShimmerRef.current = shimmerAudio;
+    } catch (e) {
+      console.warn("Audio preloading not supported:", e);
+    }
+
     const checkDesktop = () => {
       const isDesk = window.innerWidth >= 1024;
       setIsDesktop(isDesk);
@@ -89,10 +123,19 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
       const timer = setTimeout(() => {
         setIsFlashing(true);
         setIsUnlocked(true);
+
+        // Play shimmer SFX on reveal completion
+        try {
+          if (sfxShimmerRef.current) {
+            sfxShimmerRef.current.currentTime = 0;
+            sfxShimmerRef.current.play().catch(() => {});
+          }
+        } catch (_) {}
+
         try {
           confetti({
-            particleCount: 75,
-            spread: 80,
+            particleCount: 80,
+            spread: 85,
             origin: { y: 0.55 },
             colors: ["#D4AF37", "#F5E5A3", "#10B981", "#FFFDF8"],
           });
@@ -130,16 +173,16 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
 
   const revealMonthDay = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", { month: "long", day: "numeric", timeZone: "UTC" })
-    : "September 18";
+    : "February 14";
   const revealDayName = !isNaN(weddingDate.getTime())
     ? weddingDate.toLocaleDateString("en-US", { weekday: "long", timeZone: "UTC" })
-    : "Friday";
+    : "Sunday";
   const revealYearStr = !isNaN(weddingDate.getTime())
     ? weddingDate.getFullYear().toString()
-    : "2026";
+    : "2027";
 
-  const venueName = data?.venueName || data?.venue?.name || resolvedData.venue?.name || "The Emerald Palace Estate";
-  const venueAddress = data?.venueAddress || data?.venue?.address || resolvedData.venue?.address || "Corniche Road, West Bay, Abu Dhabi";
+  const venueName = data?.venueName || data?.venue?.name || resolvedData.venue?.name || "The Grand Falaknuma Palace";
+  const venueAddress = data?.venueAddress || data?.venue?.address || resolvedData.venue?.address || "Engine Bowli, Falaknuma, Hyderabad, Telangana 500053";
   const venueMapUrl = data?.venueMapUrl || data?.venue?.mapUrl || resolvedData.venue?.mapUrl;
   const islamicDate = data?.islamicDate || resolvedData.islamicDate || "07 Sha'ban 1448 AH";
 
@@ -165,17 +208,17 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
     .filter(Boolean);
 
   const galleryCaptions = resolvedData.galleryCaptions || [
-    { title: "Ottoman Emerald Palace", subtitle: "Grandeur & Grace" },
-    { title: "Sacred Nikahnama", subtitle: "Blessed by Divine Grace" },
-    { title: "Courtyard of Whispers", subtitle: "Moments of Serenity" },
-    { title: "Starlight Banquet", subtitle: "Celebration with Loved Ones" },
-    { title: "Golden Filigree Arch", subtitle: "A Royal Heritage" },
+    { title: "The Imperial Qasr Entrance", subtitle: "A Royal Fairytale Begins" },
+    { title: "Golden Filigree & Jewels", subtitle: "Crafted with Heritage Elegance" },
+    { title: "Sacred Quranic Vows", subtitle: "Bound by Faith & Love" },
+    { title: "Sunset on the Palace Terrace", subtitle: "Whispers of Forever" },
+    { title: "The Royal Banquet", subtitle: "Celebration of Two Families" },
   ];
 
   const events: EventItem[] = (data?.events || data?.eventsJson || resolvedData.events || []).filter((e: any) => e.enabled !== false);
 
   const hashtag = data?.hashtag || resolvedData.hashtag || `#${brideName}Weds${groomName}`;
-  const storyMessage = data?.storyMessage || resolvedData.storyMessage || "Under the serene starlight of Abu Dhabi, amidst the fragrant amber and emerald arches, two souls found tranquility in one another. With the blessings of our beloved elders, we begin our sacred eternal covenant of Nikah.";
+  const storyMessage = data?.storyMessage || resolvedData.storyMessage || "Underneath the starlit skies of the historic City of Pearls, amidst the timeless Nizami archways and glowing crystal chandeliers, two souls were destined in love. With the boundless grace of Allah (SWT) and the sacred prayers of our loving parents, we begin our eternal covenant of Nikah.";
 
   // Deterministic falling gold petals (Royal Lotus Parallax Engine)
   const petals = [
@@ -223,9 +266,30 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
     return () => clearInterval(interval);
   }, [galleryMode, galleryPhotos.length]);
 
-  // Handle Tap to Open Video
+  // 3D Pointer & Touch Tilt Handler (Suppresses pointer tilt for touch events to eliminate mobile tap jitter)
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -8;
+    setTilt({ x, y });
+  };
+
+  const handlePointerLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
+
+  // Handle Tap to Open Video / Unveil Keepsake
   const handleOpenInvitation = () => {
     if (isPlayingVideo && !videoOpened) return;
+
+    // Trigger preloaded open SFX
+    try {
+      if (sfxOpenRef.current) {
+        sfxOpenRef.current.currentTime = 0;
+        sfxOpenRef.current.play().catch(() => {});
+      }
+    } catch (_) {}
 
     setIsPlayingVideo(true);
 
@@ -310,6 +374,64 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
     }
   };
 
+  // One-Click Copy Venue Address with Toast Confirmation
+  const handleCopyAddress = () => {
+    const fullAddress = `${venueName}, ${venueAddress}`;
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(fullAddress).then(() => {
+        setCopiedAddress(true);
+        setTimeout(() => setCopiedAddress(false), 2500);
+      });
+    } else {
+      // Fallback
+      setCopiedAddress(true);
+      setTimeout(() => setCopiedAddress(false), 2500);
+    }
+  };
+
+  // Add to Calendar (.ics Download)
+  const handleAddToCalendar = (eventTitle?: string, eventDateStr?: string) => {
+    const dateObj = eventDateStr ? new Date(eventDateStr) : weddingDate;
+    const validDate = !isNaN(dateObj.getTime()) ? dateObj : new Date();
+    const startTime = validDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+    const endDate = new Date(validDate.getTime() + 4 * 60 * 60 * 1000);
+    const endTime = endDate.toISOString().replace(/-|:|\.\d\d\d/g, "");
+
+    const summary = eventTitle
+      ? `${eventTitle} - ${brideName} & ${groomName}`
+      : `${brideName} & ${groomName}'s Royal Nikah Celebration`;
+
+    const icsContent = [
+      "BEGIN:VCALENDAR",
+      "VERSION:2.0",
+      "PRODID:-//Emerald Qasr//Wedding Invitation//EN",
+      "BEGIN:VEVENT",
+      `SUMMARY:${summary}`,
+      `DESCRIPTION:The Royal Ottoman & Falaknuma Celebration of ${brideName} & ${groomName}. ${hashtag}`,
+      `LOCATION:${venueName}, ${venueAddress}`,
+      `DTSTART:${startTime}`,
+      `DTEND:${endTime}`,
+      "STATUS:CONFIRMED",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+
+    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.setAttribute("download", `${brideName}-and-${groomName}-Wedding.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // WhatsApp Share Invitation Link
+  const handleWhatsAppShare = () => {
+    const shareText = `✨ You are cordially invited to the Royal Nikah Celebration of *${brideName} & ${groomName}* on ${formattedDate} at *${venueName}*. Join us in celebration and prayers! ${hashtag}`;
+    const url = typeof window !== "undefined" ? window.location.href : "";
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareText + "\n\n" + url)}`, "_blank");
+  };
+
   const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitted(true);
@@ -321,8 +443,6 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
         colors: ["#D4AF37", "#10B981", "#F59E0B", "#FDFBF7"],
       });
     } catch (_) {}
-
-
 
     try {
       await fetch("/api/messages", {
@@ -398,7 +518,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
         ))}
       </div>
 
-      {/* Floating Music Button with Dynamic Soundwave */}
+      {/* Floating Music Button with Dynamic Soundwave (Safe-Area Aware) */}
       <motion.button
         className="eq-music-toggle"
         onClick={toggleMusic}
@@ -433,59 +553,63 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
           <div className="eq-arch-tag">THE ROYAL OTTOMAN NIKAH CELEBRATION · EMERALD QASR</div>
         </motion.header>
 
-        {/* ── Grand Envelope Hero Stage (Centered on All Screen Sizes) ── */}
+        {/* ── Grand Envelope Hero Stage ── */}
         <section className="eq-hero-stage-container">
           {/* Flanking Royal Hanging Lanterns & Floating Star Medallions */}
           <div className="eq-hero-floating-elements" aria-hidden="true">
-            {/* Left Hanging Ottoman Lantern */}
+            {/* Left Hanging Ottoman Lantern (Decoupled Float & Pendulum Sway) */}
             <div className="eq-floating-lantern eq-lantern-left">
               <div className="eq-lantern-chain" />
-              <div className="eq-lantern-body">
-                <svg viewBox="0 0 48 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="eq-lantern-svg">
-                  <circle cx="24" cy="6" r="4" stroke="#F5E5A3" strokeWidth="1.5" />
-                  <path d="M16 12C16 12 20 8 24 8C28 8 32 12 32 12L36 18H12L16 12Z" fill="url(#eqLanternGold)" />
-                  <path d="M12 18L16 52H32L36 18H12Z" fill="rgba(212, 175, 55, 0.15)" stroke="#D4AF37" strokeWidth="1.2" />
-                  <path d="M24 18V52M18 20C18 36 24 48 24 48C24 48 30 36 30 20" stroke="#F5E5A3" strokeWidth="0.8" opacity="0.8" />
-                  <circle cx="24" cy="36" r="4" fill="#FFE082" className="eq-lantern-flame" />
-                  <path d="M16 52L24 64L32 52H16Z" fill="url(#eqLanternGold)" />
-                  <circle cx="24" cy="68" r="2" fill="#D4AF37" />
-                  <defs>
-                    <linearGradient id="eqLanternGold" x1="12" y1="8" x2="36" y2="64" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#F5E5A3" />
-                      <stop offset="0.5" stopColor="#D4AF37" />
-                      <stop offset="1" stopColor="#8A661C" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="eq-lantern-light-glow" />
+              <div className="eq-lantern-pendulum">
+                <div className="eq-lantern-body">
+                  <svg viewBox="0 0 48 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="eq-lantern-svg">
+                    <circle cx="24" cy="6" r="4" stroke="#F5E5A3" strokeWidth="1.5" />
+                    <path d="M16 12C16 12 20 8 24 8C28 8 32 12 32 12L36 18H12L16 12Z" fill="url(#eqLanternGold)" />
+                    <path d="M12 18L16 52H32L36 18H12Z" fill="rgba(212, 175, 55, 0.15)" stroke="#D4AF37" strokeWidth="1.2" />
+                    <path d="M24 18V52M18 20C18 36 24 48 24 48C24 48 30 36 30 20" stroke="#F5E5A3" strokeWidth="0.8" opacity="0.8" />
+                    <circle cx="24" cy="36" r="4" fill="#FFE082" className="eq-lantern-flame" />
+                    <path d="M16 52L24 64L32 52H16Z" fill="url(#eqLanternGold)" />
+                    <circle cx="24" cy="68" r="2" fill="#D4AF37" />
+                    <defs>
+                      <linearGradient id="eqLanternGold" x1="12" y1="8" x2="36" y2="64" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#F5E5A3" />
+                        <stop offset="0.5" stopColor="#D4AF37" />
+                        <stop offset="1" stopColor="#8A661C" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="eq-lantern-light-glow" />
+                </div>
               </div>
             </div>
 
-            {/* Right Hanging Ottoman Lantern */}
+            {/* Right Hanging Ottoman Lantern (Decoupled Float & Pendulum Sway) */}
             <div className="eq-floating-lantern eq-lantern-right">
               <div className="eq-lantern-chain" />
-              <div className="eq-lantern-body">
-                <svg viewBox="0 0 48 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="eq-lantern-svg">
-                  <circle cx="24" cy="6" r="4" stroke="#F5E5A3" strokeWidth="1.5" />
-                  <path d="M16 12C16 12 20 8 24 8C28 8 32 12 32 12L36 18H12L16 12Z" fill="url(#eqLanternGoldR)" />
-                  <path d="M12 18L16 52H32L36 18H12Z" fill="rgba(212, 175, 55, 0.15)" stroke="#D4AF37" strokeWidth="1.2" />
-                  <path d="M24 18V52M18 20C18 36 24 48 24 48C24 48 30 36 30 20" stroke="#F5E5A3" strokeWidth="0.8" opacity="0.8" />
-                  <circle cx="24" cy="36" r="4" fill="#FFE082" className="eq-lantern-flame" />
-                  <path d="M16 52L24 64L32 52H16Z" fill="url(#eqLanternGoldR)" />
-                  <circle cx="24" cy="68" r="2" fill="#D4AF37" />
-                  <defs>
-                    <linearGradient id="eqLanternGoldR" x1="12" y1="8" x2="36" y2="64" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#F5E5A3" />
-                      <stop offset="0.5" stopColor="#D4AF37" />
-                      <stop offset="1" stopColor="#8A661C" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div className="eq-lantern-light-glow" />
+              <div className="eq-lantern-pendulum">
+                <div className="eq-lantern-body">
+                  <svg viewBox="0 0 48 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="eq-lantern-svg">
+                    <circle cx="24" cy="6" r="4" stroke="#F5E5A3" strokeWidth="1.5" />
+                    <path d="M16 12C16 12 20 8 24 8C28 8 32 12 32 12L36 18H12L16 12Z" fill="url(#eqLanternGoldR)" />
+                    <path d="M12 18L16 52H32L36 18H12Z" fill="rgba(212, 175, 55, 0.15)" stroke="#D4AF37" strokeWidth="1.2" />
+                    <path d="M24 18V52M18 20C18 36 24 48 24 48C24 48 30 36 30 20" stroke="#F5E5A3" strokeWidth="0.8" opacity="0.8" />
+                    <circle cx="24" cy="36" r="4" fill="#FFE082" className="eq-lantern-flame" />
+                    <path d="M16 52L24 64L32 52H16Z" fill="url(#eqLanternGoldR)" />
+                    <circle cx="24" cy="68" r="2" fill="#D4AF37" />
+                    <defs>
+                      <linearGradient id="eqLanternGoldR" x1="12" y1="8" x2="36" y2="64" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#F5E5A3" />
+                        <stop offset="0.5" stopColor="#D4AF37" />
+                        <stop offset="1" stopColor="#8A661C" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="eq-lantern-light-glow" />
+                </div>
               </div>
             </div>
 
-            {/* Floating Celestial Starbursts & Geometry Motifs */}
+            {/* Floating Celestial Starbursts */}
             <div className="eq-floating-medallion star-1">
               <Sparkle size={20} weight="fill" />
             </div>
@@ -500,10 +624,20 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
             </div>
           </div>
 
-          <div className="eq-video-hero-wrapper">
+          <div
+            className="eq-video-hero-wrapper"
+            onPointerMove={handlePointerMove}
+            onPointerLeave={handlePointerLeave}
+          >
             <div
               className={`eq-video-card ${videoOpened ? "eq-card-revealed" : ""}`}
               onClick={!isPlayingVideo ? handleOpenInvitation : undefined}
+              style={{
+                transform:
+                  tilt.x !== 0 || tilt.y !== 0
+                    ? `perspective(1200px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
+                    : undefined,
+              }}
             >
               {/* Desktop Specific High-Resolution 16:9 Envelope Preview */}
               <img
@@ -515,7 +649,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               {/* The Mobile Video Element */}
               <video
                 ref={videoRef}
-                src={resolvedData.videoOpening.videoUrl}
+                src={resolvedData.videoOpening?.videoUrl || "/templates/emerald-qasr/opening.mp4"}
                 playsInline
                 webkit-playsinline="true"
                 muted={false}
@@ -534,9 +668,15 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 }}
               />
 
-              {/* Seamless Stamped Initials on Envelope Wax Seal (Mobile Only) */}
-              {!isDesktop && (
-                <div className={`eq-seal-monogram-anchor ${isPlayingVideo ? "eq-seal-lifting" : ""}`}>
+              {/* Seamless Stamped Initials on Envelope Wax Seal (Min 48x48px Touch Target) */}
+              {!isDesktop && !videoOpened && (
+                <div
+                  className={`eq-seal-monogram-anchor ${isPlayingVideo ? "eq-seal-lifting" : ""}`}
+                  onClick={!isPlayingVideo ? handleOpenInvitation : undefined}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Unveil royal invitation"
+                >
                   <div className="eq-wax-initials-ring">
                     <span className="eq-wax-initials">
                       {brideName[0]}&amp;{groomName[0]}
@@ -545,13 +685,18 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 </div>
               )}
 
-              {/* Tap to Open Prompt Ribbon (Mobile Only) */}
+              {/* Tap to Open Prompt Ribbon (Min 44px Height, Touch Action Manipulation) */}
               {!isPlayingVideo && !isDesktop && (
-                <div className="eq-tap-prompt-ribbon">
-                  <Sparkle size={11} className="text-[#D4AF37]" weight="fill" />
+                <button
+                  type="button"
+                  className="eq-tap-prompt-ribbon"
+                  onClick={handleOpenInvitation}
+                  aria-label="Tap to unveil invitation"
+                >
+                  <Sparkle size={12} className="text-[#D4AF37]" weight="fill" />
                   <span>TAP TO UNVEIL INVITATION</span>
-                  <Sparkle size={11} className="text-[#D4AF37]" weight="fill" />
-                </div>
+                  <Sparkle size={12} className="text-[#D4AF37]" weight="fill" />
+                </button>
               )}
 
               {/* Seamless Paper Print Overlay directly filling the Card */}
@@ -563,6 +708,9 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                     initial="hidden"
                     animate="visible"
                   >
+                    {/* Specular Shimmer Sweep Across Card Face upon slide-up */}
+                    <div className="eq-card-shimmer" aria-hidden="true" />
+
                     <div className="eq-paper-print-content">
                       {/* Top Sacred Header */}
                       <motion.div className="eq-print-header-group" variants={inkItemVariants}>
@@ -591,7 +739,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
 
                         <div className="eq-print-venue-badge">
                           <MapPin size={12} className="text-[#8A661C]" weight="fill" />
-                          <span>{venueName}, {resolvedData.venue?.city || "Abu Dhabi"}</span>
+                          <span>{venueName}, {resolvedData.venue?.city || "Hyderabad"}</span>
                         </div>
 
                         <div className="eq-print-time-text">
@@ -632,6 +780,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                             className="eq-print-btn-replay"
                             onClick={handleReplay}
                             title="Replay Envelope Opening"
+                            aria-label="Replay invitation opening"
                           >
                             <ArrowsClockwise size={14} weight="bold" />
                           </button>
@@ -659,7 +808,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
           </motion.div>
         )}
 
-        {/* ── Optional Custom Hero / Couple Portrait Banner (if uploaded by user) ── */}
+        {/* ── Facial Clearance Guarantee: Optional Custom Hero / Couple Portrait Banner ── */}
         {isUnlocked && heroImageSrc && (
           <motion.div
             className="eq-custom-hero-banner"
@@ -672,14 +821,14 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               <div className="eq-custom-hero-gradient" />
               <div className="eq-custom-hero-badge">
                 <span className="eq-custom-hero-tag">ROYAL OTTOMAN COUPLE</span>
-                <span className="eq-custom-hero-names">{brideName} & {groomName}</span>
+                <span className="eq-custom-hero-names">{brideName} &amp; {groomName}</span>
                 <p className="eq-custom-hero-sub">United in Faith, Love, and Eternal Grace</p>
               </div>
             </div>
           </motion.div>
         )}
 
-        {/* ── Unlocked Royal Content Flow (Multi-Column Desktop Architecture) ── */}
+        {/* ── Unlocked Royal Content Flow ── */}
         <AnimatePresence>
           {isUnlocked && (
             <motion.div
@@ -688,7 +837,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: "easeOut" }}
             >
-              {/* ── 1. Quranic Verse Section (Wide Illuminated Parchment) ── */}
+              {/* ── 1. Quranic Verse Section ── */}
               <motion.section
                 id="eq-quran-section"
                 className="eq-section eq-quran-card"
@@ -703,7 +852,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 <div className="eq-section-corner-ornament top-right" aria-hidden="true" />
                 <div className="eq-section-corner-ornament bottom-left" aria-hidden="true" />
                 <div className="eq-section-corner-ornament bottom-right" aria-hidden="true" />
-                <div className="eq-quran-filigree">✦ ⚜ ✦</div>
+                <div className="eq-section-ornament">✦ ⚜ ✦</div>
                 <p className="eq-arabic-verse">{resolvedData.verse?.arabic || "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً"}</p>
                 <p className="eq-verse-translation">&ldquo;{resolvedData.verse?.translation || "And of His signs is that He created for you from yourselves mates that you may find tranquility in them; and He placed between you affection and mercy."}&rdquo;</p>
                 <p className="eq-verse-ref">{resolvedData.verse?.reference || "Surah Ar-Rum · 30:21"}</p>
@@ -776,7 +925,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 <span className="eq-couple-hashtag">{hashtag}</span>
               </motion.section>
 
-              {/* ── 2. Live Countdown & Scratch-to-Reveal (Desktop 2-Column Split Row) ── */}
+              {/* ── 2. Live Countdown & Scratch-to-Reveal ── */}
               <div className="eq-grid-2col-row">
                 {/* 2A. Live Countdown Box */}
                 <motion.section
@@ -858,7 +1007,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 </motion.section>
               </div>
 
-              {/* ── 3. Wedding Ceremonies & Itinerary (Desktop 3-Column Architectural Cards) ── */}
+              {/* ── 3. Wedding Ceremonies & Palace Itinerary ── */}
               <motion.section
                 id="eq-events-section"
                 className="eq-section eq-events-wrapper"
@@ -886,7 +1035,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, margin: "-40px" }}
                       transition={{ duration: 0.6, delay: idx * 0.12 }}
-                      whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.25 } }}
+                      whileHover={{ y: -6, scale: 1.01, transition: { duration: 0.25 } }}
                     >
                       <div className="eq-event-card-header">
                         <span className="eq-event-num">0{idx + 1}</span>
@@ -929,16 +1078,26 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                           rel="noopener noreferrer"
                           className="eq-event-map-link"
                         >
-                          <span>Directions & Location</span>
+                          <span>Directions</span>
                           <ArrowSquareOut size={13} weight="bold" />
                         </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleAddToCalendar(evt.name, evt.date)}
+                          className="eq-event-cal-btn"
+                          title="Add this ceremony to your calendar"
+                        >
+                          <CalendarBlank size={12} weight="bold" />
+                          <span>Calendar (.ics)</span>
+                        </button>
                       </div>
                     </motion.div>
                   ))}
                 </div>
               </motion.section>
 
-              {/* ── 4. Curated Photo Gallery Section (Bento Mosaic & Panoramic Slider) ── */}
+              {/* ── 4. Curated Photo Gallery Section ── */}
               {galleryPhotos.length > 0 && (
                 <motion.section
                   className="eq-section eq-gallery-section"
@@ -953,7 +1112,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                   <div className="eq-section-corner-ornament bottom-right" aria-hidden="true" />
                   <div className="text-center mb-6">
                     <span className="eq-section-subtitle">CHERISHED MOMENTS</span>
-                    <h2 className="eq-section-title">Emerald & 24K Gold Gallery</h2>
+                    <h2 className="eq-section-title">Emerald &amp; 24K Gold Gallery</h2>
                     <div className="eq-section-ornament">✦ ⚜ ✦</div>
 
                     {/* Mode Selector Toggle */}
@@ -994,7 +1153,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                             key={i}
                             className={`eq-bento-card ${isFeatured ? "eq-bento-featured" : ""} ${isWide ? "eq-bento-wide" : ""}`}
                             onClick={() => setSelectedPhoto(imgUrl)}
-                            whileHover={{ scale: 1.03, y: -6 }}
+                            whileHover={{ scale: 1.02, y: -4 }}
                             transition={{ duration: 0.3 }}
                           >
                             <img src={imgUrl} alt={meta?.title || `Gallery Photo ${i + 1}`} className="eq-bento-img" loading="lazy" />
@@ -1048,7 +1207,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                           </motion.div>
                         </AnimatePresence>
 
-                        {/* Navigation Arrows */}
+                        {/* Navigation Arrows (Min 44x44px Touch Target) */}
                         {galleryPhotos.length > 1 && (
                           <>
                             <button
@@ -1115,7 +1274,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                   <h2 className="eq-section-title">Things to Know</h2>
                   <div className="eq-section-ornament">✦ ⚜ ✦</div>
                   <p className="text-xs text-[#B8CCC5] max-w-md mx-auto mt-2">
-                    Thoughtful arrangements to ensure your celebration at The Emerald Palace is effortless and memorable.
+                    Thoughtful arrangements to ensure your celebration at {venueName} is effortless and memorable.
                   </p>
                 </div>
 
@@ -1123,17 +1282,17 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                   {[
                     {
                       title: "Dress Code",
-                      desc: data?.dressCodeText || "Regal Modest Formal / Sherwanis & Embroidered Lehengas in Emerald & Gold hues.",
+                      desc: data?.dressCodeText || "Regal Nizami & Mughal Modest Formal / Sherwanis & Embroidered Lehengas in Emerald & Gold hues.",
                       icon: <Sparkle size={24} weight="fill" />,
                     },
                     {
                       title: "Palace Valet & Parking",
-                      desc: data?.transportText || "Complimentary imperial valet service at the Grand Arch entrance with dedicated airport shuttles.",
+                      desc: data?.transportText || "Complimentary imperial valet service at the Grand Arch entrance with dedicated guest assistance.",
                       icon: <Compass size={24} weight="fill" />,
                     },
                     {
                       title: "Palace Guest Guide & Stay",
-                      desc: "Curated royal suites reserved at The Emerald Palace. Please contact our hospitality team for bookings.",
+                      desc: "Curated royal heritage suites reserved at Falaknuma. Please contact our hospitality team for bookings.",
                       icon: <MapPin size={24} weight="fill" />,
                     },
                     {
@@ -1149,7 +1308,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.6, delay: idx * 0.12 }}
-                      whileHover={{ y: -8, transition: { duration: 0.25 } }}
+                      whileHover={{ y: -6, transition: { duration: 0.25 } }}
                     >
                       <div className="eq-essentials-icon-frame">
                         {item.icon}
@@ -1162,7 +1321,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 </div>
               </motion.section>
 
-              {/* ── 5. Venue & Location Destination (Desktop 2-Column Split Row) ── */}
+              {/* ── 5. Venue & Sacred Destination Card ── */}
               <motion.section
                 className="eq-section eq-venue-section"
                 initial={{ opacity: 0, y: 45, scale: 0.97 }}
@@ -1183,18 +1342,49 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                       Valet parking and imperial greeting reception will be arranged at the Grand Arch entrance. Guests are warmly requested to arrive 15 minutes prior to Nikah solemnization.
                     </p>
 
-                    <motion.a
-                      href={venueMapUrl || `https://maps.google.com/?q=${encodeURIComponent(venueName + " " + venueAddress)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="eq-map-cta-btn"
-                      whileHover={{ scale: 1.04, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <MapPin size={18} weight="bold" />
-                      <span>Open in Google Maps</span>
-                      <ArrowSquareOut size={16} weight="bold" />
-                    </motion.a>
+                    <div className="eq-venue-actions-row">
+                      <motion.a
+                        href={venueMapUrl || `https://maps.google.com/?q=${encodeURIComponent(venueName + " " + venueAddress)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="eq-map-cta-btn"
+                        whileHover={{ scale: 1.04, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <MapPin size={18} weight="bold" />
+                        <span>Open in Google Maps</span>
+                        <ArrowSquareOut size={16} weight="bold" />
+                      </motion.a>
+
+                      <button
+                        type="button"
+                        onClick={handleCopyAddress}
+                        className="eq-copy-addr-btn"
+                        title="Copy full venue address"
+                      >
+                        {copiedAddress ? (
+                          <>
+                            <CheckCircle size={16} className="text-emerald-400" weight="fill" />
+                            <span>Address Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy size={16} weight="bold" />
+                            <span>Copy Address</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleAddToCalendar()}
+                        className="eq-copy-addr-btn"
+                        title="Add wedding to your calendar"
+                      >
+                        <CalendarBlank size={16} weight="bold" />
+                        <span>Add to Calendar</span>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="eq-venue-visual-card">
@@ -1248,6 +1438,17 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                     <span>Confirm Your RSVP</span>
                     <Sparkle size={18} weight="fill" />
                   </motion.button>
+
+                  {/* WhatsApp Share Button */}
+                  <button
+                    type="button"
+                    onClick={handleWhatsAppShare}
+                    className="eq-whatsapp-share-btn"
+                    title="Share invitation with friends and family"
+                  >
+                    <WhatsappLogo size={18} weight="fill" />
+                    <span>Share on WhatsApp</span>
+                  </button>
                 </div>
               </motion.section>
 
@@ -1260,9 +1461,9 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                 transition={{ duration: 1.0 }}
               >
                 <div className="eq-footer-monogram">
-                  {brideName[0]}&{groomName[0]}
+                  {brideName[0]}&amp;{groomName[0]}
                 </div>
-                <h3 className="eq-footer-names">{brideName} & {groomName}</h3>
+                <h3 className="eq-footer-names">{brideName} &amp; {groomName}</h3>
                 <p className="eq-footer-quote">
                   United in Sacred Covenant · Guided by Divine Mercy · Insha&apos;Allah Forever
                 </p>
@@ -1325,6 +1526,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               <button
                 className="eq-modal-close"
                 onClick={() => setIsRsvpOpen(false)}
+                aria-label="Close RSVP modal"
               >
                 <X size={18} />
               </button>
@@ -1332,7 +1534,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               <div className="eq-modal-header">
                 <div className="eq-modal-bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
                 <h3 className="eq-modal-title">Confirm Attendance</h3>
-                <p className="eq-modal-sub">For {brideName} & {groomName}&apos;s Royal Celebration</p>
+                <p className="eq-modal-sub">For {brideName} &amp; {groomName}&apos;s Royal Celebration</p>
               </div>
 
               {isSubmitted ? (
@@ -1427,6 +1629,21 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               )}
             </motion.div>
           </div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Toast Notification ── */}
+      <AnimatePresence>
+        {copiedAddress && (
+          <motion.div
+            className="eq-toast-notification"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
+          >
+            <CheckCircle size={16} className="text-[#D4AF37]" weight="fill" />
+            <span>Address Copied to Clipboard</span>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
