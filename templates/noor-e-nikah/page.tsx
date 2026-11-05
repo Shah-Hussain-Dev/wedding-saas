@@ -54,6 +54,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
   // Envelope opening progressive states
   const [isOpen, setIsOpen] = useState(false);
   const [isLighting, setIsLighting] = useState(false);
+  const [isCracked, setIsCracked] = useState(false);
   const [isFlapOpen, setIsFlapOpen] = useState(false);
   const [isCardUp, setIsCardUp] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
@@ -79,9 +80,48 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
   // Mount state for SSR hydration safety
   const [mounted, setMounted] = useState(false);
+
+  // Preloaded Audio SFX Refs
+  const sfxOpenRef = useRef<HTMLAudioElement | null>(null);
+  const sfxLetterRef = useRef<HTMLAudioElement | null>(null);
+  const sfxShimmerRef = useRef<HTMLAudioElement | null>(null);
+
+  // 3D Pointer & Touch Tilt State
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     setMounted(true);
+    try {
+      const openAudio = new Audio("/templates/noor-e-nikah/audio/sfx-open.mp3");
+      openAudio.preload = "auto";
+      openAudio.volume = 0.7;
+      sfxOpenRef.current = openAudio;
+
+      const letterAudio = new Audio("/templates/noor-e-nikah/audio/sfx-letter.mp3");
+      letterAudio.preload = "auto";
+      letterAudio.volume = 0.6;
+      sfxLetterRef.current = letterAudio;
+
+      const shimmerAudio = new Audio("/templates/noor-e-nikah/audio/sfx-shimmer.mp3");
+      shimmerAudio.preload = "auto";
+      shimmerAudio.volume = 0.55;
+      sfxShimmerRef.current = shimmerAudio;
+    } catch {}
   }, []);
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isLighting || isFlapOpen || isOpening) return;
+    // On mobile touch devices, suppress finger-drag tilt to keep tap target completely rock-solid
+    if (e.pointerType === "touch") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 12;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -12;
+    setTilt({ x, y });
+  };
+
+  const handlePointerLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
 
   // Parallax Scroll Tracking for Hero
   const heroRef = useRef<HTMLDivElement>(null);
@@ -254,12 +294,23 @@ export default function NoorNikah({ data }: NoorNikahProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Progressive Slow & Ultra-Smooth Envelope Unfolding Sequence
+  // Progressive Real-Physics 3D Envelope Unfolding Sequence
   const handleOpenInvitation = () => {
-    if (isLighting || isFlapOpen || isOpening) return;
+    if (isLighting || isCracked || isFlapOpen || isOpening) return;
 
-    // 1. Slow golden energy radiance starts & music unlocks
+    // Reset tilt for clean unfolding trajectory
+    setTilt({ x: 0, y: 0 });
+
+    // 1. Play seal break SFX, crack seal, and trigger golden wax sparks
+    if (sfxOpenRef.current) {
+      try {
+        sfxOpenRef.current.currentTime = 0;
+        sfxOpenRef.current.play().catch(() => {});
+      } catch {}
+    }
+
     setIsLighting(true);
+    setIsCracked(true);
 
     if (audioRef.current) {
       audioRef.current
@@ -268,25 +319,50 @@ export default function NoorNikah({ data }: NoorNikahProps) {
         .catch((e) => console.log("Audio autoplay restricted:", e));
     }
 
-    // 2. Slow 3D Flap Unfolding (1.1s)
+    // Golden wax fragments & stardust burst from seal origin
+    try {
+      confetti({
+        particleCount: 55,
+        spread: 60,
+        origin: { x: 0.5, y: 0.49 },
+        colors: ["#FFE58F", "#D4AF37", "#FFD700", "#1B3D2F", "#FFFFFF"],
+        ticks: 110,
+        gravity: 0.85,
+        scalar: 0.95,
+      });
+    } catch {}
+
+    // 2. Flap unfolds in authentic 3D arc carrying seal tip (450ms)
     setTimeout(() => {
       setIsFlapOpen(true);
-    }, 1100);
+    }, 450);
 
-    // 3. Inner Royal Gilded Invitation Card slides up majestically (2.0s)
+    // 3. Inner Royal Gilded Invitation Card emerges from pocket + paper rustle & chime SFX (1350ms)
     setTimeout(() => {
+      if (sfxLetterRef.current) {
+        try {
+          sfxLetterRef.current.currentTime = 0;
+          sfxLetterRef.current.play().catch(() => {});
+        } catch {}
+      }
+      if (sfxShimmerRef.current) {
+        try {
+          sfxShimmerRef.current.currentTime = 0;
+          sfxShimmerRef.current.play().catch(() => {});
+        } catch {}
+      }
       setIsCardUp(true);
-    }, 2000);
+    }, 1350);
 
-    // 4. Cinematic Envelope glow & portal expansion (3.4s)
+    // 4. Cinematic Golden Portal Bloom & expansion (3300ms)
     setTimeout(() => {
       setIsOpening(true);
-    }, 3400);
+    }, 3300);
 
-    // 5. Unveil palace hero portal (4.2s)
+    // 5. Unveil palace hero portal (4100ms)
     setTimeout(() => {
       setIsOpen(true);
-    }, 4200);
+    }, 4100);
   };
 
   const toggleMusic = () => {
@@ -358,19 +434,31 @@ export default function NoorNikah({ data }: NoorNikahProps) {
       {/* 1. Ultra-Realistic 3D Luxury Folded Islamic Wedding Envelope */}
       <AnimatePresence>
         {!isOpen && (
-          <div className="noor-envelope-overlay">
+          <motion.div
+            className="noor-envelope-overlay"
+            initial={{ opacity: 1 }}
+            exit={{
+              opacity: 0,
+              scale: 1.05,
+              filter: "blur(8px)",
+              transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1] },
+            }}
+          >
             {/* Soft Ambient Backdrop Glow */}
             <div className="noor-env-backdrop-glow" />
 
+            {/* Islamic Geometric Star Jaali Watermark Pattern */}
+            <div className="noor-env-jali-watermark" />
+
             {/* Ambient Sparkles Container */}
             <div className="noor-env-ambient">
-              {[...Array(16)].map((_, i) => (
+              {[...Array(18)].map((_, i) => (
                 <span
                   key={i}
                   className="noor-env-sparkle"
                   style={{
-                    left: `${(i * 6.2) + 2}%`,
-                    animationDuration: `${4.5 + (i % 5) * 1.8}s`,
+                    left: `${(i * 5.5) + 1.5}%`,
+                    animationDuration: `${4.2 + (i % 5) * 1.6}s`,
                     animationDelay: `${(i * 0.35) % 3}s`,
                     transform: `scale(${0.6 + (i % 4) * 0.25})`,
                   }}
@@ -382,12 +470,23 @@ export default function NoorNikah({ data }: NoorNikahProps) {
               {/* Header Inscription */}
               <div className="noor-env-top-bar">
                 <p className="noor-env-bismillah">{sacredInvocation}</p>
-                <p className="noor-env-sub">{envSub}</p>
+                <div className="noor-env-sub-wrap">
+                  <span className="noor-env-star-gem">✦</span>
+                  <p className="noor-env-sub">{envSub}</p>
+                  <span className="noor-env-star-gem">✦</span>
+                </div>
               </div>
 
-              {/* 3D Envelope Master Assembly */}
+              {/* 3D Envelope Master Assembly with Interactive Tilt */}
               <div
                 className={`noor-envelope-scene ${isLighting ? "is-lighting" : ""} ${isFlapOpen ? "is-flap-open" : ""} ${isCardUp ? "is-card-up" : ""} ${isOpening ? "is-opening" : ""}`}
+                style={{
+                  transform: !isFlapOpen && !isOpening
+                    ? `perspective(1400px) rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
+                    : undefined,
+                }}
+                onPointerMove={handlePointerMove}
+                onPointerLeave={handlePointerLeave}
                 onClick={handleOpenInvitation}
                 role="button"
                 tabIndex={0}
@@ -408,32 +507,34 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                         <defs>
                           <linearGradient id="flapPearlGrad" x1="50%" y1="0%" x2="50%" y2="100%">
                             <stop offset="0%" stopColor="#FFFFFF" />
-                            <stop offset="45%" stopColor="#FAF7F0" />
-                            <stop offset="85%" stopColor="#EFE5D3" />
-                            <stop offset="100%" stopColor="#E4D5BC" />
+                            <stop offset="40%" stopColor="#FAF7F0" />
+                            <stop offset="75%" stopColor="#EFE5D3" />
+                            <stop offset="100%" stopColor="#E2D2B8" />
                           </linearGradient>
                           <linearGradient id="flapGoldTrimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#B38926" />
-                            <stop offset="25%" stopColor="#F5D77F" />
-                            <stop offset="50%" stopColor="#FFF4C2" />
-                            <stop offset="75%" stopColor="#D4AF37" />
+                            <stop offset="0%" stopColor="#8C6618" />
+                            <stop offset="15%" stopColor="#D4AF37" />
+                            <stop offset="35%" stopColor="#FFF4C2" />
+                            <stop offset="50%" stopColor="#F5D77F" />
+                            <stop offset="70%" stopColor="#FFF4C2" />
+                            <stop offset="85%" stopColor="#D4AF37" />
                             <stop offset="100%" stopColor="#8C6618" />
                           </linearGradient>
                           <filter id="flapShadow" x="-10%" y="-10%" width="120%" height="140%">
-                            <feDropShadow dx="0" dy="6" stdDeviation="7" floodColor="#000000" floodOpacity="0.4" />
+                            <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#000000" floodOpacity="0.55" />
                           </filter>
                         </defs>
 
-                        {/* Triangular Pointed Flap */}
+                        {/* Pointed Triangular Flap with Soft Contoured Apex */}
                         <path
-                          d="M 0 0 L 380 0 L 190 200 Z"
+                          d="M 0 0 L 380 0 L 195 198 Q 190 203 185 198 Z"
                           fill="url(#flapPearlGrad)"
                           filter="url(#flapShadow)"
                         />
 
                         {/* Gold Foil Trim on Flap Edge */}
                         <path
-                          d="M 0 0 L 190 200 L 380 0"
+                          d="M 0 0 L 185 198 Q 190 203 195 198 L 380 0"
                           fill="none"
                           stroke="url(#flapGoldTrimGrad)"
                           strokeWidth="3.5"
@@ -443,24 +544,162 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
                         {/* Inner Dashed Gold Filigree */}
                         <path
-                          d="M 18 12 L 190 184 L 362 12"
+                          d="M 18 10 L 190 182 L 362 10"
                           fill="none"
                           stroke="#D4AF37"
                           strokeWidth="1.2"
                           strokeDasharray="4 3"
-                          opacity="0.8"
+                          opacity="0.85"
                         />
 
-                        {/* Small Arabesque Top Center Crest */}
-                        <circle cx="190" cy="50" r="2.5" fill="#D4AF37" opacity="0.75" />
+                        {/* Ornamental Gold Corner Palmettes */}
                         <path
-                          d="M 175 40 Q 190 30 205 40"
+                          d="M 10 8 Q 26 16 38 8 Q 28 26 12 24 Z"
                           fill="none"
                           stroke="#D4AF37"
                           strokeWidth="1"
-                          opacity="0.6"
+                          opacity="0.75"
+                        />
+                        <path
+                          d="M 370 8 Q 354 16 342 8 Q 352 26 368 24 Z"
+                          fill="none"
+                          stroke="#D4AF37"
+                          strokeWidth="1"
+                          opacity="0.75"
+                        />
+
+                        {/* Arabesque Apex Crest & 4-Point Star */}
+                        <circle cx="190" cy="162" r="3" fill="#D4AF37" opacity="0.9" />
+                        <path
+                          d="M 178 152 Q 190 144 202 152"
+                          fill="none"
+                          stroke="#D4AF37"
+                          strokeWidth="1.2"
+                          opacity="0.8"
+                        />
+                        <path
+                          d="M 190 138 L 191.5 142 L 195.5 143.5 L 191.5 145 L 190 149 L 188.5 145 L 184.5 143.5 L 188.5 142 Z"
+                          fill="#D4AF37"
+                          opacity="0.85"
                         />
                       </svg>
+
+                      {/* Central 24K Royal Gold Wax Seal Medallion — Stamped on Flap Tip */}
+                      <div className="noor-wax-seal-anchor">
+                        <div className={`noor-wax-seal-body ${isCracked ? "is-cracked" : ""}`}>
+                          {/* Outer Golden Aura Ring */}
+                          <div className="noor-seal-aura" />
+
+                          {/* 3D Beveled Wax Seal Medallion */}
+                          <div className="noor-seal-lacquer">
+                            <svg className="noor-seal-svg" viewBox="0 0 100 100">
+                              <defs>
+                                <radialGradient id="waxGoldGrad" cx="35%" cy="30%" r="65%">
+                                  <stop offset="0%" stopColor="#FFF9E6" />
+                                  <stop offset="22%" stopColor="#F5D77F" />
+                                  <stop offset="50%" stopColor="#D4AF37" />
+                                  <stop offset="78%" stopColor="#9E741B" />
+                                  <stop offset="100%" stopColor="#4A3408" />
+                                </radialGradient>
+                                <radialGradient id="coinFaceGrad" cx="38%" cy="32%" r="62%">
+                                  <stop offset="0%" stopColor="#F7DF94" />
+                                  <stop offset="40%" stopColor="#D4AF37" />
+                                  <stop offset="85%" stopColor="#8C6618" />
+                                  <stop offset="100%" stopColor="#422E06" />
+                                </radialGradient>
+                                <filter id="sealShadow" x="-20%" y="-20%" width="140%" height="140%">
+                                  <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="#000000" floodOpacity="0.55" />
+                                </filter>
+                              </defs>
+
+                              {/* Organic Molten Scalloped Wax Rim (12 Lobes) */}
+                              <path
+                                d="M 50 4 C 58 4 61 8 67 8 C 73 7 78 12 82 17 C 86 21 91 25 93 31 C 95 37 93 43 96 49 C 99 55 96 61 95 67 C 94 73 89 77 86 82 C 83 87 77 90 71 93 C 65 96 58 95 52 96 C 46 97 40 95 34 94 C 28 93 21 89 17 84 C 13 79 9 74 7 68 C 5 62 4 55 5 49 C 6 43 9 37 12 32 C 15 27 18 21 23 17 C 28 13 34 8 40 6 C 45 4 47 4 50 4 Z"
+                                fill="url(#waxGoldGrad)"
+                                filter="url(#sealShadow)"
+                              />
+
+                              {/* Milled Outer Coin Border */}
+                              <circle cx="50" cy="50" r="35" fill="none" stroke="#FFEAA7" strokeWidth="1.2" opacity="0.9" />
+                              <circle cx="50" cy="50" r="32.5" fill="none" stroke="#FFFFFF" strokeWidth="0.8" strokeDasharray="1.5 1.5" opacity="0.85" />
+
+                              {/* Inner Coin Surface */}
+                              <circle cx="50" cy="50" r="30.5" fill="url(#coinFaceGrad)" />
+
+                              {/* Top Royal Crown Vector Crest */}
+                              <g transform="translate(50, 29) scale(0.68)">
+                                <path
+                                  d="M -16 6 L -12 -3 L -5 2 L 0 -6 L 5 2 L 12 -3 L 16 6 Z"
+                                  fill="#FFF8DC"
+                                  stroke="#FFEAA7"
+                                  strokeWidth="0.8"
+                                />
+                                <circle cx="-12" cy="-4" r="1.5" fill="#FFFFFF" />
+                                <circle cx="0" cy="-7" r="1.8" fill="#FFFFFF" />
+                                <circle cx="12" cy="-4" r="1.5" fill="#FFFFFF" />
+                                <circle cx="-5" cy="2" r="1.1" fill="#FFFFFF" />
+                                <circle cx="5" cy="2" r="1.1" fill="#FFFFFF" />
+                                <path
+                                  d="M -17 7 Q 0 9 17 7"
+                                  fill="none"
+                                  stroke="#FFEAA7"
+                                  strokeWidth="1.2"
+                                />
+                              </g>
+
+                              {/* Center Monogram Initials with Dual Specular Relief */}
+                              <text
+                                x="50"
+                                y="53"
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                className="noor-seal-monogram-svg"
+                              >
+                                {brideName[0]}&amp;{groomName[0]}
+                              </text>
+
+                              {/* Bottom Laurel Branches & 4-Point Star Gem */}
+                              <path
+                                d="M 33 64 Q 50 70 67 64"
+                                fill="none"
+                                stroke="#FFEAA7"
+                                strokeWidth="1.2"
+                                opacity="0.9"
+                              />
+                              <path
+                                d="M 50 64 L 51 66 L 53 67 L 51 68 L 50 70 L 49 68 L 47 67 L 49 66 Z"
+                                fill="#FFFFFF"
+                                opacity="0.95"
+                              />
+
+                              {/* Interactive Golden Fracture Line when tapped */}
+                              {isCracked && (
+                                <path
+                                  d="M 50 6 L 47 22 L 53 36 L 46 50 L 54 66 L 48 80 L 51 94"
+                                  fill="none"
+                                  stroke="#FFF7D6"
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="noor-seal-crack-glow"
+                                />
+                              )}
+                            </svg>
+
+                            {/* Specular Light Glint Streak */}
+                            <div className="noor-seal-glint" />
+                          </div>
+                        </div>
+
+                        {/* Interactive Tap To Open Floating Pill */}
+                        {!isCracked && !isFlapOpen && (
+                          <div className="noor-tap-pill">
+                            <Sparkle size={13} className="text-[#D4AF37]" weight="fill" />
+                            <span className="noor-tap-pill-text">TAP TO OPEN</span>
+                            <Sparkle size={13} className="text-[#D4AF37]" weight="fill" />
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Back Flap Facet (Visible when unfolded) */}
@@ -468,19 +707,19 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                       <svg className="noor-flap-svg" viewBox="0 0 380 210" preserveAspectRatio="none">
                         <defs>
                           <linearGradient id="flapVelvetGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-                            <stop offset="0%" stopColor="#081E13" />
-                            <stop offset="50%" stopColor="#123B28" />
-                            <stop offset="100%" stopColor="#0B261A" />
+                            <stop offset="0%" stopColor="#061A10" />
+                            <stop offset="50%" stopColor="#0E3823" />
+                            <stop offset="100%" stopColor="#082216" />
                           </linearGradient>
                         </defs>
 
                         <path
-                          d="M 0 0 L 380 0 L 190 200 Z"
+                          d="M 0 0 L 380 0 L 195 198 Q 190 203 185 198 Z"
                           fill="url(#flapVelvetGrad)"
                         />
 
                         <path
-                          d="M 0 0 L 190 200 L 380 0"
+                          d="M 0 0 L 185 198 Q 190 203 195 198 L 380 0"
                           fill="none"
                           stroke="url(#flapGoldTrimGrad)"
                           strokeWidth="3.5"
@@ -489,16 +728,21 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                         />
 
                         {/* Arabesque Gold Star Accents on Flap Interior */}
-                        <circle cx="190" cy="100" r="3.5" fill="#D4AF37" opacity="0.85" />
-                        <circle cx="135" cy="65" r="2.5" fill="#D4AF37" opacity="0.65" />
-                        <circle cx="245" cy="65" r="2.5" fill="#D4AF37" opacity="0.65" />
+                        <circle cx="190" cy="100" r="4" fill="#D4AF37" opacity="0.9" />
+                        <circle cx="135" cy="65" r="2.5" fill="#D4AF37" opacity="0.75" />
+                        <circle cx="245" cy="65" r="2.5" fill="#D4AF37" opacity="0.75" />
                         <path
                           d="M 155 85 Q 190 65 225 85"
                           fill="none"
                           stroke="#D4AF37"
-                          strokeWidth="1"
+                          strokeWidth="1.2"
                           strokeDasharray="3 3"
-                          opacity="0.6"
+                          opacity="0.7"
+                        />
+                        <path
+                          d="M 190 54 L 192 60 L 198 62 L 192 64 L 190 70 L 188 64 L 182 62 L 188 60 Z"
+                          fill="#D4AF37"
+                          opacity="0.85"
                         />
                       </svg>
                     </div>
@@ -507,6 +751,9 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                   {/* Inner Gilded Royal Invitation Card (Slides Up gracefully out of Pocket) */}
                   <div className="noor-env-card-insert">
                     <div className="noor-env-card-inner">
+                      {/* Gilded Specular Light Sweeper across Card Face */}
+                      <div className="noor-card-shimmer" />
+
                       <div className="noor-card-content-wrap">
                         {/* Top Invocation */}
                         <div className="noor-card-arch-top">
@@ -543,7 +790,7 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                           <stop offset="0%" stopColor="#FFFFFF" />
                           <stop offset="35%" stopColor="#FAF7F0" />
                           <stop offset="80%" stopColor="#EFE5D3" />
-                          <stop offset="100%" stopColor="#E2D2B8" />
+                          <stop offset="100%" stopColor="#E0CFA7" />
                         </linearGradient>
                         <linearGradient id="pocketFoldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stopColor="#E6D7BF" />
@@ -551,32 +798,38 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                           <stop offset="100%" stopColor="#E6D7BF" />
                         </linearGradient>
                         <filter id="pocketInnerShad" x="-10%" y="-10%" width="120%" height="120%">
-                          <feDropShadow dx="0" dy="-4" stdDeviation="6" floodColor="#000000" floodOpacity="0.3" />
+                          <feDropShadow dx="0" dy="-5" stdDeviation="7" floodColor="#000000" floodOpacity="0.38" />
                         </filter>
                       </defs>
 
                       {/* Pocket Base Polygon with Gentle V-Cut */}
                       <path
-                        d="M 0 0 L 190 85 L 380 0 L 380 270 L 0 270 Z"
+                        d="M 0 0 L 185 92 Q 190 95 195 92 L 380 0 L 380 270 L 0 270 Z"
                         fill="url(#pocketPearlGrad)"
                         filter="url(#pocketInnerShad)"
                       />
 
+                      {/* Gilded Wax Seal Pocket Imprint where seal once rested */}
+                      <g className="noor-pocket-seal-imprint" opacity="0.45">
+                        <ellipse cx="190" cy="18" rx="38" ry="34" fill="rgba(212, 175, 55, 0.08)" stroke="#D4AF37" strokeWidth="1.2" strokeDasharray="4 3" />
+                        <circle cx="190" cy="18" r="26" fill="none" stroke="#D4AF37" strokeWidth="0.8" opacity="0.6" />
+                      </g>
+
                       {/* Left & Right Origami Fold Facets */}
                       <path
-                        d="M 0 0 L 190 85 L 0 270 Z"
+                        d="M 0 0 L 185 92 L 0 270 Z"
                         fill="url(#pocketFoldGrad)"
-                        opacity="0.3"
+                        opacity="0.35"
                       />
                       <path
-                        d="M 380 0 L 190 85 L 380 270 Z"
+                        d="M 380 0 L 195 92 L 380 270 Z"
                         fill="url(#pocketFoldGrad)"
-                        opacity="0.3"
+                        opacity="0.35"
                       />
 
                       {/* Gold Foil Geometric V-Trim */}
                       <path
-                        d="M 0 0 L 190 85 L 380 0"
+                        d="M 0 0 L 185 92 Q 190 95 195 92 L 380 0"
                         fill="none"
                         stroke="url(#flapGoldTrimGrad)"
                         strokeWidth="3.5"
@@ -586,12 +839,12 @@ export default function NoorNikah({ data }: NoorNikahProps) {
 
                       {/* Concentric Inner Hairline */}
                       <path
-                        d="M 14 16 L 190 98 L 366 16"
+                        d="M 14 16 L 190 102 L 366 16"
                         fill="none"
                         stroke="#D4AF37"
                         strokeWidth="1.2"
                         strokeDasharray="4 3"
-                        opacity="0.75"
+                        opacity="0.8"
                       />
 
                       {/* Bottom Envelope Border Gold Trim */}
@@ -599,64 +852,46 @@ export default function NoorNikah({ data }: NoorNikahProps) {
                         x="12"
                         y="256"
                         width="356"
-                        height="2"
+                        height="2.5"
                         fill="url(#flapGoldTrimGrad)"
-                        opacity="0.8"
+                        opacity="0.85"
                       />
 
-                      {/* Arabesque Flourish on Pocket */}
-                      <circle cx="190" cy="180" r="3" fill="#D4AF37" opacity="0.6" />
-                      <circle cx="160" cy="180" r="1.5" fill="#D4AF37" opacity="0.4" />
-                      <circle cx="220" cy="180" r="1.5" fill="#D4AF37" opacity="0.4" />
-                      <path
-                        d="M 140 180 Q 190 160 240 180 Q 190 200 140 180"
-                        fill="none"
-                        stroke="#D4AF37"
-                        strokeWidth="0.8"
-                        opacity="0.5"
-                      />
+                      {/* Imperial Arabesque Medallion Cartouche on Pocket */}
+                      <g transform="translate(190, 185)">
+                        <circle cx="0" cy="0" r="24" fill="none" stroke="#D4AF37" strokeWidth="1" opacity="0.6" />
+                        <circle cx="0" cy="0" r="20" fill="none" stroke="#D4AF37" strokeWidth="1" strokeDasharray="2 2" opacity="0.8" />
+                        <circle cx="0" cy="0" r="14" fill="none" stroke="#D4AF37" strokeWidth="0.8" opacity="0.5" />
+                        {/* 8 Floral Radiant Palmettes */}
+                        {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, k) => (
+                          <path
+                            key={k}
+                            d="M 0 -14 Q 3 -20 0 -24 Q -3 -20 0 -14"
+                            fill="none"
+                            stroke="#D4AF37"
+                            strokeWidth="0.9"
+                            opacity="0.75"
+                            transform={`rotate(${angle})`}
+                          />
+                        ))}
+                        <circle cx="0" cy="0" r="2.5" fill="#D4AF37" opacity="0.85" />
+                      </g>
                     </svg>
                   </div>
 
                   {/* Golden Radiance Light Sweeper */}
                   <div className="noor-env-light-sweep" />
                   <div className="noor-env-gold-halo" />
-
-                  {/* Central 24K Royal Gold Wax Seal Medallion */}
-                  <div className="noor-wax-seal-anchor">
-                    <div className="noor-wax-seal-body">
-                      {/* Outer Golden Aura Ring */}
-                      <div className="noor-seal-aura" />
-
-                      {/* 3D Beveled Wax Seal Medallion */}
-                      <div className="noor-seal-lacquer">
-                        <div className="noor-seal-bezel">
-                          <span className="noor-seal-crown">👑</span>
-                          <span className="noor-seal-monogram">
-                            {brideName[0]}&{groomName[0]}
-                          </span>
-                          <span className="noor-seal-wreath">✦ ⚜ ✦</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Interactive Tap To Open Floating Pill */}
-                    <div className="noor-tap-pill">
-                      <Sparkle size={13} className="text-[#D4AF37]" weight="fill" />
-                      <span className="noor-tap-pill-text">TAP TO OPEN</span>
-                      <Sparkle size={13} className="text-[#D4AF37]" weight="fill" />
-                    </div>
-                  </div>
                 </div>
               </div>
 
               {/* Bottom Couple Names Footer */}
               <div className="noor-env-bottom-bar">
                 <p className="noor-env-names">{brideName} & {groomName}</p>
-                <p className="noor-env-hint">Touch the royal seal to unfold the invitation & music</p>
+                <p className="noor-env-hint">✦ Touch the royal seal to unfold the invitation & music ✦</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
@@ -735,9 +970,9 @@ export default function NoorNikah({ data }: NoorNikahProps) {
         <motion.div
           className="noor-hero-top-badge"
           style={mounted ? { y: heroCardY, opacity: heroCardOpacity } : undefined}
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
+          initial={{ opacity: 0, y: -25 }}
+          animate={isOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -25 }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         >
           <p className="noor-hero-bismillah">{sacredInvocation}</p>
           <div className="noor-hero-top-divider">
@@ -752,8 +987,8 @@ export default function NoorNikah({ data }: NoorNikahProps) {
           className="noor-hero-bottom-card"
           style={mounted ? { y: heroCardY, opacity: heroCardOpacity } : undefined}
           initial={{ opacity: 0, y: 35, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
+          animate={isOpen ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 35, scale: 0.96 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
         >
           <h1 className="noor-hero-names">
             {brideName} <span className="noor-hero-amp">&</span> {groomName}
