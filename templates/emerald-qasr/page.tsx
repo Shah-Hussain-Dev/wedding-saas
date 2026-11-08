@@ -107,19 +107,15 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
     const checkDesktop = () => {
       const isDesk = window.innerWidth >= 1024;
       setIsDesktop(isDesk);
-      if (isDesk) {
-        setVideoOpened(true);
-        setIsUnlocked(true);
-      }
     };
     checkDesktop();
     window.addEventListener("resize", checkDesktop);
     return () => window.removeEventListener("resize", checkDesktop);
   }, []);
 
-  // Flash celebration & unlock lower sections once card writing completes on mobile
+  // Flash celebration & unlock lower sections once card writing completes
   useEffect(() => {
-    if (videoOpened && !isUnlocked && !isDesktop) {
+    if (videoOpened && !isUnlocked) {
       const timer = setTimeout(() => {
         setIsFlashing(true);
         setIsUnlocked(true);
@@ -144,7 +140,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
       }, 1400);
       return () => clearTimeout(timer);
     }
-  }, [videoOpened, isUnlocked, isDesktop]);
+  }, [videoOpened, isUnlocked]);
 
   // RSVP Form State
   const [isRsvpOpen, setIsRsvpOpen] = useState(false);
@@ -669,7 +665,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               />
 
               {/* Seamless Stamped Initials on Envelope Wax Seal (Min 48x48px Touch Target) */}
-              {!isDesktop && !videoOpened && (
+              {!videoOpened && (
                 <div
                   className={`eq-seal-monogram-anchor ${isPlayingVideo ? "eq-seal-lifting" : ""}`}
                   onClick={!isPlayingVideo ? handleOpenInvitation : undefined}
@@ -686,7 +682,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
               )}
 
               {/* Tap to Open Prompt Ribbon (Min 44px Height, Touch Action Manipulation) */}
-              {!isPlayingVideo && !isDesktop && (
+              {!isPlayingVideo && !videoOpened && (
                 <button
                   type="button"
                   className="eq-tap-prompt-ribbon"
@@ -701,7 +697,7 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
 
               {/* Seamless Paper Print Overlay directly filling the Card */}
               <AnimatePresence>
-                {(videoOpened || isDesktop) && (
+                {videoOpened && (
                   <motion.div
                     className="eq-blank-card-overlay"
                     variants={inkContainerVariants}
@@ -775,16 +771,14 @@ export default function EmeraldQasr({ data }: EmeraldQasrProps) {
                           <span>Itinerary</span>
                         </button>
 
-                        {!isDesktop && (
-                          <button
-                            className="eq-print-btn-replay"
-                            onClick={handleReplay}
-                            title="Replay Envelope Opening"
-                            aria-label="Replay invitation opening"
-                          >
-                            <ArrowsClockwise size={14} weight="bold" />
-                          </button>
-                        )}
+                        <button
+                          className="eq-print-btn-replay"
+                          onClick={handleReplay}
+                          title="Replay Envelope Opening"
+                          aria-label="Replay invitation opening"
+                        >
+                          <ArrowsClockwise size={14} weight="bold" />
+                        </button>
                       </motion.div>
                     </div>
                   </motion.div>

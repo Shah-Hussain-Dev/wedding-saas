@@ -8,7 +8,11 @@ import { getTemplateDefaultData } from "@/templates";
 
 export async function GET(req: NextRequest) {
   try {
-    const email = req.nextUrl.searchParams.get("email")?.toLowerCase()?.trim();
+    const session = await getServerSession(authOptions);
+    const email =
+      req.nextUrl.searchParams.get("email")?.toLowerCase()?.trim() ||
+      session?.user?.email?.toLowerCase()?.trim();
+    const templateIdParam = req.nextUrl.searchParams.get("templateId")?.toLowerCase()?.trim();
 
     // If no email is provided, do NOT leak other users' invitations
     if (!email) {
@@ -24,6 +28,39 @@ export async function GET(req: NextRequest) {
       });
 
       if (user) {
+        // If templateId is requested, check if user already has a saved invitation for this template
+        if (templateIdParam) {
+          const normalizedTemplate = templateIdParam.replace(/_/g, "-");
+          const existing = await prisma.invitation.findFirst({
+            where: {
+              userId: user.id,
+              templateId: normalizedTemplate,
+            },
+            include: { order: true },
+            orderBy: { updatedAt: "desc" },
+          });
+
+          if (existing) {
+            const trans = (existing.translations as any) || {};
+            const isPaid = existing.order?.status === "paid";
+            return NextResponse.json({
+              existingInvitation: {
+                ...existing,
+                isPaid,
+                isPublished: Boolean(existing.isPublished && isPaid),
+                orderStatus: existing.order?.status || (isPaid ? "paid" : "pending"),
+                religion: trans.religion || "universal",
+                sacredInvocation: trans.sacredInvocation || null,
+                sacredVerse: trans.sacredVerse || null,
+                sacredTranslation: trans.sacredTranslation || null,
+                alreadySaved: true,
+              },
+            });
+          } else {
+            return NextResponse.json({ existingInvitation: null });
+          }
+        }
+
         // Self-healing check: ensure any paid orders have an active invitation linked to this user
         try {
           const paidOrders = await prisma.order.findMany({
@@ -190,9 +227,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     const targetEmail = sessionEmail;
-
-    // Generate collision-free unique slug
-    const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`);
+    const targetTemplateId = (templateId || "royal-lotus").replace(/_/g, "-").toLowerCase();
 
     const resolvedReligion = religion || "universal";
     const translationsData = {
@@ -218,16 +253,90 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      // Check if user already has an invitation for this template
+      const existingInvitation = await prisma.invitation.findFirst({
+        where: {
+          userId: user.id,
+          templateId: targetTemplateId,
+        },
+        include: { order: true },
+        orderBy: { updatedAt: "desc" },
+      });
+
+      if (existingInvitation) {
+        // ONE TEMPLATE SAVED ONCE PER USER:
+        // Do NOT create a duplicate record or append random strings to the slug.
+        // Update the existing customized record while preserving its clean link.
+        const isPaid = (existingInvitation.order?.status || "pending") === "paid";
+        const isPublished = isPaid ? Boolean(body.isPublished && isPaid) : false;
+
+        const updatedInvitation = await prisma.invitation.update({
+          where: { id: existingInvitation.id },
+          data: {
+            brideName: brideName || existingInvitation.brideName,
+            groomName: groomName || existingInvitation.groomName,
+            weddingDate: weddingDate ? new Date(weddingDate) : existingInvitation.weddingDate,
+            weddingTime: weddingTime || existingInvitation.weddingTime,
+            venueName: venueName || existingInvitation.venueName,
+            venueAddress: venueAddress || existingInvitation.venueAddress,
+            venueLat: venueLat !== undefined ? venueLat : existingInvitation.venueLat,
+            venueLng: venueLng !== undefined ? venueLng : existingInvitation.venueLng,
+            heroImageUrl: heroImageUrl !== undefined ? heroImageUrl : existingInvitation.heroImageUrl,
+            slideshowImages: slideshowImages !== undefined ? slideshowImages : existingInvitation.slideshowImages,
+            musicTrack: musicTrack || existingInvitation.musicTrack,
+            showDressCode: showDressCode !== undefined ? Boolean(showDressCode) : existingInvitation.showDressCode,
+            dressCodeText: dressCodeText !== undefined ? dressCodeText : existingInvitation.dressCodeText,
+            showTransport: showTransport !== undefined ? Boolean(showTransport) : existingInvitation.showTransport,
+            transportText: transportText !== undefined ? transportText : existingInvitation.transportText,
+            eventsJson: eventsJson !== undefined ? eventsJson : existingInvitation.eventsJson,
+            translations: translationsData,
+            isPublished,
+          },
+        });
+
+        // Clean up any stray duplicate un-paid invitations for this template and user (from previous collision bugs)
+        try {
+          await prisma.invitation.deleteMany({
+            where: {
+              userId: user.id,
+              templateId: targetTemplateId,
+              id: { not: existingInvitation.id },
+              order: { status: { not: "paid" } },
+            },
+          });
+        } catch (cleanupErr) {
+          console.warn("Cleanup of duplicate invitations non-fatal warning:", cleanupErr);
+        }
+
+        const enrichedExisting = {
+          ...updatedInvitation,
+          isPublished,
+          isPaid,
+          orderStatus: existingInvitation.order?.status || "pending",
+          religion: resolvedReligion,
+          sacredInvocation: sacredInvocation || null,
+          sacredVerse: sacredVerse || null,
+          sacredTranslation: sacredTranslation || null,
+          alreadySaved: true,
+          message: "This template is already saved in your dashboard.",
+        };
+
+        return NextResponse.json(enrichedExisting, { status: 200 });
+      }
+
+      // No previous invitation exists for this template: create initial invitation
+      const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`);
+
       // Find or create order for this template
       let order = await prisma.order.findFirst({
-        where: { userId: user.id, templateId: templateId || "royal-lotus" },
+        where: { userId: user.id, templateId: targetTemplateId },
       });
 
       if (!order) {
         order = await prisma.order.create({
           data: {
             userId: user.id,
-            templateId: templateId || "royal-lotus",
+            templateId: targetTemplateId,
             amountPaise: 149900,
             status: "pending",
           },
@@ -241,7 +350,7 @@ export async function POST(req: NextRequest) {
         data: {
           userId: user.id,
           orderId: order.id,
-          templateId: templateId || "royal-lotus",
+          templateId: targetTemplateId,
           slug: uniqueSlug,
           brideName,
           groomName,
@@ -273,18 +382,20 @@ export async function POST(req: NextRequest) {
         sacredInvocation: sacredInvocation || null,
         sacredVerse: sacredVerse || null,
         sacredTranslation: sacredTranslation || null,
+        alreadySaved: false,
       };
 
       return NextResponse.json(enrichedCreated, { status: 201 });
     } catch (dbError) {
-      console.warn("Prisma create failed. Returning mock response for frontend.", dbError);
+      console.warn("Prisma operation failed. Returning mock response for frontend.", dbError);
+      const uniqueSlug = await generateUniqueSlug(slug || `${brideName}-${groomName}`);
       return NextResponse.json(
         {
           id: `mock-${Date.now()}`,
           slug: uniqueSlug,
           brideName,
           groomName,
-          templateId: templateId || "royal-lotus",
+          templateId: targetTemplateId,
           weddingDate,
           weddingTime,
           venueName,
@@ -299,6 +410,7 @@ export async function POST(req: NextRequest) {
           sacredVerse: sacredVerse || null,
           sacredTranslation: sacredTranslation || null,
           translations: translationsData,
+          alreadySaved: false,
         },
         { status: 200 }
       );

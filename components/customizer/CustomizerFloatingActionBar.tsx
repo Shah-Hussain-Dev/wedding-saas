@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Eye, FloppyDisk, SignIn } from "@phosphor-icons/react";
+import { ArrowRight, Eye, FloppyDisk, LockOpen, SignIn } from "@phosphor-icons/react";
 
 interface CustomizerFloatingActionBarProps {
   isFormComplete: boolean;
@@ -8,6 +8,8 @@ interface CustomizerFloatingActionBarProps {
   isEdit: boolean;
   isSubmitting: boolean;
   activeStep: number;
+  isPaid?: boolean;
+  priceFormatted?: string;
   onSaveContinue: () => void;
   onPreview: () => void;
   onPrimaryAction: () => void;
@@ -19,6 +21,8 @@ export function CustomizerFloatingActionBar({
   isEdit,
   isSubmitting,
   activeStep,
+  isPaid = false,
+  priceFormatted,
   onSaveContinue,
   onPreview,
   onPrimaryAction,
@@ -26,7 +30,15 @@ export function CustomizerFloatingActionBar({
   const saveContinueLabel =
     activeStep >= 5 ? "Review sections" : "Save & continue";
 
-  const primaryLabel = !isLoggedIn ? "Log in & Finish" : "Finish & Submit";
+  let primaryLabel = !isLoggedIn
+    ? priceFormatted
+      ? `Log in & Unlock · ${priceFormatted}`
+      : "Log in & Unlock"
+    : !isPaid
+      ? priceFormatted
+        ? `Pay & Unlock · ${priceFormatted}`
+        : "Pay & Unlock"
+      : "Save & Update";
 
   return (
     <div className="pointer-events-none sticky bottom-0 z-20 mt-4 border-t border-[#073D31]/10 bg-[#FAFAF8]/95 px-4 pb-[max(1rem,env(safe-area-inset-bottom,1rem))] pt-4 backdrop-blur-md sm:px-5">
@@ -57,11 +69,13 @@ export function CustomizerFloatingActionBar({
               className="flex min-h-[48px] min-w-0 w-full items-center justify-center gap-2 rounded-xl bg-[#073D31] px-3 font-sans text-[11px] font-bold text-[#F7F4ED] shadow-sm transition-colors hover:bg-[#032A23] disabled:opacity-60 sm:px-4 sm:text-xs"
             >
               {!isLoggedIn ? (
-                <SignIn size={16} weight="bold" className="shrink-0 text-[#C8A45E]" />
+                <LockOpen size={16} weight="bold" className="shrink-0 text-[#C8A45E]" />
+              ) : !isPaid ? (
+                <LockOpen size={16} weight="bold" className="shrink-0 text-[#C8A45E]" />
               ) : (
                 <FloppyDisk size={16} weight="bold" className="shrink-0" />
               )}
-              <span className="truncate">{isSubmitting ? "Saving…" : primaryLabel}</span>
+              <span className="truncate">{isSubmitting ? "Processing…" : primaryLabel}</span>
             </button>
           </div>
         ) : null}

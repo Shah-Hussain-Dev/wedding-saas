@@ -7,6 +7,7 @@ import { DoorAnimation } from "@/components/invitation/DoorAnimation";
 import { MusicPlayer } from "@/components/invitation/MusicPlayer";
 import { LanguageToggle } from "@/components/invitation/LanguageToggle";
 import { DemoBanner } from "@/components/preview/DemoBanner";
+import { DemoWatermark } from "@/components/preview/DemoWatermark";
 import { Sparkle, Warning } from "@phosphor-icons/react";
 
 interface LiveInvitationPageProps {
@@ -68,7 +69,7 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
       }
 
       if (localItem) {
-        const isPaid = Boolean(localItem.isPaid === true || localItem.order?.status === "paid" || localItem.orderStatus === "paid");
+        const isPaid = Boolean(localItem.order?.status === "paid" || localItem.orderStatus === "paid");
         setInvitation({
           ...localItem,
           isPaid,
@@ -170,25 +171,43 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
     setHasOpenedDoors(true);
   };
 
+  const handleUnlockSuccess = () => {
+    setInvitation((prev: any) => ({
+      ...prev,
+      isPaid: true,
+      isPublished: true,
+      orderStatus: "paid",
+    }));
+  };
+
   const isPaid = Boolean(invitation.isPaid === true || invitation.order?.status === "paid" || invitation.orderStatus === "paid");
   const isUnpublished = !(invitation.isPublished && isPaid);
 
   return (
     <div className="relative min-h-screen no-scrollbar" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
-      {/* If unpublished (free demo preview mode), display Demo Banner */}
+      {/* If unpublished (free demo preview mode), display Demo Banner & Demo Watermark */}
       {isUnpublished && (
-        <DemoBanner
-          invitationId={invitation.id}
-          slug={invitation.slug || slug}
-          templateId={invitation.templateId || "royal-lotus"}
-          templateName={invitation.brideName ? `${invitation.brideName} & ${invitation.groomName}` : undefined}
-          brideName={invitation.brideName}
-          groomName={invitation.groomName}
-          amountPaise={invitation.amountPaise}
-          isPublished={false}
-          isPaid={false}
-          expiresInSeconds={900}
-        />
+        <>
+          <DemoBanner
+            invitationId={invitation.id}
+            slug={invitation.slug || slug}
+            templateId={invitation.templateId || "royal-lotus"}
+            templateName={invitation.brideName ? `${invitation.brideName} & ${invitation.groomName}` : undefined}
+            brideName={invitation.brideName}
+            groomName={invitation.groomName}
+            amountPaise={invitation.amountPaise}
+            isPublished={false}
+            isPaid={false}
+            expiresInSeconds={900}
+            onUnlockSuccess={handleUnlockSuccess}
+          />
+          <DemoWatermark
+            slug={invitation.slug || slug}
+            brideName={invitation.brideName}
+            groomName={invitation.groomName}
+            templateName={invitation.templateId}
+          />
+        </>
       )}
 
       {/* Demo Warning Banner (if in fallback mock mode) */}

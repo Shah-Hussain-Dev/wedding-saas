@@ -29,6 +29,7 @@ interface DemoBannerProps {
   isPaid?: boolean;
   expiresInSeconds?: number;
   isHeroTapped?: boolean;
+  onUnlockSuccess?: (liveUrl: string) => void;
 }
 
 export function DemoBanner({
@@ -43,6 +44,7 @@ export function DemoBanner({
   isPaid = false,
   expiresInSeconds = 900,
   isHeroTapped = false,
+  onUnlockSuccess,
 }: DemoBannerProps) {
   const { data: session } = useSession();
   const { getPriceFormatted, getPriceNumber, getPricingDetails } = useTemplatePricing();
@@ -56,7 +58,7 @@ export function DemoBanner({
   const effectiveBrideName = brideName || nameParts[0] || "Bride";
   const effectiveGroomName = groomName || nameParts[1] || "Groom";
 
-  // Check if paid in local storage or via verified payment props
+  // Check if paid strictly via verified payment props or verified database order
   const checkIsUnlocked = () => {
     if (isPaid) return true;
     if (typeof window !== "undefined") {
@@ -64,7 +66,7 @@ export function DemoBanner({
         const stored = localStorage.getItem(`unfold_invitation_${slug}`);
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (parsed.isPaid === true || parsed.order?.status === "paid" || parsed.orderStatus === "paid") {
+          if (parsed.order?.status === "paid" || parsed.orderStatus === "paid") {
             return true;
           }
         }
@@ -125,6 +127,7 @@ export function DemoBanner({
 
   const handleUnlockSuccess = (liveUrl: string) => {
     setIsUnlocked(true);
+    onUnlockSuccess?.(liveUrl);
   };
 
   // If already unlocked / published, render sleek top live status bar and NEVER show payment button again

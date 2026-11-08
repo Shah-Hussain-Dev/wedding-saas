@@ -6,6 +6,7 @@ export interface SubmitCustomizerInvitationResult {
   finalId: string;
   payload: Record<string, unknown>;
   apiRecord?: Record<string, unknown>;
+  alreadySaved?: boolean;
 }
 
 function normalizeSlug(raw: string, brideName: string, groomName: string): string {
@@ -95,7 +96,14 @@ export async function submitCustomizerInvitation(options: {
         finalId = String(updated.id || activeId);
         const fullRecord = { ...payload, ...updated };
         persistInvitationLocal(fullRecord, finalSlug, finalId);
-        return { ok: true, finalSlug, finalId, payload: fullRecord, apiRecord: updated };
+        return {
+          ok: true,
+          finalSlug,
+          finalId,
+          payload: fullRecord,
+          apiRecord: updated,
+          alreadySaved: true,
+        };
       }
     } else {
       const res = await fetch("/api/invitations", {
@@ -114,7 +122,14 @@ export async function submitCustomizerInvitation(options: {
         if (created.id) finalId = String(created.id);
         const fullRecord = { ...payload, ...created };
         persistInvitationLocal(fullRecord, finalSlug, finalId);
-        return { ok: true, finalSlug, finalId, payload: fullRecord, apiRecord: created };
+        return {
+          ok: true,
+          finalSlug,
+          finalId,
+          payload: fullRecord,
+          apiRecord: created,
+          alreadySaved: Boolean(created.alreadySaved),
+        };
       }
     }
   } catch {

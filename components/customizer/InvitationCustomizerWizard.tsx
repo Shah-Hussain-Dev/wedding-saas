@@ -54,6 +54,9 @@ import { CustomizerStepAccordion } from "@/components/customizer/CustomizerStepA
 import { CustomizerFloatingActionBar } from "@/components/customizer/CustomizerFloatingActionBar";
 import { CustomizerAuthModal } from "@/components/customizer/CustomizerAuthModal";
 import { CustomizerSubmitConfirmModal } from "@/components/customizer/CustomizerSubmitConfirmModal";
+import { CustomizerPaymentModal } from "@/components/customizer/CustomizerPaymentModal";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
+import confetti from "canvas-confetti";
 import {
   CustomizerSubmitSuccessModal,
   type CustomizerSuccessInvite,
@@ -314,7 +317,8 @@ export function InvitationCustomizerWizard({
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isPaying, setIsPaying] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
@@ -322,6 +326,29 @@ export function InvitationCustomizerWizard({
   const [savedInvitationId, setSavedInvitationId] = useState<string | null>(
     invitationId && !invitationId.startsWith("demo-") ? invitationId : null
   );
+
+  const { getPricingDetails } = useTemplatePricing();
+  const pricingDetail = useMemo(
+    () => getPricingDetails(templateId),
+    [getPricingDetails, templateId]
+  );
+
+  const [isPaid, setIsPaid] = useState<boolean>(() =>
+    Boolean(
+      initialData?.order?.status === "paid" ||
+      initialData?.orderStatus === "paid"
+    )
+  );
+
+  useEffect(() => {
+    if (
+      initialData?.order?.status === "paid" ||
+      initialData?.orderStatus === "paid"
+    ) {
+      setIsPaid(true);
+    }
+  }, [initialData]);
+
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const buildDraftPayload = useCallback(() => {
@@ -576,9 +603,15 @@ export function InvitationCustomizerWizard({
     if (sessionStatus !== "authenticated") return;
     if (!consumeCustomizerResumeSubmit()) return;
     if (findFirstInvalidStep() === null) {
-      setIsConfirmModalOpen(true);
+      if (isPaid) {
+        void handleSaveInvitationInternal();
+      } else {
+        void handleSaveInvitationInternal({ silent: true }).then((res) => {
+          if (res?.success) setIsPaymentModalOpen(true);
+        });
+      }
     }
-  }, [sessionStatus, findFirstInvalidStep]);
+  }, [sessionStatus, findFirstInvalidStep, isPaid]);
 
   const scrollToCustomizerStep = useCallback((step: number) => {
     requestAnimationFrame(() => {
@@ -653,41 +686,38 @@ export function InvitationCustomizerWizard({
     window.open(href, "_blank", "noopener,noreferrer");
   };
 
-  const requestSubmitFlow = () => {
-    setValidationError(null);
-    const invalid = findFirstInvalidStep();
-    if (invalid) {
-      setValidationError(invalid.message);
-      openCustomizerStep(invalid.step);
-      return;
-    }
-    if (!session?.user?.email) {
-      persistBeforeAuth();
-      setIsAuthModalOpen(true);
-      return;
-    }
-    setIsConfirmModalOpen(true);
+  const loadRazorpayScript = (): Promise<boolean> => {
+    return new Promise((resolve) => {
+      if (typeof window === "undefined") {
+        resolve(false);
+        return;
+      }
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
   };
 
-  const handleAuthSuccess = () => {
-    consumeCustomizerResumeSubmit();
-    setIsConfirmModalOpen(true);
-  };
-
-  const handleSaveInvitation = async () => {
+  const handleSaveInvitationInternal = async (options?: { silent?: boolean }) => {
     setValidationError(null);
 
     const invalid = findFirstInvalidStep();
     if (invalid) {
       setValidationError(invalid.message);
       focusCustomizerStep(invalid.step);
-      return;
+      return null;
     }
 
     if (!session?.user?.email) {
       persistBeforeAuth();
       setIsAuthModalOpen(true);
-      return;
+      return null;
     }
 
     setIsSubmitting(true);
@@ -701,7 +731,7 @@ export function InvitationCustomizerWizard({
     const targetEmail = session.user.email;
 
     const isAlreadyPaid = Boolean(
-      initialData?.isPaid === true ||
+      isPaid ||
       initialData?.order?.status === "paid" ||
       initialData?.orderStatus === "paid"
     );
@@ -731,6 +761,12 @@ export function InvitationCustomizerWizard({
 
     let finalSlug = normalizedSlug;
     let finalId = savedInvitationId || invitationId || payload.id;
+    let isAlreadySavedResult = Boolean(
+      (savedInvitationId && !savedInvitationId.startsWith("demo-")) ||
+      (invitationId && !invitationId.startsWith("demo-")) ||
+      Boolean(initialData?.id && !initialData?.id.startsWith("demo-")) ||
+      isEdit
+    );
 
     const activeId =
       savedInvitationId && !savedInvitationId.startsWith("demo-")
@@ -751,14 +787,14 @@ export function InvitationCustomizerWizard({
           persistBeforeAuth();
           setIsAuthModalOpen(true);
           setIsSubmitting(false);
-          setIsConfirmModalOpen(false);
-          return;
+          return null;
         }
 
         if (res.ok) {
           const updated = await res.json();
           finalSlug = updated.slug || normalizedSlug;
           finalId = updated.id || activeId;
+          isAlreadySavedResult = true;
           setSlug(finalSlug);
           setSavedInvitationId(finalId);
           persistLocal({ ...payload, ...updated }, finalSlug, finalId);
@@ -776,8 +812,7 @@ export function InvitationCustomizerWizard({
           persistBeforeAuth();
           setIsAuthModalOpen(true);
           setIsSubmitting(false);
-          setIsConfirmModalOpen(false);
-          return;
+          return null;
         }
 
         if (res.ok) {
@@ -789,6 +824,9 @@ export function InvitationCustomizerWizard({
           if (created?.id) {
             finalId = created.id;
             setSavedInvitationId(created.id);
+          }
+          if (created?.alreadySaved) {
+            isAlreadySavedResult = true;
           }
           persistLocal({ ...payload, ...created }, finalSlug, finalId || undefined);
         }
@@ -802,9 +840,238 @@ export function InvitationCustomizerWizard({
       localStorage.setItem("unfold_user_email", targetEmail.toLowerCase());
     }
 
+    setIsSubmitting(false);
+
+    if (!options?.silent) {
+      const successRecord: CustomizerSuccessInvite = {
+        id: String(finalId || `local-${finalSlug}`),
+        slug: finalSlug,
+        brideName,
+        groomName,
+        weddingDate,
+        weddingTime,
+        venueName,
+        venueAddress,
+        templateId,
+        alreadySaved: isAlreadySavedResult,
+        isPaid: isAlreadyPaid,
+      };
+      setSavedInvite(successRecord);
+      setIsSuccessModalOpen(true);
+      setSaveSuccessMsg(
+        isAlreadySavedResult
+          ? "This template is already saved in your dashboard! Customization updated."
+          : "Invitation saved to your dashboard."
+      );
+    }
+
+    return {
+      success: true,
+      finalId: String(finalId),
+      finalSlug,
+      alreadySaved: isAlreadySavedResult,
+      isPaid: isAlreadyPaid,
+    };
+  };
+
+  const requestSubmitFlow = async () => {
+    setValidationError(null);
+    const invalid = findFirstInvalidStep();
+    if (invalid) {
+      setValidationError(invalid.message);
+      openCustomizerStep(invalid.step);
+      return;
+    }
+
+    if (!session?.user?.email) {
+      persistBeforeAuth();
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    // If already paid for this template, update and show success
+    if (isPaid) {
+      await handleSaveInvitationInternal();
+      return;
+    }
+
+    // PAYMENT IS FIRST PRIORITY:
+    // 1. Silently save draft to DB to obtain invitation ID & clean slug
+    const result = await handleSaveInvitationInternal({ silent: true });
+    if (result?.success) {
+      // 2. Open payment modal immediately!
+      setIsPaymentModalOpen(true);
+    }
+  };
+
+  const handleAuthSuccess = async () => {
+    consumeCustomizerResumeSubmit();
+
+    // If already paid for this template, update and show success
+    if (isPaid) {
+      await handleSaveInvitationInternal();
+      return;
+    }
+
+    // PAYMENT IS FIRST PRIORITY AFTER LOGIN:
+    // 1. Silently save draft to DB
+    const result = await handleSaveInvitationInternal({ silent: true });
+    if (result?.success) {
+      // 2. Open payment modal immediately!
+      setIsPaymentModalOpen(true);
+    }
+  };
+
+  const handlePayInvitation = async () => {
+    if (!session?.user?.email) {
+      setIsPaymentModalOpen(false);
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    try {
+      setIsPaying(true);
+
+      const saveRes = await handleSaveInvitationInternal({ silent: true });
+      const activeInvitationId = saveRes?.finalId || savedInvitationId || invitationId;
+      const activeSlug = saveRes?.finalSlug || slug;
+      const payerEmail = session.user.email;
+      const payerName = session.user.name || `${brideName} & ${groomName}`;
+      const amount = pricingDetail.priceInr || 1199;
+
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        alert("Failed to load Razorpay payment gateway. Please check your internet connection.");
+        setIsPaying(false);
+        return;
+      }
+
+      const orderRes = await fetch("/api/payments/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          invitationId: activeInvitationId,
+          slug: activeSlug,
+          templateId,
+          brideName,
+          groomName,
+          customerEmail: payerEmail,
+          customerName: payerName,
+          amount,
+        }),
+      });
+
+      const orderData = await orderRes.json();
+      if (!orderRes.ok || !orderData.orderId) {
+        throw new Error(orderData.error || "Failed to initiate payment order");
+      }
+
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency || "INR",
+        name: "WedInvites Digital Invitation",
+        description: `Lifetime Live Link & RSVPs for ${brideName} & ${groomName}`,
+        order_id: orderData.orderId,
+        prefill: {
+          name: payerName,
+          email: payerEmail,
+        },
+        notes: {
+          invitationId: activeInvitationId,
+          slug: activeSlug,
+          templateId,
+          brideName,
+          groomName,
+          couple: `${brideName} & ${groomName}`,
+          email: payerEmail,
+        },
+        theme: {
+          color: "#073D31",
+        },
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await fetch("/api/payments/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpayOrderId: response.razorpay_order_id || orderData.orderId,
+                razorpayPaymentId: response.razorpay_payment_id || `pay_${Date.now()}`,
+                razorpaySignature: response.razorpay_signature || "mock_signature",
+                invitationId: activeInvitationId,
+                slug: activeSlug,
+                templateId,
+                brideName,
+                groomName,
+                customerEmail: payerEmail,
+                customerName: payerName,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyRes.ok && verifyData.success) {
+              setIsPaid(true);
+              setIsPaymentModalOpen(false);
+              setIsPaying(false);
+
+              try {
+                confetti({
+                  particleCount: 160,
+                  spread: 100,
+                  origin: { y: 0.45 },
+                  colors: ["#D4AF37", "#10B981", "#FEF0C7", "#073D31", "#FFFFFF"],
+                });
+              } catch (_) {}
+
+              const finalLiveSlug = verifyData.invitation?.slug || activeSlug;
+              const successRecord: CustomizerSuccessInvite = {
+                id: String(activeInvitationId),
+                slug: finalLiveSlug,
+                brideName,
+                groomName,
+                weddingDate,
+                weddingTime,
+                venueName,
+                venueAddress,
+                templateId,
+                alreadySaved: true,
+                isPaid: true,
+              };
+
+              setSavedInvite(successRecord);
+              setIsSuccessModalOpen(true);
+              setSaveSuccessMsg("Payment successful! Your permanent live invitation is published.");
+            } else {
+              alert(verifyData.error || "Payment verification failed.");
+              setIsPaying(false);
+            }
+          } catch (verifyErr) {
+            console.error("Payment verification error:", verifyErr);
+            alert("Error confirming payment. Please contact support.");
+            setIsPaying(false);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            setIsPaying(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err: any) {
+      console.error("Payment initiation error:", err);
+      alert(err.message || "Failed to start payment.");
+      setIsPaying(false);
+    }
+  };
+
+  const handleSaveAsDraftOnly = () => {
+    setIsPaymentModalOpen(false);
     const successRecord: CustomizerSuccessInvite = {
-      id: String(finalId || `local-${finalSlug}`),
-      slug: finalSlug,
+      id: String(savedInvitationId || `local-${slug}`),
+      slug,
       brideName,
       groomName,
       weddingDate,
@@ -812,13 +1079,15 @@ export function InvitationCustomizerWizard({
       venueName,
       venueAddress,
       templateId,
+      alreadySaved: true,
+      isPaid: false,
     };
     setSavedInvite(successRecord);
-    setIsConfirmModalOpen(false);
     setIsSuccessModalOpen(true);
-    setSaveSuccessMsg("Invitation saved to your dashboard.");
-    setIsSubmitting(false);
+    setSaveSuccessMsg("Saved to dashboard as draft. Complete payment anytime to publish.");
   };
+
+  const handleSaveInvitation = () => handleSaveInvitationInternal();
 
   const editorTitle = useMemo(
     () => (isEdit ? "Edit your invitation" : "Customize your invitation"),
@@ -884,6 +1153,14 @@ export function InvitationCustomizerWizard({
             Save for later
           </button>
         </div>
+
+        {((savedInvitationId && !savedInvitationId.startsWith("demo-")) ||
+          Boolean(initialData?.id && !initialData?.id.startsWith("demo-"))) && (
+          <div className="mt-3 flex items-center gap-1.5 rounded-lg border border-emerald-600/20 bg-emerald-50 px-3 py-1.5 text-[11px] font-semibold text-emerald-900">
+            <CheckCircle size={14} weight="fill" className="shrink-0 text-emerald-600" />
+            <span>Already saved in your dashboard &bull; Edits will update your existing invitation.</span>
+          </div>
+        )}
       </div>
         </div>
 
@@ -1673,8 +1950,10 @@ export function InvitationCustomizerWizard({
         isFormComplete={isFormComplete}
         isLoggedIn={isLoggedIn}
         isEdit={isEdit}
-        isSubmitting={isSubmitting}
+        isSubmitting={isSubmitting || isPaying}
         activeStep={activeStep}
+        isPaid={isPaid}
+        priceFormatted={pricingDetail.priceFormatted}
         onSaveContinue={handleFloatingSaveContinue}
         onPreview={handlePreviewFullscreen}
         onPrimaryAction={requestSubmitFlow}
@@ -1709,12 +1988,16 @@ export function InvitationCustomizerWizard({
         onBeforeAuth={persistBeforeAuth}
       />
 
-      <CustomizerSubmitConfirmModal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
-        onConfirm={() => void handleSaveInvitation()}
-        isSubmitting={isSubmitting}
+      <CustomizerPaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        onPay={handlePayInvitation}
+        onSaveAsDraft={handleSaveAsDraftOnly}
+        isPaying={isPaying}
         coupleLabel={`${brideName} & ${groomName}`}
+        templateId={templateId}
+        pricing={pricingDetail}
+        slug={slug}
       />
 
       <CustomizerSubmitSuccessModal
@@ -1726,6 +2009,8 @@ export function InvitationCustomizerWizard({
           setIsShareModalOpen(true);
         }}
         onOpenFullscreenPreview={handlePreviewFullscreen}
+        onPay={handlePayInvitation}
+        priceFormatted={pricingDetail.priceFormatted}
       />
 
       {savedInvite ? (

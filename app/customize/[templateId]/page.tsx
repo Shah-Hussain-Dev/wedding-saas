@@ -25,6 +25,24 @@ function CustomizeTemplateContent({ templateId }: { templateId: string }) {
       const normalized = templateId.replace(/_/g, "-").toLowerCase();
 
       if (!editSlug && !editId) {
+        // 1. Check if logged-in user already has a saved invitation for this template
+        try {
+          const invRes = await fetch(`/api/invitations?templateId=${encodeURIComponent(normalized)}`, {
+            cache: "no-store",
+          });
+          if (invRes.ok) {
+            const invData = await invRes.json();
+            if (invData?.existingInvitation) {
+              setInitialData(invData.existingInvitation);
+              setLoading(false);
+              return;
+            }
+          }
+        } catch (invErr) {
+          console.warn("Could not check existing user invitation for template:", invErr);
+        }
+
+        // 2. Fall back to demo defaults for uncustomized template
         try {
           const res = await fetch(`/api/templates/${normalized}/defaults`, { cache: "no-store" });
           if (res.ok) {

@@ -1,8 +1,8 @@
 {
   "celestial-rose": {
-    "priceInr": 1,
+    "priceInr": 1499,
     "originalPriceInr": 2999,
-    "discountPercent": 60,
+    "discountPercent": 50,
     "discountName": "Launch Offer",
     "isActive": true,
     "isPopular": false

@@ -121,5 +121,17 @@ describe('Emerald Qasr Mobile-First Responsiveness & 3D Web Standards', () => {
       assert.ok(pageContent.includes('api.whatsapp.com'));
     });
   });
+
+  describe('Feature 7: Desktop Envelope Kept Closed until User Interaction', () => {
+    test('Paper overlay strictly renders upon videoOpened, never auto-revealed on desktop load', () => {
+      assert.doesNotMatch(pageContent, /if\s*\(isDesk\)\s*\{\s*setVideoOpened\(true\)/);
+      assert.match(pageContent, /\{videoOpened\s*&&\s*\(\s*<motion\.div\s+className=["']eq-blank-card-overlay["']/);
+    });
+
+    test('Wax seal and tap ribbon are visible on desktop prior to unveiling', () => {
+      assert.match(pageContent, /\{!videoOpened\s*&&\s*\(\s*<div\s+className=\{`eq-seal-monogram-anchor/);
+      assert.match(pageContent, /\{!isPlayingVideo\s*&&\s*!videoOpened\s*&&\s*\(\s*<button/);
+    });
+  });
 });
 
