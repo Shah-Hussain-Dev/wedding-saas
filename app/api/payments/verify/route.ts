@@ -3,6 +3,7 @@ import { verifyRazorpaySignature, fetchRazorpayPayment } from "@/lib/razorpay";
 import prisma from "@/lib/prisma";
 import { generateUniqueSlug } from "@/lib/slug";
 import { getTemplateDefaultData } from "@/templates";
+import { sendPaymentSuccessEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -269,6 +270,28 @@ export async function POST(req: NextRequest) {
 
     const liveSlug = updatedInvitation?.slug || candidateSlug;
     const liveUrl = liveSlug ? `/${liveSlug}` : `/dashboard`;
+
+    // Dispatch royal thank-you and confirmation email asynchronously (non-blocking)
+    const recipientEmail = email || user?.email;
+    if (recipientEmail && recipientEmail.includes("@")) {
+      const coupleBride = updatedInvitation?.brideName || brideName || "Bride";
+      const coupleGroom = updatedInvitation?.groomName || groomName || "Groom";
+      const finalAmountInr = order?.amountPaise ? Math.floor(order.amountPaise / 100) : 1499;
+
+      sendPaymentSuccessEmail({
+        to: recipientEmail,
+        brideName: coupleBride,
+        groomName: coupleGroom,
+        templateName: resolvedTemplateId,
+        liveUrl,
+        dashboardUrl: "/dashboard",
+        amountInr: finalAmountInr,
+        paymentId: razorpayPaymentId,
+        orderId: razorpayOrderId,
+      }).catch((mailErr) => {
+        console.warn("Transactional payment success email non-fatal notice:", mailErr);
+      });
+    }
 
     return NextResponse.json({
       success: true,
