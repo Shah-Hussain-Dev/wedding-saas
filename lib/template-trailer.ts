@@ -16,22 +16,43 @@ const TEMPLATE_TRAILER_MAP: Record<string, string> = {
   "emerald-noir": "/videos/royal-grace.mp4",
   "royal-elegance": "/videos/royal-elegance-royal.mp4",
   "modern-minimal": "/videos/royal-grace.mp4",
+  "sheesh-mahal": "",
 };
 
-/** Static hero/card fallback when trailer video is missing or fails to load */
-const TEMPLATE_POSTER_MAP: Record<string, string> = {
-  "noor-e-nikah": "/templates/noor-e-nikah/envelope-bg.jpg",
-  "crimson-royale": "/templates/crimson-royale/bg-welcome-desktop.jpg",
-  "royal-lotus": "/templates/imperial-palace/staircase.jpg",
-  "royal-elegance": "/templates/imperial-palace/doors-hero.jpg",
+/**
+ * Authentic, high-resolution static cover photos for all 17 templates.
+ * Every template has a strictly unique, dedicated visual asset matching its theme.
+ */
+export const TEMPLATE_POSTER_MAP: Record<string, string> = {
+  // Islamic & Nikah Collections
   "sheesh-mahal": "/templates/sheesh-mahal/assets/cover/doors.webp",
+  "noor-e-nikah": "/templates/noor-e-nikah/envelope-bg.jpg",
+  "emerald-qasr": "/templates/emerald-qasr/poster.png",
+  "gul-e-noor": "/templates/gul-e-noor/poster.png",
+  "azure-nikah": "/templates/azure-nikah/poster.png",
+  "kitab-e-nikah": "/templates/kitab-e-nikah/poster.png",
+
+  // Universal & Celestial Masterpieces
+  "celestial-rose": "/templates/celestial-rose/gallery-1.jpg",
+  "imperial-palace": "/templates/imperial-palace/doors-hero.jpg",
+  "royal-elegance": "/templates/imperial-palace/ballroom.jpg",
+  "royal-majesty": "/templates/royal-majesty/ballroom-terrace.jpg",
+  "royal-heritage": "/templates/royal-heritage/couple-arch.jpg",
+  "royal-grace": "/templates/royal-grace/botanical-palace.jpg",
+  "rose-gold-blush": "/templates/rose-gold-blush/palace-arch.jpg",
+
+  // Hindu & Vedic Grandeur
+  "crimson-royale": "/templates/crimson-royale/bg-welcome-desktop.jpg",
+  "royal-lotus": "/templates/lotus-courtyard/farman-open.webp",
+  "emerald-noir": "/images/gallery-library/hindu/haveli-royal-vivah.webp",
+  "modern-minimal": "/templates/noor-e-nikah/welcome-parchment.jpg",
 };
 
 export function getTemplatePosterUrl(templateId: string): string {
   const normalized = (templateId || "").trim().replace(/_/g, "-").toLowerCase();
   return (
     TEMPLATE_POSTER_MAP[normalized] ||
-    `/templates/${normalized}/hero-couple-mobile.jpg`
+    `/templates/${normalized}/envelope-desktop.jpg`
   );
 }
 

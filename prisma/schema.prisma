@@ -159,12 +159,14 @@ model TemplateConfig {
   discountName      String?  @default("Launch Offer") @map("discount_name")
   isActive          Boolean  @default(true) @map("is_active")
   isPopular         Boolean  @default(false) @map("is_popular")
+  sortOrder         Int      @default(0) @map("sort_order")
   coverImageUrl     String?  @map("cover_image_url")
   trailerVideoUrl   String?  @map("trailer_video_url")
   defaultMusicTrack String?  @map("default_music_track")
   defaultsJson      Json     @default("{}") @map("defaults_json")
   marketingJson     Json     @default("{}") @map("marketing_json")
   updatedBy         String?  @map("updated_by")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   @@map("template_configs")

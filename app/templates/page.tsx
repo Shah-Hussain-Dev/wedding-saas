@@ -4,15 +4,22 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
-import { Sparkle, MagnifyingGlass } from "@phosphor-icons/react";
+import { Sparkle, MagnifyingGlass, SortAscending } from "@phosphor-icons/react";
 import { TemplateCatalogCard } from "@/components/marketing/template-catalog-card";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
 import {
   templateMatchesFaithCatalogFilter,
   type TemplateMeta,
 } from "@/lib/template-meta";
+import {
+  getTemplateSortRank,
+  getTemplateReleaseDate,
+  DEFAULT_TEMPLATE_SORT_ORDER,
+  DEFAULT_TEMPLATE_RELEASE_DATES,
+} from "@/lib/template-sort";
 
 const FILTERS = [
-  { id: "All", label: "All Masterpieces (16)" },
+  { id: "All", label: "All Masterpieces (17)" },
   { id: "Universal", label: "✦ Universal Themes" },
   { id: "Hindu", label: "🕉️ Hindu Weddings" },
   { id: "Muslim", label: "🌙 Muslim Weddings" },
@@ -319,8 +326,10 @@ const TEMPLATES = [
 ];
 
 export default function TemplatesPage() {
+  const { getPricingDetails } = useTemplatePricing();
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"best" | "latest" | "price_asc" | "price_desc">("best");
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
 
   const filteredTemplates = TEMPLATES.filter((t) => {
@@ -348,10 +357,36 @@ export default function TemplatesPage() {
         t.tag === "Best Seller" ||
         t.tag === "Masterpiece" ||
         t.tag === "Signature Royale" ||
-        t.tag === "Awwwards Dreamscape"
+        t.tag === "Awwwards Dreamscape" ||
+        t.tag === "Featured" ||
+        t.tag === "Imperial Royale"
       );
-    if (activeFilter === "New") return t.tag === "New" || t.tag === "Trending";
+    if (activeFilter === "New") return t.tag === "New" || t.tag === "Trending" || t.id === "sheesh-mahal";
     return true;
+  });
+
+  const sortedTemplates = [...filteredTemplates].sort((a, b) => {
+    if (sortBy === "best") {
+      const rankA = getTemplateSortRank(a?.id);
+      const rankB = getTemplateSortRank(b?.id);
+      return rankA - rankB;
+    }
+    if (sortBy === "latest") {
+      const dateA = new Date(getTemplateReleaseDate(a?.id)).getTime();
+      const dateB = new Date(getTemplateReleaseDate(b?.id)).getTime();
+      return dateB - dateA;
+    }
+    if (sortBy === "price_asc") {
+      const priceA = getPricingDetails(a?.id, a?.price).priceInr;
+      const priceB = getPricingDetails(b?.id, b?.price).priceInr;
+      return priceA - priceB;
+    }
+    if (sortBy === "price_desc") {
+      const priceA = getPricingDetails(a?.id, a?.price).priceInr;
+      const priceB = getPricingDetails(b?.id, b?.price).priceInr;
+      return priceB - priceA;
+    }
+    return 0;
   });
 
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
@@ -374,7 +409,7 @@ export default function TemplatesPage() {
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#073D31]/12 shadow-xs text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-[#073D31] uppercase font-sans backdrop-blur-md"
             >
               <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
-              <span>Curated Showroom Collection · All 16 Masterpieces</span>
+              <span>Curated Showroom Collection · All 17 Masterpieces</span>
               <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
             </motion.div>
 
@@ -393,12 +428,12 @@ export default function TemplatesPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-xs sm:text-sm md:text-base text-[#76766F] font-sans max-w-xl mx-auto leading-relaxed"
             >
-              Explore all 16 interactive wedding invitations. Each card autoplays its cinematic trailer so you can feel the opening before you customize.
+              Explore all 17 interactive wedding invitations. Each card autoplays its cinematic trailer so you can feel the opening before you customize.
             </motion.p>
 
-            {/* SEARCH & FILTER CONTROLS */}
+            {/* SEARCH & SORT CONTROLS */}
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto">
-              <div className="relative w-full">
+              <div className="relative w-full sm:flex-1">
                 <MagnifyingGlass
                   size={16}
                   className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"
@@ -410,6 +445,20 @@ export default function TemplatesPage() {
                   placeholder="Search by theme, faith, ballroom, starlight..."
                   className="w-full bg-white/90 border border-[#073D31]/12 rounded-full pl-11 pr-4 py-3 text-xs sm:text-sm text-[#18211E] placeholder:text-stone-400 outline-none focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] shadow-xs transition-all"
                 />
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="w-full sm:w-auto">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="w-full sm:w-auto bg-white/90 border border-[#073D31]/12 rounded-full px-4 py-3 text-xs sm:text-sm font-semibold text-[#073D31] outline-none focus:border-[#073D31] shadow-xs cursor-pointer transition-all"
+                >
+                  <option value="best">⭐ Best Templates First</option>
+                  <option value="latest">✨ Latest Created First</option>
+                  <option value="price_asc">💰 Price: Low to High</option>
+                  <option value="price_desc">💎 Price: High to Low</option>
+                </select>
               </div>
             </div>
           </div>
@@ -435,12 +484,12 @@ export default function TemplatesPage() {
             })}
           </div>
 
-          {/* TEMPLATES SHOWROOM GRID - ALL 16 TEMPLATES */}
+          {/* TEMPLATES SHOWROOM GRID - ALL 17 TEMPLATES */}
           <div
-            key={`${activeFilter}-${searchQuery.trim()}`}
+            key={`${activeFilter}-${searchQuery.trim()}-${sortBy}`}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           >
-            {filteredTemplates.map((item) => (
+            {sortedTemplates.map((item) => (
               <TemplateCatalogCard
                 key={item.id}
                 id={item.id}

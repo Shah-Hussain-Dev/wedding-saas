@@ -2,6 +2,19 @@ import fs from "fs";
 import path from "path";
 import prisma from "@/lib/prisma";
 import { TEMPLATE_META, TemplateId } from "@/lib/template-meta";
+import {
+  DEFAULT_TEMPLATE_SORT_ORDER,
+  DEFAULT_TEMPLATE_RELEASE_DATES,
+  getTemplateSortRank,
+  getTemplateReleaseDate,
+} from "./template-sort";
+
+export {
+  DEFAULT_TEMPLATE_SORT_ORDER,
+  DEFAULT_TEMPLATE_RELEASE_DATES,
+  getTemplateSortRank,
+  getTemplateReleaseDate,
+};
 
 export interface TemplatePricingConfig {
   id: string;
@@ -19,6 +32,8 @@ export interface TemplatePricingConfig {
   isOnSale: boolean; // true if originalPriceInr > priceInr
   isActive: boolean;
   isPopular?: boolean;
+  sortOrder: number; // 1..N order rank
+  createdAt?: string; // ISO timestamp
   tag?: string;
   gradient?: string;
 }
@@ -30,6 +45,8 @@ export interface CachedTemplateConfig {
   discountName?: string;
   isActive: boolean;
   isPopular?: boolean;
+  sortOrder?: number;
+  createdAt?: string;
 }
 
 export const DEFAULT_PRICE_INR = 1199;
@@ -117,7 +134,9 @@ export function buildTemplatePricingConfig(
   const savingsAmountInr = Math.max(0, originalPriceInr - priceInr);
   const isOnSale = originalPriceInr > priceInr && priceInr > 0;
   const isActive = cached?.isActive ?? true;
-  const isPopular = cached?.isPopular ?? (meta.tag === "Best Seller" || meta.tag === "Trending");
+  const isPopular = cached?.isPopular ?? (meta.tag === "Best Seller" || meta.tag === "Trending" || meta.tag === "Awwwards Dreamscape" || meta.tag === "Imperial Royale");
+  const sortOrder = cached?.sortOrder !== undefined ? cached.sortOrder : (DEFAULT_TEMPLATE_SORT_ORDER[normalizedId] ?? 99);
+  const createdAt = cached?.createdAt || DEFAULT_TEMPLATE_RELEASE_DATES[normalizedId] || "2026-01-01T00:00:00.000Z";
 
   return {
     id: normalizedId,
@@ -135,6 +154,8 @@ export function buildTemplatePricingConfig(
     isOnSale,
     isActive,
     isPopular,
+    sortOrder,
+    createdAt,
     tag: meta.tag,
     gradient: meta.gradient,
   };
@@ -149,7 +170,7 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
   try {
     if ((prisma as any).templateConfig) {
       const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("DB query timed out")), 2500)
+        setTimeout(() => reject(new Error("DB query timed out")), 12000)
       );
       const dbConfigs = (await Promise.race([
         (prisma as any).templateConfig.findMany(),
@@ -165,6 +186,8 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
             discountName: cfg.discountName ?? DEFAULT_DISCOUNT_NAME,
             isActive: cfg.isActive !== false,
             isPopular: cfg.isPopular || false,
+            sortOrder: cfg.sortOrder ?? DEFAULT_TEMPLATE_SORT_ORDER[cfg.id] ?? 99,
+            createdAt: cfg.createdAt ? new Date(cfg.createdAt).toISOString() : DEFAULT_TEMPLATE_RELEASE_DATES[cfg.id],
           };
         });
         // Keep file backup in sync with database
@@ -241,10 +264,16 @@ export async function updateTemplatePrice(
     discountName?: string;
     isActive?: boolean;
     isPopular?: boolean;
+    sortOrder?: number;
+    coverImageUrl?: string;
   }
 ): Promise<TemplatePricingConfig> {
   const normalizedId = templateId.replace(/_/g, "-").toLowerCase();
   const safePrice = Math.max(0, Math.round(Number(priceInr) ?? DEFAULT_PRICE_INR));
+
+  // 1. Ensure file data is loaded into memory cache
+  const fileData = loadPricesFromFile();
+  memoryPriceCache = { ...fileData, ...memoryPriceCache };
 
   const existing = memoryPriceCache[normalizedId] || {
     priceInr: DEFAULT_PRICE_INR,
@@ -274,6 +303,11 @@ export async function updateTemplatePrice(
       ? options.discountName.trim()
       : (existing.discountName || DEFAULT_DISCOUNT_NAME);
 
+  const safeSortOrder =
+    options?.sortOrder !== undefined
+      ? Number(options.sortOrder)
+      : (existing.sortOrder ?? DEFAULT_TEMPLATE_SORT_ORDER[normalizedId] ?? 99);
+
   const updated: CachedTemplateConfig = {
     priceInr: safePrice,
     originalPriceInr: safeOriginalPrice,
@@ -281,6 +315,8 @@ export async function updateTemplatePrice(
     discountName: safeDiscountName,
     isActive: options?.isActive !== undefined ? options.isActive : existing.isActive,
     isPopular: options?.isPopular !== undefined ? options.isPopular : existing.isPopular,
+    sortOrder: safeSortOrder,
+    createdAt: existing.createdAt || DEFAULT_TEMPLATE_RELEASE_DATES[normalizedId],
   };
 
   // Update in-memory cache
@@ -292,28 +328,29 @@ export async function updateTemplatePrice(
   // Save to Supabase PostgreSQL database table (graceful async error handling)
   try {
     if ((prisma as any).templateConfig) {
+      const updateData: any = {
+        priceInr: safePrice,
+        originalPriceInr: safeOriginalPrice,
+        discountPercent: safeDiscountPercent,
+        discountName: safeDiscountName,
+        isActive: updated.isActive,
+        isPopular: updated.isPopular,
+        sortOrder: safeSortOrder,
+      };
+      if (options?.coverImageUrl) {
+        updateData.coverImageUrl = options.coverImageUrl.trim();
+      }
+
       await (prisma as any).templateConfig.upsert({
         where: { id: normalizedId },
-        update: {
-          priceInr: safePrice,
-          originalPriceInr: safeOriginalPrice,
-          discountPercent: safeDiscountPercent,
-          discountName: safeDiscountName,
-          isActive: updated.isActive,
-          isPopular: updated.isPopular,
-        },
+        update: updateData,
         create: {
           id: normalizedId,
-          priceInr: safePrice,
-          originalPriceInr: safeOriginalPrice,
-          discountPercent: safeDiscountPercent,
-          discountName: safeDiscountName,
-          isActive: updated.isActive,
-          isPopular: updated.isPopular,
+          ...updateData,
         },
       });
       console.log(
-        `[Pricing] Successfully persisted template ${normalizedId} (Selling: ₹${safePrice}, MRP: ₹${safeOriginalPrice}, ${safeDiscountPercent}% OFF "${safeDiscountName}")`
+        `[Pricing] Successfully persisted template ${normalizedId} (Selling: ₹${safePrice}, MRP: ₹${safeOriginalPrice}, ${safeDiscountPercent}% OFF "${safeDiscountName}", Rank: ${safeSortOrder})`
       );
     }
   } catch (dbErr) {

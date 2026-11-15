@@ -7,18 +7,15 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { GlassNav } from "@/components/ui/glass-nav";
 import { PremiumFooter } from "@/components/ui/premium-footer";
-import { EnvelopeSimple, Key, ShieldCheck, Sparkle, ArrowRight } from "@phosphor-icons/react";
-import { siteConfig } from "@/config/site";
+import { EnvelopeSimple, Key, Sparkle, ArrowRight } from "@phosphor-icons/react";
 import { isUserAdmin } from "@/lib/admin-client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [authMode, setAuthMode] = useState<"password" | "magic">("password");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isMagicLinkSent, setIsMagicLinkSent] = useState(false);
 
   const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,30 +53,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleMagicLinkSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setIsSubmitting(true);
-    setErrorMessage("");
-
-    try {
-      const res = await signIn("email", {
-        email: email.trim().toLowerCase(),
-        redirect: false,
-        callbackUrl: "/dashboard",
-      });
-      if (res?.ok) {
-        setIsMagicLinkSent(true);
-      } else {
-        setErrorMessage("Magic link failed to send. Try Email + Password login or Developer bypass.");
-      }
-    } catch {
-      setErrorMessage("SMTP connection failed. Try Email + Password or Developer bypass.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen bg-[#F7F4ED] text-[#18211E] selection:bg-[#C8A45E]/30 selection:text-[#073D31]">
       <GlassNav />
@@ -95,7 +68,8 @@ export default function LoginPage() {
           className="w-full max-w-md relative z-10"
         >
           <div className="p-8 sm:p-10 rounded-[2.5rem] bg-white border border-[#073D31]/12 shadow-[0_25px_60px_rgba(7,61,49,0.08)]">
-            <div className="text-center mb-7 space-y-2">
+            {/* Header */}
+            <div className="text-center mb-8 space-y-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#073D31]/8 text-[#073D31] text-[10px] font-bold tracking-widest uppercase font-sans">
                 <Sparkle size={12} weight="fill" className="text-[#C8A45E]" />
                 <span>Host Portal</span>
@@ -104,12 +78,12 @@ export default function LoginPage() {
                 Welcome Back
               </h1>
               <p className="text-xs text-[#76766F] font-sans">
-                Manage your invitation, guest RSVPs, and live timings.
+                Sign in to manage your invitation, guest RSVPs, and live timings.
               </p>
             </div>
 
             {/* Google 1-Click Login */}
-            <div className="space-y-3 mb-6">
+            <div className="space-y-4 mb-6">
               <button
                 type="button"
                 onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
@@ -136,166 +110,79 @@ export default function LoginPage() {
                 <span>Continue with Google (1-Click)</span>
               </button>
 
-              <div className="relative flex items-center justify-center my-2">
+              <div className="relative flex items-center justify-center my-3">
                 <div className="border-t border-stone-200 w-full"></div>
                 <span className="bg-white px-3 text-[10px] uppercase font-bold text-stone-400 tracking-wider whitespace-nowrap shrink-0">
-                  Or Log In with
+                  Or Log In with Email
                 </span>
                 <div className="border-t border-stone-200 w-full"></div>
               </div>
             </div>
 
-            {/* Auth Mode Toggle Tabs */}
-            <div className="grid grid-cols-2 p-1 bg-[#FAF8F5] border border-stone-200 rounded-full mb-5">
-              <button
-                type="button"
-                onClick={() => { setAuthMode("password"); setErrorMessage(""); }}
-                className={`py-2 text-xs font-bold rounded-full transition-all cursor-pointer ${
-                  authMode === "password"
-                    ? "bg-[#073D31] text-white shadow-xs"
-                    : "text-stone-500 hover:text-stone-800"
-                }`}
-              >
-                Email &amp; Password
-              </button>
-              <button
-                type="button"
-                onClick={() => { setAuthMode("magic"); setErrorMessage(""); }}
-                className={`py-2 text-xs font-bold rounded-full transition-all cursor-pointer ${
-                  authMode === "magic"
-                    ? "bg-[#073D31] text-white shadow-xs"
-                    : "text-stone-500 hover:text-stone-800"
-                }`}
-              >
-                Magic Link
-              </button>
-            </div>
-
+            {/* Error Message */}
             {errorMessage && (
-              <div className="p-3.5 mb-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs leading-relaxed">
+              <div className="p-3.5 mb-5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs leading-relaxed">
                 {errorMessage}
               </div>
             )}
 
-            {authMode === "password" ? (
-              <form onSubmit={handlePasswordLogin} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <EnvelopeSimple className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@email.com"
-                      required
-                      className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
-                    />
-                  </div>
+            {/* Email & Password Form */}
+            <form onSubmit={handlePasswordLogin} className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <EnvelopeSimple className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@wedinvites.in"
+                    autoComplete="email"
+                    required
+                    className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
+                  />
                 </div>
-
-                <div className="space-y-1.5">
-                  <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Key className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      required
-                      className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans transition-all shadow-md hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-                >
-                  <span className="roll">
-                    <span className="roll__a">{isSubmitting ? "Logging In..." : "Sign In to Dashboard"}</span>
-                    <span className="roll__b" aria-hidden="true">{isSubmitting ? "Logging In..." : "Sign In to Dashboard"}</span>
-                  </span>
-                  <ArrowRight size={14} weight="bold" />
-                </button>
-              </form>
-            ) : isMagicLinkSent ? (
-              <div className="text-center py-6 space-y-3">
-                <div className="h-12 w-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-700 mx-auto">
-                  <ShieldCheck className="h-6 w-6" weight="bold" />
-                </div>
-                <h4 className="font-serif text-lg font-bold text-[#18211E]">Check Your Inbox</h4>
-                <p className="text-xs text-[#76766F] font-sans">
-                  We sent a magic sign-in link to <strong>{email}</strong>. Click it to log in instantly.
-                </p>
               </div>
-            ) : (
-              <form onSubmit={handleMagicLinkSubmit} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
-                    Email Address
-                  </label>
-                  <div className="relative">
-                    <EnvelopeSimple className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="you@email.com"
-                      required
-                      className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
-                    />
-                  </div>
+
+              <div className="space-y-1.5">
+                <label className="block text-[10.5px] uppercase font-bold tracking-wider text-[#76766F] font-sans">
+                  Password
+                </label>
+                <div className="relative">
+                  <Key className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    autoComplete="current-password"
+                    required
+                    className="w-full bg-[#FAF8F5] border border-stone-200 rounded-xl pl-11 pr-4 py-3 text-xs sm:text-sm font-medium outline-none focus:border-[#073D31] transition-colors"
+                  />
                 </div>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-4 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans transition-all shadow-md hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
-                >
-                  <span className="roll">
-                    <span className="roll__a">{isSubmitting ? "Sending Link..." : "Send Magic Link"}</span>
-                    <span className="roll__b" aria-hidden="true">{isSubmitting ? "Sending Link..." : "Send Magic Link"}</span>
-                  </span>
-                  <ArrowRight size={14} weight="bold" />
-                </button>
-              </form>
-            )}
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-4 mt-2 rounded-full bg-[#073D31] hover:bg-[#032A23] text-[#F7F4ED] text-xs font-bold tracking-wider uppercase font-sans transition-all shadow-md hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+              >
+                <span className="roll">
+                  <span className="roll__a">{isSubmitting ? "Signing In..." : "Sign In to Dashboard"}</span>
+                  <span className="roll__b" aria-hidden="true">{isSubmitting ? "Signing In..." : "Sign In to Dashboard"}</span>
+                </span>
+                <ArrowRight size={14} weight="bold" />
+              </button>
+            </form>
 
-            <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs font-sans">
+            {/* Bottom Account Link */}
+            <div className="mt-8 pt-5 border-t border-stone-100 flex items-center justify-between text-xs font-sans">
               <span className="text-stone-500">Don&apos;t have an account?</span>
               <Link href="/signup" className="text-[#073D31] font-bold hover:underline">
                 Create Account →
               </Link>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-2 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail(siteConfig.email.support);
-                  setPassword("AdminPassword@123");
-                  setAuthMode("password");
-                  setErrorMessage("");
-                }}
-                className="text-[11px] text-[#073D31] font-bold bg-[#073D31]/8 border border-[#073D31]/15 rounded-xl py-2 px-3 hover:bg-[#073D31]/12 transition flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Sparkle size={13} weight="fill" className="text-[#C8A45E]" />
-                <span>Auto-fill Demo Credentials ({siteConfig.email.support})</span>
-              </button>
-
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="text-[11px] text-stone-400 font-medium hover:text-stone-600 hover:underline cursor-pointer"
-              >
-                Developer sandbox bypass → Dashboard
-              </button>
             </div>
           </div>
         </motion.div>

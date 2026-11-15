@@ -1,17 +1,172 @@
 {
   "celestial-rose": {
-    "priceInr": 1499,
+    "priceInr": 1199,
     "originalPriceInr": 2999,
-    "discountPercent": 50,
-    "discountName": "Launch Offer",
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": false
+    "isPopular": true,
+    "sortOrder": 3,
+    "createdAt": "2026-10-15T00:00:00.000Z"
   },
   "noor-e-nikah": {
-    "priceInr": 900,
+    "priceInr": 899,
     "originalPriceInr": 2999,
     "discountPercent": 70,
     "discountName": "70% OFF Limited Deal",
-    "isActive": true
+    "isActive": true,
+    "isPopular": true,
+    "sortOrder": 2,
+    "createdAt": "2026-06-01T00:00:00.000Z"
+  },
+  "emerald-qasr": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 4,
+    "createdAt": "2026-09-10T00:00:00.000Z"
+  },
+  "gul-e-noor": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 5,
+    "createdAt": "2026-09-01T00:00:00.000Z"
+  },
+  "azure-nikah": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 6,
+    "createdAt": "2026-08-20T00:00:00.000Z"
+  },
+  "kitab-e-nikah": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 7,
+    "createdAt": "2026-08-10T00:00:00.000Z"
+  },
+  "crimson-royale": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": true,
+    "sortOrder": 8,
+    "createdAt": "2026-06-15T00:00:00.000Z"
+  },
+  "royal-lotus": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 9,
+    "createdAt": "2026-05-15T00:00:00.000Z"
+  },
+  "emerald-noir": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": true,
+    "sortOrder": 10,
+    "createdAt": "2026-05-01T00:00:00.000Z"
+  },
+  "royal-elegance": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": true,
+    "sortOrder": 11,
+    "createdAt": "2026-04-15T00:00:00.000Z"
+  },
+  "modern-minimal": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 17,
+    "createdAt": "2026-04-01T00:00:00.000Z"
+  },
+  "rose-gold-blush": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 16,
+    "createdAt": "2026-08-01T00:00:00.000Z"
+  },
+  "royal-grace": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 15,
+    "createdAt": "2026-07-20T00:00:00.000Z"
+  },
+  "royal-heritage": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 14,
+    "createdAt": "2026-09-20T00:00:00.000Z"
+  },
+  "royal-majesty": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": true,
+    "sortOrder": 13,
+    "createdAt": "2026-10-01T00:00:00.000Z"
+  },
+  "imperial-palace": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": false,
+    "sortOrder": 12,
+    "createdAt": "2026-07-01T00:00:00.000Z"
+  },
+  "sheesh-mahal": {
+    "priceInr": 1199,
+    "originalPriceInr": 2999,
+    "discountPercent": 60,
+    "discountName": "Wedding Season Offer",
+    "isActive": true,
+    "isPopular": true,
+    "sortOrder": 1,
+    "createdAt": "2026-11-01T00:00:00.000Z"
   }
 }

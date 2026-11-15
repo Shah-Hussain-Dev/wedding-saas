@@ -1,12 +1,12 @@
 {
-  "celestial-rose": {
-    "id": "celestial-rose",
-    "coverImageUrl": null,
+  "noor-e-nikah": {
+    "id": "noor-e-nikah",
+    "coverImageUrl": "/templates/noor-e-nikah/envelope-bg.jpg",
     "trailerVideoUrl": null,
     "defaultMusicTrack": null,
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-06T06:37:03.366Z"
+    "updatedAt": "2026-11-15T16:49:11.538Z"
   }
 }

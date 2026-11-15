@@ -21,6 +21,7 @@ import {
   Lightning,
   Flame,
   ArrowRight,
+  Star,
 } from "@phosphor-icons/react";
 
 export interface TemplateItem {
@@ -39,6 +40,8 @@ export interface TemplateItem {
   isOnSale?: boolean;
   isActive: boolean;
   isPopular?: boolean;
+  sortOrder?: number;
+  createdAt?: string;
   tag?: string;
   gradient?: string;
   coverImageUrl?: string;
@@ -54,6 +57,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
   const [items, setItems] = useState<TemplateItem[]>(templates);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [sortBy, setSortBy] = useState<"best" | "latest" | "rank" | "price_asc" | "price_desc" | "name_asc">("best");
   const [isSaving, setIsSaving] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -62,6 +66,9 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
   const [editSellingPrice, setEditSellingPrice] = useState<number>(1199);
   const [editOriginalPrice, setEditOriginalPrice] = useState<number>(2999);
   const [editDiscountName, setEditDiscountName] = useState<string>("Wedding Season Offer");
+  const [editSortOrder, setEditSortOrder] = useState<number>(1);
+  const [editIsPopular, setEditIsPopular] = useState<boolean>(false);
+  const [editCoverImageUrl, setEditCoverImageUrl] = useState<string>("");
 
   // Bulk Campaign Modal State
   const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
@@ -96,12 +103,44 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
     return matchesSearch && matchesCategory;
   });
 
+  const sortedTemplates = [...filteredTemplates].sort((a, b) => {
+    if (sortBy === "best") {
+      // Best / Featured first: Popular templates first, then by ascending rank
+      const aPop = a.isPopular ? 1 : 0;
+      const bPop = b.isPopular ? 1 : 0;
+      if (bPop !== aPop) return bPop - aPop;
+      return (a.sortOrder ?? 99) - (b.sortOrder ?? 99);
+    }
+    if (sortBy === "latest") {
+      // Latest created templates first
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return timeB - timeA;
+    }
+    if (sortBy === "rank") {
+      return (a.sortOrder ?? 99) - (b.sortOrder ?? 99);
+    }
+    if (sortBy === "price_asc") {
+      return a.priceInr - b.priceInr;
+    }
+    if (sortBy === "price_desc") {
+      return b.priceInr - a.priceInr;
+    }
+    if (sortBy === "name_asc") {
+      return a.name.localeCompare(b.name);
+    }
+    return 0;
+  });
+
   // Open individual edit modal
   const handleStartEdit = (template: TemplateItem) => {
     setEditingTemplate(template);
     setEditSellingPrice(template.priceInr);
     setEditOriginalPrice(template.originalPriceInr || Math.max(2999, Math.round(template.priceInr * 2.2)));
     setEditDiscountName(template.discountName || "Wedding Season Offer");
+    setEditSortOrder(template.sortOrder ?? 99);
+    setEditIsPopular(Boolean(template.isPopular));
+    setEditCoverImageUrl(template.coverImageUrl || "");
   };
 
   // Quick Preset Calculator for Single Edit
@@ -145,33 +184,48 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
           originalPriceInr: editOriginalPrice,
           discountPercent: calculatedDiscountPct,
           discountName: editDiscountName.trim() || `${calculatedDiscountPct}% OFF Deal`,
+          sortOrder: Number(editSortOrder),
+          isPopular: Boolean(editIsPopular),
+          coverImageUrl: editCoverImageUrl.trim() || undefined,
         }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        showToast(data.message || `Updated pricing for ${editingTemplate.name}`);
+        showToast(data.message || `Updated pricing and settings for ${editingTemplate.name}`);
         setEditingTemplate(null);
         
-        // Optimistic local update
+        const serverTemplate = data.template;
         setItems((prev) =>
           prev.map((t) =>
             t.id === templateId
               ? {
                   ...t,
-                  priceInr: editSellingPrice,
-                  originalPriceInr: editOriginalPrice,
-                  discountPercent: calculatedDiscountPct,
-                  discountName: editDiscountName.trim() || `${calculatedDiscountPct}% OFF Deal`,
-                  priceFormatted: `₹${editSellingPrice.toLocaleString("en-IN")}`,
-                  originalPriceFormatted: `₹${editOriginalPrice.toLocaleString("en-IN")}`,
-                  savingsAmountInr: Math.max(0, editOriginalPrice - editSellingPrice),
-                  savingsFormatted: `₹${Math.max(0, editOriginalPrice - editSellingPrice).toLocaleString("en-IN")}`,
-                  isOnSale: editOriginalPrice > editSellingPrice,
+                  priceInr: serverTemplate?.priceInr ?? editSellingPrice,
+                  originalPriceInr: serverTemplate?.originalPriceInr ?? editOriginalPrice,
+                  discountPercent: serverTemplate?.discountPercent ?? calculatedDiscountPct,
+                  discountName: serverTemplate?.discountName ?? (editDiscountName.trim() || `${calculatedDiscountPct}% OFF Deal`),
+                  priceFormatted: serverTemplate?.priceFormatted ?? `₹${editSellingPrice.toLocaleString("en-IN")}`,
+                  originalPriceFormatted: serverTemplate?.originalPriceFormatted ?? `₹${editOriginalPrice.toLocaleString("en-IN")}`,
+                  savingsAmountInr: serverTemplate?.savingsAmountInr ?? Math.max(0, editOriginalPrice - editSellingPrice),
+                  savingsFormatted: serverTemplate?.savingsFormatted ?? `₹${Math.max(0, editOriginalPrice - editSellingPrice).toLocaleString("en-IN")}`,
+                  isOnSale: (serverTemplate?.originalPriceInr ?? editOriginalPrice) > (serverTemplate?.priceInr ?? editSellingPrice),
+                  sortOrder: serverTemplate?.sortOrder !== undefined ? serverTemplate.sortOrder : Number(editSortOrder),
+                  isPopular: serverTemplate?.isPopular !== undefined ? serverTemplate.isPopular : Boolean(editIsPopular),
+                  coverImageUrl: editCoverImageUrl.trim() || t.coverImageUrl,
                 }
               : t
           )
         );
+
+        // Sync client local storage cache so all pages reflect the update
+        try {
+          const stored = localStorage.getItem("unfold_template_pricing");
+          const pricingMap = stored ? JSON.parse(stored) : {};
+          pricingMap[templateId] = serverTemplate?.priceInr ?? editSellingPrice;
+          localStorage.setItem("unfold_template_pricing", JSON.stringify(pricingMap));
+        } catch (_) {}
+
         onRefresh();
       } else {
         const errData = await res.json();
@@ -179,6 +233,46 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
       }
     } catch (err: any) {
       showToast(`Network error: ${err?.message || "Failed to update"}`);
+    } finally {
+      setIsSaving(null);
+    }
+  };
+
+  // Toggle Best / Featured template with a single click
+  const handleTogglePopular = async (template: TemplateItem) => {
+    const nextPopular = !template.isPopular;
+    setIsSaving(template.id);
+    // Optimistic UI update
+    setItems((prev) =>
+      prev.map((t) => (t.id === template.id ? { ...t, isPopular: nextPopular } : t))
+    );
+
+    try {
+      const res = await fetch("/api/admin/templates", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          templateId: template.id,
+          priceInr: template.priceInr,
+          isPopular: nextPopular,
+        }),
+      });
+
+      if (res.ok) {
+        showToast(`${template.name} is ${nextPopular ? "now marked as Best / Featured ⭐" : "removed from Featured"}`);
+        onRefresh();
+      } else {
+        // Revert on error
+        setItems((prev) =>
+          prev.map((t) => (t.id === template.id ? { ...t, isPopular: !nextPopular } : t))
+        );
+        showToast("Failed to update featured status");
+      }
+    } catch {
+      setItems((prev) =>
+        prev.map((t) => (t.id === template.id ? { ...t, isPopular: !nextPopular } : t))
+      );
+      showToast("Network error while updating featured status");
     } finally {
       setIsSaving(null);
     }
@@ -356,40 +450,61 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
         </div>
       </div>
 
-      {/* Filter and Search Controls */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#073D31]/10 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
-        {/* Search */}
-        <div className="relative w-full md:w-80">
-          <MagnifyingGlass size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
-          <input
-            type="text"
-            placeholder="Search template name, ID, or style..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs font-medium text-stone-800 outline-none focus:border-[#073D31] focus:bg-white transition-all font-sans"
-          />
+      {/* Filter, Search, and Sort Controls */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#073D31]/10 shadow-xs flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
+        <div className="flex flex-col sm:flex-row items-center gap-3 flex-1">
+          {/* Search */}
+          <div className="relative w-full sm:w-72">
+            <MagnifyingGlass size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Search template name, ID, or style..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-stone-50 border border-stone-200 text-xs font-medium text-stone-800 outline-none focus:border-[#073D31] focus:bg-white transition-all font-sans"
+            />
+          </div>
+
+          {/* Category Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto pb-1 sm:pb-0">
+            {[
+              { id: "all", label: "All Themes" },
+              { id: "muslim", label: "Muslim / Nikah" },
+              { id: "hindu", label: "Hindu / Vedic" },
+              { id: "universal", label: "Universal / Royal" },
+            ].map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setCategoryFilter(cat.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer transition-all ${
+                  categoryFilter === cat.id
+                    ? "bg-[#073D31] text-[#F7F4ED] shadow-xs font-bold"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Category Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar w-full md:w-auto pb-1 md:pb-0">
-          {[
-            { id: "all", label: "All Themes" },
-            { id: "muslim", label: "Muslim / Nikah" },
-            { id: "hindu", label: "Hindu / Vedic" },
-            { id: "universal", label: "Universal / Royal" },
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setCategoryFilter(cat.id)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer transition-all ${
-                categoryFilter === cat.id
-                  ? "bg-[#073D31] text-[#F7F4ED] shadow-xs font-bold"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Sort Order Selector */}
+        <div className="flex items-center gap-2 justify-end pt-2 lg:pt-0 border-t lg:border-t-0 border-stone-100">
+          <span className="text-[10.5px] uppercase font-bold tracking-wider text-stone-400 font-sans whitespace-nowrap">
+            Sort Order:
+          </span>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="px-3 py-1.5 rounded-xl bg-stone-50 border border-stone-200 text-xs font-semibold text-stone-800 outline-none focus:border-[#073D31] focus:bg-white cursor-pointer shadow-2xs transition-all font-sans"
+          >
+            <option value="best">⭐ Best Template First (Featured)</option>
+            <option value="latest">✨ Latest Created First</option>
+            <option value="rank">🔢 Custom Display Rank (1 → N)</option>
+            <option value="price_asc">💰 Price: Low to High</option>
+            <option value="price_desc">💎 Price: High to Low</option>
+            <option value="name_asc">🔤 Alphabetical (A → Z)</option>
+          </select>
         </div>
       </div>
 
@@ -399,7 +514,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-stone-50/80 border-b border-stone-200/80 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-stone-500 font-sans">
-                <th className="py-3.5 px-4 sm:px-6">Template &amp; Theme</th>
+                <th className="py-3.5 px-4 sm:px-6">Template, Theme &amp; Rank</th>
                 <th className="py-3.5 px-4">Category</th>
                 <th className="py-3.5 px-4 text-center">Status</th>
                 <th className="py-3.5 px-4">Selling Price</th>
@@ -409,7 +524,7 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-100 text-xs font-sans">
-              {filteredTemplates.map((template) => {
+              {sortedTemplates.map((template) => {
                 const isSavingThis = isSaving === template.id;
                 const origPrice = template.originalPriceInr || Math.max(2999, Math.round(template.priceInr * 2.2));
                 const discountPct =
@@ -425,30 +540,61 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                     key={template.id}
                     className="hover:bg-amber-50/30 transition-colors group"
                   >
-                    {/* Template Info */}
+                    {/* Template Info, Cover Thumbnail, Star & Rank */}
                     <td className="py-3.5 px-4 sm:px-6">
                       <div className="flex items-center gap-3">
+                        {/* Quick Favorite / Best Star Button */}
+                        <button
+                          type="button"
+                          onClick={() => handleTogglePopular(template)}
+                          disabled={isSavingThis}
+                          title={template.isPopular ? "Marked as Best / Featured (Click to toggle)" : "Click to mark as Best / Featured"}
+                          className={`p-1 -ml-1 rounded-md transition-colors cursor-pointer ${
+                            template.isPopular ? "text-amber-500 hover:text-amber-600 scale-110" : "text-stone-300 hover:text-amber-400"
+                          }`}
+                        >
+                          <Star size={16} weight={template.isPopular ? "fill" : "regular"} />
+                        </button>
+
+                        {/* Rank Badge */}
+                        <span
+                          title={`Sort Rank #${template.sortOrder ?? 99}`}
+                          className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-stone-100 text-stone-600 border border-stone-200"
+                        >
+                          #{template.sortOrder ?? 99}
+                        </span>
+
+                        {/* Cover Image Thumbnail with Fail-Safe Initials Fallback */}
                         <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-lg border border-[#C8A45E]/30 bg-[#18211E] shadow-xs">
                           {template.coverImageUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={template.coverImageUrl}
-                              alt=""
+                              alt={template.name}
                               className="h-full w-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = "none";
+                              }}
                             />
-                          ) : (
-                            <span className="flex h-full w-full items-center justify-center font-serif text-[10px] font-bold text-[#E1C98E]">
-                              {template.name.slice(0, 2).toUpperCase()}
-                            </span>
-                          )}
+                          ) : null}
+                          <span className="absolute inset-0 -z-10 flex h-full w-full items-center justify-center font-serif text-[10px] font-bold text-[#E1C98E]">
+                            {template.name.slice(0, 2).toUpperCase()}
+                          </span>
                         </div>
+
                         <div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-1.5">
                             <span className="font-serif font-bold text-stone-900 text-sm">
                               {template.name}
                             </span>
+                            {template.isPopular && (
+                              <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 font-bold text-[9px] uppercase tracking-wider flex items-center gap-0.5">
+                                <Star size={9} weight="fill" className="text-amber-600" />
+                                <span>Best</span>
+                              </span>
+                            )}
                             {template.tag && (
-                              <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold text-[9px] uppercase tracking-wider">
+                              <span className="px-2 py-0.5 rounded-md bg-stone-100 text-stone-800 font-bold text-[9px] uppercase tracking-wider">
                                 {template.tag}
                               </span>
                             )}
@@ -678,6 +824,80 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
                   placeholder="e.g. Wedding Season 60% OFF, Festive Special, Early Bird"
                   className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-xs font-medium"
                 />
+              </div>
+
+              {/* Sorting & Presentation Controls */}
+              <div className="pt-2 border-t border-stone-100 space-y-4">
+                <div className="grid grid-cols-2 gap-3 items-center">
+                  {/* Display Rank */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5">
+                      4. Display Rank (1 = Top)
+                    </label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={999}
+                      value={editSortOrder}
+                      onChange={(e) => setEditSortOrder(Number(e.target.value))}
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-xs font-medium font-mono"
+                    />
+                    <p className="text-[10px] text-stone-400 mt-1">Lower rank numbers show first.</p>
+                  </div>
+
+                  {/* Best / Featured Toggle */}
+                  <div className="flex flex-col justify-end">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5">
+                      5. Best Template ⭐
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setEditIsPopular(!editIsPopular)}
+                      className={`px-3.5 py-2.5 rounded-xl border font-bold text-xs flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                        editIsPopular
+                          ? "bg-amber-100 border-amber-300 text-amber-900"
+                          : "bg-stone-50 border-stone-300 text-stone-600 hover:bg-stone-100"
+                      }`}
+                    >
+                      <Star size={15} weight={editIsPopular ? "fill" : "regular"} className={editIsPopular ? "text-amber-600" : "text-stone-400"} />
+                      <span>{editIsPopular ? "Featured Best Seller" : "Standard Listing"}</span>
+                    </button>
+                    <p className="text-[10px] text-stone-400 mt-1">Highlighted first in Best View.</p>
+                  </div>
+                </div>
+
+                {/* Cover Photo URL */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1.5">
+                    6. Related Cover Photo URL
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="relative h-12 w-9 shrink-0 overflow-hidden rounded-lg border border-[#C8A45E]/30 bg-[#18211E] shadow-xs">
+                      {editCoverImageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={editCoverImageUrl}
+                          alt="Cover Preview"
+                          className="h-full w-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                      ) : null}
+                      <span className="absolute inset-0 -z-10 flex h-full w-full items-center justify-center font-serif text-[10px] font-bold text-[#E1C98E]">
+                        IMG
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={editCoverImageUrl}
+                      onChange={(e) => setEditCoverImageUrl(e.target.value)}
+                      placeholder="/templates/sheesh-mahal/assets/cover/doors.webp"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 focus:border-[#073D31] focus:ring-1 focus:ring-[#073D31] outline-none text-xs font-mono"
+                    />
+                  </div>
+                  <p className="text-[10px] text-stone-400 mt-1">Relative public asset path or external HTTPS image URL.</p>
+                </div>
               </div>
             </div>
 

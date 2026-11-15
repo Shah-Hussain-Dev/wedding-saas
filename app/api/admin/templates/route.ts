@@ -11,9 +11,9 @@ import { getTemplatePosterUrl } from "@/lib/template-trailer";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
-    const { isAdmin } = await verifyAdminSession();
+    const { isAdmin } = await verifyAdminSession(req);
     if (!isAdmin) {
       return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 401 });
     }
@@ -62,7 +62,7 @@ export async function GET() {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { isAdmin } = await verifyAdminSession();
+    const { isAdmin } = await verifyAdminSession(req);
     if (!isAdmin) {
       return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 401 });
     }
@@ -96,6 +96,8 @@ export async function PATCH(req: NextRequest) {
       discountName,
       isActive,
       isPopular,
+      sortOrder,
+      coverImageUrl,
     } = body;
 
     if (!templateId) {
@@ -109,13 +111,29 @@ export async function PATCH(req: NextRequest) {
       );
     }
 
-    const updated = await updateTemplatePrice(templateId, Number(priceInr), {
+    const finalPrice = priceInr !== undefined ? Number(priceInr) : 1199;
+
+    const updated = await updateTemplatePrice(templateId, finalPrice, {
       originalPriceInr: originalPriceInr !== undefined ? Number(originalPriceInr) : undefined,
       discountPercent: discountPercent !== undefined ? Number(discountPercent) : undefined,
       discountName: discountName !== undefined ? String(discountName) : undefined,
       isActive: isActive !== undefined ? Boolean(isActive) : undefined,
       isPopular: isPopular !== undefined ? Boolean(isPopular) : undefined,
+      sortOrder: sortOrder !== undefined ? Number(sortOrder) : undefined,
+      coverImageUrl: coverImageUrl !== undefined ? String(coverImageUrl) : undefined,
     });
+
+    // If coverImageUrl is provided, also sync with template settings
+    if (coverImageUrl !== undefined) {
+      try {
+        const { updateTemplateSettings } = await import("@/lib/template-settings");
+        await updateTemplateSettings(templateId, {
+          coverImageUrl: coverImageUrl ? String(coverImageUrl).trim() : null,
+        });
+      } catch (covErr) {
+        console.warn("Could not persist coverImageUrl in templateSettings:", covErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,

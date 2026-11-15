@@ -357,3 +357,10 @@ export const TEMPLATE_COMPONENTS = {
   "imperial-palace": () => import("@/templates/imperial-palace"),
   "sheesh-mahal": () => import("@/templates/sheesh-mahal"),
 } as const;
+
+export {
+  DEFAULT_TEMPLATE_SORT_ORDER,
+  DEFAULT_TEMPLATE_RELEASE_DATES,
+  getTemplateSortRank,
+  getTemplateReleaseDate,
+} from "./template-sort";
