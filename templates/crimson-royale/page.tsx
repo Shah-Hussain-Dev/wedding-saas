@@ -25,7 +25,6 @@ import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketi
 import "./style.css";
 
 // Theme-tailored Lottie Animations
-import crimsonRoyalSeal from "@/public/lottie-icons/crimson-royal-seal.json";
 import crimsonGoldDiya from "@/public/lottie-icons/crimson-gold-diya.json";
 import crimsonWeddingRings from "@/public/lottie-icons/crimson-wedding-rings.json";
 import crimsonRoyalFloral from "@/public/lottie-icons/crimson-royal-floral.json";
@@ -163,6 +162,31 @@ export default function CrimsonRoyale({
   const [showPaletteMenu, setShowPaletteMenu] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Lock body & document scroll when gates are closed to prevent content peeking underneath
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      if (!isOpen) {
+        document.documentElement.classList.add("is-shut");
+        document.body.classList.add("is-shut");
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+      } else {
+        document.documentElement.classList.remove("is-shut");
+        document.body.classList.remove("is-shut");
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+    }
+    return () => {
+      if (typeof document !== "undefined") {
+        document.documentElement.classList.remove("is-shut");
+        document.body.classList.remove("is-shut");
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+      }
+    };
+  }, [isOpen]);
 
   // Parallax Section Refs for Odd (Media) Sections
   const heroRef = useRef<HTMLDivElement>(null);
@@ -357,7 +381,7 @@ export default function CrimsonRoyale({
   const currentBgObj = BG_VARIANTS.find(v => v.id === selectedVariant) || BG_VARIANTS[0];
 
   return (
-    <div className="tmpl-crimson-royale" data-variant={selectedVariant}>
+    <div className={`tmpl-crimson-royale ${!isOpen ? "is-shut" : ""}`} data-variant={selectedVariant}>
       {/* Floating Ambient Stardust Particles */}
       <div className="ambient-particles" aria-hidden="true">
         {[...Array(16)].map((_, i) => (
@@ -436,14 +460,17 @@ export default function CrimsonRoyale({
             </div>
 
             <div className="gate__center">
-              {/* Auspicious Royal Header */}
+              {/* Auspicious Royal Gate Crest Header (Invitation details reveal only upon opening) */}
               <div className="gate__header">
                 <span className="gate__emblem">✦ ⚜ ✦</span>
-                <p className="gate__eyebrow">THE WEDDING CELEBRATION OF</p>
-                <h1 className="gate__names">
-                  {brideName} <span className="gate__amp">&</span> {groomName}
-                </h1>
-                <p className="gate__invitation-text">Cordially invite you to celebrate our union</p>
+                <p className="gate__eyebrow">ROYAL WEDDING INVITATION</p>
+                <h1 className="gate__title">SHUBH VIVAH</h1>
+                <p className="gate__subtitle">Grand Velvet Palace Gates</p>
+                <div className="gate__divider">
+                  <span className="gate__divider-line" />
+                  <span className="gate__divider-gem">✦</span>
+                  <span className="gate__divider-line" />
+                </div>
               </div>
 
               {/* Royal Wax Seal Tap Interaction */}
@@ -454,8 +481,35 @@ export default function CrimsonRoyale({
                   aria-label="Open the wedding invitation"
                   type="button"
                 >
-                  <div className="gate__seal-lottie-container">
-                    <Lottie src={crimsonRoyalSeal} loop autoplay />
+                  <div className="gate__seal-art" aria-hidden="true">
+                    <svg viewBox="0 0 100 100" className="gate__seal-svg">
+                      <defs>
+                        <radialGradient id="cr-gold-grad" cx="40%" cy="35%" r="60%">
+                          <stop offset="0%" stopColor="#FFF2C4" />
+                          <stop offset="35%" stopColor="#D4AF37" />
+                          <stop offset="70%" stopColor="#9D7838" />
+                          <stop offset="100%" stopColor="#543A15" />
+                        </radialGradient>
+                        <radialGradient id="cr-wax-grad" cx="35%" cy="30%" r="65%">
+                          <stop offset="0%" stopColor="#8A1C2E" />
+                          <stop offset="50%" stopColor="#5E101D" />
+                          <stop offset="100%" stopColor="#2D060C" />
+                        </radialGradient>
+                        <filter id="cr-seal-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#000000" floodOpacity="0.75" />
+                        </filter>
+                      </defs>
+                      <circle cx="50" cy="50" r="46" fill="url(#cr-wax-grad)" filter="url(#cr-seal-shadow)" stroke="url(#cr-gold-grad)" strokeWidth="1.5" />
+                      <circle cx="50" cy="50" r="41" fill="none" stroke="url(#cr-gold-grad)" strokeWidth="1" strokeDasharray="2,3" opacity="0.85" />
+                      <circle cx="50" cy="50" r="35" fill="url(#cr-wax-grad)" stroke="url(#cr-gold-grad)" strokeWidth="1" />
+                      <g transform="translate(50, 48) scale(0.65)" fill="url(#cr-gold-grad)">
+                        <path d="M0 -22 C-4 -12 -12 -8 -12 0 C-12 7 -5 13 0 16 C5 13 12 7 12 0 C12 -8 4 -12 0 -22 Z" />
+                        <path d="M-13 4 C-20 4 -23 10 -20 15 C-17 19 -10 18 -6 13 C-4 10 -6 6 -13 4 Z" />
+                        <path d="M13 4 C20 4 23 10 20 15 C17 19 10 18 6 13 C4 10 6 6 13 4 Z" />
+                        <rect x="-14" y="16" width="28" height="3" rx="1.5" />
+                        <path d="M-9 19 C-9 24 9 24 9 19 Z" />
+                      </g>
+                    </svg>
                   </div>
                   <div className="gate__seal-pill">
                     <span className="gate__seal-sparkle">✦</span>
@@ -465,9 +519,8 @@ export default function CrimsonRoyale({
                 </button>
               </div>
 
-              {/* Date & Tap hint */}
+              {/* Tap hint */}
               <div className="gate__footer-hint">
-                <p className="gate__date-text">{formattedDate}</p>
                 <p className="gate__subhint">Touch royal seal to unfold the invitation & music</p>
               </div>
             </div>
@@ -576,7 +629,15 @@ export default function CrimsonRoyale({
       )}
 
       {/* Main Content Sections (ODD: Image Media + Parallax | EVEN: Color Gradient) */}
-      <main>
+      <main
+        style={{
+          display: isOpen || isOpening ? "block" : "none",
+          visibility: isOpen || isOpening ? "visible" : "hidden",
+          opacity: isOpen ? 1 : 0,
+          transition: "opacity 1.2s ease",
+          pointerEvents: isOpen ? "auto" : "none"
+        }}
+      >
         {/* SECTION 1 (ODD): Hero (Dedicated Hero Background Media with Parallax) */}
         <section ref={heroRef} className="hero">
           <div className="section__bg-wrap">
