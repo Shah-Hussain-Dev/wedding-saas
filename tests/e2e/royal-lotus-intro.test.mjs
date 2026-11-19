@@ -1,0 +1,138 @@
+import { test, describe } from 'node:test';
+import assert from 'node:assert';
+import fs from 'node:fs';
+import path from 'node:path';
+
+describe('Royal Lotus Hero Intro & Interactive Blooming Lotus Standards', () => {
+  const pagePath = path.resolve(process.cwd(), 'templates/royal-lotus/page.tsx');
+  const stylePath = path.resolve(process.cwd(), 'templates/royal-lotus/style.css');
+
+  test('Feature 1: Royal Lotus page renders big interactive lotus button with aura & pulse rings', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    assert.ok(pageContent.includes('intro__lotus-wrap'), 'page.tsx must use intro__lotus-wrap container');
+    assert.ok(pageContent.includes('intro__lotus-btn'), 'page.tsx must have intro__lotus-btn');
+    assert.ok(pageContent.includes('intro__lotus-glow'), 'page.tsx must have radial golden glow');
+    assert.ok(pageContent.includes('intro__lotus-pulse-ring'), 'page.tsx must have expanding pulse ring');
+    assert.ok(pageContent.includes('lotus-closed.webp'), 'page.tsx must have closed lotus bud image');
+    assert.ok(pageContent.includes('lotus-open.webp'), 'page.tsx must have open blooming lotus image');
+  });
+
+  test('Feature 2: High-contrast, elegant "Tap the lotus to join us" badge with dual click affordance', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    assert.ok(pageContent.includes('intro__lotus-badge'), 'page.tsx must render dedicated intro__lotus-badge');
+    assert.ok(pageContent.includes('Tap the lotus to join us'), 'page.tsx must have clear CTA text');
+    assert.ok(pageContent.includes('intro__badge-sparkle'), 'badge must feature decorative sparkles');
+    assert.ok(pageContent.includes('onClick={handleLotusClick}'), 'badge must trigger handleLotusClick');
+  });
+
+  test('Feature 3: CSS enforces large touch target, mobile responsiveness and thumb zone ergonomics', () => {
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+    
+    // Check lotus dimensions
+    assert.match(
+      styleContent,
+      /\.tmpl-lotus-courtyard\s+\.intro__lotus-btn\s*\{[^}]*width:\s*clamp\(108px/i,
+      'intro__lotus-btn must have responsive width starting at least 108px'
+    );
+    assert.match(
+      styleContent,
+      /\.tmpl-lotus-courtyard\s+\.intro__lotus-btn\s*\{[^}]*height:\s*clamp\(108px/i,
+      'intro__lotus-btn must have responsive height starting at least 108px'
+    );
+
+    // Check touch target standards (minimum 44px)
+    assert.match(
+      styleContent,
+      /\.tmpl-lotus-courtyard\s+\.intro__lotus-badge\s*\{[^}]*min-height:\s*44px/i,
+      'intro__lotus-badge must satisfy 44px minimum touch target standard'
+    );
+
+    // Check high-contrast typography and backdrop styling
+    assert.ok(
+      styleContent.includes('backdrop-filter: blur(12px)'),
+      'intro__lotus-badge must have frosted glass backdrop for contrast'
+    );
+    assert.ok(
+      styleContent.includes('rgba(245, 220, 140, 0.75)'),
+      'intro__lotus-badge must have radiant antique gold border'
+    );
+    assert.ok(
+      styleContent.includes('letter-spacing: 0.18em'),
+      'intro__badge-text must have elegant tracking'
+    );
+  });
+
+  test('Feature 4: Micro-interactions and cinematic animations', () => {
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+    assert.ok(styleContent.includes('@keyframes royalLotusHoverSway'), 'Must define royalLotusHoverSway animation');
+    assert.ok(styleContent.includes('@keyframes royalLotusGlowPulse'), 'Must define royalLotusGlowPulse animation');
+    assert.ok(styleContent.includes('@keyframes royalLotusPulseRing'), 'Must define royalLotusPulseRing animation');
+    assert.ok(styleContent.includes('@keyframes royalBadgeBreathing'), 'Must define royalBadgeBreathing animation');
+  });
+
+  test('Feature 5: Royal Lotus events section implements scroll-triggered Farman unrolling', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    assert.ok(pageContent.includes('RoyalLotusEventCard'), 'page.tsx must use RoyalLotusEventCard component');
+    assert.ok(pageContent.includes('events__rolled-wrap'), 'Event card must render events__rolled-wrap');
+    assert.ok(pageContent.includes('farman-rolled.webp'), 'Event card must include farman-rolled.webp');
+    assert.ok(pageContent.includes('events__open-wrap'), 'Event card must render events__open-wrap');
+    assert.ok(pageContent.includes('farman-open.webp'), 'Event card must include farman-open.webp');
+    assert.ok(pageContent.includes('IntersectionObserver'), 'Event card must observe scroll intersection');
+    assert.ok(pageContent.includes('intersectionRatio >='), 'Must ensure card is completely visible in view before trigger');
+    assert.ok(pageContent.includes('setTimeout'), 'Must apply graceful delay so user clearly sees the rolled scroll');
+    assert.ok(pageContent.includes('events__stop--rolled'), 'Event card must support rolled initial state');
+    assert.ok(pageContent.includes('events__stop--unrolling'), 'Event card must support unrolling transition state');
+  });
+
+  test('Feature 6: Event scroll unrolling CSS with smooth clip-path and content cascading', () => {
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+    assert.ok(styleContent.includes('.events__stop--rolled .events__open-wrap'), 'Must define rolled open-wrap clip-path');
+    assert.ok(styleContent.includes('clip-path: inset(0 0 100% round 4px)'), 'Rolled state must clip parchment to 100%');
+    assert.ok(styleContent.includes('.events__stop--unrolling .events__open-wrap'), 'Must define unrolling state');
+    assert.ok(styleContent.includes('clip-path: inset(0 0 0% round 4px)'), 'Unrolled state must expand clip-path to 0%');
+    assert.ok(styleContent.includes('@keyframes royalRolledFloat'), 'Must define royalRolledFloat animation');
+    assert.ok(styleContent.includes('@keyframes royalRolledAura'), 'Must define royalRolledAura animation');
+    assert.ok(styleContent.includes('eventsMotifIn'), 'Must cascade motif icon on unroll');
+    assert.ok(styleContent.includes('eventsTextIn'), 'Must cascade ceremony text on unroll');
+  });
+
+  test('Feature 7: Royal Lotus removes RSVP pedestal banner and modal dialog', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    assert.ok(!pageContent.includes('rl-rsvp-banner-card'), 'RSVP banner card must be removed');
+    assert.ok(!pageContent.includes('rl-modal-overlay'), 'RSVP modal overlay must be removed');
+    assert.ok(!pageContent.includes('handleRsvpSubmit'), 'RSVP submit handler must be removed');
+    assert.ok(!pageContent.includes('isRsvpOpen'), 'isRsvpOpen state must be removed');
+    assert.ok(!pageContent.includes('id="rsvp"'), 'RSVP section id anchor must be removed');
+  });
+
+  test('Feature 8: Royal Lotus enforces mobile-first stacked footer layout and marketing atelier', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+
+    // Page structure has closing__marketing-wrap
+    assert.ok(pageContent.includes('closing__marketing-wrap'), 'page.tsx must wrap TemplateMarketingFooter in closing__marketing-wrap');
+    assert.ok(pageContent.includes('closing__lotus'), 'page.tsx must have sacred closing lotus motif');
+    assert.ok(pageContent.includes('closing__cow'), 'page.tsx must have Kamadhenu cow motif');
+    assert.ok(pageContent.includes('closing__elephant'), 'page.tsx must have sacred elephant motif');
+
+    // CSS strictly enforces column stacking on .closing
+    assert.match(
+      styleContent,
+      /\.tmpl-lotus-courtyard\s+\.closing\s*\{[^}]*flex-direction:\s*column\s*!important/i,
+      '.closing section must enforce flex-direction: column to prevent side-by-side squishing on mobile'
+    );
+    assert.match(
+      styleContent,
+      /\.tmpl-lotus-courtyard\s+\.closing\s+\.section-inner\s*\{[^}]*flex-direction:\s*column\s*!important/i,
+      '.section-inner in closing must enforce column alignment'
+    );
+    assert.ok(
+      styleContent.includes('closing__marketing-wrap'),
+      'style.css must define .closing__marketing-wrap full-width styling'
+    );
+    assert.ok(
+      styleContent.includes('env(safe-area-inset-bottom'),
+      'style.css must account for safe area insets on mobile footer'
+    );
+  });
+});
