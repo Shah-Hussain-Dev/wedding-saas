@@ -115,16 +115,23 @@ export default function EditInvitationPage({ params }: EditInvitationPageProps) 
   const templateId = initialData?.templateId || "royal-lotus";
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FCFBF7] text-[#1A1A1A]">
-      <GlassNav />
+    <div
+      data-lenis-prevent
+      className="flex min-h-screen flex-col bg-[#FCFBF7] text-[#1A1A1A] lg:h-[100dvh] lg:max-h-[100dvh] lg:overflow-hidden lg:bg-[#E8E4DC]"
+    >
+      <div className="lg:hidden">
+        <GlassNav />
+      </div>
 
-      <main className="flex-grow pt-28 pb-20">
-        <InvitationCustomizerWizard
-          templateId={templateId}
-          invitationId={id}
-          initialData={initialData}
-          isEditMode={true}
-        />
+      <main className="flex min-h-0 flex-1 flex-col pt-28 pb-20 lg:h-full lg:overflow-hidden lg:pt-0 lg:pb-0">
+        <div className="flex min-h-0 flex-1 flex-col lg:h-full">
+          <InvitationCustomizerWizard
+            templateId={templateId}
+            invitationId={id}
+            initialData={initialData}
+            isEditMode={true}
+          />
+        </div>
       </main>
     </div>
   );

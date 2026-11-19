@@ -35,6 +35,7 @@ import {
   Lock,
   ArrowsClockwise,
   FilePdf,
+  FloppyDisk,
 } from "@phosphor-icons/react";
 import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
 import { CulturalTradition } from "@/lib/pdf-theme-tokens";
@@ -350,7 +351,8 @@ export function InvitationCustomizerWizard({
   const [isPaid, setIsPaid] = useState<boolean>(() =>
     Boolean(
       initialData?.order?.status === "paid" ||
-      initialData?.orderStatus === "paid"
+      initialData?.orderStatus === "paid" ||
+      initialData?.isPaid === true
     )
   );
 
@@ -907,8 +909,8 @@ export function InvitationCustomizerWizard({
       return;
     }
 
-    // If already paid for this template, update and show success
-    if (isPaid) {
+    // If already paid for this template or in edit mode, update and show success
+    if (isPaid || isEdit) {
       await handleSaveInvitationInternal();
       return;
     }
@@ -925,8 +927,8 @@ export function InvitationCustomizerWizard({
   const handleAuthSuccess = async () => {
     consumeCustomizerResumeSubmit();
 
-    // If already paid for this template, update and show success
-    if (isPaid) {
+    // If already paid for this template or in edit mode, update and show success
+    if (isPaid || isEdit) {
       await handleSaveInvitationInternal();
       return;
     }
@@ -1170,6 +1172,17 @@ export function InvitationCustomizerWizard({
           >
             Save for later
           </button>
+          {isEdit && (
+            <button
+              type="button"
+              onClick={requestSubmitFlow}
+              disabled={isSubmitting}
+              className="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full bg-[#073D31] px-4 font-sans text-xs font-bold text-white transition-colors hover:bg-[#032A23] disabled:opacity-60 cursor-pointer shadow-sm"
+            >
+              <FloppyDisk size={16} weight="bold" className="text-[#C8A45E]" />
+              <span>{isSubmitting ? "Saving..." : "Save & Update"}</span>
+            </button>
+          )}
         </div>
 
         {((savedInvitationId && !savedInvitationId.startsWith("demo-")) ||
@@ -1957,6 +1970,26 @@ export function InvitationCustomizerWizard({
                   </span>
                 </div>
               </div>
+
+                <div className="pt-2">
+                  <button
+                    type="button"
+                    onClick={requestSubmitFlow}
+                    disabled={isSubmitting || isPaying}
+                    className="flex min-h-[50px] w-full items-center justify-center gap-2.5 rounded-xl bg-[#073D31] px-6 font-sans text-xs sm:text-sm font-bold text-[#F7F4ED] shadow-md transition-all hover:bg-[#032A23] hover:shadow-lg active:scale-98 disabled:opacity-60 cursor-pointer"
+                  >
+                    <FloppyDisk size={18} weight="bold" className="shrink-0 text-[#C8A45E]" />
+                    <span>
+                      {isSubmitting
+                        ? "Saving Changes..."
+                        : isEdit
+                          ? "Save & Update Invitation"
+                          : isPaid
+                            ? "Save & Update Invitation"
+                            : `Unlock & Publish · ${pricingDetail.priceFormatted}`}
+                    </span>
+                  </button>
+                </div>
             </DoubleBezelCard>
           </motion.div>
         )}

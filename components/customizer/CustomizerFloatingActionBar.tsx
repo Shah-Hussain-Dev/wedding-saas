@@ -34,11 +34,11 @@ export function CustomizerFloatingActionBar({
     ? priceFormatted
       ? `Log in & Unlock · ${priceFormatted}`
       : "Log in & Unlock"
-    : !isPaid
-      ? priceFormatted
+    : isEdit || isPaid
+      ? "Save & Update"
+      : priceFormatted
         ? `Pay & Unlock · ${priceFormatted}`
-        : "Pay & Unlock"
-      : "Save & Update";
+        : "Pay & Unlock";
 
   return (
     <div className="pointer-events-none sticky bottom-0 z-20 mt-4 border-t border-[#073D31]/10 bg-[#FAFAF8]/95 px-4 pb-[max(1rem,env(safe-area-inset-bottom,1rem))] pt-4 backdrop-blur-md sm:px-5">
@@ -52,8 +52,7 @@ export function CustomizerFloatingActionBar({
           <ArrowRight size={14} weight="bold" />
         </button>
 
-        {isFormComplete ? (
-          <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={onPreview}
@@ -66,11 +65,11 @@ export function CustomizerFloatingActionBar({
               type="button"
               onClick={onPrimaryAction}
               disabled={isSubmitting}
-              className="flex min-h-[48px] min-w-0 w-full items-center justify-center gap-2 rounded-xl bg-[#073D31] px-3 font-sans text-[11px] font-bold text-[#F7F4ED] shadow-sm transition-colors hover:bg-[#032A23] disabled:opacity-60 sm:px-4 sm:text-xs"
+              className="flex min-h-[48px] min-w-0 w-full items-center justify-center gap-2 rounded-xl bg-[#073D31] px-3 font-sans text-[11px] font-bold text-[#F7F4ED] shadow-sm transition-colors hover:bg-[#032A23] disabled:opacity-60 sm:px-4 sm:text-xs cursor-pointer"
             >
               {!isLoggedIn ? (
                 <LockOpen size={16} weight="bold" className="shrink-0 text-[#C8A45E]" />
-              ) : !isPaid ? (
+              ) : !isPaid && !isEdit ? (
                 <LockOpen size={16} weight="bold" className="shrink-0 text-[#C8A45E]" />
               ) : (
                 <FloppyDisk size={16} weight="bold" className="shrink-0" />
@@ -78,7 +77,6 @@ export function CustomizerFloatingActionBar({
               <span className="truncate">{isSubmitting ? "Processing…" : primaryLabel}</span>
             </button>
           </div>
-        ) : null}
       </div>
     </div>
   );
