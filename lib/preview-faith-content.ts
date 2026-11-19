@@ -403,14 +403,14 @@ export function getFaithAdjustedTemplateData(
       : variant.groomFullName);
 
   const brideParents =
-    isDefaultFaithForTemplate
-      ? (baseData?.brideParents || baseData?.couple?.brideParents || variant.brideParents)
-      : variant.brideParents;
+    baseData?.brideParents ||
+    baseData?.couple?.brideParents ||
+    (isDefaultFaithForTemplate ? variant.brideParents : variant.brideParents);
 
   const groomParents =
-    isDefaultFaithForTemplate
-      ? (baseData?.groomParents || baseData?.couple?.groomParents || variant.groomParents)
-      : variant.groomParents;
+    baseData?.groomParents ||
+    baseData?.couple?.groomParents ||
+    (isDefaultFaithForTemplate ? variant.groomParents : variant.groomParents);
 
   const dynamicHashtag = `#${groomName}And${brideName}`.replace(/[\s&]+/g, "");
 
@@ -436,6 +436,8 @@ export function getFaithAdjustedTemplateData(
     title: `${variant.titlePrefix} · ${baseData?.title || baseData?.name || "Luxury Invitation"}`,
     brideName,
     groomName,
+    brideParents,
+    groomParents,
     hashtag: dynamicHashtag,
     islamicDate: variant.secondaryDate,
     secondaryDate: variant.secondaryDate,

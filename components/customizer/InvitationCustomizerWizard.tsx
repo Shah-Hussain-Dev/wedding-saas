@@ -189,6 +189,26 @@ export function InvitationCustomizerWizard({
 
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);
+  const [brideParents, setBrideParents] = useState<string>(() => {
+    return (
+      initialData?.brideParents ||
+      initialData?.couple?.brideParents ||
+      initialData?.translations?.brideParents ||
+      (demoDefaults as any)?.brideParents ||
+      (demoDefaults as any)?.couple?.brideParents ||
+      ""
+    );
+  });
+  const [groomParents, setGroomParents] = useState<string>(() => {
+    return (
+      initialData?.groomParents ||
+      initialData?.couple?.groomParents ||
+      initialData?.translations?.groomParents ||
+      (demoDefaults as any)?.groomParents ||
+      (demoDefaults as any)?.couple?.groomParents ||
+      ""
+    );
+  });
   const [weddingDate, setWeddingDate] = useState(
     initialData?.weddingDate
       ? initialData.weddingDate.split("T")[0]
@@ -363,6 +383,14 @@ export function InvitationCustomizerWizard({
     ) {
       setIsPaid(true);
     }
+    if (initialData) {
+      if (initialData.brideParents || initialData.couple?.brideParents || initialData.translations?.brideParents) {
+        setBrideParents(initialData.brideParents || initialData.couple?.brideParents || initialData.translations?.brideParents || "");
+      }
+      if (initialData.groomParents || initialData.couple?.groomParents || initialData.translations?.groomParents) {
+        setGroomParents(initialData.groomParents || initialData.couple?.groomParents || initialData.translations?.groomParents || "");
+      }
+    }
   }, [initialData]);
 
   const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -380,6 +408,14 @@ export function InvitationCustomizerWizard({
       templateId,
       brideName,
       groomName,
+      brideParents: brideParents.trim(),
+      groomParents: groomParents.trim(),
+      couple: {
+        brideName,
+        groomName,
+        brideParents: brideParents.trim(),
+        groomParents: groomParents.trim(),
+      },
       weddingDate,
       weddingTime,
       venueName,
@@ -401,6 +437,8 @@ export function InvitationCustomizerWizard({
     slug,
     brideName,
     groomName,
+    brideParents,
+    groomParents,
     invitationId,
     templateId,
     weddingDate,
@@ -763,6 +801,13 @@ export function InvitationCustomizerWizard({
       isPublished: isAlreadyPaid && Boolean(initialData?.isPublished),
       userEmail: targetEmail,
       email: targetEmail,
+      brideParents: brideParents.trim(),
+      groomParents: groomParents.trim(),
+      translations: {
+        ...(initialData?.translations || {}),
+        brideParents: brideParents.trim(),
+        groomParents: groomParents.trim(),
+      },
       createdAt: initialData?.createdAt || initialData?.created_at || new Date().toISOString(),
     };
 
@@ -1285,6 +1330,53 @@ export function InvitationCustomizerWizard({
                     placeholder="e.g. Shaan"
                     className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 bg-stone-50/50 text-stone-900"
                   />
+                </div>
+              </div>
+
+              {/* Parents' Details & Blessings */}
+              <div className="pt-2 border-t border-stone-200/80">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700">
+                    Parents &amp; Family Blessings (Mataji &amp; Pitaji)
+                  </h3>
+                </div>
+                <p className="text-[11px] text-stone-500 mb-3.5 leading-relaxed">
+                  Enter parents&apos; names to display in the blessings section (e.g. &ldquo;With the divine grace of Lord Ganesha and the affectionate prayers of our beloved parents&rdquo;).
+                </p>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
+                      Bride&apos;s Parents (Mataji &amp; Pitaji)
+                    </label>
+                    <input
+                      type="text"
+                      value={brideParents}
+                      onChange={(e) => setBrideParents(e.target.value)}
+                      placeholder="e.g. Swargiya Bindu Agrahari & Shri Vinay Agrahari"
+                      className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 bg-stone-50/50 text-stone-900"
+                    />
+                    <span className="text-[10px] text-stone-400 mt-1 block">
+                      Mention mother &amp; father names (e.g. Smt. / Shri / Swargiya)
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
+                      Groom&apos;s Parents (Mataji &amp; Pitaji)
+                    </label>
+                    <input
+                      type="text"
+                      value={groomParents}
+                      onChange={(e) => setGroomParents(e.target.value)}
+                      placeholder="e.g. Smt. Vimla Devi & Shri Mahendra Agrahari"
+                      className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 bg-stone-50/50 text-stone-900"
+                    />
+                    <span className="text-[10px] text-stone-400 mt-1 block">
+                      Mention mother &amp; father names (e.g. Smt. / Shri)
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -1885,6 +1977,20 @@ export function InvitationCustomizerWizard({
                 </div>
 
                 <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
+                  <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Parents &amp; Blessings</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-stone-500 block font-sans">Bride&apos;s Parents:</span>
+                      <span className="font-serif font-bold text-stone-900">{brideParents || "Default Elders"}</span>
+                    </div>
+                    <div>
+                      <span className="text-stone-500 block font-sans">Groom&apos;s Parents:</span>
+                      <span className="font-serif font-bold text-stone-900">{groomParents || "Default Elders"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="min-w-0 p-4 rounded-xl bg-stone-50 border border-stone-200/80">
                   <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider block mb-1">Tradition &amp; Blessings</span>
                   <span className="font-serif text-base font-bold text-stone-900 flex flex-wrap items-center gap-1.5">
                     <span>{RELIGION_PRESETS[religion].icon}</span>
@@ -2019,6 +2125,8 @@ export function InvitationCustomizerWizard({
         initialData={{
           brideName,
           groomName,
+          brideParents,
+          groomParents,
           weddingDate,
           weddingTime,
           venueName,

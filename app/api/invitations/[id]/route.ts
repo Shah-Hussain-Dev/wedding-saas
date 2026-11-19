@@ -37,6 +37,14 @@ export async function GET(
         sacredInvocation: trans.sacredInvocation || null,
         sacredVerse: trans.sacredVerse || null,
         sacredTranslation: trans.sacredTranslation || null,
+        brideParents: trans.brideParents || null,
+        groomParents: trans.groomParents || null,
+        couple: {
+          brideName: invitation.brideName,
+          groomName: invitation.groomName,
+          brideParents: trans.brideParents || null,
+          groomParents: trans.groomParents || null,
+        },
       };
 
       return NextResponse.json(enriched, { status: 200 });
@@ -67,6 +75,8 @@ export async function PUT(
     const {
       brideName,
       groomName,
+      brideParents,
+      groomParents,
       weddingDate,
       weddingTime,
       venueName,
@@ -98,6 +108,8 @@ export async function PUT(
       sacredInvocation: sacredInvocation || null,
       sacredVerse: sacredVerse || null,
       sacredTranslation: sacredTranslation || null,
+      brideParents: brideParents || null,
+      groomParents: groomParents || null,
     };
 
     try {

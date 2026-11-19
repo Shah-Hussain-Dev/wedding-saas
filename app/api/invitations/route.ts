@@ -204,6 +204,8 @@ export async function POST(req: NextRequest) {
     const {
       brideName,
       groomName,
+      brideParents,
+      groomParents,
       weddingDate,
       weddingTime,
       venueName,
@@ -236,6 +238,8 @@ export async function POST(req: NextRequest) {
       sacredInvocation: sacredInvocation || null,
       sacredVerse: sacredVerse || null,
       sacredTranslation: sacredTranslation || null,
+      brideParents: brideParents || null,
+      groomParents: groomParents || null,
     };
 
     try {

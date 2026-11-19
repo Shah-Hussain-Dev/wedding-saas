@@ -157,6 +157,8 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
 
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);
+  const [brideParents, setBrideParents] = useState<string>("");
+  const [groomParents, setGroomParents] = useState<string>("");
   const [liveDraft, setLiveDraft] = useState<Record<string, unknown> | null>(null);
   const [isOpenPanel, setIsOpenPanel] = useState(!isEmbed);
   const [submitValidationError, setSubmitValidationError] = useState<string | null>(null);
@@ -180,6 +182,12 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
         if (typeof parsed.musicTrack === "string" && parsed.musicTrack.trim()) {
           setMusicTrack(parsed.musicTrack);
         }
+        if (typeof parsed.brideParents === "string") {
+          setBrideParents(parsed.brideParents);
+        }
+        if (typeof parsed.groomParents === "string") {
+          setGroomParents(parsed.groomParents);
+        }
         if (
           parsed.religion === "universal" ||
           parsed.religion === "hindu" ||
@@ -200,7 +208,7 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
   const SelectedTemplate = TEMPLATES_MAP[normalizedId] || NoorNikah;
   const activeGroom = groomName || defaultGroom;
   const activeBride = brideName || defaultBride;
-  const draft = liveDraft || {};
+  const draft = (liveDraft || {}) as Record<string, any>;
   const draftBride =
     (typeof draft.brideName === "string" && draft.brideName.trim()) || activeBride;
   const draftGroom =
@@ -257,10 +265,32 @@ function InteractivePreviewInner({ templateId }: InteractivePreviewProps) {
         : "",
     musicTrack:
       (typeof draft.musicTrack === "string" && draft.musicTrack) || musicTrack,
+    brideParents:
+      (typeof draft.brideParents === "string" && draft.brideParents) ||
+      (typeof draft.couple?.brideParents === "string" && draft.couple.brideParents) ||
+      brideParents ||
+      (templateDefault as any)?.brideParents ||
+      (templateDefault as any)?.couple?.brideParents,
+    groomParents:
+      (typeof draft.groomParents === "string" && draft.groomParents) ||
+      (typeof draft.couple?.groomParents === "string" && draft.couple.groomParents) ||
+      groomParents ||
+      (templateDefault as any)?.groomParents ||
+      (templateDefault as any)?.couple?.groomParents,
     couple: {
       ...templateDefault?.couple,
       brideName: draftBride,
       groomName: draftGroom,
+      brideParents:
+        (typeof draft.brideParents === "string" && draft.brideParents) ||
+        (typeof draft.couple?.brideParents === "string" && draft.couple.brideParents) ||
+        brideParents ||
+        (templateDefault as any)?.couple?.brideParents,
+      groomParents:
+        (typeof draft.groomParents === "string" && draft.groomParents) ||
+        (typeof draft.couple?.groomParents === "string" && draft.couple.groomParents) ||
+        groomParents ||
+        (templateDefault as any)?.couple?.groomParents,
     },
   };
 

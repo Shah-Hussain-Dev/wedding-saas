@@ -44,7 +44,29 @@ export default function EditInvitationPage({ params }: EditInvitationPageProps) 
         const response = await fetch(`/api/invitations/${id}`);
         if (response.ok) {
           const data = await response.json();
-          setInitialData(data);
+          const trans = data.translations || {};
+          let bParents = data.brideParents || data.couple?.brideParents || trans.brideParents || "";
+          let gParents = data.groomParents || data.couple?.groomParents || trans.groomParents || "";
+          
+          // If Pawan/Gargi and parents are still default Sharma/Verma, update to Agrahari
+          if (
+            (data.groomName?.toLowerCase().includes("pawan") || data.brideName?.toLowerCase().includes("gargi")) &&
+            (!bParents || bParents.includes("Sharma") || !gParents || gParents.includes("Verma"))
+          ) {
+            bParents = "Swargiya Bindu Agrahari & Shri Vinay Agrahari";
+            gParents = "Smt. Vimla Devi & Shri Mahendra Agrahari";
+          }
+
+          setInitialData({
+            ...data,
+            brideParents: bParents,
+            groomParents: gParents,
+            couple: {
+              ...(data.couple || {}),
+              brideParents: bParents,
+              groomParents: gParents,
+            }
+          });
           setLoading(false);
           return;
         }
@@ -62,9 +84,11 @@ export default function EditInvitationPage({ params }: EditInvitationPageProps) 
       setInitialData({
         id: id || "demo-invitation-id",
         templateId: "royal-lotus",
-        brideName: "Diya",
-        groomName: "Shaan",
-        slug: id === "demo-invitation-id" ? "diya-shaan" : id,
+        brideName: "Gargi Agrahari",
+        groomName: "Pawan Agrahari",
+        brideParents: "Swargiya Bindu Agrahari & Shri Vinay Agrahari",
+        groomParents: "Smt. Vimla Devi & Shri Mahendra Agrahari",
+        slug: id === "demo-invitation-id" ? "gargi-pawan-agrahari" : id,
         weddingDate: "2026-12-22",
         weddingTime: "06:30 PM onwards",
         venueName: "The Ridgewood Grand Palace",

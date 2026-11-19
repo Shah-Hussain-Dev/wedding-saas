@@ -8,8 +8,8 @@
     "brideFullName": "Ananya Sharma",
     "groomFullName": "Shubham Verma",
     "tagline": "The Royal Wedding Of",
-    "brideParents": "Mrs. Sunita & Mr. Rajesh Sharma",
-    "groomParents": "Mrs. Meenakshi & Mr. Alok Verma"
+    "brideParents": "Swargiya Bindu Agrahari & Shri Vinay Agrahari",
+    "groomParents": "Smt. Vimla Devi & Shri Mahendra Agrahari"
   },
   "hashtag": "#ShubhamWedsAnanya",
   "sacred": {
@@ -75,11 +75,31 @@
     }
   ],
   "gallery": [
-    { "url": "/templates/crimson-royale/gallery-1.webp", "caption": "The Royal Palace Courtyard" },
-    { "url": "/templates/crimson-royale/gallery-2.webp", "caption": "Intricate Bridal Mehendi" },
-    { "url": "/templates/crimson-royale/gallery-3.webp", "caption": "A Promise of Togetherness" },
-    { "url": "/templates/crimson-royale/gallery-4.webp", "caption": "Sunset at the Lake Palace" },
-    { "url": "/templates/crimson-royale/gallery-5.webp", "caption": "Celebrations and Joy" },
-    { "url": "/templates/crimson-royale/gallery-6.webp", "caption": "Everlasting Love" }
-  ]
+    {
+      "url": "/templates/crimson-royale/gallery-1.webp",
+      "caption": "The Royal Palace Courtyard"
+    },
+    {
+      "url": "/templates/crimson-royale/gallery-2.webp",
+      "caption": "Intricate Bridal Mehendi"
+    },
+    {
+      "url": "/templates/crimson-royale/gallery-3.webp",
+      "caption": "A Promise of Togetherness"
+    },
+    {
+      "url": "/templates/crimson-royale/gallery-4.webp",
+      "caption": "Sunset at the Lake Palace"
+    },
+    {
+      "url": "/templates/crimson-royale/gallery-5.webp",
+      "caption": "Celebrations and Joy"
+    },
+    {
+      "url": "/templates/crimson-royale/gallery-6.webp",
+      "caption": "Everlasting Love"
+    }
+  ],
+  "brideParents": "Swargiya Bindu Agrahari & Shri Vinay Agrahari",
+  "groomParents": "Smt. Vimla Devi & Shri Mahendra Agrahari"
 }

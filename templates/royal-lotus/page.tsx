@@ -583,8 +583,8 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
   const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple?.brideName || "Ananya";
   const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple?.groomName || "Shubham";
-  const brideParents = data?.brideParents || data?.couple?.brideParents || defaultData.couple?.brideParents || "Mrs. Sunita & Mr. Rajesh Sharma";
-  const groomParents = data?.groomParents || data?.couple?.groomParents || defaultData.couple?.groomParents || "Mrs. Meenakshi & Mr. Alok Verma";
+  const brideParents = data?.brideParents || data?.couple?.brideParents || defaultData.couple?.brideParents || "Swargiya Bindu Agrahari & Shri Vinay Agrahari";
+  const groomParents = data?.groomParents || data?.couple?.groomParents || defaultData.couple?.groomParents || "Smt. Vimla Devi & Shri Mahendra Agrahari";
   const vedicShloka = data?.sacred?.shloka || defaultData.sacred?.shloka || "वक्रतुण्ड महाकाय सूर्यकोटि समप्रभ। निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥";
   const shlokaTranslation = data?.sacred?.shlokaTranslation || defaultData.sacred?.shlokaTranslation || "O Lord Ganesha, of colossal form and radiance of a million suns, remove all obstacles from our sacred journey forever.";
   const weddingDateRaw = data?.weddingDate ? new Date(data.weddingDate) : new Date("2026-12-22T17:00:00");
