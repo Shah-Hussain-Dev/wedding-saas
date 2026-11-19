@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion } from "motion/react";
+import { X, CaretLeft, CaretRight, MagnifyingGlassPlus } from "@phosphor-icons/react";
 import defaultData from "./data.json";
 import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
@@ -117,6 +118,7 @@ function RoyalLotusIntro({
   }, []);
 
   const resetRopeTransforms = useCallback(() => {
+    if (reveals.names) return;
     if (ropeBtnRef.current) {
       ropeBtnRef.current.style.transition = "";
       ropeBtnRef.current.style.transform = "";
@@ -130,7 +132,21 @@ function RoyalLotusIntro({
       haloRef.current.style.opacity = "";
       haloRef.current.style.transform = "";
     }
-  }, []);
+  }, [reveals.names]);
+
+  useEffect(() => {
+    if (reveals.names) {
+      if (ropeBtnRef.current) {
+        ropeBtnRef.current.style.transition = "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out";
+        ropeBtnRef.current.style.transform = "translateX(-50%) translateY(-140%)";
+        ropeBtnRef.current.style.opacity = "0";
+        ropeBtnRef.current.style.pointerEvents = "none";
+      }
+      if (haloRef.current) {
+        haloRef.current.style.opacity = "0";
+      }
+    }
+  }, [reveals.names]);
 
   const handlePointerUpOrCancel = useCallback(() => {
     isPointerDownRef.current = false;
@@ -189,7 +205,15 @@ function RoyalLotusIntro({
     window.setTimeout(() => setIsFlash(true), 140);
     window.setTimeout(() => setIsFlash(false), 1440);
 
-    window.setTimeout(() => setReveals((prev) => ({ ...prev, names: true })), 1000);
+    window.setTimeout(() => {
+      setReveals((prev) => ({ ...prev, names: true }));
+      if (ropeBtnRef.current) {
+        ropeBtnRef.current.style.transition = "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out";
+        ropeBtnRef.current.style.transform = "translateX(-50%) translateY(-140%)";
+        ropeBtnRef.current.style.opacity = "0";
+        ropeBtnRef.current.style.pointerEvents = "none";
+      }
+    }, 1000);
     window.setTimeout(() => setReveals((prev) => ({ ...prev, date: true })), 1800);
     window.setTimeout(() => setReveals((prev) => ({ ...prev, venue: true })), 2200);
     window.setTimeout(() => setReveals((prev) => ({ ...prev, lotus: true })), 2700);
@@ -248,9 +272,15 @@ function RoyalLotusIntro({
 
       <button
         ref={ropeBtnRef}
-        className={`intro__rope ${isDragging ? "intro__rope--dragging" : "intro__rope--idle"}`}
+        className={`intro__rope ${isDragging ? "intro__rope--dragging" : "intro__rope--idle"} ${reveals.names ? "intro__rope--hidden" : ""}`}
+        style={reveals.names ? {
+          opacity: 0,
+          pointerEvents: "none",
+          transform: "translateX(-50%) translateY(-140%)",
+          transition: "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out",
+        } : undefined}
         onPointerDown={(e) => {
-          if (isTriggeredRef.current) return;
+          if (isTriggeredRef.current || reveals.names) return;
           e.preventDefault();
           isPointerDownRef.current = true;
           setIsDragging(true);
@@ -259,7 +289,7 @@ function RoyalLotusIntro({
           ropeBtnRef.current?.setPointerCapture?.(e.pointerId);
         }}
         onPointerMove={(e) => {
-          if (!isPointerDownRef.current || isTriggeredRef.current) return;
+          if (!isPointerDownRef.current || isTriggeredRef.current || reveals.names) return;
           const rawDelta = Math.max(0, e.clientY - startYRef.current);
           const limit = thresholdRef.current;
           const springK1 = 0.38 * limit;
@@ -294,6 +324,8 @@ function RoyalLotusIntro({
         onPointerUp={handlePointerUpOrCancel}
         onPointerCancel={handlePointerUpOrCancel}
         aria-label="Pull the rope to light our celebration"
+        aria-hidden={reveals.names}
+        tabIndex={reveals.names ? -1 : 0}
         type="button"
       >
         <span ref={haloRef} className="intro__rope-halo" aria-hidden="true" />
@@ -545,7 +577,7 @@ function RoyalLotusEventCard({
 export default function RoyalLotus({ data }: RoyalLotusProps) {
   const [unlocked, setUnlocked] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
+  const [activePhotoIdx, setActivePhotoIdx] = useState<number | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -599,6 +631,22 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
       { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
     ];
+
+  // Full-screen Lightbox keyboard controls (Escape, ArrowLeft, ArrowRight)
+  useEffect(() => {
+    if (activePhotoIdx === null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActivePhotoIdx(null);
+      if (e.key === "ArrowLeft") {
+        setActivePhotoIdx((prev) => (prev !== null && prev > 0 ? prev - 1 : galleryItems.length - 1));
+      }
+      if (e.key === "ArrowRight") {
+        setActivePhotoIdx((prev) => (prev !== null && prev < galleryItems.length - 1 ? prev + 1 : 0));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activePhotoIdx, galleryItems.length]);
 
   // Deterministic floating petals to guarantee 100% hydration match between SSR and client
   const petals = [
@@ -923,7 +971,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 4: "GALLERY WALL" (MEMORIES)
+          SECTION 4: "GALLERY OF MEMORIES" (ROYAL BENTO MOSAIC WALL)
       ───────────────────────────────────────────────────────────────────────────── */}
       <section className="section gallery" id="gallery">
         <div
@@ -935,27 +983,83 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
         <div className="section-inner">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="gallery__header"
+            initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.7 }}
           >
-            <p className="eyebrow">Memories</p>
-            <h2 className="gallery__title">Gallery Wall</h2>
-            <div className="divider" />
+            <p className="eyebrow">✦ Cherished Moments ✦</p>
+            <h2 className="gallery__title script">Gallery of Memories</h2>
+            <p className="gallery__subtitle">A glimpse into our sacred journey of love and togetherness</p>
+            <div className="gallery__lotus-mark" aria-hidden="true">
+              <span className="gallery__rule-line" />
+              <img
+                src="/templates/lotus-courtyard/motif-lotus.webp"
+                alt=""
+                className="gallery__mark-lotus"
+              />
+              <span className="gallery__rule-line" />
+            </div>
           </motion.div>
 
-          <div className="gallery__mosaic" aria-label="Photo gallery">
-            {galleryItems.map((item, idx) => (
-              <figure
-                key={idx}
-                className="gallery__item cursor-pointer"
-                onClick={() => setLightboxImg(item.url)}
-              >
-                <img className="gallery__img" src={item.url} alt={item.caption || `Wedding moment ${idx + 1}`} />
-                {item.caption && <figcaption className="gallery__caption">{item.caption}</figcaption>}
-              </figure>
-            ))}
+          <div className="gallery__bento-wall" aria-label="Wedding Photo Gallery">
+            {galleryItems.map((item, idx) => {
+              const spanClass =
+                idx === 0
+                  ? "gallery__card--hero"
+                  : idx === 5
+                  ? "gallery__card--wide"
+                  : "gallery__card--standard";
+
+              return (
+                <motion.figure
+                  key={idx}
+                  className={`gallery__card ${spanClass} cursor-pointer`}
+                  onClick={() => setActivePhotoIdx(idx)}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: Math.min(idx * 0.08, 0.4) }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View photo ${idx + 1}: ${item.caption || "Wedding moment"}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActivePhotoIdx(idx);
+                    }
+                  }}
+                >
+                  <div className="gallery__frame">
+                    <img
+                      className="gallery__img"
+                      src={item.url}
+                      alt={item.caption || `Wedding moment ${idx + 1}`}
+                      loading="lazy"
+                    />
+
+                    {/* Ambient Gold Vignette & Corner Accents */}
+                    <div className="gallery__rim-glow" aria-hidden="true" />
+                    <span className="gallery__corner gallery__corner--tl" aria-hidden="true">✦</span>
+                    <span className="gallery__corner gallery__corner--br" aria-hidden="true">✦</span>
+
+                    {/* Quick Expand Icon Pill */}
+                    <div className="gallery__tap-pill" aria-hidden="true">
+                      <MagnifyingGlassPlus size={14} weight="bold" />
+                      <span className="gallery__tap-text">Enlarge</span>
+                    </div>
+
+                    {/* Elegant Plaque / Caption Overlay */}
+                    {item.caption && (
+                      <figcaption className="gallery__plaque">
+                        <span className="gallery__plaque-text">{item.caption}</span>
+                      </figcaption>
+                    )}
+                  </div>
+                </motion.figure>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1024,11 +1128,11 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
                 detail: data?.transportText || "Valet parking available at the main palace porch. Dedicated airport shuttles arranged.",
                 icon: "/templates/lotus-courtyard/icon-venue.webp",
               },
-              {
-                title: "Stay Options",
-                detail: "A curated block of rooms has been reserved at the palace — please contact our guest team.",
-                icon: "/templates/lotus-courtyard/icon-stay-options.webp",
-              },
+              // {
+              //   title: "Stay Options",
+              //   detail: "A curated block of rooms has been reserved at the palace — please contact our guest team.",
+              //   icon: "/templates/lotus-courtyard/icon-stay-options.webp",
+              // },
               {
                 title: "Wedding Hashtag",
                 detail: `Share your favourite moments with ${hashtag}.`,
@@ -1126,17 +1230,84 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
         </div>
       </section>
 
-      {/* LIGHTBOX MODAL */}
-      {lightboxImg && (
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          ROYAL LOTUS FULL-SCREEN LIGHTBOX MODAL
+      ───────────────────────────────────────────────────────────────────────────── */}
+      {activePhotoIdx !== null && galleryItems[activePhotoIdx] && (
         <div
-          onClick={() => setLightboxImg(null)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          className="rl-lightbox-overlay"
+          onClick={() => setActivePhotoIdx(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Enlarged photo viewer"
         >
-          <img
-            src={lightboxImg}
-            alt=""
-            className="max-w-full max-h-[90vh] rounded-2xl shadow-2xl object-contain border border-[#D4AF37]/40"
-          />
+          <div
+            className="rl-lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Toolbar */}
+            <div className="rl-lightbox-bar">
+              <span className="rl-lightbox-counter">
+                ✦ {activePhotoIdx + 1} of {galleryItems.length} ✦
+              </span>
+              <button
+                type="button"
+                className="rl-lightbox-btn--close cursor-pointer"
+                onClick={() => setActivePhotoIdx(null)}
+                aria-label="Close enlarged photo"
+              >
+                <X size={20} weight="bold" />
+              </button>
+            </div>
+
+            {/* Main Image Stage */}
+            <div className="rl-lightbox-stage">
+              <img
+                src={galleryItems[activePhotoIdx].url}
+                alt={galleryItems[activePhotoIdx].caption || "Enlarged wedding moment"}
+                className="rl-lightbox-img"
+              />
+
+              {/* Prev / Next Buttons */}
+              {galleryItems.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className="rl-lightbox-nav rl-lightbox-nav--prev cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePhotoIdx((prev) =>
+                        prev !== null && prev > 0 ? prev - 1 : galleryItems.length - 1
+                      );
+                    }}
+                    aria-label="Previous photo"
+                  >
+                    <CaretLeft size={22} weight="bold" />
+                  </button>
+                  <button
+                    type="button"
+                    className="rl-lightbox-nav rl-lightbox-nav--next cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePhotoIdx((prev) =>
+                        prev !== null && prev < galleryItems.length - 1 ? prev + 1 : 0
+                      );
+                    }}
+                    aria-label="Next photo"
+                  >
+                    <CaretRight size={22} weight="bold" />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Caption Plaque at Bottom */}
+            {galleryItems[activePhotoIdx].caption && (
+              <p className="rl-lightbox-caption">
+                {galleryItems[activePhotoIdx].caption}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </div>

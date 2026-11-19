@@ -135,4 +135,92 @@ describe('Royal Lotus Hero Intro & Interactive Blooming Lotus Standards', () => 
       'style.css must account for safe area insets on mobile footer'
     );
   });
+
+  test('Feature 9: Royal Lotus Gallery implements mobile-first bento mosaic wall with responsive spans', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+
+    // Page structure
+    assert.ok(pageContent.includes('gallery__bento-wall'), 'page.tsx must render gallery__bento-wall grid');
+    assert.ok(pageContent.includes('gallery__card--hero'), 'First item must have gallery__card--hero span');
+    assert.ok(pageContent.includes('gallery__card--wide'), 'Closing item must have gallery__card--wide span');
+    assert.ok(pageContent.includes('gallery__tap-pill'), 'Each card must render enlarge tap pill');
+    assert.ok(pageContent.includes('gallery__plaque'), 'Each card must have caption plaque');
+
+    // CSS Grid & Responsive Spans
+    assert.ok(styleContent.includes('.gallery__bento-wall'), 'CSS must define .gallery__bento-wall');
+    assert.ok(styleContent.includes('grid-template-columns: repeat(2, 1fr)'), 'CSS must use 2-column grid by default on mobile');
+    assert.ok(styleContent.includes('.gallery__card--hero'), 'CSS must style hero span');
+    assert.ok(styleContent.includes('.gallery__card--wide'), 'CSS must style wide span');
+    assert.ok(styleContent.includes('@media (min-width: 640px)'), 'CSS must have tablet breakpoint');
+    assert.ok(styleContent.includes('@media (min-width: 1024px)'), 'CSS must have desktop breakpoint');
+  });
+
+  test('Feature 10: Interactive accessible lightbox with keyboard navigation and 44px touch targets', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+
+    // Page JSX & handlers
+    assert.ok(pageContent.includes('activePhotoIdx'), 'page.tsx must manage activePhotoIdx state');
+    assert.ok(pageContent.includes('rl-lightbox-overlay'), 'page.tsx must render rl-lightbox-overlay');
+    assert.ok(pageContent.includes('rl-lightbox-counter'), 'Lightbox must render photo index counter');
+    assert.ok(pageContent.includes('rl-lightbox-btn--close'), 'Lightbox must render close button');
+    assert.ok(pageContent.includes('rl-lightbox-nav--prev'), 'Lightbox must render prev button');
+    assert.ok(pageContent.includes('rl-lightbox-nav--next'), 'Lightbox must render next button');
+    assert.ok(pageContent.includes('ArrowLeft'), 'page.tsx must handle keyboard arrow left');
+    assert.ok(pageContent.includes('ArrowRight'), 'page.tsx must handle keyboard arrow right');
+    assert.ok(pageContent.includes('Escape'), 'page.tsx must handle keyboard Escape key');
+
+    // Touch Targets in CSS (>= 44px)
+    assert.match(
+      styleContent,
+      /\.rl-lightbox-btn--close\s*\{[^}]*min-width:\s*44px/i,
+      'Close button must satisfy minimum 44px touch target'
+    );
+    assert.match(
+      styleContent,
+      /\.rl-lightbox-nav\s*\{[^}]*min-width:\s*44px/i,
+      'Prev/Next navigation buttons must satisfy minimum 44px touch target'
+    );
+  });
+  test('Feature 11: Floating bell rope/thread smoothly retracts and hides when bride & groom names reveal', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+
+    // Page checks
+    assert.ok(
+      pageContent.includes('reveals.names ? "intro__rope--hidden" : ""'),
+      'Rope button must apply intro__rope--hidden class when reveals.names is true'
+    );
+    assert.ok(
+      pageContent.includes('aria-hidden={reveals.names}'),
+      'Rope button must set aria-hidden when names are revealed'
+    );
+    assert.ok(
+      pageContent.includes('tabIndex={reveals.names ? -1 : 0}'),
+      'Rope button must remove tabIndex when hidden'
+    );
+    assert.ok(
+      pageContent.includes('translateY(-140%)'),
+      'Rope must smoothly ascend out of view when names reveal'
+    );
+
+    // CSS checks
+    assert.ok(
+      styleContent.includes('.intro__rope--hidden'),
+      'style.css must define .intro__rope--hidden rule'
+    );
+    assert.ok(
+      styleContent.includes('opacity: 0 !important'),
+      '.intro__rope--hidden must fade out with opacity 0'
+    );
+    assert.ok(
+      styleContent.includes('pointer-events: none !important'),
+      '.intro__rope--hidden must disable pointer events'
+    );
+    assert.ok(
+      styleContent.includes('transform: translateX(-50%) translateY(-140%) !important'),
+      '.intro__rope--hidden must transform upward past canopy'
+    );
+  });
 });

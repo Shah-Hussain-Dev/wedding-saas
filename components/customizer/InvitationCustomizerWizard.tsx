@@ -120,6 +120,19 @@ export const RELIGION_PRESETS: Record<CulturalTradition, ReligionPreset> = {
   },
 };
 
+function normalizeGalleryUrls(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .map((item) => {
+      if (typeof item === "string") return item;
+      if (item && typeof item === "object") {
+        return (item as any).url || (item as any).src || (item as any).image || "";
+      }
+      return "";
+    })
+    .filter((url): url is string => typeof url === "string" && url.trim().length > 0);
+}
+
 export interface InvitationCustomizerWizardProps {
   templateId: string;
   invitationId?: string | null;
@@ -203,12 +216,13 @@ export function InvitationCustomizerWizard({
   const [heroBgChoice, setHeroBgChoice] = useState<"default" | "custom">(
     initialData?.heroImageUrl ? "custom" : "default"
   );
-  const [slideshowImages, setSlideshowImages] = useState<string[]>(
-    Array.isArray(initialData?.slideshowImages)
-      ? initialData.slideshowImages
-      : Array.isArray(initialData?.gallery)
-      ? initialData.gallery
-      : []
+  const [slideshowImages, setSlideshowImages] = useState<string[]>(() =>
+    normalizeGalleryUrls(
+      initialData?.slideshowImages ??
+      initialData?.gallery ??
+      demoDefaults?.slideshowImages ??
+      demoDefaults?.gallery
+    )
   );
   const searchParams = useSearchParams();
   const paramMusicTrack = searchParams?.get("musicTrack");
@@ -465,9 +479,9 @@ export function InvitationCustomizerWizard({
         setHeroBgChoice("custom");
       }
       if (Array.isArray(initialData.slideshowImages)) {
-        setSlideshowImages(initialData.slideshowImages);
+        setSlideshowImages(normalizeGalleryUrls(initialData.slideshowImages));
       } else if (Array.isArray(initialData.gallery)) {
-        setSlideshowImages(initialData.gallery);
+        setSlideshowImages(normalizeGalleryUrls(initialData.gallery));
       }
       if (initialData.musicTrack) setMusicTrack(initialData.musicTrack);
       if (Array.isArray(initialData.eventsJson) && initialData.eventsJson.length > 0) {
@@ -514,7 +528,11 @@ export function InvitationCustomizerWizard({
       setHeroImageUrl(source.heroImageUrl);
       setHeroBgChoice("custom");
     }
-    if (Array.isArray(source.slideshowImages)) setSlideshowImages(source.slideshowImages as string[]);
+    if (Array.isArray(source.slideshowImages)) {
+      setSlideshowImages(normalizeGalleryUrls(source.slideshowImages));
+    } else if (Array.isArray(source.gallery)) {
+      setSlideshowImages(normalizeGalleryUrls(source.gallery));
+    }
     if (typeof source.musicTrack === "string") setMusicTrack(source.musicTrack);
     const isGenericHinduEvents = (evts: any[]) =>
       Array.isArray(evts) &&
