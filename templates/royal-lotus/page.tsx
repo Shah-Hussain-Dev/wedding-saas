@@ -529,7 +529,7 @@ function RoyalLotusEventCard({
             <h3 className="events__name script">{event.name}</h3>
             <div className="events__rule" aria-hidden="true" />
             <p className="events__when eyebrow">{event.date}</p>
-            <p className="events__time">{event.time}</p>
+            {event.time ? <p className="events__time">{event.time}</p> : null}
             <p className="events__location">
               {event.location || event.venue || venueName}
             </p>

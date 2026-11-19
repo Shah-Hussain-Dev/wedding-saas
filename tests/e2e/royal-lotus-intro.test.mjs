@@ -223,4 +223,45 @@ describe('Royal Lotus Hero Intro & Interactive Blooming Lotus Standards', () => 
       '.intro__rope--hidden must transform upward past canopy'
     );
   });
+
+  test('Feature 12: Desktop Farman Scroll Event Cards — 3-column grid layout, crystal-clear readability and zero collisions', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+
+    // Page checks
+    assert.ok(
+      pageContent.includes('event.time ? <p className="events__time">{event.time}</p> : null'),
+      'RoyalLotusEventCard must conditionally render time only when present'
+    );
+
+    // CSS checks for Desktop (min-width: 1024px)
+    assert.ok(
+      styleContent.includes('ROYAL LOTUS DESKTOP FARMAN SCROLL EVENT CARDS'),
+      'style.css must have dedicated desktop Farman scroll section'
+    );
+    assert.ok(
+      styleContent.includes('grid-template-columns: repeat(3, minmax(0, 1fr)) !important'),
+      'Desktop cards must restore authentic 3-column grid layout'
+    );
+    assert.ok(
+      styleContent.includes('color: #2b1218 !important'),
+      'Desktop venue and address must use high-contrast deep royal ink'
+    );
+    assert.ok(
+      styleContent.includes('opacity: 0.95 !important'),
+      'Desktop venue must have solid 0.95 opacity for crisp legibility against parchment'
+    );
+    assert.ok(
+      styleContent.includes('max-height: 46px !important'),
+      'Desktop icon must be refined to preserve vertical space for address & CTA'
+    );
+    assert.ok(
+      styleContent.includes('overflow: visible !important'),
+      'Desktop content must avoid clipping text or buttons'
+    );
+    assert.ok(
+      styleContent.includes('min-height: 32px !important'),
+      'Desktop map button must have compact height to prevent bottom border collision'
+    );
+  });
 });
