@@ -6,7 +6,7 @@
     "discountName": "Wedding Season Offer",
     "isActive": true,
     "isPopular": true,
-    "sortOrder": 3,
+    "sortOrder": 5,
     "createdAt": "2026-10-15T00:00:00.000Z"
   },
   "noor-e-nikah": {
@@ -15,8 +15,8 @@
     "discountPercent": 70,
     "discountName": "70% OFF Limited Deal",
     "isActive": true,
-    "isPopular": true,
-    "sortOrder": 2,
+    "isPopular": false,
+    "sortOrder": 10,
     "createdAt": "2026-06-01T00:00:00.000Z"
   },
   "emerald-qasr": {
@@ -26,7 +26,7 @@
     "discountName": "Wedding Season Offer",
     "isActive": true,
     "isPopular": false,
-    "sortOrder": 4,
+    "sortOrder": 12,
     "createdAt": "2026-09-10T00:00:00.000Z"
   },
   "gul-e-noor": {
@@ -36,7 +36,7 @@
     "discountName": "Wedding Season Offer",
     "isActive": true,
     "isPopular": false,
-    "sortOrder": 5,
+    "sortOrder": 14,
     "createdAt": "2026-09-01T00:00:00.000Z"
   },
   "azure-nikah": {
@@ -65,7 +65,7 @@
     "discountPercent": 60,
     "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": true,
+    "isPopular": false,
     "sortOrder": 8,
     "createdAt": "2026-06-15T00:00:00.000Z"
   },
@@ -85,7 +85,7 @@
     "discountPercent": 60,
     "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": true,
+    "isPopular": false,
     "sortOrder": 10,
     "createdAt": "2026-05-01T00:00:00.000Z"
   },
@@ -95,7 +95,7 @@
     "discountPercent": 60,
     "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": true,
+    "isPopular": false,
     "sortOrder": 11,
     "createdAt": "2026-04-15T00:00:00.000Z"
   },
@@ -125,8 +125,8 @@
     "discountPercent": 60,
     "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": false,
-    "sortOrder": 15,
+    "isPopular": true,
+    "sortOrder": 3,
     "createdAt": "2026-07-20T00:00:00.000Z"
   },
   "royal-heritage": {
@@ -135,8 +135,8 @@
     "discountPercent": 60,
     "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": false,
-    "sortOrder": 14,
+    "isPopular": true,
+    "sortOrder": 4,
     "createdAt": "2026-09-20T00:00:00.000Z"
   },
   "royal-majesty": {
@@ -146,7 +146,7 @@
     "discountName": "Wedding Season Offer",
     "isActive": true,
     "isPopular": true,
-    "sortOrder": 13,
+    "sortOrder": 5,
     "createdAt": "2026-10-01T00:00:00.000Z"
   },
   "imperial-palace": {
@@ -155,8 +155,8 @@
     "discountPercent": 60,
     "discountName": "Wedding Season Offer",
     "isActive": true,
-    "isPopular": false,
-    "sortOrder": 12,
+    "isPopular": true,
+    "sortOrder": 2,
     "createdAt": "2026-07-01T00:00:00.000Z"
   },
   "sheesh-mahal": {

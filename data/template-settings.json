@@ -7,7 +7,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-15T16:49:11.539Z"
+    "updatedAt": "2026-11-19T07:39:08.456Z"
   },
   "celestial-rose": {
     "id": "celestial-rose",
@@ -17,7 +17,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:15.294Z"
+    "updatedAt": "2026-11-19T07:41:25.158Z"
   },
   "emerald-qasr": {
     "id": "emerald-qasr",
@@ -27,7 +27,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:17.588Z"
+    "updatedAt": "2026-11-19T07:44:50.222Z"
   },
   "gul-e-noor": {
     "id": "gul-e-noor",
@@ -37,7 +37,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:17.872Z"
+    "updatedAt": "2026-11-19T07:45:02.808Z"
   },
   "azure-nikah": {
     "id": "azure-nikah",
@@ -47,7 +47,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:18.156Z"
+    "updatedAt": "2026-11-17T16:12:28.080Z"
   },
   "kitab-e-nikah": {
     "id": "kitab-e-nikah",
@@ -57,7 +57,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:18.441Z"
+    "updatedAt": "2026-11-17T16:12:28.340Z"
   },
   "crimson-royale": {
     "id": "crimson-royale",
@@ -67,7 +67,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:18.725Z"
+    "updatedAt": "2026-11-19T07:39:42.916Z"
   },
   "royal-lotus": {
     "id": "royal-lotus",
@@ -77,7 +77,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:19.009Z"
+    "updatedAt": "2026-11-17T16:12:28.860Z"
   },
   "emerald-noir": {
     "id": "emerald-noir",
@@ -87,7 +87,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:19.303Z"
+    "updatedAt": "2026-11-19T07:39:54.557Z"
   },
   "royal-elegance": {
     "id": "royal-elegance",
@@ -97,7 +97,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:19.587Z"
+    "updatedAt": "2026-11-19T07:41:48.016Z"
   },
   "modern-minimal": {
     "id": "modern-minimal",
@@ -107,7 +107,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:19.870Z"
+    "updatedAt": "2026-11-17T16:12:29.639Z"
   },
   "rose-gold-blush": {
     "id": "rose-gold-blush",
@@ -117,7 +117,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:20.154Z"
+    "updatedAt": "2026-11-17T16:12:29.899Z"
   },
   "royal-grace": {
     "id": "royal-grace",
@@ -127,7 +127,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:20.438Z"
+    "updatedAt": "2026-11-19T07:42:46.542Z"
   },
   "royal-heritage": {
     "id": "royal-heritage",
@@ -137,7 +137,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:20.723Z"
+    "updatedAt": "2026-11-19T07:44:13.598Z"
   },
   "royal-majesty": {
     "id": "royal-majesty",
@@ -147,7 +147,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:21.040Z"
+    "updatedAt": "2026-11-19T07:44:38.200Z"
   },
   "imperial-palace": {
     "id": "imperial-palace",
@@ -157,7 +157,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:21.325Z"
+    "updatedAt": "2026-11-19T07:42:01.146Z"
   },
   "sheesh-mahal": {
     "id": "sheesh-mahal",
@@ -167,6 +167,6 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-14T17:12:21.609Z"
+    "updatedAt": "2026-11-17T16:12:31.201Z"
   }
 }
