@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AnimatePresence } from "motion/react";
 import { ArrowRight, Sparkle } from "@phosphor-icons/react";
 import { TemplateCatalogCard } from "@/components/marketing/template-catalog-card";
+import { useTemplatePricing } from "@/lib/hooks/use-template-pricing";
+import { getTemplateSortRank } from "@/lib/template-sort";
 
 interface TemplateItem {
   id: string;
@@ -17,18 +19,17 @@ interface TemplateItem {
   video?: string;
 }
 
-/** Homepage showcase: 9 featured templates (full collection on /templates). */
+/** Full collection of templates for homepage showcase sorted by admin rank and Best Star */
 const CATALOGUE_TEMPLATES: TemplateItem[] = [
   {
-    id: "celestial-rose",
-    name: "Celestial Rose Dreamscape",
-    category: "celestial",
-    categoryLabel: "Universal",
+    id: "sheesh-mahal",
+    name: "Sheesh Mahal",
+    category: "muslim",
+    categoryLabel: "Mughal Imperial",
     description:
-      "Starlight terrace video, constellation story, scratch-the-stars reveal, and wish-upon-a-star RSVP flight.",
-    price: "₹1,199",
-    tag: "Awwwards Dreamscape",
-    video: "/videos/royal-prestige.mp4",
+      "Mughal imperial palace of mirrors experience featuring 3D double-leaf doors, gold medallion seal, Surah Ar-Rum blessings, and reflecting pool.",
+    price: "₹1,499",
+    tag: "Imperial Royale",
   },
   {
     id: "imperial-palace",
@@ -38,7 +39,73 @@ const CATALOGUE_TEMPLATES: TemplateItem[] = [
     description:
       "Monumental 3D palace doors, gold inlay ballroom, royal procession itinerary, and wax seal reveal.",
     price: "₹1,199",
-    tag: "Signature Royale",
+    tag: "Masterpiece",
+  },
+  {
+    id: "royal-lotus",
+    name: "Royal Lotus",
+    category: "hindu",
+    categoryLabel: "Rajasthani Haveli",
+    description:
+      "Rajasthani palace experience with ivory canvas, 24K antique gold filigree, floating lotus petals, and 3D royal palace gate reveal.",
+    price: "₹1,199",
+    tag: "Auspicious",
+    video: "/videos/royal-majesty.mp4",
+  },
+  {
+    id: "royal-majesty",
+    name: "Royal Majesty",
+    category: "royal",
+    categoryLabel: "Regency & Heritage",
+    description:
+      "Grand ballroom and lakeside terrace trailer with crystal chandeliers and live guestbook flights.",
+    price: "₹1,199",
+    tag: "Imperial Royale",
+    video: "/videos/royal-majesty.mp4",
+  },
+  {
+    id: "celestial-rose",
+    name: "Celestial Rose Dreamscape",
+    category: "celestial",
+    categoryLabel: "Universal",
+    description:
+      "Starlight terrace video, constellation story, scratch-the-stars reveal, and wish-upon-a-star RSVP flight.",
+    price: "₹1,499",
+    tag: "Awwwards Dreamscape",
+    video: "/videos/royal-prestige.mp4",
+  },
+  {
+    id: "royal-heritage",
+    name: "Royal Heritage",
+    category: "royal",
+    categoryLabel: "Universal",
+    description:
+      "Mediterranean archway and coral bougainvillea cinematic reveal with panoramic photo horizon.",
+    price: "₹1,199",
+    tag: "Universal Royale",
+    video: "/videos/royal-heritage.mp4",
+  },
+  {
+    id: "royal-grace",
+    name: "Royal Grace",
+    category: "royal",
+    categoryLabel: "Universal Royale",
+    description:
+      "Cinematic night palace gate opening with floating chandeliers, gold dust particles, and live RSVP.",
+    price: "₹1,199",
+    tag: "Cinematic Gate",
+    video: "/templates/royal-grace/opening.mp4",
+  },
+  {
+    id: "crimson-royale",
+    name: "Crimson Royale",
+    category: "hindu",
+    categoryLabel: "Hinduism",
+    description:
+      "Traditional velvet doors, Ganesh Vandana, marigold courtyard, and multi-event Hindu itinerary.",
+    price: "₹1,199",
+    tag: "Trending",
+    video: "/templates/crimson-royale/bg-love.mp4",
   },
   {
     id: "noor-e-nikah",
@@ -51,48 +118,25 @@ const CATALOGUE_TEMPLATES: TemplateItem[] = [
     tag: "Sacred Nikah",
   },
   {
-    id: "royal-majesty",
-    name: "Royal Majesty",
-    category: "royal",
-    categoryLabel: "Regency & Heritage",
+    id: "emerald-noir",
+    name: "Emerald Noir",
+    category: "hindu",
+    categoryLabel: "Luxury Dark & Gold",
     description:
-      "Grand ballroom and lakeside terrace trailer with crystal chandeliers and live guestbook flights.",
+      "Ornate 24K gold details on rich emerald canvas with 3D Royal Haveli Gate reveal and glowing Ganesha seal.",
     price: "₹1,199",
-    tag: "Luxury Heritage",
-    video: "/videos/royal-majesty.mp4",
+    tag: "Best Seller",
   },
   {
-    id: "rose-gold-blush",
-    name: "Rose Gold Blush",
-    category: "modern",
-    categoryLabel: "Modern Floral",
-    description:
-      "Champagne silk, falling petal shower, gold foil typography, and synchronized harp score.",
-    price: "₹1,199",
-    tag: "Romantic Modern",
-    video: "/videos/rose-gold-blush.mp4",
-  },
-  {
-    id: "crimson-royale",
-    name: "Crimson Royale",
+    id: "royal-elegance",
+    name: "Royal Elegance",
     category: "hindu",
     categoryLabel: "Hinduism",
     description:
-      "Traditional velvet doors, Ganesh Vandana, marigold courtyard, and multi-event Hindu itinerary.",
+      "Maharani crimson silk curtains, royal Kundan wax seal, Gauri Ganesh blessings, and gallery lightbox.",
     price: "₹1,199",
-    tag: "Hindu Heritage",
-    video: "/templates/crimson-royale/bg-love.mp4",
-  },
-  {
-    id: "royal-heritage",
-    name: "Royal Heritage",
-    category: "royal",
-    categoryLabel: "Universal",
-    description:
-      "Mediterranean archway and coral bougainvillea cinematic reveal with panoramic photo horizon.",
-    price: "₹1,199",
-    tag: "New",
-    video: "/videos/royal-heritage.mp4",
+    tag: "Best Seller",
+    video: "/videos/royal-elegance-royal.mp4",
   },
   {
     id: "emerald-qasr",
@@ -106,15 +150,58 @@ const CATALOGUE_TEMPLATES: TemplateItem[] = [
     video: "/templates/emerald-qasr/opening.mp4",
   },
   {
-    id: "royal-elegance",
-    name: "Royal Elegance",
-    category: "hindu",
-    categoryLabel: "Hinduism",
+    id: "gul-e-noor",
+    name: "Gul-e-Noor",
+    category: "muslim",
+    categoryLabel: "Romantic Rose",
     description:
-      "Maharani crimson silk curtains, royal Kundan wax seal, Gauri Ganesh blessings, and gallery lightbox.",
+      "Dreamy blush pink & rose velvet celebration with floating floral envelope animation and Quranic blessings.",
     price: "₹1,199",
-    tag: "Best Seller",
-    video: "/videos/royal-elegance-royal.mp4",
+    tag: "Romantic Video",
+    video: "/templates/gul-e-noor/opening.mp4",
+  },
+  {
+    id: "azure-nikah",
+    name: "Azure Nikah",
+    category: "muslim",
+    categoryLabel: "Islamic",
+    description:
+      "Persian sapphire tilework with celestial moonrise animations, Quranic Ayah in gold calligraphy.",
+    price: "₹1,199",
+    tag: "Royal Video",
+    video: "/templates/azure-nikah/opening.mp4",
+  },
+  {
+    id: "kitab-e-nikah",
+    name: "Kitab-e-Nikah",
+    category: "muslim",
+    categoryLabel: "Islamic",
+    description:
+      "Sacred velvet tome unfolding invitation featuring cinematic opening book video and gold arabesque motifs.",
+    price: "₹1,199",
+    tag: "Luxury Video",
+    video: "/templates/kitab-e-nikah/opening.mp4",
+  },
+  {
+    id: "rose-gold-blush",
+    name: "Rose Gold Blush",
+    category: "modern",
+    categoryLabel: "Modern Floral",
+    description:
+      "Champagne silk, falling petal shower, gold foil typography, and synchronized harp score.",
+    price: "₹1,199",
+    tag: "Romantic Modern",
+    video: "/videos/rose-gold-blush.mp4",
+  },
+  {
+    id: "modern-minimal",
+    name: "Modern Minimal",
+    category: "modern",
+    categoryLabel: "Minimalist",
+    description:
+      "Contemporary Vedic luxury with 3D architectural origami envelope, pure gold monogram seal, and Muhurat card.",
+    price: "₹1,199",
+    tag: "Modern Veda",
   },
 ];
 
@@ -130,6 +217,7 @@ const CATEGORY_TABS = [
 ];
 
 export function InteractiveTemplateGrid() {
+  const { getPricingDetails } = useTemplatePricing();
   const [activeTab, setActiveTab] = useState<string>("all");
   const [wishlisted, setWishlisted] = useState<Record<string, boolean>>({});
 
@@ -138,7 +226,22 @@ export function InteractiveTemplateGrid() {
       ? CATALOGUE_TEMPLATES
       : CATALOGUE_TEMPLATES.filter((t) => t.category === activeTab);
 
-  const visibleCards = filtered.slice(0, HOMEPAGE_CARD_COUNT);
+  const sortedCards = [...filtered].sort((a, b) => {
+    const detailsA = getPricingDetails(a.id, a.price);
+    const detailsB = getPricingDetails(b.id, b.price);
+
+    // 1. Featured / Best Starred templates first (matching Admin table)
+    const aPop = detailsA.isPopular ? 1 : 0;
+    const bPop = detailsB.isPopular ? 1 : 0;
+    if (bPop !== aPop) return bPop - aPop;
+
+    // 2. Then by dynamic assigned display rank (lower rank number first)
+    const rankA = detailsA.sortOrder !== undefined ? detailsA.sortOrder : getTemplateSortRank(a.id);
+    const rankB = detailsB.sortOrder !== undefined ? detailsB.sortOrder : getTemplateSortRank(b.id);
+    return rankA - rankB;
+  });
+
+  const visibleCards = sortedCards.slice(0, HOMEPAGE_CARD_COUNT);
 
   const toggleWishlist = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
@@ -215,7 +318,7 @@ export function InteractiveTemplateGrid() {
             <ArrowRight size={16} weight="bold" />
           </Link>
           <p className="text-[11px] text-[#76766F] font-sans text-center max-w-md">
-            Browse all 16 masterpieces — see the real demo on any template before you buy
+            Browse all 17 masterpieces — see the real demo on any template before you buy
           </p>
         </div>
       </div>

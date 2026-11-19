@@ -156,11 +156,19 @@ export function TemplateCatalogCard({
             <span className="text-[10px] font-bold uppercase tracking-wider text-[#C8A45E]">
               {categoryLabel}
             </span>
-            {tag && (
-              <span className="shrink-0 rounded-full bg-[#073D31]/8 px-2 py-0.5 text-[9px] font-semibold text-[#073D31]">
-                {tag}
-              </span>
-            )}
+            <div className="flex items-center gap-1.5">
+              {pricing.isPopular && (
+                <span className="shrink-0 rounded-full bg-amber-100 border border-amber-300/80 px-2 py-0.5 text-[9px] font-bold text-amber-900 flex items-center gap-1 shadow-xs">
+                  <span className="text-amber-600 font-bold">★</span>
+                  <span>BEST</span>
+                </span>
+              )}
+              {tag && tag !== "Best Seller" && (
+                <span className="shrink-0 rounded-full bg-[#073D31]/8 px-2 py-0.5 text-[9px] font-semibold text-[#073D31]">
+                  {tag}
+                </span>
+              )}
+            </div>
           </div>
 
           <h3 className="font-serif text-lg font-bold text-[#18211E] transition-colors line-clamp-1 group-hover:text-[#073D31]">

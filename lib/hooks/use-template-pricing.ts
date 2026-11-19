@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { getTemplateSortRank, getTemplateReleaseDate } from "@/lib/template-sort";
 
 export interface TemplatePricingDetail {
   id: string;
@@ -16,6 +17,8 @@ export interface TemplatePricingDetail {
   isOnSale: boolean;
   isActive?: boolean;
   isPopular?: boolean;
+  sortOrder?: number;
+  createdAt?: string;
 }
 
 export function useTemplatePricing() {
@@ -27,17 +30,25 @@ export function useTemplatePricing() {
   useEffect(() => {
     setIsMounted(true);
 
+    const syncFromStorage = () => {
+      try {
+        const storedMap = localStorage.getItem("unfold_template_pricing");
+        if (storedMap) {
+          setPricingMap(JSON.parse(storedMap));
+        }
+        const storedDetails = localStorage.getItem("unfold_template_pricing_details");
+        if (storedDetails) {
+          setDetailsMap(JSON.parse(storedDetails));
+        }
+      } catch (_) {}
+    };
+
     // 1. Read cached prices & discount details from localStorage on client mount
-    try {
-      const storedMap = localStorage.getItem("unfold_template_pricing");
-      if (storedMap) {
-        setPricingMap(JSON.parse(storedMap));
-      }
-      const storedDetails = localStorage.getItem("unfold_template_pricing_details");
-      if (storedDetails) {
-        setDetailsMap(JSON.parse(storedDetails));
-      }
-    } catch (_) {}
+    syncFromStorage();
+
+    // Listen to inter-tab and intra-tab synchronization events
+    window.addEventListener("unfold_pricing_updated", syncFromStorage);
+    window.addEventListener("storage", syncFromStorage);
 
     let isSubscribed = true;
 
@@ -74,6 +85,8 @@ export function useTemplatePricing() {
 
     return () => {
       isSubscribed = false;
+      window.removeEventListener("unfold_pricing_updated", syncFromStorage);
+      window.removeEventListener("storage", syncFromStorage);
     };
   }, []);
 
@@ -113,7 +126,20 @@ export function useTemplatePricing() {
       savingsAmountInr: Math.max(0, originalPriceInr - priceInr),
       savingsFormatted: `₹${Math.max(0, originalPriceInr - priceInr).toLocaleString("en-IN")}`,
       isOnSale: originalPriceInr > priceInr && priceInr > 0,
+      isPopular: false,
+      sortOrder: getTemplateSortRank(normalized),
+      createdAt: getTemplateReleaseDate(normalized),
     };
+  };
+
+  const getSortRank = (templateId: string): number => {
+    const details = getPricingDetails(templateId);
+    return details.sortOrder !== undefined ? details.sortOrder : getTemplateSortRank(templateId);
+  };
+
+  const isPopular = (templateId: string): boolean => {
+    const details = getPricingDetails(templateId);
+    return Boolean(details.isPopular);
   };
 
   const getPriceFormatted = (templateId: string, fallback = "₹1,199"): string => {
@@ -169,6 +195,8 @@ export function useTemplatePricing() {
     getDiscountName,
     getSavingsFormatted,
     getPricingDetails,
+    getSortRank,
+    isPopular,
     isOnSale,
   };
 }
