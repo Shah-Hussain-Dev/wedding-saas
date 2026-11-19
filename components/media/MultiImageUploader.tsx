@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import {
   UploadSimple,
   X,
@@ -15,7 +15,7 @@ import { GalleryImagePickerModal } from "./GalleryImagePickerModal";
 import { CulturalTradition } from "@/lib/pdf-theme-tokens";
 
 interface MultiImageUploaderProps {
-  images: string[];
+  images: (string | { url?: string; src?: string; [key: string]: any })[];
   onChange: (urls: string[]) => void;
   maxImages?: number;
   label?: string;
@@ -25,7 +25,7 @@ interface MultiImageUploaderProps {
 }
 
 export function MultiImageUploader({
-  images = [],
+  images: rawImages = [],
   onChange,
   maxImages = 6,
   label = "Gallery & Memories Photos",
@@ -33,6 +33,18 @@ export function MultiImageUploader({
   tradition = "all",
   enableLibrary = true,
 }: MultiImageUploaderProps) {
+  const images: string[] = useMemo(() => {
+    if (!Array.isArray(rawImages)) return [];
+    return rawImages
+      .map((item) => {
+        if (typeof item === "string") return item;
+        if (item && typeof item === "object") {
+          return (item as any).url || (item as any).src || (item as any).image || "";
+        }
+        return "";
+      })
+      .filter((url): url is string => typeof url === "string" && url.trim().length > 0);
+  }, [rawImages]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
@@ -152,7 +164,9 @@ export function MultiImageUploader({
       {/* Grid of uploaded thumbnails + Add button */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {images.map((url, idx) => {
-          const isLibraryImage = url.includes("/images/gallery-library/");
+          const isLibraryImage = Boolean(
+            typeof url === "string" && url.includes("/images/gallery-library/")
+          );
 
           return (
             <div

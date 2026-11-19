@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import confetti from "canvas-confetti";
-import { Heart, Sparkle, CheckCircle, X, WhatsappLogo } from "@phosphor-icons/react";
+import { motion } from "motion/react";
+import { X, CaretLeft, CaretRight, MagnifyingGlassPlus } from "@phosphor-icons/react";
 import defaultData from "./data.json";
 import { TemplateMarketingFooter } from "@/components/invitation/TemplateMarketingFooter";
 import "./style.css";
@@ -119,6 +118,7 @@ function RoyalLotusIntro({
   }, []);
 
   const resetRopeTransforms = useCallback(() => {
+    if (reveals.names) return;
     if (ropeBtnRef.current) {
       ropeBtnRef.current.style.transition = "";
       ropeBtnRef.current.style.transform = "";
@@ -132,7 +132,21 @@ function RoyalLotusIntro({
       haloRef.current.style.opacity = "";
       haloRef.current.style.transform = "";
     }
-  }, []);
+  }, [reveals.names]);
+
+  useEffect(() => {
+    if (reveals.names) {
+      if (ropeBtnRef.current) {
+        ropeBtnRef.current.style.transition = "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out";
+        ropeBtnRef.current.style.transform = "translateX(-50%) translateY(-140%)";
+        ropeBtnRef.current.style.opacity = "0";
+        ropeBtnRef.current.style.pointerEvents = "none";
+      }
+      if (haloRef.current) {
+        haloRef.current.style.opacity = "0";
+      }
+    }
+  }, [reveals.names]);
 
   const handlePointerUpOrCancel = useCallback(() => {
     isPointerDownRef.current = false;
@@ -191,7 +205,15 @@ function RoyalLotusIntro({
     window.setTimeout(() => setIsFlash(true), 140);
     window.setTimeout(() => setIsFlash(false), 1440);
 
-    window.setTimeout(() => setReveals((prev) => ({ ...prev, names: true })), 1000);
+    window.setTimeout(() => {
+      setReveals((prev) => ({ ...prev, names: true }));
+      if (ropeBtnRef.current) {
+        ropeBtnRef.current.style.transition = "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out";
+        ropeBtnRef.current.style.transform = "translateX(-50%) translateY(-140%)";
+        ropeBtnRef.current.style.opacity = "0";
+        ropeBtnRef.current.style.pointerEvents = "none";
+      }
+    }, 1000);
     window.setTimeout(() => setReveals((prev) => ({ ...prev, date: true })), 1800);
     window.setTimeout(() => setReveals((prev) => ({ ...prev, venue: true })), 2200);
     window.setTimeout(() => setReveals((prev) => ({ ...prev, lotus: true })), 2700);
@@ -250,9 +272,15 @@ function RoyalLotusIntro({
 
       <button
         ref={ropeBtnRef}
-        className={`intro__rope ${isDragging ? "intro__rope--dragging" : "intro__rope--idle"}`}
+        className={`intro__rope ${isDragging ? "intro__rope--dragging" : "intro__rope--idle"} ${reveals.names ? "intro__rope--hidden" : ""}`}
+        style={reveals.names ? {
+          opacity: 0,
+          pointerEvents: "none",
+          transform: "translateX(-50%) translateY(-140%)",
+          transition: "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out",
+        } : undefined}
         onPointerDown={(e) => {
-          if (isTriggeredRef.current) return;
+          if (isTriggeredRef.current || reveals.names) return;
           e.preventDefault();
           isPointerDownRef.current = true;
           setIsDragging(true);
@@ -261,7 +289,7 @@ function RoyalLotusIntro({
           ropeBtnRef.current?.setPointerCapture?.(e.pointerId);
         }}
         onPointerMove={(e) => {
-          if (!isPointerDownRef.current || isTriggeredRef.current) return;
+          if (!isPointerDownRef.current || isTriggeredRef.current || reveals.names) return;
           const rawDelta = Math.max(0, e.clientY - startYRef.current);
           const limit = thresholdRef.current;
           const springK1 = 0.38 * limit;
@@ -296,6 +324,8 @@ function RoyalLotusIntro({
         onPointerUp={handlePointerUpOrCancel}
         onPointerCancel={handlePointerUpOrCancel}
         aria-label="Pull the rope to light our celebration"
+        aria-hidden={reveals.names}
+        tabIndex={reveals.names ? -1 : 0}
         type="button"
       >
         <span ref={haloRef} className="intro__rope-halo" aria-hidden="true" />
@@ -324,28 +354,38 @@ function RoyalLotusIntro({
           </div>
 
           {reveals.lotus && (
-            <div className="intro__reveal-item is-visible mt-4">
+            <div className="intro__reveal-item is-visible intro__lotus-wrap">
               <button
                 className="intro__lotus-btn cursor-pointer"
                 onClick={handleLotusClick}
                 type="button"
-                aria-label="Enter invitation"
+                aria-label="Tap the sacred lotus to open invitation"
               >
                 <span className="intro__lotus-glow" aria-hidden="true" />
+                <span className="intro__lotus-pulse-ring" aria-hidden="true" />
                 <img
                   className="intro__lotus-img intro__lotus-img--closed"
                   style={{ opacity: isLotusOpen ? 0 : 1 }}
                   src="/templates/lotus-courtyard/lotus-closed.webp"
-                  alt=""
+                  alt="Royal Lotus Bud"
                 />
                 <img
                   className="intro__lotus-img intro__lotus-img--open"
                   style={{ opacity: isLotusOpen ? 1 : 0 }}
                   src="/templates/lotus-courtyard/lotus-open.webp"
-                  alt=""
+                  alt="Royal Lotus Blooming"
                 />
               </button>
-              <p className="intro__hint">Tap the lotus to join us</p>
+              <button
+                type="button"
+                className="intro__lotus-badge cursor-pointer"
+                onClick={handleLotusClick}
+                aria-label="Tap to enter celebration"
+              >
+                <span className="intro__badge-sparkle" aria-hidden="true">✦</span>
+                <span className="intro__badge-text">Tap the lotus to join us</span>
+                <span className="intro__badge-sparkle" aria-hidden="true">✦</span>
+              </button>
             </div>
           )}
         </div>
@@ -361,57 +401,183 @@ function RoyalLotusIntro({
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// ROYAL LOTUS SCROLL-UNROLLING EVENT CARD (FARMAN)
+// ─────────────────────────────────────────────────────────────────────────────
+interface RoyalLotusEventCardProps {
+  event: EventItem;
+  idx: number;
+  venueName: string;
+  venueAddress: string;
+  iconSrc: string;
+}
+
+function RoyalLotusEventCard({
+  event,
+  idx,
+  venueName,
+  venueAddress,
+  iconSrc,
+}: RoyalLotusEventCardProps) {
+  const [isUnrolled, setIsUnrolled] = useState(false);
+  const cardRef = useRef<HTMLLIElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    if (typeof IntersectionObserver === "undefined") {
+      setIsUnrolled(true);
+      return;
+    }
+
+    // Require the card to be completely visible in viewport before opening
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+          // Generous delay so the user sees the rolled royal scroll resting in full view
+          timerRef.current = setTimeout(() => {
+            setIsUnrolled(true);
+          }, 500);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: [0.2, 0.45, 0.6],
+        rootMargin: "0px 0px -60px 0px",
+      }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
+  const handleToggle = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    if (!isUnrolled) setIsUnrolled(true);
+  };
+
+  const isMain =
+    event.name.toLowerCase().includes("shaadi") ||
+    event.name.toLowerCase().includes("wedding");
+  const sideClass = isMain
+    ? "events__stop--main"
+    : idx % 2 === 0
+      ? "events__stop--left"
+      : "events__stop--right";
+
+  return (
+    <li
+      ref={cardRef}
+      className={`events__stop ${sideClass} ${
+        isUnrolled
+          ? "events__stop--unrolling events__stop--open"
+          : "events__stop--entering events__stop--rolled"
+      }`}
+      onClick={handleToggle}
+    >
+      <div className="events__card">
+        {/* 1. ROLLED FARMAN SCROLL (Default state before scroll brings it into view) */}
+        <div
+          className="events__rolled-wrap"
+          aria-hidden={isUnrolled}
+          style={{
+            pointerEvents: isUnrolled ? "none" : "auto",
+            cursor: isUnrolled ? "default" : "pointer",
+          }}
+        >
+          <div className="events__rolled-box">
+            <span className="events__rolled-glow" aria-hidden="true" />
+            <img
+              className="events__rolled-img"
+              src="/templates/lotus-courtyard/farman-rolled.webp"
+              alt={`Sacred Royal Farman Scroll for ${event.name}`}
+              loading="lazy"
+            />
+            <div className="events__rolled-banner">
+              <span className="events__rolled-sparkle" aria-hidden="true">✦</span>
+              <span className="events__rolled-event-name script">{event.name}</span>
+              <span className="events__rolled-hint">Tap or scroll to unfold</span>
+              <span className="events__rolled-sparkle" aria-hidden="true">✦</span>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. OPEN FARMAN PARCHMENT (Smoothly unrolls downwards when scrolled into view) */}
+        <div className="events__open-wrap">
+          <img
+            className="events__parchment-img"
+            src="/templates/lotus-courtyard/farman-open.webp"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+          />
+
+          <div
+            className="events__content"
+            aria-label={`${event.name} ceremony details`}
+          >
+            <img
+              className="events__icon"
+              src={iconSrc}
+              alt=""
+              aria-hidden="true"
+            />
+            <h3 className="events__name script">{event.name}</h3>
+            <div className="events__rule" aria-hidden="true" />
+            <p className="events__when eyebrow">{event.date}</p>
+            <p className="events__time">{event.time}</p>
+            <p className="events__location">
+              {event.location || event.venue || venueName}
+            </p>
+            {event.detail && (
+              <p className="events__detail">{event.detail}</p>
+            )}
+            <a
+              className="events__map-link"
+              href={
+                event.mapsUrl ||
+                `https://maps.google.com/?q=${encodeURIComponent(
+                  (event.location || venueName) + " " + venueAddress
+                )}`
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="M12 21s7-6.2 7-11.5a7 7 0 10-14 0C5 14.8 12 21 12 21z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+                <circle
+                  cx="12"
+                  cy="9.5"
+                  r="2.5"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                />
+              </svg>
+              <span>View on Map</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // MAIN TEMPLATE: COMPLETE ROYAL LOTUS INVITATION
 // ─────────────────────────────────────────────────────────────────────────────
 export default function RoyalLotus({ data }: RoyalLotusProps) {
   const [unlocked, setUnlocked] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [lightboxImg, setLightboxImg] = useState<string | null>(null);
-
-  // RSVP Form State & Handlers
-  const [isRsvpOpen, setIsRsvpOpen] = useState(false);
-  const [rsvpAttending, setRsvpAttending] = useState("yes");
-  const [rsvpGuests, setRsvpGuests] = useState("2");
-  const [rsvpName, setRsvpName] = useState("");
-  const [rsvpPhone, setRsvpPhone] = useState("");
-  const [rsvpWishes, setRsvpWishes] = useState("");
-  const [isRsvpSubmitted, setIsRsvpSubmitted] = useState(false);
-
-  const handleRsvpSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsRsvpSubmitted(true);
-    try {
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ["#FF9933", "#FFD700", "#138808", "#FFFFFF", "#D4AF37"],
-      });
-    } catch (_) { }
-
-
-
-    try {
-      await fetch("/api/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          invitationId: data?.id,
-          slug: (data as any)?.slug,
-          guestName: rsvpName,
-          message: rsvpWishes,
-          rsvpJson: {
-            phone: rsvpPhone,
-            attending: rsvpAttending === "yes",
-            guests: rsvpAttending === "yes" ? (parseInt(rsvpGuests, 10) || 1) : 0,
-            submittedAt: new Date().toISOString(),
-          },
-        }),
-      });
-    } catch (err) {
-      console.warn("Could not save RSVP to server:", err);
-    }
-  };
+  const [activePhotoIdx, setActivePhotoIdx] = useState<number | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -465,6 +631,22 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
       { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
     ];
+
+  // Full-screen Lightbox keyboard controls (Escape, ArrowLeft, ArrowRight)
+  useEffect(() => {
+    if (activePhotoIdx === null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setActivePhotoIdx(null);
+      if (e.key === "ArrowLeft") {
+        setActivePhotoIdx((prev) => (prev !== null && prev > 0 ? prev - 1 : galleryItems.length - 1));
+      }
+      if (e.key === "ArrowRight") {
+        setActivePhotoIdx((prev) => (prev !== null && prev < galleryItems.length - 1 ? prev + 1 : 0));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activePhotoIdx, galleryItems.length]);
 
   // Deterministic floating petals to guarantee 100% hydration match between SSR and client
   const petals = [
@@ -637,9 +819,6 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
             className="invite__ctas"
             variants={{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0 } }}
           >
-            <a className="invite__btn invite__btn--solid" href="#rsvp">
-              RSVP Now
-            </a>
             <a className="invite__btn invite__btn--outline" href="#events">
               View Events
             </a>
@@ -729,47 +908,14 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
           <ol className="events__list" aria-label="Wedding ceremonies itinerary">
             {events.map((event, idx) => (
-              <li key={event.id || idx} className="events__stop events__stop--open">
-                <div className="events__card">
-                  <div className="events__open-wrap">
-                    <img
-                      className="events__parchment-img"
-                      src="/templates/lotus-courtyard/farman-open.webp"
-                      alt=""
-                      aria-hidden="true"
-                    />
-
-                    <div className="events__content" aria-label={`${event.name} ceremony details`}>
-                      <img
-                        className="events__icon"
-                        src={getEventIcon(event.name)}
-                        alt=""
-                        aria-hidden="true"
-                      />
-                      <h3 className="events__name script">{event.name}</h3>
-                      <div className="events__rule" aria-hidden="true" />
-                      <p className="events__when eyebrow">{event.date}</p>
-                      <p className="events__time">{event.time}</p>
-                      <p className="events__location">{event.location || event.venue || venueName}</p>
-                      {event.detail && (
-                        <p className="events__detail">{event.detail}</p>
-                      )}
-                      <a
-                        className="events__map-link"
-                        href={event.mapsUrl || `https://maps.google.com/?q=${encodeURIComponent((event.location || venueName) + " " + venueAddress)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path d="M12 21s7-6.2 7-11.5a7 7 0 10-14 0C5 14.8 12 21 12 21z" stroke="currentColor" strokeWidth="1.6" />
-                          <circle cx="12" cy="9.5" r="2.5" stroke="currentColor" strokeWidth="1.6" />
-                        </svg>
-                        <span>View on Map</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </li>
+              <RoyalLotusEventCard
+                key={event.id || idx}
+                event={event}
+                idx={idx}
+                venueName={venueName}
+                venueAddress={venueAddress}
+                iconSrc={getEventIcon(event.name)}
+              />
             ))}
           </ol>
         </div>
@@ -825,7 +971,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 4: "GALLERY WALL" (MEMORIES)
+          SECTION 4: "GALLERY OF MEMORIES" (ROYAL BENTO MOSAIC WALL)
       ───────────────────────────────────────────────────────────────────────────── */}
       <section className="section gallery" id="gallery">
         <div
@@ -837,27 +983,83 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
         <div className="section-inner">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            className="gallery__header"
+            initial={{ opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.7 }}
           >
-            <p className="eyebrow">Memories</p>
-            <h2 className="gallery__title">Gallery Wall</h2>
-            <div className="divider" />
+            <p className="eyebrow">✦ Cherished Moments ✦</p>
+            <h2 className="gallery__title script">Gallery of Memories</h2>
+            <p className="gallery__subtitle">A glimpse into our sacred journey of love and togetherness</p>
+            <div className="gallery__lotus-mark" aria-hidden="true">
+              <span className="gallery__rule-line" />
+              <img
+                src="/templates/lotus-courtyard/motif-lotus.webp"
+                alt=""
+                className="gallery__mark-lotus"
+              />
+              <span className="gallery__rule-line" />
+            </div>
           </motion.div>
 
-          <div className="gallery__mosaic" aria-label="Photo gallery">
-            {galleryItems.map((item, idx) => (
-              <figure
-                key={idx}
-                className="gallery__item cursor-pointer"
-                onClick={() => setLightboxImg(item.url)}
-              >
-                <img className="gallery__img" src={item.url} alt={item.caption || `Wedding moment ${idx + 1}`} />
-                {item.caption && <figcaption className="gallery__caption">{item.caption}</figcaption>}
-              </figure>
-            ))}
+          <div className="gallery__bento-wall" aria-label="Wedding Photo Gallery">
+            {galleryItems.map((item, idx) => {
+              const spanClass =
+                idx === 0
+                  ? "gallery__card--hero"
+                  : idx === 5
+                  ? "gallery__card--wide"
+                  : "gallery__card--standard";
+
+              return (
+                <motion.figure
+                  key={idx}
+                  className={`gallery__card ${spanClass} cursor-pointer`}
+                  onClick={() => setActivePhotoIdx(idx)}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.6, delay: Math.min(idx * 0.08, 0.4) }}
+                  tabIndex={0}
+                  role="button"
+                  aria-label={`View photo ${idx + 1}: ${item.caption || "Wedding moment"}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setActivePhotoIdx(idx);
+                    }
+                  }}
+                >
+                  <div className="gallery__frame">
+                    <img
+                      className="gallery__img"
+                      src={item.url}
+                      alt={item.caption || `Wedding moment ${idx + 1}`}
+                      loading="lazy"
+                    />
+
+                    {/* Ambient Gold Vignette & Corner Accents */}
+                    <div className="gallery__rim-glow" aria-hidden="true" />
+                    <span className="gallery__corner gallery__corner--tl" aria-hidden="true">✦</span>
+                    <span className="gallery__corner gallery__corner--br" aria-hidden="true">✦</span>
+
+                    {/* Quick Expand Icon Pill */}
+                    <div className="gallery__tap-pill" aria-hidden="true">
+                      <MagnifyingGlassPlus size={14} weight="bold" />
+                      <span className="gallery__tap-text">Enlarge</span>
+                    </div>
+
+                    {/* Elegant Plaque / Caption Overlay */}
+                    {item.caption && (
+                      <figcaption className="gallery__plaque">
+                        <span className="gallery__plaque-text">{item.caption}</span>
+                      </figcaption>
+                    )}
+                  </div>
+                </motion.figure>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -926,11 +1128,11 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
                 detail: data?.transportText || "Valet parking available at the main palace porch. Dedicated airport shuttles arranged.",
                 icon: "/templates/lotus-courtyard/icon-venue.webp",
               },
-              {
-                title: "Stay Options",
-                detail: "A curated block of rooms has been reserved at the palace — please contact our guest team.",
-                icon: "/templates/lotus-courtyard/icon-stay-options.webp",
-              },
+              // {
+              //   title: "Stay Options",
+              //   detail: "A curated block of rooms has been reserved at the palace — please contact our guest team.",
+              //   icon: "/templates/lotus-courtyard/icon-stay-options.webp",
+              // },
               {
                 title: "Wedding Hashtag",
                 detail: `Share your favourite moments with ${hashtag}.`,
@@ -958,49 +1160,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       </section>
 
       {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 6: INTERACTIVE RSVP PEDESTAL BANNER
-      ───────────────────────────────────────────────────────────────────────────── */}
-      <section className="section rsvp" id="rsvp">
-        <div
-          className="rsvp__bg"
-          style={{ backgroundImage: "url(/templates/lotus-courtyard/bg-rsvp.webp)" }}
-          aria-hidden="true"
-        />
-        <div className="rsvp__bg-tint" aria-hidden="true" />
-
-        <motion.div
-          className="section-inner"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="rl-rsvp-banner-card">
-            <div className="rl-rsvp-banner-icon">
-              <Heart size={36} weight="fill" className="text-[#D4AF37] animate-pulse" />
-            </div>
-            <p className="eyebrow" style={{ color: "var(--color-primary-light)" }}>Join The Celebration</p>
-            <h2 className="rsvp__title script">Your Gracious Presence is Awaited</h2>
-            <div className="essentials__rule" style={{ margin: "0.8rem auto" }} aria-hidden="true" />
-            <p className="rsvp__body">
-              {data?.rsvpDeadline || "Kindly confirm your presence by 15th November 2026. We've saved you a seat — just let us know you're coming."}
-            </p>
-            <motion.button
-              type="button"
-              className="rl-rsvp-open-btn"
-              onClick={() => setIsRsvpOpen(true)}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.97 }}
-            >
-              <span>Confirm Your RSVP</span>
-              <Sparkle size={18} weight="fill" />
-            </motion.button>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────────────────────────
-          SECTION 7: ROYAL HERITAGE FOOTER (KAMADHENU COW & ELEPHANT MOTIFS)
+          SECTION 6: ROYAL HERITAGE FOOTER (KAMADHENU COW & ELEPHANT MOTIFS)
       ───────────────────────────────────────────────────────────────────────────── */}
       <section className="section closing">
         <div
@@ -1060,7 +1220,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
         </motion.div>
 
         {/* ── Marketing Content At End of Template Footer ── */}
-        <div className="w-full relative z-10 text-left">
+        <div className="closing__marketing-wrap w-full relative z-10 text-left">
           <TemplateMarketingFooter
             templateId="royal-lotus"
             templateName="Royal Lotus"
@@ -1070,149 +1230,86 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
         </div>
       </section>
 
-      {/* LIGHTBOX MODAL */}
-      {lightboxImg && (
+      {/* ─────────────────────────────────────────────────────────────────────────────
+          ROYAL LOTUS FULL-SCREEN LIGHTBOX MODAL
+      ───────────────────────────────────────────────────────────────────────────── */}
+      {activePhotoIdx !== null && galleryItems[activePhotoIdx] && (
         <div
-          onClick={() => setLightboxImg(null)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-pointer"
+          className="rl-lightbox-overlay"
+          onClick={() => setActivePhotoIdx(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Enlarged photo viewer"
         >
-          <img
-            src={lightboxImg}
-            alt=""
-            className="max-w-full max-h-[90vh] rounded-2xl shadow-2xl object-contain border border-[#D4AF37]/40"
-          />
-        </div>
-      )}
-
-      {/* ── Interactive RSVP Modal Dialog ── */}
-      <AnimatePresence>
-        {isRsvpOpen && (
-          <div className="rl-modal-overlay">
-            <motion.div
-              className="rl-modal-container"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: "spring", stiffness: 320, damping: 28 }}
-            >
+          <div
+            className="rl-lightbox-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Toolbar */}
+            <div className="rl-lightbox-bar">
+              <span className="rl-lightbox-counter">
+                ✦ {activePhotoIdx + 1} of {galleryItems.length} ✦
+              </span>
               <button
                 type="button"
-                className="rl-modal-close"
-                onClick={() => setIsRsvpOpen(false)}
-                aria-label="Close RSVP modal"
+                className="rl-lightbox-btn--close cursor-pointer"
+                onClick={() => setActivePhotoIdx(null)}
+                aria-label="Close enlarged photo"
               >
-                <X size={18} weight="bold" />
+                <X size={20} weight="bold" />
               </button>
+            </div>
 
-              <div className="rl-modal-header">
-                <div className="rl-modal-tag">✦ SHUBH VIVAH RSVP ✦</div>
-                <h3 className="rl-modal-title">Confirm Attendance</h3>
-                <p className="rl-modal-sub">For {brideName} & {groomName}&apos;s Royal Celebration</p>
-              </div>
+            {/* Main Image Stage */}
+            <div className="rl-lightbox-stage">
+              <img
+                src={galleryItems[activePhotoIdx].url}
+                alt={galleryItems[activePhotoIdx].caption || "Enlarged wedding moment"}
+                className="rl-lightbox-img"
+              />
 
-              {isRsvpSubmitted ? (
-                <div className="rl-success-msg">
-                  <CheckCircle size={48} className="text-[#D4AF37] mb-3 mx-auto" weight="fill" />
-                  <h4 className="text-xl font-serif text-[#D4AF37]">Dhanyawad!</h4>
-                  <p className="text-xs text-[#F5E5A3] mt-1.5 leading-relaxed">
-                    Thank you, <strong>{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
-                  </p>
-
-                  <div className="mt-4 pt-3 border-t border-[rgba(212,175,55,0.2)]">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsRsvpOpen(false);
-                        setIsRsvpSubmitted(false);
-                      }}
-                      className="w-full py-2.5 bg-[#D4AF37] hover:bg-[#c49f2e] text-[#1c1508] font-bold text-xs rounded-xl uppercase tracking-wider transition-all"
-                    >
-                      Done
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <form onSubmit={handleRsvpSubmit} className="rl-rsvp-form">
-                  <div className="rl-form-group">
-                    <label className="rl-label">Your Full Name *</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Vikramaditya & Family"
-                      value={rsvpName}
-                      onChange={(e) => setRsvpName(e.target.value)}
-                      className="rl-input"
-                    />
-                  </div>
-
-                  <div className="rl-form-group">
-                    <label className="rl-label">Phone / WhatsApp Number</label>
-                    <input
-                      type="tel"
-                      placeholder="+91 98765 43210"
-                      value={rsvpPhone}
-                      onChange={(e) => setRsvpPhone(e.target.value)}
-                      className="rl-input"
-                    />
-                  </div>
-
-                  <div className="rl-form-group">
-                    <label className="rl-label">Will you be attending?</label>
-                    <div className="rl-radio-group">
-                      <button
-                        type="button"
-                        className={`rl-radio-btn ${rsvpAttending === "yes" ? "active" : ""}`}
-                        onClick={() => setRsvpAttending("yes")}
-                      >
-                        Joyfully Accept
-                      </button>
-                      <button
-                        type="button"
-                        className={`rl-radio-btn ${rsvpAttending === "no" ? "active" : ""}`}
-                        onClick={() => setRsvpAttending("no")}
-                      >
-                        Regretfully Decline
-                      </button>
-                    </div>
-                  </div>
-
-                  {rsvpAttending === "yes" && (
-                    <div className="rl-form-group">
-                      <label className="rl-label">Number of Guests Attending</label>
-                      <select
-                        value={rsvpGuests}
-                        onChange={(e) => setRsvpGuests(e.target.value)}
-                        className="rl-select"
-                      >
-                        <option value="1">1 Person</option>
-                        <option value="2">2 Persons</option>
-                        <option value="3">3 Persons</option>
-                        <option value="4">4 Persons</option>
-                        <option value="5+">5+ Persons (Family)</option>
-                      </select>
-                    </div>
-                  )}
-
-                  <div className="rl-form-group">
-                    <label className="rl-label">Warm Wishes & Blessings for the Couple</label>
-                    <textarea
-                      rows={3}
-                      placeholder="Leave your heartfelt blessings for the bride & groom..."
-                      value={rsvpWishes}
-                      onChange={(e) => setRsvpWishes(e.target.value)}
-                      className="rl-textarea"
-                    />
-                  </div>
-
-                  <button type="submit" className="rl-submit-btn">
-                    <span>Send Royal RSVP</span>
+              {/* Prev / Next Buttons */}
+              {galleryItems.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className="rl-lightbox-nav rl-lightbox-nav--prev cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePhotoIdx((prev) =>
+                        prev !== null && prev > 0 ? prev - 1 : galleryItems.length - 1
+                      );
+                    }}
+                    aria-label="Previous photo"
+                  >
+                    <CaretLeft size={22} weight="bold" />
                   </button>
-                </form>
+                  <button
+                    type="button"
+                    className="rl-lightbox-nav rl-lightbox-nav--next cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePhotoIdx((prev) =>
+                        prev !== null && prev < galleryItems.length - 1 ? prev + 1 : 0
+                      );
+                    }}
+                    aria-label="Next photo"
+                  >
+                    <CaretRight size={22} weight="bold" />
+                  </button>
+                </>
               )}
-            </motion.div>
+            </div>
+
+            {/* Caption Plaque at Bottom */}
+            {galleryItems[activePhotoIdx].caption && (
+              <p className="rl-lightbox-caption">
+                {galleryItems[activePhotoIdx].caption}
+              </p>
+            )}
           </div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }

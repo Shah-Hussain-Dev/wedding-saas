@@ -43,7 +43,11 @@ export function AudioTrackSelector({
   onChange,
   templateDefaultUrl = "/audio/wedding-ambience.mp3",
 }: AudioTrackSelectorProps) {
-  const isSelectedYt = Boolean(selectedTrackUrl && (selectedTrackUrl.includes("yt-") || selectedTrackUrl.includes("cloudinary.com")));
+  const safeSelectedTrackUrl = typeof selectedTrackUrl === "string" ? selectedTrackUrl : "";
+  const isSelectedYt = Boolean(
+    safeSelectedTrackUrl &&
+      (safeSelectedTrackUrl.includes("yt-") || safeSelectedTrackUrl.includes("cloudinary.com"))
+  );
 
   const [mainMode, setMainMode] = useState<"library" | "youtube" | "community">(
     isSelectedYt ? "community" : "library"
@@ -166,7 +170,7 @@ export function AudioTrackSelector({
     // 1. Client-Side Instant Duplicate Check
     if (videoId) {
       const existingCommunity = communityTracks.find(
-        (t) => t.id === `yt-${videoId}` || (t.url && t.url.includes(videoId))
+        (t) => t.id === `yt-${videoId}` || (typeof t.url === "string" && t.url.includes(videoId))
       );
       if (existingCommunity) {
         setDuplicateModalTrack(existingCommunity);
