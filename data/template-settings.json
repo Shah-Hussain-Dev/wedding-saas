@@ -1,24 +1,4 @@
 {
-  "noor-e-nikah": {
-    "id": "noor-e-nikah",
-    "coverImageUrl": "/templates/noor-e-nikah/envelope-bg.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:39:08.456Z"
-  },
-  "celestial-rose": {
-    "id": "celestial-rose",
-    "coverImageUrl": "/templates/celestial-rose/gallery-1.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:41:25.158Z"
-  },
   "emerald-qasr": {
     "id": "emerald-qasr",
     "coverImageUrl": "/templates/emerald-qasr/poster.png",
@@ -27,7 +7,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-19T07:44:50.222Z"
+    "updatedAt": "2026-11-19T07:44:50.221Z"
   },
   "gul-e-noor": {
     "id": "gul-e-noor",
@@ -37,136 +17,6 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-19T07:45:02.808Z"
-  },
-  "azure-nikah": {
-    "id": "azure-nikah",
-    "coverImageUrl": "/templates/azure-nikah/poster.png",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:28.080Z"
-  },
-  "kitab-e-nikah": {
-    "id": "kitab-e-nikah",
-    "coverImageUrl": "/templates/kitab-e-nikah/poster.png",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:28.340Z"
-  },
-  "crimson-royale": {
-    "id": "crimson-royale",
-    "coverImageUrl": "/templates/crimson-royale/bg-welcome-desktop.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:39:42.916Z"
-  },
-  "royal-lotus": {
-    "id": "royal-lotus",
-    "coverImageUrl": "/templates/lotus-courtyard/farman-open.webp",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:28.860Z"
-  },
-  "emerald-noir": {
-    "id": "emerald-noir",
-    "coverImageUrl": "/images/gallery-library/hindu/haveli-royal-vivah.webp",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:39:54.557Z"
-  },
-  "royal-elegance": {
-    "id": "royal-elegance",
-    "coverImageUrl": "/templates/imperial-palace/ballroom.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:41:48.016Z"
-  },
-  "modern-minimal": {
-    "id": "modern-minimal",
-    "coverImageUrl": "/templates/noor-e-nikah/welcome-parchment.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:29.639Z"
-  },
-  "rose-gold-blush": {
-    "id": "rose-gold-blush",
-    "coverImageUrl": "/templates/rose-gold-blush/palace-arch.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:29.899Z"
-  },
-  "royal-grace": {
-    "id": "royal-grace",
-    "coverImageUrl": "/templates/royal-grace/botanical-palace.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:42:46.542Z"
-  },
-  "royal-heritage": {
-    "id": "royal-heritage",
-    "coverImageUrl": "/templates/royal-heritage/couple-arch.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:44:13.598Z"
-  },
-  "royal-majesty": {
-    "id": "royal-majesty",
-    "coverImageUrl": "/templates/royal-majesty/ballroom-terrace.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:44:38.200Z"
-  },
-  "imperial-palace": {
-    "id": "imperial-palace",
-    "coverImageUrl": "/templates/imperial-palace/doors-hero.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:42:01.146Z"
-  },
-  "sheesh-mahal": {
-    "id": "sheesh-mahal",
-    "coverImageUrl": "/templates/sheesh-mahal/assets/cover/doors.webp",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
-    "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:31.201Z"
+    "updatedAt": "2026-11-19T07:45:02.807Z"
   }
 }

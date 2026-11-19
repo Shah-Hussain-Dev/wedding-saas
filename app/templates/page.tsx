@@ -352,8 +352,10 @@ export default function TemplatesPage() {
         activeFilter
       );
     }
-    if (activeFilter === "Best Sellers")
+    if (activeFilter === "Best Sellers") {
+      const pricing = getPricingDetails(t.id, t.price);
       return (
+        Boolean(pricing.isPopular) ||
         t.tag === "Best Seller" ||
         t.tag === "Masterpiece" ||
         t.tag === "Signature Royale" ||
@@ -361,19 +363,29 @@ export default function TemplatesPage() {
         t.tag === "Featured" ||
         t.tag === "Imperial Royale"
       );
+    }
     if (activeFilter === "New") return t.tag === "New" || t.tag === "Trending" || t.id === "sheesh-mahal";
     return true;
   });
 
   const sortedTemplates = [...filteredTemplates].sort((a, b) => {
+    const detailsA = getPricingDetails(a?.id, a?.price);
+    const detailsB = getPricingDetails(b?.id, b?.price);
+
     if (sortBy === "best") {
-      const rankA = getTemplateSortRank(a?.id);
-      const rankB = getTemplateSortRank(b?.id);
+      // 1. Featured / Best Starred templates first (matching Admin table)
+      const aPop = detailsA.isPopular ? 1 : 0;
+      const bPop = detailsB.isPopular ? 1 : 0;
+      if (bPop !== aPop) return bPop - aPop;
+
+      // 2. Then by dynamic assigned display rank (lower rank number first)
+      const rankA = detailsA.sortOrder !== undefined ? detailsA.sortOrder : getTemplateSortRank(a?.id);
+      const rankB = detailsB.sortOrder !== undefined ? detailsB.sortOrder : getTemplateSortRank(b?.id);
       return rankA - rankB;
     }
     if (sortBy === "latest") {
-      const dateA = new Date(getTemplateReleaseDate(a?.id)).getTime();
-      const dateB = new Date(getTemplateReleaseDate(b?.id)).getTime();
+      const dateA = new Date(detailsA.createdAt || getTemplateReleaseDate(a?.id)).getTime();
+      const dateB = new Date(detailsB.createdAt || getTemplateReleaseDate(b?.id)).getTime();
       return dateB - dateA;
     }
     if (sortBy === "price_asc") {

@@ -94,4 +94,62 @@ describe('Template Sort Order & Authentic Cover Photos Standards', () => {
     assert.ok(tableFile.includes('unfold_template_pricing'), 'AdminTemplatesTable must sync updated prices to client storage');
     assert.ok(tableFile.includes('serverTemplate'), 'AdminTemplatesTable must consume serverTemplate from response');
   });
+
+  it('Feature 7: /templates showroom synchronizes with dynamic Best Star & Display Rank from Admin', () => {
+    const showroomFile = fs.readFileSync('app/templates/page.tsx', 'utf8');
+    assert.ok(showroomFile.includes('detailsA.isPopular'), 'Showroom must sort popular/starred templates first');
+    assert.ok(showroomFile.includes('detailsA.sortOrder'), 'Showroom must prioritize dynamic sortOrder from details');
+    assert.ok(showroomFile.includes('pricing.isPopular'), 'Showroom Best Sellers filter must include dynamic starred templates');
+
+    const cardFile = fs.readFileSync('components/marketing/template-catalog-card.tsx', 'utf8');
+    assert.ok(cardFile.includes('pricing.isPopular'), 'TemplateCatalogCard must check pricing.isPopular');
+    assert.ok(cardFile.includes('BEST'), 'TemplateCatalogCard must render BEST badge for starred templates');
+
+    const hookFile = fs.readFileSync('lib/hooks/use-template-pricing.ts', 'utf8');
+    assert.ok(hookFile.includes('sortOrder?: number'), 'TemplatePricingDetail must include sortOrder');
+    assert.ok(hookFile.includes('isPopular?: boolean'), 'TemplatePricingDetail must include isPopular');
+    assert.ok(hookFile.includes('unfold_pricing_updated'), 'useTemplatePricing must listen to unfold_pricing_updated event');
+    assert.ok(hookFile.includes('getSortRank'), 'useTemplatePricing must export getSortRank helper');
+    assert.ok(hookFile.includes('isPopular'), 'useTemplatePricing must export isPopular helper');
+
+    const adminTableFile = fs.readFileSync('components/admin/AdminTemplatesTable.tsx', 'utf8');
+    assert.ok(adminTableFile.includes('unfold_template_pricing_details'), 'AdminTemplatesTable must sync unfold_template_pricing_details');
+    assert.ok(adminTableFile.includes('unfold_pricing_updated'), 'AdminTemplatesTable must dispatch unfold_pricing_updated event');
+  });
+
+  it('Feature 8: Home Page InteractiveTemplateGrid reflects exact Admin saved rank, ⭐ BEST, and Sheesh Mahal #1', () => {
+    const gridFile = fs.readFileSync('components/marketing/interactive-template-grid.tsx', 'utf8');
+    assert.ok(gridFile.includes('useTemplatePricing'), 'Home Page grid must use useTemplatePricing hook');
+    assert.ok(gridFile.includes('sheesh-mahal'), 'Home Page grid must contain sheesh-mahal');
+    assert.ok(gridFile.includes('detailsA.isPopular'), 'Home Page grid must prioritize dynamic Best Star');
+    assert.ok(gridFile.includes('rankA - rankB'), 'Home Page grid must sort by display rank');
+
+    const sortFile = fs.readFileSync('lib/template-sort.ts', 'utf8');
+    assert.ok(sortFile.includes('"sheesh-mahal": 1'), 'Default rank #1 must be sheesh-mahal');
+    assert.ok(sortFile.includes('"imperial-palace": 2'), 'Default rank #2 must be imperial-palace');
+    assert.ok(sortFile.includes('"royal-lotus": 3'), 'Default rank #3 must be royal-lotus');
+    assert.ok(sortFile.includes('"royal-majesty": 4'), 'Default rank #4 must be royal-majesty');
+    assert.ok(sortFile.includes('"celestial-rose": 5'), 'Default rank #5 must be celestial-rose');
+    assert.ok(sortFile.includes('"royal-heritage": 6'), 'Default rank #6 must be royal-heritage');
+    assert.ok(sortFile.includes('"royal-grace": 7'), 'Default rank #7 must be royal-grace');
+    assert.ok(sortFile.includes('"crimson-royale": 8'), 'Default rank #8 must be crimson-royale');
+
+    const pricesJson = JSON.parse(fs.readFileSync('data/template-prices.json', 'utf8'));
+    assert.strictEqual(pricesJson['sheesh-mahal'].sortOrder, 1);
+    assert.strictEqual(pricesJson['sheesh-mahal'].isPopular, true);
+    assert.strictEqual(pricesJson['imperial-palace'].sortOrder, 2);
+    assert.strictEqual(pricesJson['imperial-palace'].isPopular, true);
+    assert.strictEqual(pricesJson['royal-lotus'].sortOrder, 3);
+    assert.strictEqual(pricesJson['royal-lotus'].isPopular, true);
+    assert.strictEqual(pricesJson['royal-majesty'].sortOrder, 4);
+    assert.strictEqual(pricesJson['royal-majesty'].isPopular, true);
+    assert.strictEqual(pricesJson['celestial-rose'].sortOrder, 5);
+    assert.strictEqual(pricesJson['celestial-rose'].isPopular, true);
+    assert.strictEqual(pricesJson['royal-heritage'].sortOrder, 6);
+    assert.strictEqual(pricesJson['royal-heritage'].isPopular, true);
+    assert.strictEqual(pricesJson['royal-grace'].sortOrder, 7);
+    assert.strictEqual(pricesJson['royal-grace'].isPopular, true);
+    assert.strictEqual(pricesJson['crimson-royale'].sortOrder, 8);
+    assert.strictEqual(pricesJson['crimson-royale'].isPopular, true);
+  });
 });

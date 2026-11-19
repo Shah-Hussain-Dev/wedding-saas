@@ -179,15 +179,26 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
 
       if (Array.isArray(dbConfigs) && dbConfigs.length > 0) {
         dbConfigs.forEach((cfg: any) => {
+          const fileCfg = fileData[cfg.id];
+          const resolvedSortOrder =
+            (cfg.sortOrder !== undefined && cfg.sortOrder !== null && cfg.sortOrder > 0)
+              ? cfg.sortOrder
+              : (fileCfg?.sortOrder ?? DEFAULT_TEMPLATE_SORT_ORDER[cfg.id] ?? 99);
+
+          const resolvedIsPopular =
+            cfg.isPopular !== undefined && cfg.isPopular !== null
+              ? Boolean(cfg.isPopular)
+              : (fileCfg?.isPopular ?? false);
+
           memoryPriceCache[cfg.id] = {
-            priceInr: cfg.priceInr ?? DEFAULT_PRICE_INR,
-            originalPriceInr: cfg.originalPriceInr ?? DEFAULT_ORIGINAL_PRICE_INR,
-            discountPercent: cfg.discountPercent ?? 60,
-            discountName: cfg.discountName ?? DEFAULT_DISCOUNT_NAME,
+            priceInr: cfg.priceInr ?? fileCfg?.priceInr ?? DEFAULT_PRICE_INR,
+            originalPriceInr: cfg.originalPriceInr ?? fileCfg?.originalPriceInr ?? DEFAULT_ORIGINAL_PRICE_INR,
+            discountPercent: cfg.discountPercent ?? fileCfg?.discountPercent ?? 60,
+            discountName: cfg.discountName ?? fileCfg?.discountName ?? DEFAULT_DISCOUNT_NAME,
             isActive: cfg.isActive !== false,
-            isPopular: cfg.isPopular || false,
-            sortOrder: cfg.sortOrder ?? DEFAULT_TEMPLATE_SORT_ORDER[cfg.id] ?? 99,
-            createdAt: cfg.createdAt ? new Date(cfg.createdAt).toISOString() : DEFAULT_TEMPLATE_RELEASE_DATES[cfg.id],
+            isPopular: resolvedIsPopular,
+            sortOrder: resolvedSortOrder,
+            createdAt: cfg.createdAt ? new Date(cfg.createdAt).toISOString() : (fileCfg?.createdAt || DEFAULT_TEMPLATE_RELEASE_DATES[cfg.id]),
           };
         });
         // Keep file backup in sync with database

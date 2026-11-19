@@ -224,6 +224,26 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
           const pricingMap = stored ? JSON.parse(stored) : {};
           pricingMap[templateId] = serverTemplate?.priceInr ?? editSellingPrice;
           localStorage.setItem("unfold_template_pricing", JSON.stringify(pricingMap));
+
+          const storedDetails = localStorage.getItem("unfold_template_pricing_details");
+          const detailsMap = storedDetails ? JSON.parse(storedDetails) : {};
+          detailsMap[templateId] = {
+            ...(detailsMap[templateId] || {}),
+            id: templateId,
+            priceInr: serverTemplate?.priceInr ?? editSellingPrice,
+            originalPriceInr: serverTemplate?.originalPriceInr ?? editOriginalPrice,
+            discountPercent: serverTemplate?.discountPercent ?? calculatedDiscountPct,
+            discountName: serverTemplate?.discountName ?? (editDiscountName.trim() || `${calculatedDiscountPct}% OFF Deal`),
+            priceFormatted: serverTemplate?.priceFormatted ?? `₹${editSellingPrice.toLocaleString("en-IN")}`,
+            originalPriceFormatted: serverTemplate?.originalPriceFormatted ?? `₹${editOriginalPrice.toLocaleString("en-IN")}`,
+            savingsAmountInr: serverTemplate?.savingsAmountInr ?? Math.max(0, editOriginalPrice - editSellingPrice),
+            savingsFormatted: serverTemplate?.savingsFormatted ?? `₹${Math.max(0, editOriginalPrice - editSellingPrice).toLocaleString("en-IN")}`,
+            isOnSale: (serverTemplate?.originalPriceInr ?? editOriginalPrice) > (serverTemplate?.priceInr ?? editSellingPrice),
+            sortOrder: serverTemplate?.sortOrder !== undefined ? serverTemplate.sortOrder : Number(editSortOrder),
+            isPopular: serverTemplate?.isPopular !== undefined ? serverTemplate.isPopular : Boolean(editIsPopular),
+          };
+          localStorage.setItem("unfold_template_pricing_details", JSON.stringify(detailsMap));
+          window.dispatchEvent(new Event("unfold_pricing_updated"));
         } catch (_) {}
 
         onRefresh();
@@ -255,11 +275,26 @@ export function AdminTemplatesTable({ templates = [], onRefresh }: AdminTemplate
           templateId: template.id,
           priceInr: template.priceInr,
           isPopular: nextPopular,
+          sortOrder: template.sortOrder,
         }),
       });
 
       if (res.ok) {
         showToast(`${template.name} is ${nextPopular ? "now marked as Best / Featured ⭐" : "removed from Featured"}`);
+        try {
+          const storedDetails = localStorage.getItem("unfold_template_pricing_details");
+          const detailsMap = storedDetails ? JSON.parse(storedDetails) : {};
+          if (detailsMap[template.id]) {
+            detailsMap[template.id].isPopular = nextPopular;
+            if (template.sortOrder !== undefined) {
+              detailsMap[template.id].sortOrder = template.sortOrder;
+            }
+          } else {
+            detailsMap[template.id] = { id: template.id, isPopular: nextPopular, sortOrder: template.sortOrder };
+          }
+          localStorage.setItem("unfold_template_pricing_details", JSON.stringify(detailsMap));
+          window.dispatchEvent(new Event("unfold_pricing_updated"));
+        } catch (_) {}
         onRefresh();
       } else {
         // Revert on error
