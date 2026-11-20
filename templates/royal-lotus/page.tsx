@@ -1136,7 +1136,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
               //   title: "Stay Options",
               //   detail: "A curated block of rooms has been reserved at the palace — please contact our guest team.",
               //   icon: "/templates/lotus-courtyard/icon-stay-options.webp",
-              // },
+              // }, 
               {
                 title: "Wedding Hashtag",
                 detail: `Share your favourite moments with ${hashtag}.`,
