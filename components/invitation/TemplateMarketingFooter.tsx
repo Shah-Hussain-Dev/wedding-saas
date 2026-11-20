@@ -422,242 +422,174 @@ export function TemplateMarketingFooter({
   return (
     <section
       aria-label="WedInvites Wedding Website Atelier"
-      className={`w-full relative py-12 sm:py-16 px-4 sm:px-6 md:px-8 bg-transparent text-inherit ${className}`}
+      className={`w-full relative py-6 sm:py-8 px-3 sm:px-6 bg-transparent text-inherit ${className}`}
     >
       {/* Ornamental Transition Motif */}
-      <div className="flex items-center justify-center gap-3 pb-8 sm:pb-10" aria-hidden="true">
+      <div className="flex items-center justify-center gap-2.5 pb-4 sm:pb-5 opacity-40" aria-hidden="true">
         <span
-          className="h-px w-12 sm:w-24 bg-gradient-to-r from-transparent via-current to-transparent opacity-30"
+          className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent via-current to-transparent"
           style={{ color: theme.accentColor }}
         />
         <span
-          className="text-xs sm:text-sm tracking-[0.3em] font-serif select-none opacity-80"
+          className="text-[10px] tracking-[0.25em] font-serif select-none"
           style={{ color: theme.accentColor }}
         >
-          ✦ &nbsp; ❖ &nbsp; ✦
+          ✦ ❖ ✦
         </span>
         <span
-          className="h-px w-12 sm:w-24 bg-gradient-to-r from-transparent via-current to-transparent opacity-30"
+          className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent via-current to-transparent"
           style={{ color: theme.accentColor }}
         />
       </div>
 
-      <div className="max-w-4xl mx-auto relative z-10 text-center space-y-6 sm:space-y-8">
-        {/* Top Eyebrow Chip */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6 }}
-          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full ${theme.chipBg} ${theme.chipBorder} text-[10px] sm:text-[11px] font-bold tracking-[0.22em] uppercase font-sans backdrop-blur-md shadow-sm`}
-          style={{ color: theme.chipText }}
+      <div className="max-w-xl mx-auto relative z-10 text-center">
+        {/* Sleek, Compact Frosted Glass Atelier Plaque */}
+        <div
+          className={`rounded-2xl sm:rounded-3xl p-5 sm:p-6 ${theme.cardBg} ${theme.cardBorder} backdrop-blur-xl border shadow-xl relative overflow-hidden space-y-3.5`}
         >
-          <Sparkle size={13} weight="fill" className="animate-pulse" style={{ color: theme.accentColor }} />
-          <span>Inspired by this celebration?</span>
-          <Sparkle size={13} weight="fill" className="animate-pulse" style={{ color: theme.accentColor }} />
-        </motion.div>
-
-        {/* High-Retention Catchy Headline */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="space-y-3"
-        >
-          <h2
-            className="font-serif text-2xl sm:text-4xl md:text-5xl font-normal leading-[1.2] tracking-tight"
-            style={{ color: theme.headingColor }}
-          >
-            {hasCouple ? (
-              <>
-                Loved <span className="font-medium" style={{ color: theme.accentColor }}>{coupleDisplay}&apos;s</span> wedding invitation? <br className="hidden sm:inline" />
-                <span className="italic font-normal opacity-90">Create yours for your big day.</span>
-              </>
-            ) : (
-              <>
-                Want an unforgettable {templateName ? `${templateName} ` : ""}wedding website <br className="hidden sm:inline" />
-                <span className="italic font-normal" style={{ color: theme.accentColor }}>just like this</span> for your big day?
-              </>
-            )}
-          </h2>
-
-          <p
-            className="text-xs sm:text-sm md:text-base font-sans max-w-xl mx-auto leading-relaxed"
-            style={{ color: theme.bodyColor }}
-          >
-            Ditch paper cards that end up discarded. Turn your wedding into an interactive 3D digital celebration with carved palace doors, royal music, venue maps &amp; instant WhatsApp RSVPs.
-          </p>
-        </motion.div>
-
-        {/* 3 High-Retention Value Prop Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-left pt-2"
-        >
-          {/* Pillar 1 */}
+          {/* Subtle Ambient Radial Highlight */}
           <div
-            className={`p-4 rounded-2xl ${theme.cardBg} ${theme.cardBorder} backdrop-blur-md flex items-start gap-3 transition-colors duration-300 hover:border-opacity-60`}
-          >
-            <div
-              className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
+            className="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-24 rounded-full blur-2xl pointer-events-none opacity-20"
+            style={{ backgroundColor: theme.accentColor }}
+            aria-hidden="true"
+          />
+
+          {/* Minimal Eyebrow */}
+          <div className="flex items-center justify-center">
+            <span
+              className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full ${theme.chipBg} ${theme.chipBorder} text-[9.5px] sm:text-[10.5px] font-bold tracking-[0.18em] uppercase font-sans`}
+              style={{ color: theme.chipText }}
+            >
+              <Sparkle size={11} weight="fill" style={{ color: theme.accentColor }} />
+              <span>WedInvites Atelier</span>
+              <Sparkle size={11} weight="fill" style={{ color: theme.accentColor }} />
+            </span>
+          </div>
+
+          {/* Precise & Elegant Headline */}
+          <div className="space-y-1">
+            <h3
+              className="font-serif text-lg sm:text-2xl font-normal leading-snug tracking-tight"
+              style={{ color: theme.headingColor }}
+            >
+              {hasCouple ? (
+                <>
+                  Loved this celebration?{" "}
+                  <span className="italic opacity-90 block sm:inline" style={{ color: theme.accentColor }}>
+                    Create yours for your special day.
+                  </span>
+                </>
+              ) : (
+                <>
+                  Create an unforgettable 3D wedding website
+                </>
+              )}
+            </h3>
+            <p
+              className="text-[11px] sm:text-xs font-sans max-w-md mx-auto leading-relaxed opacity-85"
+              style={{ color: theme.bodyColor }}
+            >
+              Interactive 3D palace gates, royal soundscapes &amp; instant WhatsApp RSVPs.
+            </p>
+          </div>
+
+          {/* Sleek Feature Micro-Chips (replaces bulky stacked cards) */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-0.5">
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] sm:text-[11px] font-medium ${theme.chipBg} border ${theme.cardBorder}`}
+              style={{ color: theme.headingColor }}
+            >
+              <Sparkle size={12} weight="fill" style={{ color: theme.accentColor }} />
+              <span>16+ Royal Themes</span>
+            </span>
+
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] sm:text-[11px] font-medium ${theme.chipBg} border ${theme.cardBorder}`}
+              style={{ color: theme.headingColor }}
+            >
+              <WhatsappLogo size={12} weight="fill" className="text-emerald-400" />
+              <span>1-Click WhatsApp Share</span>
+            </span>
+
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10.5px] sm:text-[11px] font-medium ${theme.chipBg} border ${theme.cardBorder}`}
+              style={{ color: theme.headingColor }}
+            >
+              <ShieldCheck size={12} weight="fill" style={{ color: theme.accentColor }} />
+              <span>Flat {siteConfig.startingPrice} · Lifetime</span>
+            </span>
+          </div>
+
+          {/* Refined Luxury CTA Button */}
+          <div className="pt-0.5 flex items-center justify-center">
+            <Link
+              href="/"
+              className="group relative w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-7 py-2.5 rounded-full font-sans text-xs font-bold tracking-wider uppercase transition-all duration-300 hover:scale-[1.02] hover:brightness-110 active:scale-95 cursor-pointer shadow-md overflow-hidden"
               style={{
-                backgroundColor: `${theme.accentColor}18`,
-                border: `1px solid ${theme.accentColor}35`,
-                color: theme.accentColor,
+                backgroundColor: theme.accentColor,
+                color: theme.isLight ? "#FFFFFF" : "#1A1A1A",
+                boxShadow: `0 8px 24px ${theme.accentColor}35`,
               }}
             >
-              <Sparkle size={18} weight="fill" />
-            </div>
-            <div>
-              <span className="text-xs font-bold block" style={{ color: theme.headingColor }}>
-                16+ Royal 3D Themes
-              </span>
-              <span className="text-[11px] leading-snug block mt-0.5" style={{ color: theme.bodyColor }}>
-                Carved palace gates, wax seals &amp; classical soundscapes
-              </span>
-            </div>
+              <span>Create Your Invitation</span>
+              <ArrowRight
+                size={14}
+                weight="bold"
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
           </div>
 
-          {/* Pillar 2 */}
+          {/* Compact Trust Micro-Row */}
           <div
-            className={`p-4 rounded-2xl ${theme.cardBg} ${theme.cardBorder} backdrop-blur-md flex items-start gap-3 transition-colors duration-300 hover:border-emerald-500/40`}
+            className="flex items-center justify-center gap-2 text-[10.5px] font-sans opacity-75"
+            style={{ color: theme.trustTextColor }}
           >
-            <div className="h-9 w-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-              <WhatsappLogo size={18} weight="fill" />
-            </div>
-            <div>
-              <span className="text-xs font-bold block" style={{ color: theme.headingColor }}>
-                Instant WhatsApp Share
-              </span>
-              <span className="text-[11px] leading-snug block mt-0.5" style={{ color: theme.bodyColor }}>
-                Zero courier wait · 1-click delivery to all guests worldwide
-              </span>
-            </div>
+            <CheckCircle size={12} weight="fill" className="text-emerald-400 shrink-0" />
+            <span>100% Free to customize first</span>
+            <span className="opacity-40">·</span>
+            <span>No app download needed</span>
           </div>
 
-          {/* Pillar 3 */}
+          {/* Streamlined Brand Footer Bar */}
           <div
-            className={`p-4 rounded-2xl ${theme.cardBg} ${theme.cardBorder} backdrop-blur-md flex items-start gap-3 transition-colors duration-300 hover:border-opacity-60`}
-          >
-            <div
-              className="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5"
-              style={{
-                backgroundColor: `${theme.accentColor}18`,
-                border: `1px solid ${theme.accentColor}35`,
-                color: theme.accentColor,
-              }}
-            >
-              <ShieldCheck size={18} weight="fill" />
-            </div>
-            <div>
-              <span className="text-xs font-bold block" style={{ color: theme.headingColor }}>
-                Flat {siteConfig.startingPrice} All-Inclusive
-              </span>
-              <span className="text-[11px] leading-snug block mt-0.5" style={{ color: theme.bodyColor }}>
-                100% Free to customize &amp; preview · Lifetime access
-              </span>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Main Website Home CTA Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="pt-3 flex items-center justify-center w-full"
-        >
-          <Link
-            href="/"
-            className="group relative w-full sm:w-auto min-h-[48px] sm:min-h-[52px] inline-flex items-center justify-center gap-2.5 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-sans text-xs sm:text-sm font-bold tracking-wider uppercase transition-all duration-300 hover:scale-[1.03] hover:brightness-110 active:scale-95 cursor-pointer shadow-lg hover:shadow-2xl overflow-hidden"
+            className="pt-3 border-t flex flex-col sm:flex-row items-center justify-between gap-2 text-[10.5px] font-sans opacity-70"
             style={{
-              backgroundColor: theme.accentColor,
-              color: theme.isLight ? "#FFFFFF" : "#1A1A1A",
-              boxShadow: `0 10px 30px ${theme.accentColor}40`,
+              borderColor: theme.bottomBorderColor,
+              color: theme.bottomTextColor,
             }}
           >
-            <span>Create Your Invitation</span>
-            <ArrowRight
-              size={17}
-              weight="bold"
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Link>
-        </motion.div>
-
-        {/* Trust Badges Strip */}
-        <div
-          className="pt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-[11px] sm:text-xs font-sans"
-          style={{ color: theme.trustTextColor }}
-        >
-          <span className="inline-flex items-center gap-1.5">
-            <CheckCircle size={14} weight="fill" className="text-emerald-500" />
-            100% Free to Customize First
-          </span>
-          <span className="hidden sm:inline opacity-30">·</span>
-          <span className="inline-flex items-center gap-1.5">
-            <CheckCircle size={14} weight="fill" className="text-emerald-500" />
-            No App Download Needed
-          </span>
-          <span className="hidden sm:inline opacity-30">·</span>
-          <span className="inline-flex items-center gap-1.5">
-            <CheckCircle size={14} weight="fill" className="text-emerald-500" />
-            Unlimited Revisions Until Wedding
-          </span>
-        </div>
-
-        {/* Brand Bottom Lockup & Links */}
-        <div
-          className="pt-6 mt-2 border-t flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-sans"
-          style={{
-            borderColor: theme.bottomBorderColor,
-            color: theme.bottomTextColor,
-          }}
-        >
-          <Link
-            href="/"
-            className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
-          >
-            <Image
-              src={theme.logoVariant === "dark" ? siteConfig.assets.logo : siteConfig.assets.logoWhite}
-              alt={siteConfig.name}
-              width={100}
-              height={28}
-              className="h-4 w-auto object-contain"
-            />
-            <span>• {siteConfig.domain}</span>
-          </Link>
-
-          <div className="flex items-center gap-4">
             <Link
-              href="/templates"
-              className="transition-colors flex items-center gap-1 hover:opacity-100"
-              style={{ color: theme.bottomTextColor }}
+              href="/"
+              className="flex items-center gap-1.5 hover:opacity-100 transition-opacity"
             >
-              <span>All 16 Templates</span>
-              <ArrowUpRight size={11} />
+              <Image
+                src={theme.logoVariant === "dark" ? siteConfig.assets.logo : siteConfig.assets.logoWhite}
+                alt={siteConfig.name}
+                width={70}
+                height={20}
+                className="h-3.5 w-auto object-contain"
+              />
+              <span>• {siteConfig.domain}</span>
             </Link>
-            <span className="opacity-30">·</span>
-            <Link
-              href="/contact"
-              className="transition-colors hover:opacity-100"
-              style={{ color: theme.bottomTextColor }}
-            >
-              Support &amp; Help
-            </Link>
-            <span className="opacity-30">·</span>
-            <Link
-              href="/#pricing"
-              className="transition-colors hover:opacity-100"
-              style={{ color: theme.bottomTextColor }}
-            >
-              Pricing ({siteConfig.startingPrice})
-            </Link>
+
+            <div className="flex items-center gap-3">
+              <Link
+                href="/templates"
+                className="hover:opacity-100 transition-opacity flex items-center gap-0.5"
+              >
+                <span>Templates</span>
+                <ArrowUpRight size={10} />
+              </Link>
+              <span className="opacity-40">·</span>
+              <Link href="/contact" className="hover:opacity-100 transition-opacity">
+                Support
+              </Link>
+              <span className="opacity-40">·</span>
+              <Link href="/#pricing" className="hover:opacity-100 transition-opacity">
+                Pricing
+              </Link>
+            </div>
           </div>
         </div>
       </div>
