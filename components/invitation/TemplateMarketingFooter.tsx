@@ -516,7 +516,7 @@ export function TemplateMarketingFooter({
               style={{ color: theme.headingColor }}
             >
               <ShieldCheck size={12} weight="fill" style={{ color: theme.accentColor }} />
-              <span>Flat {siteConfig.startingPrice} · Lifetime</span>
+              <span>Flat {siteConfig.startingPrice} · All-Inclusive</span>
             </span>
           </div>
 

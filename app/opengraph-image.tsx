@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 
+export const revalidate = 86400;
 export const alt = "WedInvites — Premium Animated Digital Wedding Invitations";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -36,7 +37,7 @@ export default function Image() {
             marginBottom: "18px",
           }}
         >
-          ✦ WEDINVITES • DIGITAL WEDDING INVITATIONS ✦
+          • WEDINVITES • DIGITAL WEDDING INVITATIONS •
         </div>
 
         {/* Main Headline */}
@@ -84,7 +85,7 @@ export default function Image() {
             letterSpacing: "0.08em",
           }}
         >
-          LIFETIME INVITATION SUITE • ₹1,199
+          ROYAL INVITATION SUITE • ₹1,199
         </div>
       </div>
     ),

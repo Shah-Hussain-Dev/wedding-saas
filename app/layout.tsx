@@ -86,9 +86,11 @@ export const metadata: Metadata = {
       "Transform your special day with cinematic 3D digital wedding invitations, curated soundscapes, and real-time RSVP portals on wedinvites.in.",
     images: [
       {
-        url: "/images/hero-bg.png",
+        url: `${siteConfig.url}/opengraph-image`,
+        secureUrl: `${siteConfig.url}/opengraph-image`,
         width: 1200,
         height: 630,
+        type: "image/png",
         alt: `${siteConfig.name} Digital Wedding Invitations Preview`,
       },
     ],
@@ -98,7 +100,7 @@ export const metadata: Metadata = {
     title: `${siteConfig.name} — Animated Digital Wedding Invitations`,
     description:
       "Living 3D experiences, orchestral soundscapes, and real-time RSVP portals for modern weddings.",
-    images: ["/images/hero-bg.png"],
+    images: [`${siteConfig.url}/opengraph-image`],
     creator: "@wedinvites",
   },
   robots: {

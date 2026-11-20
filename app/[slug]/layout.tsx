@@ -81,15 +81,15 @@ export async function generateMetadata({
     weddingDateStr ? ` on ${weddingDateStr}` : ""
   }${venueName ? ` at ${venueName}` : ""}. View interactive 3D ceremonies, venue directions, and RSVP online.`;
 
-  const ogImageUrl = heroImage && heroImage.startsWith("http")
-    ? heroImage
-    : `${siteConfig.url}/${slug}/opengraph-image`;
+  // Always use the lightweight, optimized 1200x630 OG image (<120KB) so WhatsApp & social scrapers never fail the 300KB limit
+  const ogImageUrl = `${siteConfig.url}/${slug}/opengraph-image`;
 
   return {
+    metadataBase: new URL(siteConfig.url),
     title,
     description,
     alternates: {
-      canonical: `${siteConfig.url}/${slug}`,
+      canonical: `/${slug}`,
     },
     openGraph: {
       title: `${coupleTitle} — Wedding Celebration Invitation`,
@@ -101,6 +101,7 @@ export async function generateMetadata({
       images: [
         {
           url: ogImageUrl,
+          secureUrl: ogImageUrl,
           width: 1200,
           height: 630,
           type: "image/png",
@@ -113,6 +114,14 @@ export async function generateMetadata({
       title: `${coupleTitle} — Wedding Celebration Invitation`,
       description,
       images: [ogImageUrl],
+    },
+    other: {
+      "og:image:secure_url": ogImageUrl,
+      "og:image:type": "image/png",
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      image: ogImageUrl,
+      thumbnail: ogImageUrl,
     },
     robots: {
       index: true,

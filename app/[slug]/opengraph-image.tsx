@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import prisma from "@/lib/prisma";
 
 export const runtime = "nodejs";
+export const revalidate = 86400;
 export const alt = "Wedding Celebration Invitation";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -72,6 +73,14 @@ export default async function Image({
 
   const coupleTitle = `${brideName} & ${groomName}`;
   const displayDateVenue = [weddingDateStr, venueName].filter(Boolean).join("  •  ");
+  const nameFontSize =
+    coupleTitle.length > 32
+      ? "44px"
+      : coupleTitle.length > 24
+      ? "50px"
+      : coupleTitle.length > 18
+      ? "58px"
+      : "64px";
 
   return new ImageResponse(
     (
@@ -119,18 +128,18 @@ export default async function Image({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "12px",
+            gap: "10px",
             color: "#F5D77F",
-            fontSize: "17px",
+            fontSize: "16px",
             fontWeight: 700,
             letterSpacing: "0.26em",
             textTransform: "uppercase",
-            marginBottom: "14px",
+            marginBottom: "12px",
           }}
         >
-          <span>✦</span>
+          <span>•</span>
           <span>A SACRED WEDDING CELEBRATION</span>
-          <span>✦</span>
+          <span>•</span>
         </div>
 
         {/* Auspicious Traditional Invocation */}
@@ -151,16 +160,18 @@ export default async function Image({
         <div
           style={{
             display: "flex",
-            fontSize: "66px",
+            fontSize: nameFontSize,
             fontFamily: "serif",
             fontWeight: 700,
             color: "#FFF8EA",
             textAlign: "center",
-            lineHeight: 1.15,
+            justifyContent: "center",
+            lineHeight: 1.2,
             letterSpacing: "0.02em",
             marginBottom: "14px",
-            maxWidth: "1040px",
+            maxWidth: "980px",
             textShadow: "0 4px 16px rgba(0, 0, 0, 0.8)",
+            flexWrap: "wrap",
           }}
         >
           {coupleTitle}
@@ -170,12 +181,12 @@ export default async function Image({
         <div
           style={{
             display: "flex",
-            fontSize: "20px",
+            fontSize: "19px",
             fontFamily: "serif",
             fontStyle: "italic",
             color: "#E2CBB0",
             textAlign: "center",
-            marginBottom: "24px",
+            marginBottom: "22px",
             letterSpacing: "0.04em",
           }}
         >
@@ -192,12 +203,12 @@ export default async function Image({
               backgroundColor: "rgba(212, 175, 55, 0.16)",
               border: "1.5px solid rgba(245, 220, 140, 0.75)",
               borderRadius: "9999px",
-              padding: "10px 32px",
+              padding: "8px 28px",
               color: "#FBE6A2",
-              fontSize: "19px",
+              fontSize: "17px",
               fontWeight: 700,
-              letterSpacing: "0.08em",
-              marginBottom: "20px",
+              letterSpacing: "0.06em",
+              marginBottom: "18px",
             }}
           >
             {displayDateVenue}
@@ -214,26 +225,26 @@ export default async function Image({
             color: "#240810",
             padding: "8px 24px",
             borderRadius: "9999px",
-            fontSize: "14px",
+            fontSize: "13px",
             fontWeight: 800,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
           }}
         >
           <span>TAP TO OPEN 3D DIGITAL INVITATION</span>
-          <span>➔</span>
+          <span>-></span>
         </div>
 
         {/* Footer Brand Watermark */}
         <div
           style={{
             position: "absolute",
-            bottom: "28px",
+            bottom: "26px",
             display: "flex",
             alignItems: "center",
             gap: "6px",
             color: "rgba(245, 220, 140, 0.55)",
-            fontSize: "13px",
+            fontSize: "12px",
             letterSpacing: "0.16em",
             textTransform: "uppercase",
           }}
