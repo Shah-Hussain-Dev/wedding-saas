@@ -28,6 +28,7 @@ export async function GET(
 
       const trans = (invitation.translations as any) || {};
       const isPaid = invitation.order?.status === "paid";
+      const rawSlideshow = Array.isArray(invitation.slideshowImages) ? invitation.slideshowImages : [];
       const enriched = {
         ...invitation,
         isPaid,
@@ -39,6 +40,9 @@ export async function GET(
         sacredTranslation: trans.sacredTranslation || null,
         brideParents: trans.brideParents || null,
         groomParents: trans.groomParents || null,
+        slideshowImages: rawSlideshow,
+        gallery: rawSlideshow,
+        galleryImages: rawSlideshow,
         couple: {
           brideName: invitation.brideName,
           groomName: invitation.groomName,
@@ -129,6 +133,15 @@ export async function PUT(
       const isPaid = existing?.order?.status === "paid";
       const isPublished = isPaid ? Boolean(body.isPublished ?? existing?.isPublished ?? true) : false;
 
+      const resolvedSlideshow =
+        (Array.isArray(slideshowImages) && slideshowImages.length > 0)
+          ? slideshowImages
+          : (Array.isArray(body.gallery) && body.gallery.length > 0)
+            ? body.gallery
+            : (Array.isArray(body.galleryImages) && body.galleryImages.length > 0)
+              ? body.galleryImages
+              : (slideshowImages || []);
+
       const updated = await prisma.invitation.update({
         where: { id },
         data: {
@@ -143,7 +156,7 @@ export async function PUT(
           slug: uniqueSlug,
           templateId: templateId || "royal-lotus",
           heroImageUrl: heroImageUrl || null,
-          slideshowImages: slideshowImages || [],
+          slideshowImages: resolvedSlideshow,
           musicTrack: musicTrack || "track1",
           showDressCode: Boolean(showDressCode),
           dressCodeText: dressCodeText || null,
@@ -164,6 +177,9 @@ export async function PUT(
         sacredInvocation: sacredInvocation || null,
         sacredVerse: sacredVerse || null,
         sacredTranslation: sacredTranslation || null,
+        slideshowImages: resolvedSlideshow,
+        gallery: resolvedSlideshow,
+        galleryImages: resolvedSlideshow,
       };
 
       return NextResponse.json(enrichedUpdated, { status: 200 });

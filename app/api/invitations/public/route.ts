@@ -28,6 +28,7 @@ export async function GET(req: NextRequest) {
 
       const transObj = (invitation.translations as any) || {};
       const isPaid = invitation.order?.status === "paid";
+      const rawSlideshow = Array.isArray(invitation.slideshowImages) ? invitation.slideshowImages : [];
       const enrichedInvitation = {
         ...invitation,
         isPaid,
@@ -36,6 +37,11 @@ export async function GET(req: NextRequest) {
         sacredInvocation: transObj.sacredInvocation || null,
         sacredVerse: transObj.sacredVerse || null,
         sacredTranslation: transObj.sacredTranslation || null,
+        brideParents: transObj.brideParents || null,
+        groomParents: transObj.groomParents || null,
+        slideshowImages: rawSlideshow,
+        gallery: rawSlideshow,
+        galleryImages: rawSlideshow,
       };
 
       return NextResponse.json(enrichedInvitation, { status: 200 });

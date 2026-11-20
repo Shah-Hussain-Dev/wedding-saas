@@ -51,6 +51,14 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
           const trans = (data?.translations as any) || {};
           const resolvedReligion = data?.religion || trans.religion || localItem?.religion || "universal";
           const isPaid = Boolean(data?.isPaid === true || data?.order?.status === "paid" || data?.orderStatus === "paid");
+          const candidateSlideshow =
+            (Array.isArray(data?.slideshowImages) && data.slideshowImages.length > 0 ? data.slideshowImages : null) ||
+            (Array.isArray(data?.gallery) && data.gallery.length > 0 ? data.gallery : null) ||
+            (Array.isArray(data?.galleryImages) && data.galleryImages.length > 0 ? data.galleryImages : null) ||
+            (Array.isArray(localItem?.slideshowImages) && localItem.slideshowImages.length > 0 ? localItem.slideshowImages : null) ||
+            (Array.isArray(localItem?.gallery) && localItem.gallery.length > 0 ? localItem.gallery : null) ||
+            (Array.isArray(localItem?.galleryImages) && localItem.galleryImages.length > 0 ? localItem.galleryImages : null) ||
+            [];
           setInvitation({
             ...localItem,
             ...data,
@@ -60,6 +68,9 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
             sacredInvocation: data?.sacredInvocation || trans.sacredInvocation || localItem?.sacredInvocation,
             sacredVerse: data?.sacredVerse || trans.sacredVerse || localItem?.sacredVerse,
             sacredTranslation: data?.sacredTranslation || trans.sacredTranslation || localItem?.sacredTranslation,
+            slideshowImages: candidateSlideshow,
+            gallery: candidateSlideshow,
+            galleryImages: candidateSlideshow,
           });
           setLoading(false);
           return;
@@ -132,6 +143,15 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
     ? `#${invitation.groomName}And${invitation.brideName}`.replace(/[\s&]+/g, "")
     : undefined;
 
+  const candidateGallery =
+    (Array.isArray(invitation.gallery) && invitation.gallery.length > 0)
+      ? invitation.gallery
+      : (Array.isArray(invitation.slideshowImages) && invitation.slideshowImages.length > 0)
+        ? invitation.slideshowImages
+        : (Array.isArray(invitation.galleryImages) && invitation.galleryImages.length > 0)
+          ? invitation.galleryImages
+          : templateDefault.gallery;
+
   const mergedInvitation = {
     ...templateDefault,
     ...(isCustomized ? {
@@ -160,6 +180,9 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
     sacredInvocation: invitation.sacredInvocation || transObj.sacredInvocation,
     sacredVerse: invitation.sacredVerse || transObj.sacredVerse,
     sacredTranslation: invitation.sacredTranslation || transObj.sacredTranslation,
+    gallery: candidateGallery,
+    slideshowImages: candidateGallery,
+    galleryImages: candidateGallery,
     hideReligionSwitcher: true,
     isLive: true,
     isOwned: true,

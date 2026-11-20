@@ -43,6 +43,7 @@ export async function GET(req: NextRequest) {
           if (existing) {
             const trans = (existing.translations as any) || {};
             const isPaid = existing.order?.status === "paid";
+            const rawSlideshow = Array.isArray(existing.slideshowImages) ? existing.slideshowImages : [];
             return NextResponse.json({
               existingInvitation: {
                 ...existing,
@@ -53,6 +54,9 @@ export async function GET(req: NextRequest) {
                 sacredInvocation: trans.sacredInvocation || null,
                 sacredVerse: trans.sacredVerse || null,
                 sacredTranslation: trans.sacredTranslation || null,
+                slideshowImages: rawSlideshow,
+                gallery: rawSlideshow,
+                galleryImages: rawSlideshow,
                 alreadySaved: true,
               },
             });
@@ -274,6 +278,15 @@ export async function POST(req: NextRequest) {
         const isPaid = (existingInvitation.order?.status || "pending") === "paid";
         const isPublished = isPaid ? Boolean(body.isPublished && isPaid) : false;
 
+        const resolvedSlideshow =
+          (Array.isArray(slideshowImages) && slideshowImages.length > 0)
+            ? slideshowImages
+            : (Array.isArray(body.gallery) && body.gallery.length > 0)
+              ? body.gallery
+              : (Array.isArray(body.galleryImages) && body.galleryImages.length > 0)
+                ? body.galleryImages
+                : (slideshowImages !== undefined ? slideshowImages : existingInvitation.slideshowImages);
+
         const updatedInvitation = await prisma.invitation.update({
           where: { id: existingInvitation.id },
           data: {
@@ -286,7 +299,7 @@ export async function POST(req: NextRequest) {
             venueLat: venueLat !== undefined ? venueLat : existingInvitation.venueLat,
             venueLng: venueLng !== undefined ? venueLng : existingInvitation.venueLng,
             heroImageUrl: heroImageUrl !== undefined ? heroImageUrl : existingInvitation.heroImageUrl,
-            slideshowImages: slideshowImages !== undefined ? slideshowImages : existingInvitation.slideshowImages,
+            slideshowImages: resolvedSlideshow,
             musicTrack: musicTrack || existingInvitation.musicTrack,
             showDressCode: showDressCode !== undefined ? Boolean(showDressCode) : existingInvitation.showDressCode,
             dressCodeText: dressCodeText !== undefined ? dressCodeText : existingInvitation.dressCodeText,
@@ -321,6 +334,9 @@ export async function POST(req: NextRequest) {
           sacredInvocation: sacredInvocation || null,
           sacredVerse: sacredVerse || null,
           sacredTranslation: sacredTranslation || null,
+          slideshowImages: resolvedSlideshow,
+          gallery: resolvedSlideshow,
+          galleryImages: resolvedSlideshow,
           alreadySaved: true,
           message: "This template is already saved in your dashboard.",
         };
@@ -350,6 +366,15 @@ export async function POST(req: NextRequest) {
       const isPaid = order.status === "paid";
       const isPublished = Boolean(body.isPublished && isPaid);
 
+      const resolvedCreateSlideshow =
+        (Array.isArray(slideshowImages) && slideshowImages.length > 0)
+          ? slideshowImages
+          : (Array.isArray(body.gallery) && body.gallery.length > 0)
+            ? body.gallery
+            : (Array.isArray(body.galleryImages) && body.galleryImages.length > 0)
+              ? body.galleryImages
+              : (slideshowImages || []);
+
       const invitation = await prisma.invitation.create({
         data: {
           userId: user.id,
@@ -365,7 +390,7 @@ export async function POST(req: NextRequest) {
           venueLat: venueLat || null,
           venueLng: venueLng || null,
           heroImageUrl: heroImageUrl || null,
-          slideshowImages: slideshowImages || [],
+          slideshowImages: resolvedCreateSlideshow,
           musicTrack: musicTrack || "track1",
           showDressCode: Boolean(showDressCode),
           dressCodeText: dressCodeText || null,
@@ -386,6 +411,9 @@ export async function POST(req: NextRequest) {
         sacredInvocation: sacredInvocation || null,
         sacredVerse: sacredVerse || null,
         sacredTranslation: sacredTranslation || null,
+        slideshowImages: resolvedCreateSlideshow,
+        gallery: resolvedCreateSlideshow,
+        galleryImages: resolvedCreateSlideshow,
         alreadySaved: false,
       };
 

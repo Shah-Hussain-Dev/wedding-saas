@@ -76,29 +76,32 @@
   ],
   "gallery": [
     {
-      "url": "/templates/crimson-royale/gallery-1.webp",
+      "url": "/images/gallery-library/hindu/haveli-royal-vivah.webp",
       "caption": "The Royal Palace Courtyard"
     },
     {
-      "url": "/templates/crimson-royale/gallery-2.webp",
-      "caption": "Intricate Bridal Mehendi"
+      "url": "/images/gallery-library/hindu/vedic-mandap-ceremony.webp",
+      "caption": "Sacred Vivah Ceremony"
     },
     {
-      "url": "/templates/crimson-royale/gallery-3.webp",
-      "caption": "A Promise of Togetherness"
+      "url": "/images/gallery-library/hindu/lotus-courtyard-sangeet.webp",
+      "caption": "Lotus Courtyard Celebrations"
     },
     {
-      "url": "/templates/crimson-royale/gallery-4.webp",
+      "url": "/images/gallery-library/universal/starlit-celestial-pier.webp",
       "caption": "Sunset at the Lake Palace"
     },
     {
-      "url": "/templates/crimson-royale/gallery-5.webp",
-      "caption": "Celebrations and Joy"
-    },
-    {
-      "url": "/templates/crimson-royale/gallery-6.webp",
+      "url": "/images/gallery-library/universal/botanical-glasshouse-promenade.webp",
       "caption": "Everlasting Love"
     }
+  ],
+  "slideshowImages": [
+    "/images/gallery-library/hindu/haveli-royal-vivah.webp",
+    "/images/gallery-library/hindu/vedic-mandap-ceremony.webp",
+    "/images/gallery-library/hindu/lotus-courtyard-sangeet.webp",
+    "/images/gallery-library/universal/starlit-celestial-pier.webp",
+    "/images/gallery-library/universal/botanical-glasshouse-promenade.webp"
   ],
   "brideParents": "Swargiya Bindu Agrahari & Shri Vinay Agrahari",
   "groomParents": "Smt. Vimla Devi & Shri Mahendra Agrahari"

@@ -51,8 +51,9 @@ interface InvitationData {
   venueLat?: number | null;
   venueLng?: number | null;
   heroImageUrl?: string | null;
-  slideshowImages?: string[];
-  gallery?: GalleryItem[];
+  slideshowImages?: (string | GalleryItem)[];
+  gallery?: (string | GalleryItem)[];
+  galleryImages?: (string | GalleryItem)[];
   showDressCode?: boolean;
   dressCodeText?: string | null;
   showTransport?: boolean;
@@ -609,8 +610,12 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       { id: "vidaai", name: "Vidaai", date: "15 December 2026", time: "9:00 AM", location: "Main Courtyard", detail: "A tender farewell, wrapped in blessings", mapsUrl: "https://maps.google.com/?q=Lake+Pichola+Udaipur" },
     ];
 
-  // Authentic 6-item gallery photos from live template
-  const rawLotusGallery = data?.gallery && data.gallery.length > 0 ? data.gallery : null;
+  // Authentic 5-6 item gallery photos from customizer / live data
+  const rawLotusGallery =
+    (Array.isArray(data?.gallery) && data.gallery.length > 0 ? data.gallery : null) ||
+    (Array.isArray(data?.slideshowImages) && data.slideshowImages.length > 0 ? data.slideshowImages : null) ||
+    (Array.isArray(data?.galleryImages) && data.galleryImages.length > 0 ? data.galleryImages : null);
+
   const galleryItems: GalleryItem[] = rawLotusGallery
     ? rawLotusGallery
       .map((item: any, idx: number) => {
@@ -624,12 +629,11 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
       })
       .filter((item: GalleryItem) => Boolean(item.url))
     : [
-      { url: "/templates/crimson-royale/gallery-1.webp", caption: "The Royal Palace Courtyard" },
-      { url: "/templates/crimson-royale/gallery-2.webp", caption: "Intricate Bridal Mehendi" },
-      { url: "/templates/crimson-royale/gallery-3.webp", caption: "A Promise of Togetherness" },
-      { url: "/templates/crimson-royale/gallery-4.webp", caption: "Sunset at the Lake Palace" },
-      { url: "/templates/crimson-royale/gallery-5.webp", caption: "Celebrations and Joy" },
-      { url: "/templates/crimson-royale/gallery-6.webp", caption: "Everlasting Love" },
+      { url: "/images/gallery-library/hindu/haveli-royal-vivah.webp", caption: "The Royal Palace Courtyard" },
+      { url: "/images/gallery-library/hindu/vedic-mandap-ceremony.webp", caption: "Sacred Vivah Ceremony" },
+      { url: "/images/gallery-library/hindu/lotus-courtyard-sangeet.webp", caption: "Lotus Courtyard Celebrations" },
+      { url: "/images/gallery-library/universal/starlit-celestial-pier.webp", caption: "Sunset at the Lake Palace" },
+      { url: "/images/gallery-library/universal/botanical-glasshouse-promenade.webp", caption: "Everlasting Love" },
     ];
 
   // Full-screen Lightbox keyboard controls (Escape, ArrowLeft, ArrowRight)
