@@ -76,7 +76,7 @@ export async function generateMetadata({
   }
 
   const coupleTitle = `${brideName} & ${groomName}`;
-  const title = `${coupleTitle} — Wedding Celebration Invitation | ${siteConfig.name}`;
+  const title = `${coupleTitle} — Wedding Celebration Invitation`;
   const description = `You are cordially invited to celebrate the sacred wedding of ${coupleTitle}${
     weddingDateStr ? ` on ${weddingDateStr}` : ""
   }${venueName ? ` at ${venueName}` : ""}. View interactive 3D ceremonies, venue directions, and RSVP online.`;
@@ -92,7 +92,7 @@ export async function generateMetadata({
       canonical: `/${slug}`,
     },
     openGraph: {
-      title: `${coupleTitle} — Wedding Celebration Invitation`,
+      title,
       description,
       url: `${siteConfig.url}/${slug}`,
       siteName: siteConfig.name,
@@ -111,7 +111,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${coupleTitle} — Wedding Celebration Invitation`,
+      title,
       description,
       images: [ogImageUrl],
     },
@@ -122,6 +122,7 @@ export async function generateMetadata({
       "og:image:height": "630",
       image: ogImageUrl,
       thumbnail: ogImageUrl,
+      "link:image_src": ogImageUrl,
     },
     robots: {
       index: true,
@@ -130,6 +131,13 @@ export async function generateMetadata({
   };
 }
 
-export default function SlugLayout({ children }: SlugLayoutProps) {
-  return <>{children}</>;
+export default async function SlugLayout({ children, params }: SlugLayoutProps) {
+  const { slug } = await params;
+  const ogImageUrl = `${siteConfig.url}/${slug}/opengraph-image`;
+  return (
+    <>
+      <link rel="image_src" href={ogImageUrl} />
+      {children}
+    </>
+  );
 }

@@ -177,10 +177,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${cormorantGaramond.variable} light h-full antialiased`}
       style={{ colorScheme: "light" }}
     >
-      <head>
-        <JsonLd data={rootStructuredData} />
-      </head>
       <body className="min-h-full flex flex-col bg-[#FCFBF7] text-[#1A1A1A]">
+        <JsonLd data={rootStructuredData} />
         <SkipToMainLink />
         <SessionProvider>
           <LenisProvider>{children}</LenisProvider>
