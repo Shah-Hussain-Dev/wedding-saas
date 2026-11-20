@@ -232,7 +232,7 @@ export default async function Image({
           }}
         >
           <span>TAP TO OPEN 3D DIGITAL INVITATION</span>
-          <span>-></span>
+          <span>➔</span>
         </div>
 
         {/* Footer Brand Watermark */}
