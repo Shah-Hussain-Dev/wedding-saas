@@ -114,6 +114,18 @@ function RoyalLotusIntro({
   const startYRef = useRef(0);
   const thresholdRef = useRef(100);
 
+  // iOS Safari requires audio playback to be initialized from a synchronous user touch/pointer event (pointerdown or touchstart).
+  // A drag gesture inside pointermove / touchmove does NOT qualify as a user activation on iOS Safari.
+  const unlockAudioForIOS = useCallback(() => {
+    if (audioRef.current && audioRef.current.paused) {
+      audioRef.current.play().then(() => {
+        setIsAudioPlaying(true);
+      }).catch((err) => {
+        console.debug("iOS audio unlock attempt:", err);
+      });
+    }
+  }, [audioRef, setIsAudioPlaying]);
+
   useEffect(() => {
     thresholdRef.current = clamp(Math.round(0.12 * window.innerHeight), 80, 120);
   }, []);
@@ -221,6 +233,7 @@ function RoyalLotusIntro({
   }, [audioRef, setIsAudioPlaying]);
 
   const handleSkip = () => {
+    unlockAudioForIOS();
     if (!isTriggeredRef.current) {
       isTriggeredRef.current = true;
       setIsLit(true);
@@ -236,6 +249,7 @@ function RoyalLotusIntro({
   };
 
   const handleLotusClick = () => {
+    unlockAudioForIOS();
     setIsLotusOpen(true);
     if (audioRef.current) {
       audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
@@ -250,6 +264,8 @@ function RoyalLotusIntro({
     <div
       className={`intro ${isLit ? "intro--lit" : ""} ${isLeaving ? "intro--leaving" : ""}`}
       aria-hidden={isLeaving}
+      onPointerDownCapture={unlockAudioForIOS}
+      onTouchStartCapture={unlockAudioForIOS}
     >
       <div className="intro__scene">
         <img
@@ -281,6 +297,7 @@ function RoyalLotusIntro({
           transition: "transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.75s ease-out",
         } : undefined}
         onPointerDown={(e) => {
+          unlockAudioForIOS();
           if (isTriggeredRef.current || reveals.names) return;
           e.preventDefault();
           isPointerDownRef.current = true;
@@ -289,6 +306,7 @@ function RoyalLotusIntro({
           resetRopeTransforms();
           ropeBtnRef.current?.setPointerCapture?.(e.pointerId);
         }}
+        onTouchStart={unlockAudioForIOS}
         onPointerMove={(e) => {
           if (!isPointerDownRef.current || isTriggeredRef.current || reveals.names) return;
           const rawDelta = Math.max(0, e.clientY - startYRef.current);
@@ -582,6 +600,10 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
   const [activePhotoIdx, setActivePhotoIdx] = useState<number | null>(null);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const userMutedRef = useRef(false);
+
+  const rawMusicTrack = data?.musicTrack || "/templates/lotus-courtyard/music.mp3";
+  const resolvedMusicTrack = rawMusicTrack.replace(/\.mpeg$/i, ".mp3");
 
   const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple?.brideName || "Ananya";
   const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple?.groomName || "Shubham";
@@ -689,20 +711,42 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
     if (isAudioPlaying) {
       audioRef.current.pause();
       setIsAudioPlaying(false);
+      userMutedRef.current = true;
     } else {
+      userMutedRef.current = false;
       audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => { });
     }
   };
 
+  useEffect(() => {
+    const handleFirstTouch = () => {
+      if (!userMutedRef.current && audioRef.current && audioRef.current.paused) {
+        audioRef.current.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      }
+    };
+    window.addEventListener("touchstart", handleFirstTouch, { once: true, passive: true });
+    window.addEventListener("pointerdown", handleFirstTouch, { once: true, passive: true });
+    return () => {
+      window.removeEventListener("touchstart", handleFirstTouch);
+      window.removeEventListener("pointerdown", handleFirstTouch);
+    };
+  }, [setIsAudioPlaying]);
+
   return (
     <div className="tmpl-lotus-courtyard relative bg-[#FAF7F0] text-[#3D141C] selection:bg-[#D4AF37] selection:text-[#3D141C] min-h-screen">
-      {/* Background Audio */}
+      {/* Background Audio with iOS Safari AVFoundation compatibility */}
       <audio
         ref={audioRef}
-        src={data?.musicTrack || "/templates/lotus-courtyard/music.mp3"}
+        src={resolvedMusicTrack}
         loop
         preload="auto"
-      />
+        playsInline
+        onPlay={() => setIsAudioPlaying(true)}
+        onPause={() => setIsAudioPlaying(false)}
+      >
+        <source src={resolvedMusicTrack} type="audio/mpeg" />
+        <source src={resolvedMusicTrack.replace(/\.mp3$/i, ".mpeg")} type="audio/mpeg" />
+      </audio>
 
       {/* STAGE 1: INTRO GATE */}
       {!unlocked && (

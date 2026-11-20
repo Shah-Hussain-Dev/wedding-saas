@@ -32,8 +32,11 @@ export async function GET(req: NextRequest) {
       const transObj = (invitation.translations as any) || {};
       const isPaid = invitation.order?.status === "paid";
       const rawSlideshow = Array.isArray(invitation.slideshowImages) ? invitation.slideshowImages : [];
+      const rawMusicTrack = invitation.musicTrack || "";
+      const normalizedMusicTrack = rawMusicTrack ? rawMusicTrack.replace(/\.mpeg$/i, ".mp3") : rawMusicTrack;
       const enrichedInvitation = {
         ...invitation,
+        musicTrack: normalizedMusicTrack,
         isPaid,
         isPublished: Boolean(invitation.isPublished && isPaid),
         religion: transObj.religion || "universal",

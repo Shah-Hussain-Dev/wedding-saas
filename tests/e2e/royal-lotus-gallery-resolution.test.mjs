@@ -93,8 +93,12 @@ test("Song library includes Ramayana Tera Mera Rang track", () => {
     "lib/audio-tracks.ts must contain ramayana-tera-mera-rang track ID"
   );
   assert.ok(
-    content.includes("/audio/ramayana-tera-mera-rang.mpeg"),
-    "lib/audio-tracks.ts must point to /audio/ramayana-tera-mera-rang.mpeg"
+    content.includes("/audio/ramayana-tera-mera-rang.mp3") || content.includes("/audio/ramayana-tera-mera-rang.mpeg"),
+    "lib/audio-tracks.ts must point to /audio/ramayana-tera-mera-rang.mp3 or .mpeg"
+  );
+  assert.ok(
+    fs.existsSync(path.resolve("public/audio/ramayana-tera-mera-rang.mp3")),
+    "public/audio/ramayana-tera-mera-rang.mp3 must exist on disk for iOS playback"
   );
   assert.ok(
     fs.existsSync(path.resolve("public/audio/ramayana-tera-mera-rang.mpeg")),

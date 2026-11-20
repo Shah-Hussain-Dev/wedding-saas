@@ -22,7 +22,7 @@ export const CURATED_AUDIO_TRACKS: AudioTrackItem[] = [
     flag: "🕉️",
     tag: "Divine Vivah Bhajan",
     duration: "3:30",
-    url: "/audio/ramayana-tera-mera-rang.mpeg",
+    url: "/audio/ramayana-tera-mera-rang.mp3",
     description: "Soulful Ram-Sita vivah bhajan celebrating eternal love, sacred vows, and divine blessings.",
   },
 

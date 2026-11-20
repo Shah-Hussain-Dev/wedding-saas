@@ -182,6 +182,7 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
     } : {}),
     ...invitation,
     hashtag: invitation.hashtag || dynamicHashtag || templateDefault.hashtag,
+    musicTrack: (invitation.musicTrack || templateDefault.musicTrack)?.replace(/\.mpeg$/i, ".mp3"),
     religion: selectedReligion,
     sacredInvocation: invitation.sacredInvocation || transObj.sacredInvocation,
     sacredVerse: invitation.sacredVerse || transObj.sacredVerse,
