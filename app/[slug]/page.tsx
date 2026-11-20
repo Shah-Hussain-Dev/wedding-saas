@@ -45,7 +45,13 @@ export default function LiveInvitationPage({ params }: LiveInvitationPageProps) 
       }
 
       try {
-        const res = await fetch(`/api/invitations/public?slug=${slug}`);
+        const res = await fetch(`/api/invitations/public?slug=${encodeURIComponent(slug)}&_t=${Date.now()}`, {
+          cache: "no-store",
+          headers: {
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+        });
         if (res.ok) {
           const data = await res.json();
           const trans = (data?.translations as any) || {};

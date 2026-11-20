@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -44,7 +47,14 @@ export async function GET(req: NextRequest) {
         galleryImages: rawSlideshow,
       };
 
-      return NextResponse.json(enrichedInvitation, { status: 200 });
+      return NextResponse.json(enrichedInvitation, {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "CDN-Cache-Control": "no-store",
+          "Vercel-CDN-Cache-Control": "no-store",
+        },
+      });
     } catch (dbError) {
       console.warn("Public Invitation DB fetch failed. Relying on client-side demo fallback.", dbError);
       return NextResponse.json({ error: "Database offline" }, { status: 503 });

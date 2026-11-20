@@ -12,6 +12,20 @@ export interface AudioTrackItem {
 }
 
 export const CURATED_AUDIO_TRACKS: AudioTrackItem[] = [
+  // ── 🕉️ DIVINE & DEVOTIONAL WEDDING ──
+  {
+    id: "ramayana-tera-mera-rang",
+    title: "Tera Mera Rang Ek Hai (Ramayana)",
+    artist: "Ramayana Vivah Devotional",
+    category: "indian",
+    categoryLabel: "Trending Indian",
+    flag: "🕉️",
+    tag: "Divine Vivah Bhajan",
+    duration: "3:30",
+    url: "/audio/ramayana-tera-mera-rang.mpeg",
+    description: "Soulful Ram-Sita vivah bhajan celebrating eternal love, sacred vows, and divine blessings.",
+  },
+
   // ── 🇮🇳 TRENDING INDIAN WEDDING ──
   {
     id: "din-shagna-da",

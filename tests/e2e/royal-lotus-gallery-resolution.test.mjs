@@ -83,3 +83,31 @@ test("API routes enrich invitation with gallery, galleryImages and slideshowImag
   assert.ok(rootApi.includes("resolvedSlideshow"), "POST /api/invitations update must resolve slideshow");
   assert.ok(rootApi.includes("resolvedCreateSlideshow"), "POST /api/invitations create must resolve slideshow");
 });
+
+test("Song library includes Ramayana Tera Mera Rang track", () => {
+  const audioTracksPath = path.resolve("lib/audio-tracks.ts");
+  const content = fs.readFileSync(audioTracksPath, "utf8");
+
+  assert.ok(
+    content.includes("ramayana-tera-mera-rang"),
+    "lib/audio-tracks.ts must contain ramayana-tera-mera-rang track ID"
+  );
+  assert.ok(
+    content.includes("/audio/ramayana-tera-mera-rang.mpeg"),
+    "lib/audio-tracks.ts must point to /audio/ramayana-tera-mera-rang.mpeg"
+  );
+  assert.ok(
+    fs.existsSync(path.resolve("public/audio/ramayana-tera-mera-rang.mpeg")),
+    "public/audio/ramayana-tera-mera-rang.mpeg must exist on disk"
+  );
+});
+
+test("Public invitation API and slug fetcher enforce cache-busting to prevent stale mobile responses", () => {
+  const publicApi = fs.readFileSync("app/api/invitations/public/route.ts", "utf8");
+  assert.ok(publicApi.includes("force-dynamic"), "Public API must be force-dynamic");
+  assert.ok(publicApi.includes("no-store"), "Public API headers must include no-store");
+
+  const slugPage = fs.readFileSync("app/[slug]/page.tsx", "utf8");
+  assert.ok(slugPage.includes("_t="), "app/[slug]/page.tsx must use timestamp cache busting param");
+  assert.ok(slugPage.includes('cache: "no-store"'), "app/[slug]/page.tsx must use cache: no-store");
+});
