@@ -1085,7 +1085,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           aria-hidden="true"
           initial={{ opacity: 0, x: -30, y: -20 }}
           whileInView={{ opacity: 0.6, x: 0, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.9 }}
         />
         <motion.img
@@ -1095,7 +1095,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           aria-hidden="true"
           initial={{ opacity: 0, x: 30, y: -20 }}
           whileInView={{ opacity: 0.6, x: 0, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: true, amount: 0.1 }}
           transition={{ duration: 0.9 }}
         />
 
@@ -1103,13 +1103,13 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.1 }}
             transition={{ duration: 0.7 }}
           >
             <img
-              className="essentials__jharokha"
+              className="essentials__chhatri essentials__jharokha"
               src="/templates/lotus-courtyard/motif-chhatri.webp"
-              alt=""
+              alt="Royal Chhatri motif"
               aria-hidden="true"
             />
             <p className="eyebrow">Guest Essentials</p>
@@ -1148,7 +1148,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
                 className="essentials__card"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
+                viewport={{ once: true, amount: 0.1 }}
                 transition={{ duration: 0.6, delay: 0.08 * idx }}
               >
                 <div className="essentials__icon-frame">
@@ -1200,7 +1200,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
           className="section-inner"
           initial={{ opacity: 0, scale: 0.96 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, amount: 0.5 }}
+          viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.7 }}
         >
           <img

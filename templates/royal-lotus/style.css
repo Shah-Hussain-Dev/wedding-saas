@@ -485,7 +485,156 @@
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
   max-width: 90%;
 }
-.tmpl-lotus-courtyard .essentials{background:#180a0c;position:relative;overflow:hidden}.tmpl-lotus-courtyard .essentials__bg{z-index:0;background-position:50%;background-size:cover;position:absolute;inset:0}.tmpl-lotus-courtyard .essentials__bg-tint{z-index:0;background:linear-gradient(#0a040580 0%,#0a040540 20%,#0a04054d 80%,#0a04058c 100%);position:absolute;inset:0}.tmpl-lotus-courtyard .essentials__corner{opacity:.6;pointer-events:none;z-index:0;width:160px;height:auto;position:absolute;top:0}.tmpl-lotus-courtyard .essentials__corner--left{left:0}.tmpl-lotus-courtyard .essentials__corner--right{right:0;transform:scaleX(-1)}.tmpl-lotus-courtyard .essentials .section-inner{z-index:1;position:relative}.tmpl-lotus-courtyard .essentials__chhatri{opacity:.95;width:80px;height:auto;margin:0 auto .6rem;display:block}.tmpl-lotus-courtyard .essentials__title{margin:.4rem 0 1rem;font-size:clamp(2rem,4vw,2.8rem);font-weight:400}.tmpl-lotus-courtyard .essentials__subtitle{color:var(--ink-soft);margin-top:1rem;font-size:.92rem}.tmpl-lotus-courtyard .essentials__grid{text-align:center;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.6rem;width:100%;margin:2.8rem 0 0;padding:0;list-style:none;display:grid}.tmpl-lotus-courtyard .essentials__card{-webkit-backdrop-filter:blur(6px);background:linear-gradient(#160a0c99 0%,#080405b8 100%);border:1px solid #c9a86a52;border-radius:10px;flex-direction:column;align-items:center;padding:2.6rem 1.8rem 2.2rem;transition:border-color .3s,background .3s,transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s;display:flex;position:relative;overflow:hidden;box-shadow:0 14px 30px #00000059}.tmpl-lotus-courtyard .essentials__card:before{content:"";background:linear-gradient(90deg,#0000,#c9a86abf,#0000);width:56%;height:1px;position:absolute;top:0;left:50%;transform:translate(-50%)}.tmpl-lotus-courtyard .essentials__card:hover{background:linear-gradient(#1a0c0eb3 0%,#0a0506d1 100%);border-color:#c9a86a99;transform:translateY(-6px);box-shadow:0 22px 44px #00000073}.tmpl-lotus-courtyard .essentials__icon-frame{background:radial-gradient(circle,#c9a86a29 0%,#c9a86a00 72%);border:1px solid #c9a86a52;border-radius:50%;justify-content:center;align-items:center;width:78px;height:78px;margin-bottom:1.2rem;transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .3s;display:flex}.tmpl-lotus-courtyard .essentials__card:hover .essentials__icon-frame{border-color:#c9a86a99;transform:scale(1.08)}.tmpl-lotus-courtyard .essentials__icon{object-fit:contain;width:42px;height:42px}.tmpl-lotus-courtyard .essentials__card h3{color:var(--gold-soft);margin-bottom:.6rem;font-size:1.3rem;font-weight:400}.tmpl-lotus-courtyard .essentials__rule{background:#c9a86a80;width:30px;height:1px;margin-bottom:.9rem}.tmpl-lotus-courtyard .essentials__card p{color:var(--ink-soft);font-size:.88rem;line-height:1.7}
+/* ─────────────────────────────────────────────────────────────────────────────
+   SECTION 5: GUEST ESSENTIALS (THINGS TO KNOW)
+───────────────────────────────────────────────────────────────────────────── */
+.tmpl-lotus-courtyard .essentials {
+  background: #180a0c;
+  position: relative;
+  overflow: hidden;
+}
+.tmpl-lotus-courtyard .essentials__bg {
+  z-index: 0;
+  background-position: center center;
+  background-size: cover;
+  position: absolute;
+  inset: 0;
+}
+.tmpl-lotus-courtyard .essentials__bg-tint {
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 4, 5, 0.5) 0%,
+    rgba(10, 4, 5, 0.25) 20%,
+    rgba(10, 4, 5, 0.3) 80%,
+    rgba(10, 4, 5, 0.55) 100%
+  );
+  position: absolute;
+  inset: 0;
+}
+.tmpl-lotus-courtyard .essentials__corner {
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+  width: clamp(90px, 14vw, 160px);
+  height: auto;
+  position: absolute;
+  top: 0;
+}
+.tmpl-lotus-courtyard .essentials__corner--left {
+  left: 0;
+}
+.tmpl-lotus-courtyard .essentials__corner--right {
+  right: 0;
+  transform: scaleX(-1);
+}
+.tmpl-lotus-courtyard .essentials .section-inner {
+  z-index: 1;
+  position: relative;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.tmpl-lotus-courtyard .essentials__chhatri,
+.tmpl-lotus-courtyard .essentials__jharokha {
+  opacity: 0.95 !important;
+  width: clamp(80px, 10vw, 110px) !important;
+  max-width: 120px !important;
+  height: auto !important;
+  margin: 0 auto 0.6rem auto !important;
+  display: block !important;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45)) !important;
+}
+.tmpl-lotus-courtyard .essentials__title {
+  margin: 0.4rem 0 1rem;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 400;
+}
+.tmpl-lotus-courtyard .essentials__subtitle {
+  color: var(--ink-soft);
+  margin-top: 1rem;
+  font-size: 0.92rem;
+}
+.tmpl-lotus-courtyard .essentials__grid {
+  text-align: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.6rem;
+  width: 100%;
+  max-width: 720px;
+  margin: 2.8rem auto 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  justify-content: center;
+}
+.tmpl-lotus-courtyard .essentials__card {
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  background: linear-gradient(rgba(22, 10, 12, 0.6) 0%, rgba(8, 4, 5, 0.72) 100%);
+  border: 1px solid rgba(201, 168, 106, 0.32);
+  border-radius: 10px;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.6rem 1.8rem 2.2rem;
+  transition: border-color 0.3s, background 0.3s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+.tmpl-lotus-courtyard .essentials__card:before {
+  content: "";
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 106, 0.75), transparent);
+  width: 56%;
+  height: 1px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%);
+}
+.tmpl-lotus-courtyard .essentials__card:hover {
+  background: linear-gradient(rgba(26, 12, 14, 0.7) 0%, rgba(10, 5, 6, 0.82) 100%);
+  border-color: rgba(201, 168, 106, 0.6);
+  transform: translateY(-6px);
+  box-shadow: 0 22px 44px rgba(0, 0, 0, 0.45);
+}
+.tmpl-lotus-courtyard .essentials__icon-frame {
+  background: radial-gradient(circle, rgba(201, 168, 106, 0.16) 0%, rgba(201, 168, 106, 0) 72%);
+  border: 1px solid rgba(201, 168, 106, 0.32);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  width: 78px;
+  height: 78px;
+  margin-bottom: 1.2rem;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s;
+  display: flex;
+}
+.tmpl-lotus-courtyard .essentials__card:hover .essentials__icon-frame {
+  border-color: rgba(201, 168, 106, 0.6);
+  transform: scale(1.08);
+}
+.tmpl-lotus-courtyard .essentials__icon {
+  object-fit: contain;
+  width: 42px;
+  height: 42px;
+}
+.tmpl-lotus-courtyard .essentials__card h3 {
+  color: var(--gold-soft);
+  margin-bottom: 0.6rem;
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+.tmpl-lotus-courtyard .essentials__rule {
+  background: rgba(201, 168, 106, 0.5);
+  width: 30px;
+  height: 1px;
+  margin-bottom: 0.9rem;
+}
+.tmpl-lotus-courtyard .essentials__card p {
+  color: var(--ink-soft);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
 /* ─────────────────────────────────────────────────────────────────────────────
    ROYAL LOTUS MOBILE-FIRST ROYAL HERITAGE FOOTER & MARKETING ATELIER
 ───────────────────────────────────────────────────────────────────────────── */
