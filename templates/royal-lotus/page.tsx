@@ -1129,7 +1129,7 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
               // },
               {
                 title: "Venue & Parking",
-                detail: data?.transportText || "Valet parking available at the main palace porch. Dedicated airport shuttles arranged.",
+                detail: data?.transportText || "Valet parking available at the main palace porch.",
                 icon: "/templates/lotus-courtyard/icon-venue.webp",
               },
               // {
