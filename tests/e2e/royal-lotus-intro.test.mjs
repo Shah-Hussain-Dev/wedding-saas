@@ -264,4 +264,31 @@ describe('Royal Lotus Hero Intro & Interactive Blooming Lotus Standards', () => 
       'Desktop map button must have compact height to prevent bottom border collision'
     );
   });
+
+  test('Feature 13: Pull Rope Hint Badge features bilingual English & Hindi prompts with mobile clamp', () => {
+    const pageContent = fs.readFileSync(pagePath, 'utf8');
+    const styleContent = fs.readFileSync(stylePath, 'utf8');
+
+    assert.ok(
+      pageContent.includes('Pull the rope to light our celebration'),
+      'page.tsx must have English pull rope text'
+    );
+    assert.ok(
+      pageContent.includes('उत्सव को रोशन करने के लिए डोरी खींचें'),
+      'page.tsx must have Hindi pull rope text'
+    );
+    assert.ok(
+      pageContent.includes('intro__hint-en') && pageContent.includes('intro__hint-hi'),
+      'page.tsx must use dedicated intro__hint-en and intro__hint-hi classes'
+    );
+
+    assert.ok(
+      styleContent.includes('.intro__hint--pull'),
+      'style.css must style intro__hint--pull'
+    );
+    assert.ok(
+      styleContent.includes('.intro__hint-en') && styleContent.includes('.intro__hint-hi'),
+      'style.css must style both English and Hindi hint spans'
+    );
+  });
 });

@@ -324,7 +324,7 @@ function RoyalLotusIntro({
         }}
         onPointerUp={handlePointerUpOrCancel}
         onPointerCancel={handlePointerUpOrCancel}
-        aria-label="Pull the rope to light our celebration"
+        aria-label="Pull the rope to light our celebration / उत्सव को रोशन करने के लिए डोरी खींचें"
         aria-hidden={reveals.names}
         tabIndex={reveals.names ? -1 : 0}
         type="button"
@@ -392,9 +392,10 @@ function RoyalLotusIntro({
         </div>
 
         {!reveals.lotus && !isLit && (
-          <p className="intro__hint intro__hint--pull">
-            Pull the rope to light our celebration
-          </p>
+          <div className="intro__hint intro__hint--pull" role="status">
+            <span className="intro__hint-en">Pull the rope to light our celebration</span>
+            <span className="intro__hint-hi">उत्सव को रोशन करने के लिए डोरी खींचें</span>
+          </div>
         )}
       </div>
     </div>
