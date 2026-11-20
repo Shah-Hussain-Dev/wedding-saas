@@ -1122,11 +1122,11 @@ export default function RoyalLotus({ data }: RoyalLotusProps) {
 
           <ul className="essentials__grid" aria-label="Guest information cards">
             {[
-              {
-                title: "Dress Code",
-                detail: data?.dressCodeText || "Royal Traditional Indian. Pastel lehengas, silk sarees, sherwanis, or bandhgalas.",
-                icon: "/templates/lotus-courtyard/icon-dress-code.webp",
-              },
+              // {
+              //   title: "Dress Code",
+              //   detail: data?.dressCodeText || "Royal Traditional Indian. Pastel lehengas, silk sarees, sherwanis, or bandhgalas.",
+              //   icon: "/templates/lotus-courtyard/icon-dress-code.webp",
+              // },
               {
                 title: "Venue & Parking",
                 detail: data?.transportText || "Valet parking available at the main palace porch. Dedicated airport shuttles arranged.",
