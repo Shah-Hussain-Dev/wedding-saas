@@ -33,6 +33,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
 
+  let templateId = "";
   let brideName = "";
   let groomName = "";
   let weddingDateStr = "";
@@ -43,15 +44,18 @@ export async function generateMetadata({
     const inv = await prisma.invitation.findUnique({
       where: { slug },
       select: {
+        templateId: true,
         brideName: true,
         groomName: true,
         weddingDate: true,
         venueName: true,
         heroImageUrl: true,
+        translations: true,
       },
     });
 
     if (inv) {
+      templateId = inv.templateId || "";
       brideName = inv.brideName || "";
       groomName = inv.groomName || "";
       venueName = inv.venueName || "";
@@ -77,9 +81,9 @@ export async function generateMetadata({
 
   const coupleTitle = `${brideName} & ${groomName}`;
   const title = `${coupleTitle} — Wedding Celebration Invitation`;
-  const description = `You are cordially invited to celebrate the sacred wedding of ${coupleTitle}${
+  const description = `${coupleTitle} cordially invite you to celebrate their wedding${
     weddingDateStr ? ` on ${weddingDateStr}` : ""
-  }${venueName ? ` at ${venueName}` : ""}. View interactive 3D ceremonies, venue directions, and RSVP online.`;
+  }${venueName ? ` at ${venueName}` : ""}. Open your interactive 3D invitation.`;
 
   // Always use the lightweight, optimized 1200x630 OG image (<120KB) so WhatsApp & social scrapers never fail the 300KB limit
   const ogImageUrl = `${siteConfig.url}/${slug}/opengraph-image`;

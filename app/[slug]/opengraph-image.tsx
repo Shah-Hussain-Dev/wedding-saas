@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import prisma from "@/lib/prisma";
+import { getOgThemeForTemplate } from "@/lib/og-template-themes";
 
 export const runtime = "nodejs";
 export const revalidate = 86400;
@@ -32,23 +33,29 @@ export default async function Image({
 }) {
   const { slug } = await params;
 
+  let templateId = "";
   let brideName = "";
   let groomName = "";
   let weddingDateStr = "";
   let venueName = "";
+  let userReligion: string | null = null;
+  let customSacredInvocation: string | null = null;
 
   try {
     const inv = await prisma.invitation.findUnique({
       where: { slug },
       select: {
+        templateId: true,
         brideName: true,
         groomName: true,
         weddingDate: true,
         venueName: true,
+        translations: true,
       },
     });
 
     if (inv) {
+      templateId = inv.templateId || "";
       brideName = inv.brideName || "";
       groomName = inv.groomName || "";
       venueName = inv.venueName || "";
@@ -59,6 +66,9 @@ export default async function Image({
           year: "numeric",
         });
       }
+      const trans = (inv.translations as any) || {};
+      userReligion = trans.religion || null;
+      customSacredInvocation = trans.sacredInvocation || null;
     }
   } catch (err) {
     console.warn("Could not fetch invitation for OpenGraph image:", err);
@@ -71,6 +81,24 @@ export default async function Image({
     groomName = groomName || parsed.groom;
   }
 
+  // Fallback templateId if slug itself matches a known template
+  if (!templateId) {
+    const cleanSlug = slug.toLowerCase();
+    if (cleanSlug.includes("sheesh-mahal")) templateId = "sheesh-mahal";
+    else if (cleanSlug.includes("imperial-palace")) templateId = "imperial-palace";
+    else if (cleanSlug.includes("royal-heritage")) templateId = "royal-heritage";
+    else if (cleanSlug.includes("celestial-rose")) templateId = "celestial-rose";
+    else if (cleanSlug.includes("royal-lotus")) templateId = "royal-lotus";
+    else if (cleanSlug.includes("noor-e-nikah")) templateId = "noor-e-nikah";
+    else templateId = "imperial-palace";
+  }
+
+  const { theme, sacredInvocation, religion } = getOgThemeForTemplate(
+    templateId,
+    userReligion,
+    customSacredInvocation
+  );
+
   const coupleTitle = `${brideName} & ${groomName}`;
   const displayDateVenue = [weddingDateStr, venueName].filter(Boolean).join("  •  ");
   const nameFontSize =
@@ -79,7 +107,7 @@ export default async function Image({
       : coupleTitle.length > 24
       ? "50px"
       : coupleTitle.length > 18
-      ? "58px"
+      ? "56px"
       : "64px";
 
   return new ImageResponse(
@@ -92,68 +120,118 @@ export default async function Image({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#1c070e",
-          backgroundImage:
-            "radial-gradient(circle at 50% 38%, #3e121e 0%, #20060e 55%, #120308 100%)",
+          backgroundColor: "#0d0305",
+          backgroundImage: theme.bgGradient,
           padding: "36px",
           position: "relative",
           boxSizing: "border-box",
         }}
       >
-        {/* Outer 24K Gold Filigree Border */}
+        {/* Outer 3D Gold Filigree Border */}
         <div
           style={{
             position: "absolute",
             inset: "16px",
-            border: "3px solid rgba(212, 175, 55, 0.85)",
+            border: `3px solid ${theme.borderOuter}`,
             borderRadius: "16px",
             display: "flex",
           }}
         />
 
-        {/* Inner Delicate Gold Inset */}
+        {/* Inner Delicate Dashed Border */}
         <div
           style={{
             position: "absolute",
             inset: "24px",
-            border: "1px dashed rgba(245, 220, 140, 0.45)",
+            border: `1px dashed ${theme.borderInner}`,
             borderRadius: "10px",
             display: "flex",
           }}
         />
 
-        {/* Sacred Sanskrit / Wedding Motif Eyebrow */}
+        {/* Corner Diamond Ornaments */}
+        <div
+          style={{
+            position: "absolute",
+            top: "17px",
+            left: "20px",
+            color: theme.accentGold,
+            fontSize: "14px",
+            display: "flex",
+          }}
+        >
+          ✦
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            top: "17px",
+            right: "20px",
+            color: theme.accentGold,
+            fontSize: "14px",
+            display: "flex",
+          }}
+        >
+          ✦
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "17px",
+            left: "20px",
+            color: theme.accentGold,
+            fontSize: "14px",
+            display: "flex",
+          }}
+        >
+          ✦
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: "17px",
+            right: "20px",
+            color: theme.accentGold,
+            fontSize: "14px",
+            display: "flex",
+          }}
+        >
+          ✦
+        </div>
+
+        {/* 3D Crest & Template Eyebrow */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             gap: "10px",
-            color: "#F5D77F",
-            fontSize: "16px",
-            fontWeight: 700,
-            letterSpacing: "0.26em",
+            color: theme.accentGold,
+            fontSize: "14px",
+            fontWeight: 800,
+            letterSpacing: "0.24em",
             textTransform: "uppercase",
-            marginBottom: "12px",
+            marginBottom: "8px",
           }}
         >
-          <span>•</span>
-          <span>A SACRED WEDDING CELEBRATION</span>
-          <span>•</span>
+          <span>{theme.motifIcon}</span>
+          <span>{theme.tagline}</span>
+          <span>{theme.motifIcon}</span>
         </div>
 
-        {/* Auspicious Traditional Invocation */}
+        {/* Auspicious Sacred Invocation (Dynamic by faith/tradition) */}
         <div
           style={{
             display: "flex",
-            fontSize: "20px",
-            color: "#E8C26E",
+            fontSize: religion === "muslim" ? "22px" : "18px",
+            color: theme.accentGold,
             fontWeight: 600,
-            letterSpacing: "0.14em",
-            marginBottom: "10px",
+            letterSpacing: "0.12em",
+            marginBottom: "8px",
+            textAlign: "center",
           }}
         >
-          ॥ श्री गणेशाय नमः ॥
+          {sacredInvocation}
         </div>
 
         {/* Grand Royal Couple Headline */}
@@ -163,14 +241,14 @@ export default async function Image({
             fontSize: nameFontSize,
             fontFamily: "serif",
             fontWeight: 700,
-            color: "#FFF8EA",
+            color: theme.primaryColor,
             textAlign: "center",
             justifyContent: "center",
-            lineHeight: 1.2,
+            lineHeight: 1.18,
             letterSpacing: "0.02em",
-            marginBottom: "14px",
+            marginBottom: "12px",
             maxWidth: "980px",
-            textShadow: "0 4px 16px rgba(0, 0, 0, 0.8)",
+            textShadow: "0 4px 18px rgba(0, 0, 0, 0.85)",
             flexWrap: "wrap",
           }}
         >
@@ -181,13 +259,13 @@ export default async function Image({
         <div
           style={{
             display: "flex",
-            fontSize: "19px",
+            fontSize: "18px",
             fontFamily: "serif",
             fontStyle: "italic",
-            color: "#E2CBB0",
+            color: theme.subtextColor,
             textAlign: "center",
-            marginBottom: "22px",
-            letterSpacing: "0.04em",
+            marginBottom: "18px",
+            letterSpacing: "0.03em",
           }}
         >
           Together with their families cordially invite you to celebrate their sacred union
@@ -200,35 +278,38 @@ export default async function Image({
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "rgba(212, 175, 55, 0.16)",
-              border: "1.5px solid rgba(245, 220, 140, 0.75)",
+              backgroundColor: theme.badgeBg,
+              border: `1.5px solid ${theme.badgeBorder}`,
               borderRadius: "9999px",
-              padding: "8px 28px",
-              color: "#FBE6A2",
-              fontSize: "17px",
+              padding: "7px 26px",
+              color: theme.primaryColor,
+              fontSize: "16px",
               fontWeight: 700,
-              letterSpacing: "0.06em",
-              marginBottom: "18px",
+              letterSpacing: "0.04em",
+              marginBottom: "16px",
+              maxWidth: "920px",
+              textAlign: "center",
             }}
           >
             {displayDateVenue}
           </div>
         ) : null}
 
-        {/* Tap to View Interactive Invitation Pill */}
+        {/* Tap to View 3D Invitation Action Pill */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            backgroundColor: "#D4AF37",
-            color: "#240810",
-            padding: "8px 24px",
+            backgroundColor: theme.pillBg,
+            color: theme.pillText,
+            padding: "9px 26px",
             borderRadius: "9999px",
             fontSize: "13px",
             fontWeight: 800,
             letterSpacing: "0.14em",
             textTransform: "uppercase",
+            boxShadow: "0 4px 14px rgba(0, 0, 0, 0.4)",
           }}
         >
           <span>TAP TO OPEN 3D DIGITAL INVITATION</span>
@@ -239,11 +320,11 @@ export default async function Image({
         <div
           style={{
             position: "absolute",
-            bottom: "26px",
+            bottom: "24px",
             display: "flex",
             alignItems: "center",
-            gap: "6px",
-            color: "rgba(245, 220, 140, 0.55)",
+            gap: "8px",
+            color: theme.borderInner,
             fontSize: "12px",
             letterSpacing: "0.16em",
             textTransform: "uppercase",
@@ -251,7 +332,7 @@ export default async function Image({
         >
           <span>wedinvites.in</span>
           <span>•</span>
-          <span>Living 3D Wedding Invitations</span>
+          <span>{theme.watermark}</span>
         </div>
       </div>
     ),
