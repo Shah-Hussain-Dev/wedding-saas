@@ -169,6 +169,7 @@ export function CustomizerTemplatePickerModal({
                       src={poster}
                       alt=""
                       fill
+                      unoptimized={!poster.startsWith("/") && !poster.includes("res.cloudinary.com") && !poster.includes("unsplash.com")}
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       sizes="(max-width: 640px) 45vw, 200px"
                     />

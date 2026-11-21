@@ -387,26 +387,10 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     data?.groomParents ||
     data?.couple?.groomParents ||
     (isCustomized ? "" : defaultData.couple.groomParents);
-  const groomEducation =
-    data?.groomEducation ||
-    data?.couple?.groomEducation ||
-    (isCustomized ? "" : defaultData.couple.groomEducation);
-  const groomProfession =
-    data?.groomProfession ||
-    data?.couple?.groomProfession ||
-    (isCustomized ? "" : defaultData.couple.groomProfession);
   const brideParents =
     data?.brideParents ||
     data?.couple?.brideParents ||
     (isCustomized ? "" : defaultData.couple.brideParents);
-  const brideEducation =
-    data?.brideEducation ||
-    data?.couple?.brideEducation ||
-    (isCustomized ? "" : defaultData.couple.brideEducation);
-  const brideProfession =
-    data?.brideProfession ||
-    data?.couple?.brideProfession ||
-    (isCustomized ? "" : defaultData.couple.brideProfession);
 
   const rawDate = data?.weddingDate || defaultData.weddingDate;
   const weddingDateObj = new Date(rawDate);
@@ -464,6 +448,28 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
   }, [data?.religion]);
 
   const hideReligionSwitcher = true;
+
+  // Faith / Tradition detection (for culturally authentic blessing phrasing)
+  const isExplicitHindu = selectedReligion === "hindu" || data?.religion === "hindu";
+  const isMuslimTradition = !isExplicitHindu && Boolean(
+    selectedReligion === "muslim" ||
+    data?.religion === "muslim" ||
+    (data?.sacredInvocation && /bismillah|allah|nikah|مِّنْ|ٱللَّهِ/i.test(data.sacredInvocation)) ||
+    (data?.sacredVerse && /allah|nikah|quran|surah|ar-rum|آيَاتِهِ|tranquility|affection/i.test(data.sacredVerse)) ||
+    (data?.sacredTranslation && /allah|nikah|quran|surah|tranquility|affection/i.test(data.sacredTranslation)) ||
+    (data?.quote && /allah|nikah|quran|surah|tranquility|affection/i.test(data.quote)) ||
+    (typeof brideName === "string" && typeof groomName === "string" &&
+      /daniya|fatima|ayesha|aisha|zainab|sara|maryam|mariam|ali|khan|begum|nisha|sarzamee|shamshad|faisal|tariq|ahmed|ahmad|husain|hussain|hasan|hassan|zaidi|naqvi|ansari|siddiqui|qureshi|malik|shaikh|sheikh|abrar/i.test(
+        `${brideName} ${groomName} ${brideParents} ${groomParents}`
+      ))
+  );
+
+  const blessingQuote =
+    data?.familyBlessing ||
+    data?.blessingQuote ||
+    (isMuslimTradition
+      ? "Aap ki shirkat aur duaayein hamari khushiyon ko dobala karengi."
+      : "Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.");
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
@@ -914,13 +920,6 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                     {groomParents}
                   </p>
                 ) : null}
-                {(groomEducation || groomProfession) && (
-                  <p className="text-[10px] sm:text-xs text-[#D5BA97] font-montserrat drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
-                    {groomEducation}
-                    {groomEducation && groomProfession && " · "}
-                    {groomProfession}
-                  </p>
-                )}
               </motion.div>
 
               {/* FLORAL / GOLD AMPERSAND WITH PULSE MOTION */}
@@ -949,13 +948,6 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                     {brideParents}
                   </p>
                 ) : null}
-                {(brideEducation || brideProfession) && (
-                  <p className="text-[10px] sm:text-xs text-[#D5BA97] font-montserrat drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
-                    {brideEducation}
-                    {brideEducation && brideProfession && " · "}
-                    {brideProfession}
-                  </p>
-                )}
               </motion.div>
 
               {/* WEDDING DATE & ESTATE CHIP */}
@@ -1080,15 +1072,6 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                 <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic leading-relaxed">
                   {groomParents}
                 </p>
-                {(groomEducation || groomProfession) && (
-                  <div className="pt-2 border-t border-[#B89773]/30">
-                    <p className="text-[11px] text-[#D5BA97] font-montserrat font-medium">
-                      {groomEducation}
-                      {groomEducation && groomProfession && " · "}
-                      {groomProfession}
-                    </p>
-                  </div>
-                )}
               </motion.div>
 
               {/* Bride Pedestal */}
@@ -1113,15 +1096,6 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                 <p className="text-xs sm:text-sm text-[#AEA290] font-cormorant italic leading-relaxed">
                   {brideParents}
                 </p>
-                {(brideEducation || brideProfession) && (
-                  <div className="pt-2 border-t border-[#B89773]/30">
-                    <p className="text-[11px] text-[#D5BA97] font-montserrat font-medium">
-                      {brideEducation}
-                      {brideEducation && brideProfession && " · "}
-                      {brideProfession}
-                    </p>
-                  </div>
-                )}
               </motion.div>
             </div>
           </div>
@@ -1180,7 +1154,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                   {brideName} <span className="text-[#B89773]">&amp;</span> {groomName}
                 </p>
                 <p className="font-cormorant italic text-xs sm:text-sm text-[#986E47] font-medium">
-                  &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+                  &ldquo;{blessingQuote}&rdquo;
                 </p>
               </div>
 
@@ -1768,10 +1742,10 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                       <CheckCircle size={32} weight="fill" />
                     </div>
                     <h4 className="text-xl font-playfair font-bold text-[#551618]">
-                      Dhanyawad / JazakAllah!
+                      {isMuslimTradition ? "JazakAllah Khair!" : isExplicitHindu ? "Dhanyawad!" : "Dhanyawad / JazakAllah!"}
                     </h4>
                     <p className="text-xs sm:text-sm text-[#593C28] font-cormorant italic leading-relaxed max-w-sm mx-auto">
-                      Thank you, <strong className="text-[#551618]">{rsvpName || "Honoured Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
+                      Thank you, <strong className="text-[#551618]">{rsvpName || "Honoured Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. {isMuslimTradition ? "Aap ki shirkat aur duaayein hamare liye baais-e-musarrat hongi." : "Aapki upasthiti hamare utsav ko mangalmay banayegi."}
                     </p>
                     <button
                       type="button"

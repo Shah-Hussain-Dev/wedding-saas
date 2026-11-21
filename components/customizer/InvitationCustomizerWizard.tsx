@@ -190,6 +190,13 @@ export function InvitationCustomizerWizard({
   const [brideName, setBrideName] = useState(defaultBride);
   const [groomName, setGroomName] = useState(defaultGroom);
   const [brideParents, setBrideParents] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const draft = readCustomizerDraft(templateId);
+      const draftParents =
+        (typeof draft?.brideParents === "string" && draft.brideParents) ||
+        (typeof (draft?.couple as any)?.brideParents === "string" && (draft?.couple as any).brideParents);
+      if (draftParents) return draftParents;
+    }
     return (
       initialData?.brideParents ||
       initialData?.couple?.brideParents ||
@@ -200,6 +207,13 @@ export function InvitationCustomizerWizard({
     );
   });
   const [groomParents, setGroomParents] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      const draft = readCustomizerDraft(templateId);
+      const draftParents =
+        (typeof draft?.groomParents === "string" && draft.groomParents) ||
+        (typeof (draft?.couple as any)?.groomParents === "string" && (draft?.couple as any).groomParents);
+      if (draftParents) return draftParents;
+    }
     return (
       initialData?.groomParents ||
       initialData?.couple?.groomParents ||
@@ -227,12 +241,23 @@ export function InvitationCustomizerWizard({
     return parts.join("-").replace(/^-+|-+$/g, "");
   };
 
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(
-    Boolean(initialData?.slug && isEdit)
-  );
-  const [slug, setSlug] = useState(
-    initialData?.slug || generateSlugFromNames(defaultBride, defaultGroom)
-  );
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(() => {
+    if (typeof window !== "undefined") {
+      const draft = readCustomizerDraft(templateId);
+      if (draft) {
+        if (typeof draft.isSlugManuallyEdited === "boolean") return draft.isSlugManuallyEdited;
+        if (typeof draft.slug === "string" && draft.slug.trim()) return true;
+      }
+    }
+    return Boolean(initialData?.slug && isEdit);
+  });
+  const [slug, setSlug] = useState(() => {
+    if (typeof window !== "undefined") {
+      const draft = readCustomizerDraft(templateId);
+      if (typeof draft?.slug === "string" && draft.slug.trim()) return draft.slug.trim();
+    }
+    return initialData?.slug || generateSlugFromNames(defaultBride, defaultGroom);
+  });
   const [heroImageUrl, setHeroImageUrl] = useState(initialData?.heroImageUrl || "");
   const [heroBgChoice, setHeroBgChoice] = useState<"default" | "custom">(
     initialData?.heroImageUrl ? "custom" : "default"
@@ -405,6 +430,7 @@ export function InvitationCustomizerWizard({
     return {
       id: invitationId || `demo-${Date.now()}`,
       slug: normalizedSlug,
+      isSlugManuallyEdited,
       templateId,
       brideName,
       groomName,
@@ -435,6 +461,7 @@ export function InvitationCustomizerWizard({
     };
   }, [
     slug,
+    isSlugManuallyEdited,
     brideName,
     groomName,
     brideParents,
@@ -503,6 +530,16 @@ export function InvitationCustomizerWizard({
       }
       if (initialData.brideName) setBrideName(initialData.brideName);
       if (initialData.groomName) setGroomName(initialData.groomName);
+      const initBrideParents =
+        initialData.brideParents ||
+        initialData.couple?.brideParents ||
+        initialData.translations?.brideParents;
+      if (initBrideParents) setBrideParents(initBrideParents);
+      const initGroomParents =
+        initialData.groomParents ||
+        initialData.couple?.groomParents ||
+        initialData.translations?.groomParents;
+      if (initGroomParents) setGroomParents(initGroomParents);
       if (initialData.weddingDate) setWeddingDate(initialData.weddingDate.split("T")[0]);
       if (initialData.weddingTime) setWeddingTime(initialData.weddingTime);
       if (initialData.venueName) setVenueName(initialData.venueName);
@@ -542,8 +579,6 @@ export function InvitationCustomizerWizard({
       const serverTemplate =
         typeof initialData.templateId === "string" ? initialData.templateId : null;
       if (!serverTemplate || serverTemplate === templateId) return;
-    } else if (initialData && !isEdit && draft) {
-      return;
     }
 
     draftHydratedRef.current = true;
@@ -551,14 +586,27 @@ export function InvitationCustomizerWizard({
     const source = hydrateFrom;
     if (typeof source.brideName === "string" && source.brideName) setBrideName(source.brideName);
     if (typeof source.groomName === "string" && source.groomName) setGroomName(source.groomName);
+
+    const bParents =
+      (typeof source.brideParents === "string" && source.brideParents) ||
+      (typeof (source.couple as any)?.brideParents === "string" && (source.couple as any).brideParents) ||
+      "";
+    if (bParents) setBrideParents(bParents);
+
+    const gParents =
+      (typeof source.groomParents === "string" && source.groomParents) ||
+      (typeof (source.couple as any)?.groomParents === "string" && (source.couple as any).groomParents) ||
+      "";
+    if (gParents) setGroomParents(gParents);
+
     if (typeof source.weddingDate === "string" && source.weddingDate) {
       setWeddingDate(source.weddingDate.split("T")[0]);
     }
     if (typeof source.weddingTime === "string") setWeddingTime(source.weddingTime);
     if (typeof source.venueName === "string") setVenueName(source.venueName);
     if (typeof source.venueAddress === "string") setVenueAddress(source.venueAddress);
-    if (typeof source.slug === "string" && source.slug) {
-      setSlug(source.slug);
+    if (typeof source.slug === "string" && source.slug.trim()) {
+      setSlug(source.slug.trim());
       setIsSlugManuallyEdited(true);
     }
     if (typeof source.sacredInvocation === "string") setSacredInvocation(source.sacredInvocation);
