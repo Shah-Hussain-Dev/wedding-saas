@@ -56,11 +56,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
   const brideName = data?.brideName || data?.couple?.brideName || defaultData.couple.brideName;
   const groomName = data?.groomName || data?.couple?.groomName || defaultData.couple.groomName;
   const groomParents = data?.groomParents || data?.couple?.groomParents || (isCustomized ? "" : defaultData.couple.groomParents);
-  const groomEducation = data?.groomEducation || data?.couple?.groomEducation || (isCustomized ? "" : defaultData.couple.groomEducation);
-  const groomProfession = data?.groomProfession || data?.couple?.groomProfession || (isCustomized ? "" : defaultData.couple.groomProfession);
   const brideParents = data?.brideParents || data?.couple?.brideParents || (isCustomized ? "" : defaultData.couple.brideParents);
-  const brideEducation = data?.brideEducation || data?.couple?.brideEducation || (isCustomized ? "" : defaultData.couple.brideEducation);
-  const brideProfession = data?.brideProfession || data?.couple?.brideProfession || (isCustomized ? "" : defaultData.couple.brideProfession);
 
   const rawDate = data?.weddingDate || defaultData.weddingDate;
   const weddingDateObj = new Date(rawDate);
@@ -98,6 +94,28 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
   }, [data?.religion]);
 
   const hideReligionSwitcher = true;
+
+  // Faith / Tradition detection (for culturally authentic blessing phrasing)
+  const isExplicitHindu = selectedReligion === "hindu" || data?.religion === "hindu";
+  const isMuslimTradition = !isExplicitHindu && Boolean(
+    selectedReligion === "muslim" ||
+    data?.religion === "muslim" ||
+    (data?.sacredInvocation && /bismillah|allah|nikah|مِّنْ|ٱللَّهِ/i.test(data.sacredInvocation)) ||
+    (data?.sacredVerse && /allah|nikah|quran|surah|ar-rum|آيَاتِهِ|tranquility|affection/i.test(data.sacredVerse)) ||
+    (data?.sacredTranslation && /allah|nikah|quran|surah|tranquility|affection/i.test(data.sacredTranslation)) ||
+    (data?.quote && /allah|nikah|quran|surah|tranquility|affection/i.test(data.quote)) ||
+    (typeof brideName === "string" && typeof groomName === "string" &&
+      /daniya|fatima|ayesha|aisha|zainab|sara|maryam|mariam|ali|khan|begum|nisha|sarzamee|shamshad|faisal|tariq|ahmed|ahmad|husain|hussain|hasan|hassan|zaidi|naqvi|ansari|siddiqui|qureshi|malik|shaikh|sheikh|abrar/i.test(
+        `${brideName} ${groomName} ${brideParents} ${groomParents}`
+      ))
+  );
+
+  const blessingQuote =
+    data?.familyBlessing ||
+    data?.blessingQuote ||
+    (isMuslimTradition
+      ? "Aap ki shirkat aur duaayein hamare liye baais-e-musarrat hongi."
+      : "Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.");
 
   // Video Gate Timing & Content Reveal State
   const [isVideoStarted, setIsVideoStarted] = useState(false);
@@ -469,13 +487,6 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                     {groomParents}
                   </p>
                 ) : null}
-                {(groomEducation || groomProfession) && (
-                  <p className="text-[11px] sm:text-xs md:text-sm text-[#91B5BC] font-lora drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
-                    {groomEducation}
-                    {groomEducation && groomProfession && " · "}
-                    {groomProfession}
-                  </p>
-                )}
               </div>
 
               {/* FLORAL AMPERSAND */}
@@ -495,13 +506,6 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                     {brideParents}
                   </p>
                 ) : null}
-                {(brideEducation || brideProfession) && (
-                  <p className="text-[11px] sm:text-xs md:text-sm text-[#91B5BC] font-lora drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] font-medium">
-                    {brideEducation}
-                    {brideEducation && brideProfession && " · "}
-                    {brideProfession}
-                  </p>
-                )}
               </div>
 
               {/* WEDDING DATE & VENUE PILL */}
@@ -586,7 +590,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                 {brideName} <span className="text-[#D95147]">&amp;</span> {groomName}
               </p>
               <p className="font-lora italic text-xs sm:text-sm text-[#315F6B] font-medium">
-                &ldquo;Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.&rdquo;
+                &ldquo;{blessingQuote}&rdquo;
               </p>
             </div>
           </motion.div>
@@ -853,7 +857,7 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
 
               <div className="text-center mb-6 pt-1">
                 <span className="text-[11px] uppercase tracking-[0.25em] text-[#D95147] font-bold font-montserrat block mb-1">
-                  {selectedReligion === "muslim" ? "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ" : selectedReligion === "hindu" ? "॥ श्री गणेशाय नमः ॥" : "✦ SACRED UNION ✦"}
+                  {isMuslimTradition ? "بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ" : isExplicitHindu ? "॥ श्री गणेशाय नमः ॥" : "✦ SACRED UNION ✦"}
                 </span>
                 <h3 className="text-2xl sm:text-3xl font-lora font-bold text-[#153E4B]">
                   Confirm Attendance
@@ -869,10 +873,10 @@ export default function RoyalHeritage({ data }: RoyalHeritageProps) {
                     <CheckCircle size={36} weight="fill" />
                   </div>
                   <h4 className="text-2xl font-lora font-bold text-[#153E4B]">
-                    Dhanyawad / JazakAllah!
+                    {isMuslimTradition ? "JazakAllah Khair!" : isExplicitHindu ? "Dhanyawad!" : "Dhanyawad / JazakAllah!"}
                   </h4>
                   <p className="text-sm text-[#315F6B] font-lora leading-relaxed max-w-xs mx-auto font-medium">
-                    Thank you, <strong className="text-[#153E4B]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. Aapki upasthiti hamare utsav ko mangalmay banayegi.
+                    Thank you, <strong className="text-[#153E4B]">{rsvpName || "Dear Guest"}</strong>! Your RSVP and heartfelt blessings have been received with love. {isMuslimTradition ? "Aap ki shirkat aur duaayein hamare liye baais-e-musarrat hongi." : "Aapki upasthiti hamare utsav ko mangalmay banayegi."}
                   </p>
                   <div className="pt-4 border-t border-[#77A3AE]/30">
                     <button

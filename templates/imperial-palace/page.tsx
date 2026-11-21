@@ -468,7 +468,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     data?.familyBlessing ||
     data?.blessingQuote ||
     (isMuslimTradition
-      ? "Aap ki shirkat aur duaayein hamari khushiyon ko dobala karengi."
+      ? "Aap ki shirkat aur duaayein hamare liye baais-e-musarrat hongi."
       : "Aapki upasthiti aur aashirwad hamari khushiyon ko dobala karega.");
 
   // Video Gate Timing & Content Reveal State

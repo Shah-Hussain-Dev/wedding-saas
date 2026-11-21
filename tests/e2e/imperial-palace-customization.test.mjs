@@ -29,7 +29,7 @@ test('Imperial Palace - Education Removal & Cultural Blessing Wording', async (t
 
   await t.test('3. Muslim cultural blessing phrasing is supported in page.tsx', () => {
     assert.ok(
-      pageSource.includes('Aap ki shirkat aur duaayein hamari khushiyon ko dobala karengi.'),
+      pageSource.includes('Aap ki shirkat aur duaayein hamare liye baais-e-musarrat hongi.'),
       'page.tsx must include Muslim blessing phrase for Muslim invitations'
     );
     assert.ok(

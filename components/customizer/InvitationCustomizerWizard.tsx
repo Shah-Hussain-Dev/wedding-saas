@@ -325,7 +325,16 @@ export function InvitationCustomizerWizard({
 
   const templateLockedReligion = defaultCulturalTraditionForTemplate(templateId);
 
-  const [religion, setReligion] = useState<CulturalTradition>(templateLockedReligion);
+  const [religion, setReligion] = useState<CulturalTradition>(() => {
+    const draft = readCustomizerDraft(templateId);
+    if (draft?.religion === "muslim" || draft?.religion === "hindu" || draft?.religion === "universal") {
+      return draft.religion;
+    }
+    if (initialData?.religion === "muslim" || initialData?.religion === "hindu" || initialData?.religion === "universal") {
+      return initialData.religion;
+    }
+    return templateLockedReligion;
+  });
   const [sacredInvocation, setSacredInvocation] = useState(
     initialData?.sacredInvocation ||
       RELIGION_PRESETS[templateLockedReligion]?.sacredInvocation ||
@@ -342,8 +351,15 @@ export function InvitationCustomizerWizard({
   const [isCustomizingInvocation, setIsCustomizingInvocation] = useState(false);
 
   useEffect(() => {
-    setReligion(defaultCulturalTraditionForTemplate(templateId));
-  }, [templateId]);
+    const draft = readCustomizerDraft(templateId);
+    if (draft?.religion === "muslim" || draft?.religion === "hindu" || draft?.religion === "universal") {
+      setReligion(draft.religion);
+    } else if (initialData?.religion === "muslim" || initialData?.religion === "hindu" || initialData?.religion === "universal") {
+      setReligion(initialData.religion);
+    } else {
+      setReligion(defaultCulturalTraditionForTemplate(templateId));
+    }
+  }, [templateId, initialData?.religion]);
 
   const [events, setEvents] = useState<EventItem[]>(() => {
     if (Array.isArray(initialData?.eventsJson) && initialData.eventsJson.length > 0) {
@@ -548,6 +564,9 @@ export function InvitationCustomizerWizard({
         setSlug(initialData.slug);
         if (isEdit) setIsSlugManuallyEdited(true);
       }
+      if (initialData.religion === "muslim" || initialData.religion === "hindu" || initialData.religion === "universal") {
+        setReligion(initialData.religion);
+      }
       if (initialData.sacredInvocation) setSacredInvocation(initialData.sacredInvocation);
       if (initialData.sacredVerse) setSacredVerse(initialData.sacredVerse);
       if (initialData.sacredTranslation) setSacredTranslation(initialData.sacredTranslation);
@@ -608,6 +627,9 @@ export function InvitationCustomizerWizard({
     if (typeof source.slug === "string" && source.slug.trim()) {
       setSlug(source.slug.trim());
       setIsSlugManuallyEdited(true);
+    }
+    if (source.religion === "muslim" || source.religion === "hindu" || source.religion === "universal") {
+      setReligion(source.religion as CulturalTradition);
     }
     if (typeof source.sacredInvocation === "string") setSacredInvocation(source.sacredInvocation);
     if (typeof source.sacredVerse === "string") setSacredVerse(source.sacredVerse);
@@ -1386,43 +1408,65 @@ export function InvitationCustomizerWizard({
                 <div className="flex items-center gap-2 mb-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                   <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                    Parents &amp; Family Blessings (Mataji &amp; Pitaji)
+                    {religion === "muslim"
+                      ? "Parents & Family Blessings (Walidain)"
+                      : "Parents & Family Blessings (Mataji & Pitaji)"}
                   </h3>
                 </div>
                 <p className="text-[11px] text-stone-500 mb-3.5 leading-relaxed">
-                  Enter parents&apos; names to display in the blessings section (e.g. &ldquo;With the divine grace of Lord Ganesha and the affectionate prayers of our beloved parents&rdquo;).
+                  {religion === "muslim"
+                    ? "Enter parents' names to display in the blessings section (e.g. “With the blessings of Allah and our beloved parents”)."
+                    : "Enter parents' names to display in the blessings section (e.g. “With the divine grace of Lord Ganesha and the affectionate prayers of our beloved parents”)."}
                 </p>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
-                      Bride&apos;s Parents (Mataji &amp; Pitaji)
+                      {religion === "muslim"
+                        ? "Bride's Parents (Walidain)"
+                        : "Bride&apos;s Parents (Mataji &amp; Pitaji)"}
                     </label>
                     <input
                       type="text"
                       value={brideParents}
                       onChange={(e) => setBrideParents(e.target.value)}
-                      placeholder="e.g. Swargiya Bindu Agrahari & Shri Vinay Agrahari"
+                      placeholder={
+                        religion === "muslim"
+                          ? "e.g. Begum Farzana & Janab Faisal Khan"
+                          : "e.g. Swargiya Bindu Agrahari & Shri Vinay Agrahari"
+                      }
+                      /* Fallback reference: placeholder="e.g. Swargiya Bindu Agrahari & Shri Vinay Agrahari" */
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 bg-stone-50/50 text-stone-900"
                     />
                     <span className="text-[10px] text-stone-400 mt-1 block">
-                      Mention mother &amp; father names (e.g. Smt. / Shri / Swargiya)
+                      {religion === "muslim"
+                        ? "Mention mother & father names (e.g. Begum / Janab / Mrs. & Mr.)"
+                        : "Mention mother & father names (e.g. Smt. / Shri / Swargiya)"}
                     </span>
                   </div>
 
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1.5">
-                      Groom&apos;s Parents (Mataji &amp; Pitaji)
+                      {religion === "muslim"
+                        ? "Groom's Parents (Walidain)"
+                        : "Groom&apos;s Parents (Mataji &amp; Pitaji)"}
                     </label>
                     <input
                       type="text"
                       value={groomParents}
                       onChange={(e) => setGroomParents(e.target.value)}
-                      placeholder="e.g. Smt. Vimla Devi & Shri Mahendra Agrahari"
+                      placeholder={
+                        religion === "muslim"
+                          ? "e.g. Begum Nasibun Nisha & Janab Abrar Husain"
+                          : "e.g. Smt. Vimla Devi & Shri Mahendra Agrahari"
+                      }
+                      /* Fallback reference: placeholder="e.g. Smt. Vimla Devi & Shri Mahendra Agrahari" */
                       className="w-full px-4 py-3 rounded-xl border border-stone-200 text-sm focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 bg-stone-50/50 text-stone-900"
                     />
                     <span className="text-[10px] text-stone-400 mt-1 block">
-                      Mention mother &amp; father names (e.g. Smt. / Shri)
+                      {religion === "muslim"
+                        ? "Mention mother & father names (e.g. Begum / Janab / Mrs. & Mr.)"
+                        : "Mention mother & father names (e.g. Smt. / Shri)"}
                     </span>
                   </div>
                 </div>
@@ -1478,11 +1522,52 @@ export function InvitationCustomizerWizard({
               <div className="pt-5 border-t border-stone-200/80 space-y-3.5">
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
-                    Sacred invocations &amp; blessings
+                    Select Faith &amp; Cultural Tradition *
                   </label>
-                  <p className="text-xs text-stone-500">
-                    This design uses {meta.religionLabel} wording. You can edit the blessing text below; it applies to your live invitation and complimentary PDFs.
+                  <p className="text-xs text-stone-500 mb-2.5">
+                    Choose your cultural tradition to adapt sacred invocations, blessings, and ceremony wording across your live invitation and complimentary PDFs.
                   </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    {(
+                      [
+                        { id: "muslim" as const, name: "Muslim Tradition", icon: "☪️", desc: "Nikah, Bismillah & Duas" },
+                        { id: "hindu" as const, name: "Hindu Tradition", icon: "🕉️", desc: "Vedic, Ganesha & Muhurat" },
+                        { id: "universal" as const, name: "Universal & Contemporary", icon: "✨", desc: "Modern, Elegant & Timeless" },
+                      ] as const
+                    ).map((opt) => {
+                      const isSelected = religion === opt.id;
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => {
+                            setReligion(opt.id);
+                            const preset = RELIGION_PRESETS[opt.id];
+                            if (preset) {
+                              setSacredInvocation(preset.sacredInvocation);
+                              setSacredVerse(preset.sacredVerse);
+                              setSacredTranslation(preset.sacredTranslation);
+                            }
+                          }}
+                          className={`flex items-center gap-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? "bg-amber-500/10 border-amber-600 text-stone-900 shadow-sm ring-1 ring-amber-500/50"
+                              : "bg-white border-stone-200 text-stone-600 hover:border-amber-400 hover:bg-stone-50"
+                          }`}
+                        >
+                          <span className="text-xl shrink-0">{opt.icon}</span>
+                          <div className="min-w-0">
+                            <div className={`text-xs font-bold ${isSelected ? "text-amber-900" : "text-stone-800"}`}>
+                              {opt.name}
+                            </div>
+                            <div className="text-[10px] text-stone-500 truncate">
+                              {opt.desc}
+                            </div>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Active Tradition Blessing Showcase Card */}
