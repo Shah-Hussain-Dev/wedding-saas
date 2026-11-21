@@ -24,6 +24,10 @@ import { ImageUploader } from "@/components/media/ImageUploader";
 import { MultiImageUploader } from "@/components/media/MultiImageUploader";
 import { AudioTrackSelector } from "@/components/media/AudioTrackSelector";
 import {
+  TemplateCoverPicker,
+  TemplateVideoPicker,
+} from "@/components/admin/TemplateMediaPickers";
+import {
   RELIGION_PRESETS,
   type EventItem,
 } from "@/components/customizer/InvitationCustomizerWizard";
@@ -305,25 +309,16 @@ export function TemplateAdminEditor({ templateId }: TemplateAdminEditorProps) {
           >
             {step.id === 1 ? (
               <div className="space-y-4">
-                <div>
-                  <p className="mb-2 font-sans text-xs font-bold text-[#18211E]">Cover image (cards & modals)</p>
-                  <ImageUploader
-                    initialUrl={coverImageUrl}
-                    onUploadSuccess={setCoverImageUrl}
-                    folder="wedding-saas/template-covers"
-                    label="Upload cover (3:4 portrait)"
-                  />
-                </div>
-                <label className="block">
-                  <span className="font-sans text-xs font-bold text-[#18211E]">Trailer video URL</span>
-                  <input
-                    type="url"
-                    value={trailerVideoUrl}
-                    onChange={(e) => setTrailerVideoUrl(e.target.value)}
-                    placeholder="/templates/…/opening.mp4"
-                    className="mt-1 w-full rounded-xl border border-[#073D31]/15 px-3 py-2.5 font-sans text-sm"
-                  />
-                </label>
+                <TemplateCoverPicker
+                  selectedUrl={coverImageUrl}
+                  onChange={setCoverImageUrl}
+                  templateId={normalizedId}
+                />
+                <TemplateVideoPicker
+                  selectedUrl={trailerVideoUrl}
+                  onChange={setTrailerVideoUrl}
+                  templateId={normalizedId}
+                />
                 <label className="block">
                   <span className="font-sans text-xs font-bold text-[#18211E]">Short description override</span>
                   <textarea

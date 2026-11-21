@@ -42,12 +42,87 @@
   "royal-heritage": {
     "id": "royal-heritage",
     "coverImageUrl": "/templates/royal-heritage/couple-arch.jpg",
-    "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
+    "trailerVideoUrl": "/videos/royal-heritage.mp4",
+    "defaultMusicTrack": "/templates/royal-heritage/music.mp3",
+    "defaultsJson": {
+      "couple": {
+        "brideName": "Riya",
+        "groomName": "Kabir",
+        "slug": "riya-kabir"
+      },
+      "faith": {
+        "religion": "universal",
+        "sacredInvocation": "",
+        "sacredVerse": "",
+        "sacredTranslation": ""
+      },
+      "dateVenue": {
+        "weddingDate": "2027-11-24",
+        "weddingTime": "06:30 PM onwards",
+        "venueName": "Villa Bellavista & Azure Waterfront Estate",
+        "venueAddress": "Lakeside Royal Riviera Pavilion, Lake Como / Udaipur Heritage Valley 313001"
+      },
+      "ceremonies": {
+        "eventsJson": [
+          {
+            "name": "Welcome Mehendi & Waterfront Celebration",
+            "enabled": true,
+            "venue": "The Bougainvillea Terrace",
+            "date": "November 23, 2027",
+            "time": "04:00 PM"
+          },
+          {
+            "name": "Sun-Kissed Haldi & Golden Celebration",
+            "enabled": true,
+            "venue": "The Sunken Olive Grove & Poolside",
+            "date": "November 24, 2027",
+            "time": "10:30 AM"
+          },
+          {
+            "name": "Baraat Swagat & Grand Procession",
+            "enabled": true,
+            "venue": "The Archway Courtyard",
+            "date": "November 24, 2027",
+            "time": "04:30 PM"
+          },
+          {
+            "name": "The Sacred Vows / Vivah & Nikah",
+            "enabled": true,
+            "venue": "Lakeside Starlight Arch Mandap",
+            "date": "November 24, 2027",
+            "time": "06:30 PM"
+          },
+          {
+            "name": "The Grand Waterfront Banquet",
+            "enabled": true,
+            "venue": "The Villa Grand Promenade",
+            "date": "November 24, 2027",
+            "time": "08:30 PM onwards"
+          }
+        ]
+      },
+      "media": {
+        "heroImageUrl": "",
+        "slideshowImages": [
+          "/templates/royal-heritage/couple-arch.jpg",
+          "/templates/royal-heritage/couple-waterfront.jpg",
+          "/templates/royal-heritage/villa-mobile.jpg",
+          "/templates/royal-heritage/villa-terrace.jpg",
+          "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop"
+        ],
+        "musicTrack": "/templates/royal-heritage/music.mp3"
+      },
+      "optional": {
+        "showDressCode": true,
+        "dressCodeText": "We invite our gracious guests to celebrate in soft powder blues, sun-washed ivory, coral accents, linen suits, or traditional regal attire.",
+        "showTransport": false,
+        "transportText": ""
+      }
+    },
     "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:44:13.598Z"
+    "updatedBy": "support@wedinvites.in",
+    "updatedAt": "2026-11-21T16:40:29.178Z"
   },
   "royal-majesty": {
     "id": "royal-majesty",
@@ -57,7 +132,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-19T07:44:38.200Z"
+    "updatedAt": "2026-11-20T10:18:57.185Z"
   },
   "modern-minimal": {
     "id": "modern-minimal",
@@ -77,7 +152,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-19T14:53:11.229Z"
+    "updatedAt": "2026-11-21T14:07:01.258Z"
   },
   "azure-nikah": {
     "id": "azure-nikah",
@@ -97,7 +172,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-17T16:12:31.201Z"
+    "updatedAt": "2026-11-20T10:16:32.665Z"
   },
   "noor-e-nikah": {
     "id": "noor-e-nikah",
@@ -137,7 +212,7 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-19T07:41:25.158Z"
+    "updatedAt": "2026-11-21T14:08:14.905Z"
   },
   "royal-elegance": {
     "id": "royal-elegance",
@@ -153,11 +228,78 @@
     "id": "imperial-palace",
     "coverImageUrl": "/templates/imperial-palace/doors-hero.jpg",
     "trailerVideoUrl": null,
-    "defaultMusicTrack": null,
-    "defaultsJson": {},
+    "defaultMusicTrack": "/audio/ramayana-tera-mera-rang.mp3",
+    "defaultsJson": {
+      "faith": {
+        "religion": "hindu",
+        "sacredVerse": "मङ्गलम् भगवान विष्णुः मङ्गलम् गरुडध्वजः । मङ्गलम् पुण्डरीकाक्षः मङ्गलाय तनो हरिः ॥",
+        "sacredInvocation": "॥ श्री गणेशाय नमः ॥",
+        "sacredTranslation": "May Lord Ganesha and the Divine Trinity bless this sacred matrimonial union with eternal joy, harmony, and prosperity."
+      },
+      "media": {
+        "musicTrack": "/audio/ramayana-tera-mera-rang.mp3",
+        "heroImageUrl": "",
+        "slideshowImages": [
+          "/images/gallery-library/hindu/haveli-royal-vivah.webp",
+          "/images/gallery-library/hindu/vedic-mandap-ceremony.webp",
+          "/images/gallery-library/hindu/lotus-courtyard-sangeet.webp",
+          "/images/gallery-library/universal/starlit-celestial-pier.webp",
+          "/images/gallery-library/universal/botanical-glasshouse-promenade.webp"
+        ]
+      },
+      "couple": {
+        "slug": "nidhi-virendra",
+        "brideName": "Nidhi",
+        "groomName": "Virendra"
+      },
+      "optional": {
+        "dressCodeText": "",
+        "showDressCode": false,
+        "showTransport": false,
+        "transportText": ""
+      },
+      "dateVenue": {
+        "venueName": "Gomti Lawn",
+        "weddingDate": "2026-12-23",
+        "weddingTime": "06:00 PM IST",
+        "venueAddress": "khadra lucknow"
+      },
+      "ceremonies": {
+        "eventsJson": [
+          {
+            "date": "Friday, October 22, 2027",
+            "name": "Tel Poojan/Haldi ",
+            "time": "11:00 AM",
+            "venue": "Monday, DEC 01 2026",
+            "enabled": true
+          },
+          {
+            "date": "Friday, October 22, 2027",
+            "name": "Maatra Poojan/Mehndi",
+            "time": "06:30 PM",
+            "venue": "Tuesday, DEC 02 2026",
+            "enabled": true
+          },
+          {
+            "date": "Saturday, October 23, 2027",
+            "name": "Shubh Vivah",
+            "time": "04:30 PM",
+            "venue": "Wednesday, DEC 03 2026",
+            "enabled": true
+          },
+          {
+            "date": "Saturday, October 23, 2027",
+            "name": "Vidai",
+            "time": "08:00 PM",
+            "venue": "Thursday, DEC 04 2026",
+            "enabled": true
+          }
+        ]
+      }
+    },
     "marketingJson": {},
-    "updatedBy": null,
-    "updatedAt": "2026-11-19T07:42:01.146Z"
+    "updatedBy": "support@wedinvites.in",
+    "updatedAt": "2026-11-21T15:26:10.966Z"
   },
   "royal-grace": {
     "id": "royal-grace",
@@ -167,6 +309,6 @@
     "defaultsJson": {},
     "marketingJson": {},
     "updatedBy": null,
-    "updatedAt": "2026-11-19T07:42:46.542Z"
+    "updatedAt": "2026-11-20T10:16:59.687Z"
   }
 }
