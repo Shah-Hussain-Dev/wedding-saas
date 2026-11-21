@@ -171,7 +171,7 @@ function RoyalScratchRevealCard({
   dayStr: string;
   dateStr: string;
   yearStr: string;
-  weddingTime: string;
+  weddingTime?: string;
   venueName: string;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -328,15 +328,17 @@ function RoyalScratchRevealCard({
               <h3 className="font-playfair text-2xl sm:text-3xl font-bold text-white tracking-wide">
                 {dateStr} {yearStr}
               </h3>
-              <p className="text-[10px] sm:text-[11px] text-[#AEA290] font-montserrat flex items-center justify-center gap-1">
-                <Clock size={12} weight="bold" className="text-[#B89773]" />
-                <span>{weddingTime}</span>
-              </p>
+              {weddingTime ? (
+                <p className="text-[10px] sm:text-[11px] text-[#AEA290] font-montserrat flex items-center justify-center gap-1">
+                  <Clock size={12} weight="bold" className="text-[#B89773]" />
+                  <span>{weddingTime}</span>
+                </p>
+              ) : null}
             </div>
 
             <div className="pt-0.5 text-[10px] text-[#D5BA97]/90 font-montserrat flex items-center justify-center gap-1 truncate max-w-xs mx-auto">
               <MapPin size={12} weight="fill" className="text-[#B89773] flex-shrink-0" />
-              <span className="truncate">{venueName.split("&")[0]?.trim() || venueName}</span>
+              <span className="truncate">{venueName}</span>
             </div>
           </div>
         </div>
@@ -405,6 +407,11 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
     (data?.hashtag && !data.hashtag.toLowerCase().includes("alexander") && !data.hashtag.toLowerCase().includes("eleanor"))
       ? data.hashtag
       : (data?.hashtag?.trim() || dynamicHashtag);
+
+  const effectiveWeddingTime =
+    typeof data?.weddingTime === "string" && data.weddingTime.trim()
+      ? data.weddingTime.trim()
+      : (!isCustomized ? defaultData.weddingTime : "");
 
   const venueName =
     data?.venueName || data?.venue?.name || defaultData.venue.name;
@@ -960,7 +967,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                 <div className="inline-flex items-center gap-1.5 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full bg-black/65 backdrop-blur-md border border-[#B89773]/70 text-[#E5D8C4] text-[10px] sm:text-xs font-montserrat shadow-2xl max-w-[90vw] truncate">
                   <span className="text-[#D5BA97] font-bold">✦ {dayStr}, {dateStr} {yearStr}</span>
                   <span className="text-white/40">·</span>
-                  <span className="text-stone-200 truncate">{venueName.split("&")[0]?.trim() || venueName}</span>
+                  <span className="text-stone-200 truncate">{venueName}</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -1164,10 +1171,12 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                   <CalendarCheck size={16} weight="bold" className="text-[#D5BA97]" />
                   <span>{dayStr}, {dateStr} {yearStr}</span>
                 </div>
-                <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/70 border border-[#B89773] text-[#551618] text-xs font-montserrat font-bold shadow-sm">
-                  <Clock size={16} weight="bold" className="text-[#B89773]" />
-                  <span>{data?.weddingTime || defaultData.weddingTime}</span>
-                </div>
+                {effectiveWeddingTime ? (
+                  <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/70 border border-[#B89773] text-[#551618] text-xs font-montserrat font-bold shadow-sm">
+                    <Clock size={16} weight="bold" className="text-[#B89773]" />
+                    <span>{effectiveWeddingTime}</span>
+                  </div>
+                ) : null}
               </div>
             </motion.div>
           </div>
@@ -1201,7 +1210,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                 dayStr={dayStr}
                 dateStr={dateStr}
                 yearStr={yearStr}
-                weddingTime={data?.weddingTime || defaultData.weddingTime}
+                weddingTime={effectiveWeddingTime}
                 venueName={venueName}
               />
             </div>
@@ -1334,10 +1343,12 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                   <span className="px-3.5 py-1 rounded-full bg-[#551618] text-[#E5D8C4] text-[10px] sm:text-xs font-bold font-montserrat uppercase tracking-wider">
                     {events[selectedChamberIdx]?.chamber || `Chamber 0${selectedChamberIdx + 1}`}
                   </span>
-                  <span className="text-xs sm:text-sm font-bold text-[#551618] font-montserrat flex items-center gap-1.5">
-                    <Clock size={15} weight="bold" />
-                    {events[selectedChamberIdx]?.time}
-                  </span>
+                  {events[selectedChamberIdx]?.time ? (
+                    <span className="text-xs sm:text-sm font-bold text-[#551618] font-montserrat flex items-center gap-1.5">
+                      <Clock size={15} weight="bold" />
+                      {events[selectedChamberIdx]?.time}
+                    </span>
+                  ) : null}
                 </div>
 
                 <div className="space-y-2">
@@ -1356,7 +1367,8 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
                       <CalendarCheck size={14} weight="bold" /> Date &amp; Timing
                     </span>
                     <p className="text-xs sm:text-sm font-bold text-[#36281D] font-cormorant">
-                      {events[selectedChamberIdx]?.date} · {events[selectedChamberIdx]?.time}
+                      {events[selectedChamberIdx]?.date}
+                      {events[selectedChamberIdx]?.time ? ` · ${events[selectedChamberIdx]?.time}` : ""}
                     </p>
                   </div>
 
@@ -1542,8 +1554,9 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
         </section>
 
         {/* ====================================================
-          SCENE 09: RSVP — THE ROYAL GUEST REGISTER
+          SCENE 09: RSVP — THE ROYAL GUEST REGISTER (COMMENTED OUT)
           ==================================================== */}
+        {/*
         <section className="py-20 sm:py-32 px-4 bg-[#2C0F0D] text-[#E5D8C4] text-center relative z-10">
           <div className="max-w-2xl mx-auto">
             <motion.div
@@ -1582,6 +1595,7 @@ export default function ImperialPalace({ data }: ImperialPalaceProps) {
             </motion.div>
           </div>
         </section>
+        */}
 
         {/* ====================================================
           FOOTER & REPLAY
