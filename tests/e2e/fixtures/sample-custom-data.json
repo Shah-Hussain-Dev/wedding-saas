@@ -6,9 +6,9 @@
   "weddingDate": "2026-11-20T20:00:00+05:00",
   "weddingTime": "8:00 PM",
   "venue": {
-    "name": "The Crystal Palace Marquee",
-    "address": "Karsaz Road, Karachi",
-    "mapUrl": "https://maps.google.com/?q=The+Crystal+Palace+Marquee+Karachi"
+    "name": "The Crystal Palace Royale",
+    "address": "Civil Lines, New Delhi, India",
+    "mapUrl": "https://maps.google.com/?q=Civil+Lines+New+Delhi"
   },
   "events": [
     {
@@ -16,40 +16,40 @@
       "name": "Mehndi Night",
       "date": "Thursday · 19 November 2026",
       "time": "7:30 PM",
-      "venue": "Gulshan Lawn",
-      "address": "Block 4, Clifton, Karachi",
+      "venue": "Gulshan Heritage Lawn",
+      "address": "Gomti Nagar Extension, Lucknow, Uttar Pradesh, India",
       "dressCode": "Shades of Mustard & Pistachio",
-      "mapUrl": "https://maps.google.com/?q=Gulshan+Lawn+Clifton+Karachi"
+      "mapUrl": "https://maps.google.com/?q=Gomti+Nagar+Lucknow"
     },
     {
       "id": "nikah",
       "name": "Nikah Ceremony",
       "date": "Friday · 20 November 2026",
       "time": "4:30 PM",
-      "venue": "Sultan Mosque",
-      "address": "DHA Phase 5, Karachi",
+      "venue": "Sultan Heritage Mosque",
+      "address": "Husainabad, Lucknow, Uttar Pradesh, India",
       "dressCode": "Ivory & Champagne Gold",
-      "mapUrl": "https://maps.google.com/?q=Sultan+Mosque+Karachi"
+      "mapUrl": "https://maps.google.com/?q=Husainabad+Lucknow"
     },
     {
       "id": "baraat",
       "name": "Baraat Reception",
       "date": "Saturday · 21 November 2026",
       "time": "8:00 PM",
-      "venue": "The Crystal Palace Marquee",
-      "address": "Karsaz Road, Karachi",
+      "venue": "The Crystal Palace Royale",
+      "address": "Civil Lines, New Delhi, India",
       "dressCode": "Traditional Velvet & Maroon",
-      "mapUrl": "https://maps.google.com/?q=The+Crystal+Palace+Marquee+Karachi"
+      "mapUrl": "https://maps.google.com/?q=Civil+Lines+New+Delhi"
     },
     {
       "id": "walima",
       "name": "Walima Dinner",
       "date": "Sunday · 22 November 2026",
       "time": "8:30 PM",
-      "venue": "Beach Luxury Grand Lawn",
-      "address": "Moulvi Tamizuddin Khan Rd, Karachi",
+      "venue": "Taj Heritage Grand Lawn",
+      "address": "Old City, Hyderabad, Telangana, India",
       "dressCode": "Pastel Pink & Silver",
-      "mapUrl": "https://maps.google.com/?q=Beach+Luxury+Hotel+Karachi"
+      "mapUrl": "https://maps.google.com/?q=Old+City+Hyderabad"
     }
   ],
   "musicTrack": "/templates/sheesh-mahal/audio/music.mp3",

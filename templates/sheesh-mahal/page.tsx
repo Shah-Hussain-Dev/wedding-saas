@@ -106,7 +106,7 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
       data?.couple?.brideParents ||
       merged.brideParents ||
       merged.couple?.brideParents ||
-      "Mr & Mrs Faisal Chaudhry";
+      "Mr & Mrs Faisal Khan";
 
     const gParents =
       data?.groomParents ||
@@ -119,13 +119,13 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
       data?.venueName ||
       data?.venue?.name ||
       merged.venue?.name ||
-      "Qasr-e-Aina Banquet Hall";
+      "Qasr-e-Aina Imperial Heritage Banquets";
 
     const vAddress =
       data?.venueAddress ||
       data?.venue?.address ||
       merged.venue?.address ||
-      "Shahrah-e-Faisal, Karachi, Pakistan";
+      "Husainabad Heritage Corridor, Lucknow, Uttar Pradesh 226003, India";
 
     const vMap =
       data?.venue?.mapUrl ||
@@ -469,7 +469,7 @@ export default function SheeshMahal({ data }: SheeshMahalProps) {
 
       {/* ─────────────────────────────────────────────────────────────
           SECTION 05: FAMILY HANGING LAMPS & CONFLUENCE (#families)
-          Dual brass lanterns for Siddiqui and Chaudhry families,
+          Dual brass lanterns for Siddiqui and Khan families,
           lighting micro-interaction, SVG golden confluence threads
           ───────────────────────────────────────────────────────────── */}
       <FamilyLamps data={resolvedData} />

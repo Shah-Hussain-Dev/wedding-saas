@@ -266,7 +266,10 @@ export async function loadAllTemplateSettings(): Promise<Record<string, Template
     rows.forEach((row) => {
       memorySettingsCache[row.id] = dbRowToSettings(row);
     });
-    saveSettingsToFile(memorySettingsCache);
+    // Only write to disk if file does not exist to avoid local git diff churn during reads
+    if (!fs.existsSync(DATA_FILE_PATH)) {
+      saveSettingsToFile(memorySettingsCache);
+    }
   } catch (err) {
     console.warn("Could not load template settings from DB:", err);
   }

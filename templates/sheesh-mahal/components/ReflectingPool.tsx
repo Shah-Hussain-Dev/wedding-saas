@@ -167,7 +167,7 @@ export default function ReflectingPool({
           className="font-script text-2xl sm:text-3xl text-[#e6cf98] leading-tight"
           style={{ fontFamily: "'Alex Brush', cursive" }}
         >
-          {familySignoff || "the Siddiqui & Chaudhry families"}
+          {familySignoff || "the Siddiqui & Khan families"}
         </p>
       </div>
 

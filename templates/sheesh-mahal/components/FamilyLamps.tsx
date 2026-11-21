@@ -19,7 +19,7 @@ export default function FamilyLamps({ data }: FamilyLampsProps) {
   const groomParents =
     data?.groomParents || data?.couple?.groomParents || "Mr & Mrs Imran Siddiqui";
   const brideParents =
-    data?.brideParents || data?.couple?.brideParents || "Mr & Mrs Faisal Chaudhry";
+    data?.brideParents || data?.couple?.brideParents || "Mr & Mrs Faisal Khan";
 
   const familyDua =
     data?.sacred?.familyDua || "اللَّهُمَّ أَلِّفْ بَيْنَ قُلُوبِنَا، وَأَصْلِحْ ذَاتَ بَيْنِنَا";

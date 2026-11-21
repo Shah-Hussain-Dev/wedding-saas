@@ -66,7 +66,7 @@ export default function LetterCasket({ data, guestName: guestNameProp }: LetterC
   const groomParents =
     data?.groomParents || data?.couple?.groomParents || "Mr & Mrs Imran Siddiqui";
   const brideParents =
-    data?.brideParents || data?.couple?.brideParents || "Mr & Mrs Faisal Chaudhry";
+    data?.brideParents || data?.couple?.brideParents || "Mr & Mrs Faisal Khan";
 
   const quranArabic =
     data?.sacred?.quranArabic ||

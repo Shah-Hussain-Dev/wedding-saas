@@ -201,8 +201,10 @@ export async function getAllTemplatesWithPricing(): Promise<TemplatePricingConfi
             createdAt: cfg.createdAt ? new Date(cfg.createdAt).toISOString() : (fileCfg?.createdAt || DEFAULT_TEMPLATE_RELEASE_DATES[cfg.id]),
           };
         });
-        // Keep file backup in sync with database
-        savePricesToFile(memoryPriceCache);
+        // Keep file backup if not existing on disk (avoids dirty local git diffs on read operations)
+        if (!fs.existsSync(DATA_FILE_PATH)) {
+          savePricesToFile(memoryPriceCache);
+        }
       }
     }
   } catch (err) {

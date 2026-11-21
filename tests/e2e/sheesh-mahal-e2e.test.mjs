@@ -294,7 +294,7 @@ describe('Tier 1: Feature Coverage', () => {
       assert.ok(familyLampsCode.includes('handleBrideLamp'), 'FamilyLamps.tsx must handle bride lamp');
       assert.ok(familyLampsCode.includes('fm-lamp'), 'FamilyLamps.tsx must render .fm-lamp');
       assert.strictEqual(dataJson.couple.groomParents, 'Mr & Mrs Imran Siddiqui');
-      assert.strictEqual(dataJson.couple.brideParents, 'Mr & Mrs Faisal Chaudhry');
+      assert.strictEqual(dataJson.couple.brideParents, 'Mr & Mrs Faisal Khan');
     });
 
     it('5.2 should ignite groom family lamp and play sfx-light.mp3 on interaction', () => {
@@ -338,7 +338,7 @@ describe('Tier 1: Feature Coverage', () => {
       assert.ok(fs.existsSync(path.join(audioDir, 'sfx-window-open.mp3')), 'sfx-window-open.mp3 must exist on disk');
     });
 
-    it('6.3 should display verified Karachi venue details and dress codes for each event', () => {
+    it('6.3 should display verified venue details and dress codes for each event', () => {
       const baraat = dataJson.events.find(e => e.id === 'baraat');
       assert.ok(baraat.venue.includes('Qasr-e-Aina'), 'Baraat venue must be Qasr-e-Aina');
       assert.strictEqual(baraat.dressCode, 'Formal eastern, in reds & golds');
@@ -350,7 +350,7 @@ describe('Tier 1: Feature Coverage', () => {
       const ics = generateICalendarEvent(baraat, dataJson.couple);
       assert.ok(ics.includes('BEGIN:VCALENDAR'), 'ICS must declare VCALENDAR');
       assert.ok(ics.includes('SUMMARY:Zain & Anaya - Baraat'), 'ICS must include couple and event summary');
-      assert.ok(ics.includes('LOCATION:Qasr-e-Aina Banquet Hall, Shahrah-e-Faisal, Karachi'), 'ICS must declare exact venue location');
+      assert.ok(ics.includes('LOCATION:Qasr-e-Aina Imperial Heritage Banquets, Husainabad, Lucknow'), 'ICS must declare exact venue location');
     });
 
     it('6.5 should provide Google Maps navigation link targeting venue address', () => {
@@ -699,7 +699,7 @@ describe('Tier 3: Cross-Feature Pairwise Combinations', () => {
   it('3.5 Event Shutters + Calendar Linkage: Baraat shutter opening reveals accurate venue in .ics', () => {
     const baraat = dataJson.events.find(e => e.id === 'baraat');
     const ics = generateICalendarEvent(baraat, dataJson.couple);
-    assert.ok(ics.includes('Qasr-e-Aina Banquet Hall'), 'Generated ICS must contain Baraat venue name');
+    assert.ok(ics.includes('Qasr-e-Aina'), 'Generated ICS must contain Baraat venue name');
   });
 
   it('3.6 RSVP Bangles + Shukriya Card: Selected bangles correctly summarize attending events', () => {

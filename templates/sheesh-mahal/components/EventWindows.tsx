@@ -19,10 +19,10 @@ const DEFAULT_EVENTS: SheeshMahalEvent[] = [
     name: "Mehndi",
     date: "Thursday · 10 December 2026",
     time: "7:30 pm onwards",
-    venue: "Gul Bahar Lawn, Clifton, Karachi",
-    address: "Gul Bahar Lawn, Clifton, Karachi, Pakistan",
+    venue: "Gul-e-Rana Floral Lawns, Gomti Nagar, Lucknow",
+    address: "Gul-e-Rana Floral Lawns, Gomti Nagar Extension, Lucknow, Uttar Pradesh 226010, India",
     dressCode: "Yellow, green & marigold",
-    mapUrl: "https://maps.google.com/?q=Gul+Bahar+Lawn+Clifton+Karachi",
+    mapUrl: "https://maps.google.com/?q=Gomti+Nagar+Extension+Lucknow+Uttar+Pradesh",
     description: "An enchanting evening of intricate henna artistry, fragrant floral garlands, soulful melodies, and vibrant celebration."
   },
   {
@@ -30,10 +30,10 @@ const DEFAULT_EVENTS: SheeshMahalEvent[] = [
     name: "Nikah",
     date: "Friday · 11 December 2026",
     time: "4:30 pm, after Asr",
-    venue: "Masjid-e-Rahmat, DHA Phase 6, Karachi",
-    address: "Masjid-e-Rahmat, DHA Phase 6, Karachi, Pakistan",
+    venue: "Masjid-e-Taqwa Heritage Pavilion, Husainabad, Lucknow",
+    address: "Masjid-e-Taqwa Heritage Pavilion, Husainabad, Lucknow, Uttar Pradesh 226003, India",
     dressCode: "Soft pastels & ivory",
-    mapUrl: "https://maps.google.com/?q=Masjid-e-Rahmat+DHA+Phase+6+Karachi",
+    mapUrl: "https://maps.google.com/?q=Husainabad+Lucknow+Uttar+Pradesh",
     description: "Solemnization of marriage vows and Khutbah-e-Nikah under the sacred celestial arches, sealed with heartfelt duas and blessings."
   },
   {
@@ -41,11 +41,11 @@ const DEFAULT_EVENTS: SheeshMahalEvent[] = [
     name: "Baraat",
     date: "Saturday · 12 December 2026",
     time: "8:00 pm onwards",
-    venue: "Qasr-e-Aina Banquet Hall, Shahrah-e-Faisal, Karachi",
-    address: "Qasr-e-Aina Banquet Hall, Shahrah-e-Faisal, Karachi, Pakistan",
+    venue: "Qasr-e-Aina Imperial Heritage Banquets, Husainabad, Lucknow",
+    address: "Qasr-e-Aina Imperial Heritage Banquets, Husainabad Heritage Corridor, Lucknow, Uttar Pradesh 226003, India",
     dressCode: "Formal eastern, in reds & golds",
     isoTarget: "2026-12-12T20:00:00+05:00",
-    mapUrl: "https://maps.google.com/?q=Qasr-e-Aina+Banquet+Hall+Shahrah-e-Faisal+Karachi",
+    mapUrl: "https://maps.google.com/?q=Husainabad+Heritage+Corridor+Lucknow+Uttar+Pradesh",
     description: "The grand imperial wedding procession, welcoming the groom and celebrating the eternal union with royal Mughal splendor."
   },
   {
@@ -53,10 +53,10 @@ const DEFAULT_EVENTS: SheeshMahalEvent[] = [
     name: "Walima",
     date: "Sunday · 13 December 2026",
     time: "8:30 pm onwards",
-    venue: "The Pearl Marquee, Karsaz, Karachi",
-    address: "The Pearl Marquee, Karsaz, Karachi, Pakistan",
+    venue: "The Grand Pearl Royale Ballroom, Gomti Nagar, Lucknow",
+    address: "The Grand Pearl Royale Ballroom, Vibhuti Khand, Gomti Nagar, Lucknow, Uttar Pradesh 226010, India",
     dressCode: "Silver, pearl & pastels",
-    mapUrl: "https://maps.google.com/?q=The+Pearl+Marquee+Karsaz+Karachi",
+    mapUrl: "https://maps.google.com/?q=Vibhuti+Khand+Gomti+Nagar+Lucknow+Uttar+Pradesh",
     description: "Tender parental blessings followed by an opulent Mughal banquet reception celebrating eternal love with gourmet delicacies."
   }
 ];
