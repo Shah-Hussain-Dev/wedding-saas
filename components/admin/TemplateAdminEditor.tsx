@@ -14,6 +14,7 @@ import {
   MusicNotes,
   Sparkle,
   Tag,
+  Trash,
 } from "@phosphor-icons/react";
 import { getTemplateMeta } from "@/lib/template-meta";
 import { CustomizerStepAccordion } from "@/components/customizer/CustomizerStepAccordion";
@@ -422,45 +423,125 @@ export function TemplateAdminEditor({ templateId }: TemplateAdminEditorProps) {
 
             {step.id === 5 ? (
               <div className="space-y-3">
-                {events.map((ev, idx) => (
-                  <div key={idx} className="rounded-xl border border-[#073D31]/10 p-3 space-y-2">
-                    <input
-                      value={ev.name}
-                      onChange={(e) => {
-                        const next = [...events];
-                        next[idx] = { ...next[idx], name: e.target.value };
-                        setEvents(next);
-                      }}
-                      className="w-full rounded-lg border border-[#073D31]/10 px-2 py-1.5 text-sm"
-                    />
-                    <input
-                      value={ev.venue}
-                      onChange={(e) => {
-                        const next = [...events];
-                        next[idx] = { ...next[idx], venue: e.target.value };
-                        setEvents(next);
-                      }}
-                      className="w-full rounded-lg border border-[#073D31]/10 px-2 py-1.5 text-sm"
-                    />
-                  </div>
-                ))}
+                {events.length === 0 ? (
+                  <p className="rounded-xl border border-dashed border-[#073D31]/20 bg-white/40 p-4 text-center text-xs text-stone-500">
+                    No ceremonies added yet. Click &quot;+ Add event&quot; below to create one.
+                  </p>
+                ) : (
+                  events.map((ev, idx) => (
+                    <div
+                      key={idx}
+                      className="rounded-xl border border-[#073D31]/15 bg-white/60 p-3.5 space-y-3 shadow-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#073D31] bg-[#073D31]/10 px-2.5 py-0.5 rounded-full">
+                          Ceremony #{idx + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const next = events.filter((_, i) => i !== idx);
+                            setEvents(next);
+                          }}
+                          className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors p-2"
+                          title="Delete ceremony"
+                          aria-label={`Delete ceremony ${idx + 1}`}
+                        >
+                          <Trash size={16} weight="bold" />
+                        </button>
+                      </div>
+
+                      <div className="space-y-2.5">
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-[#073D31]/75 mb-1">
+                            Event Name
+                          </label>
+                          <input
+                            type="text"
+                            value={ev.name}
+                            onChange={(e) => {
+                              const next = [...events];
+                              next[idx] = { ...next[idx], name: e.target.value };
+                              setEvents(next);
+                            }}
+                            placeholder="e.g. Tel Poojan / Haldi, Sangeet, Shubh Vivah"
+                            className="w-full rounded-lg border border-[#073D31]/15 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#073D31]"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold uppercase tracking-wider text-[#073D31]/75 mb-1">
+                            Venue / Lawn
+                          </label>
+                          <input
+                            type="text"
+                            value={ev.venue}
+                            onChange={(e) => {
+                              const next = [...events];
+                              next[idx] = { ...next[idx], venue: e.target.value };
+                              setEvents(next);
+                            }}
+                            placeholder="e.g. Royal Palace Lawn, Banquet Hall"
+                            className="w-full rounded-lg border border-[#073D31]/15 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#073D31]"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          <div>
+                            <label className="block text-[10px] font-bold uppercase tracking-wider text-[#073D31]/75 mb-1">
+                              Date
+                            </label>
+                            <input
+                              type="text"
+                              value={ev.date}
+                              onChange={(e) => {
+                                const next = [...events];
+                                next[idx] = { ...next[idx], date: e.target.value };
+                                setEvents(next);
+                              }}
+                              placeholder="e.g. Monday, Dec 01 2026"
+                              className="w-full rounded-lg border border-[#073D31]/15 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#073D31]"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[10px] font-bold uppercase tracking-wider text-[#073D31]/75 mb-1">
+                              Time
+                            </label>
+                            <input
+                              type="text"
+                              value={ev.time}
+                              onChange={(e) => {
+                                const next = [...events];
+                                next[idx] = { ...next[idx], time: e.target.value };
+                                setEvents(next);
+                              }}
+                              placeholder="e.g. 06:00 PM onwards"
+                              className="w-full rounded-lg border border-[#073D31]/15 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:outline-none focus:border-[#073D31]"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
                 <button
                   type="button"
                   onClick={() =>
                     setEvents([
                       ...events,
                       {
-                        name: "Special Ceremony",
+                        name: "",
                         enabled: true,
                         venue: "",
-                        date: weddingDate,
-                        time: "11:00 AM",
+                        date: weddingDate || "",
+                        time: "06:00 PM",
                       },
                     ])
                   }
-                  className="min-h-[44px] rounded-full border border-[#073D31]/15 px-4 text-xs font-bold text-[#073D31]"
+                  className="min-h-[44px] rounded-full border border-[#073D31]/15 px-4 text-xs font-bold text-[#073D31] hover:bg-[#073D31]/5 transition-colors cursor-pointer"
                 >
-                  Add event
+                  + Add event
                 </button>
               </div>
             ) : null}
