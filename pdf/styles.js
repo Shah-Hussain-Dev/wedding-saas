@@ -167,20 +167,129 @@ export const CSS = `
 .wibu-page-badge{display:inline-flex;align-items:center;gap:6px;background:#ffffff;color:var(--u-brand);border:1px solid #cbd5e1;padding:5px 16px;border-radius:99px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .wibu-pagewrap{border-radius:6px;overflow:visible;background:transparent;transition:transform .2s ease;box-shadow:0 12px 36px -4px rgba(0,0,0,0.18),0 0 0 1px rgba(0,0,0,0.06);position:relative}
 
-/* Mobile View Switcher */
-.wibu-mob-toggle{display:none}
+/* Mobile View Bottom Bar */
+.wibu-mob-bottombar{display:none}
 
 @media (max-width:880px){
-  .wibu{grid-template-columns:1fr;height:auto;overflow:visible}
-  .wibu-side{height:auto;overflow:visible}
-  .wibu-main{height:auto;overflow:visible}
-  .wibu-mob-toggle{display:flex;width:100%;padding:8px 16px;background:#fff;border-bottom:1px solid var(--u-line);gap:8px;position:sticky;top:0;z-index:20}
-  .wibu-mob-toggle button{flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--u-line);background:#f8fafc;font-size:13px;font-weight:600;color:var(--u-mute);cursor:pointer;min-height:44px}
-  .wibu-mob-toggle button[aria-pressed=true]{background:var(--u-brand);color:#fff;border-color:var(--u-brand)}
-  .wibu-swatches{grid-template-columns:repeat(3,1fr)}
-  .wibu-tpls{grid-template-columns:repeat(2,1fr)}
-  .wibu-stage{padding:20px 8px 80px;gap:16px}
-  .wibu-page-container{margin-bottom:44px}
+  .wibu{grid-template-columns:1fr;height:auto;min-height:100vh;overflow-x:hidden}
+  .wibu-side{height:auto;min-height:calc(100vh - 68px);overflow:visible}
+  .wibu-main{height:auto;min-height:calc(100vh - 68px);overflow:visible}
+  .wibu-hidden-mobile{display:none!important}
+  
+  /* Compact & Clean Mobile Spacing */
+  .wibu-head{padding:12px 16px 8px;border-bottom:1px solid var(--u-line)}
+  .wibu-head h1{font-size:15px;line-height:1.2}
+  .wibu-head p{font-size:11px;margin-top:2px}
+  .wibu-body{padding:12px 14px 105px;gap:12px}
+  .wibu-stage{padding:16px 8px 115px;gap:16px;min-height:auto}
+  .wibu-page-container{margin-bottom:38px}
+
+  /* Touch Targets & iOS Auto-Zoom Prevention */
+  .wibu-in,.wibu-area,.wibu-sel{font-size:16px!important;min-height:44px;padding:9px 12px}
+  .wibu-chip{min-height:44px;padding:8px 14px;font-size:13px}
+  .wibu-pill{min-height:38px;padding:6px 14px;font-size:12px}
+  .wibu-btn{min-height:44px;font-size:13px}
+  .wibu-tabs{padding:6px 8px 0;gap:2px}
+  .wibu-tab{padding:8px 12px;font-size:12.5px;min-height:40px}
+
+  /* Responsive Template & Elements Grid */
+  .wibu-tpls{grid-template-columns:repeat(2,1fr);gap:8px}
+  .wibu-tpl{padding:6px}
+  .wibu-tpl b{font-size:11.5px}
+  .wibu-swatches{grid-template-columns:repeat(3,1fr);gap:6px}
+  .wibu-elements-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+
+  /* Top Stage Bar on Mobile */
+  .wibu-bar{padding:8px 12px;flex-wrap:wrap;gap:8px}
+  .wibu-bar>span:first-child{font-size:11px}
+  .wibu-bar span:last-child{display:none} /* Save button is in ergonomic bottom bar on mobile! */
+
+  /* Floating Canva Quick Toolbar on Mobile in Thumb Reach */
+  .wib-floating-toolbar{
+    position:fixed;
+    bottom:calc(74px + env(safe-area-inset-bottom,0px));
+    left:10px;
+    right:10px;
+    transform:none;
+    justify-content:center;
+    padding:6px 12px;
+    font-size:11.5px;
+    max-width:calc(100vw - 20px);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+
+  /* 🌟 MOBILE ERGONOMIC BOTTOM BAR (Thumb Zone) 🌟 */
+  .wibu-mob-bottombar{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    z-index:999;
+    background:rgba(255,255,255,0.96);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--u-line);
+    padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    box-shadow:0 -4px 24px rgba(0,0,0,0.09);
+  }
+  .wibu-mob-nav-group{
+    display:flex;
+    background:#f1f5f9;
+    border-radius:12px;
+    padding:3px;
+    gap:3px;
+    flex:1;
+  }
+  .wibu-mob-nav-btn{
+    flex:1;
+    border:none;
+    background:transparent;
+    border-radius:9px;
+    padding:8px 4px;
+    font-size:12px;
+    font-weight:600;
+    color:#64748b;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    min-height:38px;
+    transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .wibu-mob-nav-btn[aria-pressed=true]{
+    background:#fff;
+    color:var(--u-brand);
+    font-weight:700;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+  }
+  .wibu-mob-cta-btn{
+    background:var(--u-brand);
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    padding:9px 16px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    min-height:44px;
+    box-shadow:0 4px 14px rgba(7,61,49,0.3);
+    transition:transform .12s ease;
+    white-space:nowrap;
+  }
+  .wibu-mob-cta-btn:active{
+    transform:scale(0.96);
+  }
 }
 
 /* Clickable Map Hyperlink Button */

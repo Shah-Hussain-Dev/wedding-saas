@@ -137,16 +137,17 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
   }, []);
 
   /* preview scale follows the container width */
+  /* preview scale follows the container width */
   useEffect(() => {
     const el = stageRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => setStageW(e.contentRect.width));
+    const ro = new ResizeObserver(([e]) => setStageW(e.contentRect.width || window.innerWidth));
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [mobileView]);
 
-  // Compute effective scale considering stage width & zoom control
-  const baseScale = Math.max(0.35, Math.min(1.15, stageW / PAGE_PX.w));
+  // Compute effective scale considering stage width with comfortable mobile padding & zoom control
+  const baseScale = Math.max(0.35, Math.min(1.15, (stageW - 28) / PAGE_PX.w));
   const effectiveScale = +(baseScale * zoomMultiplier).toFixed(3);
 
   const set = useCallback((path, val) => setD((s) => setIn(s, path, val)), []);
@@ -639,25 +640,41 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
     <div className="wibu">
       <style>{CSS}</style>
 
-      {/* Mobile Ergonomic View Switcher (<= 880px) */}
-      <div className="wibu-mob-toggle print:hidden">
+      {/* 🌟 Mobile Ergonomic Bottom Action Bar (Thumb Zone) 🌟 */}
+      <div className="wibu-mob-bottombar print:hidden">
+        <div className="wibu-mob-nav-group" role="tablist">
+          <button
+            type="button"
+            className="wibu-mob-nav-btn"
+            aria-pressed={mobileView === "editor"}
+            onClick={() => setMobileView("editor")}
+          >
+            <span>✏️</span>
+            <span>Customize</span>
+          </button>
+          <button
+            type="button"
+            className="wibu-mob-nav-btn"
+            aria-pressed={mobileView === "preview"}
+            onClick={() => setMobileView("preview")}
+          >
+            <span>👁️</span>
+            <span>Preview ({pages.length})</span>
+          </button>
+        </div>
+
         <button
           type="button"
-          aria-pressed={mobileView === "editor"}
-          onClick={() => setMobileView("editor")}
+          className="wibu-mob-cta-btn"
+          onClick={downloadPdf}
+          title="Save as PDF invitation"
         >
-          ✏️ Customize Details
-        </button>
-        <button
-          type="button"
-          aria-pressed={mobileView === "preview"}
-          onClick={() => setMobileView("preview")}
-        >
-          👁️ Live Preview ({pages.length} A5)
+          <span>📥</span>
+          <span>Save PDF</span>
         </button>
       </div>
 
-      <aside className={`wibu-side ${mobileView === "preview" ? "hidden md:flex" : "flex"}`}>
+      <aside className={`wibu-side ${mobileView === "preview" ? "wibu-hidden-mobile" : ""}`}>
         <div className="wibu-head">
           <h1>PDF Invitation Studio</h1>
           <p>Universal 2–3 page A5 wedding invitations with Canva-style direct editing.</p>
@@ -670,7 +687,7 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
         <div className="wibu-body" role="tabpanel">{body}</div>
       </aside>
 
-      <main className={`wibu-main ${mobileView === "editor" ? "hidden md:flex" : "flex"}`}>
+      <main className={`wibu-main ${mobileView === "editor" ? "wibu-hidden-mobile" : ""}`}>
         <div className="wibu-bar">
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span>{pages.length} {pages.length === 1 ? "page" : "pages"} ({d.structure === "2-page" ? "2-Page Keepsake" : "3-Page Suite"}) · A5 portrait</span>

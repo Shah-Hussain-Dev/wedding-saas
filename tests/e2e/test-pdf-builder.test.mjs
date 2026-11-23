@@ -132,9 +132,11 @@ test('pdf/styles.js contains print stylesheet, Canva selection styles, map butto
   assert.ok(content.includes('.wibu-page-container'), 'Must include .wibu-page-container for page spacing');
   assert.ok(content.includes('.wibu-page-badge'), 'Must include .wibu-page-badge for page identification');
   assert.ok(content.includes('.wib-map-link-btn'), 'Must include .wib-map-link-btn styling');
+  assert.ok(content.includes('.wibu-mob-bottombar'), 'Must include .wibu-mob-bottombar for mobile ergonomic navigation');
+  assert.ok(content.includes('font-size:16px!important'), 'Must enforce 16px font on inputs to prevent iOS auto-zoom');
 });
 
-test('pdf/WeddingInvitationBuilder.jsx has Canva editing, page containers, Stickers & 3D tab, and zoom controls', () => {
+test('pdf/WeddingInvitationBuilder.jsx has Canva editing, mobile bottom bar, page containers, and zoom controls', () => {
   const builderPath = path.join(projectRoot, 'pdf', 'WeddingInvitationBuilder.jsx');
   const content = fs.readFileSync(builderPath, 'utf8');
 
@@ -147,5 +149,7 @@ test('pdf/WeddingInvitationBuilder.jsx has Canva editing, page containers, Stick
   assert.ok(content.includes('wib-floating-toolbar'), 'Must provide floating format bar in preview');
   assert.ok(content.includes('wibu-page-container'), 'Must render wibu-page-container');
   assert.ok(content.includes('wibu-page-badge'), 'Must render wibu-page-badge');
+  assert.ok(content.includes('wibu-mob-bottombar'), 'Must render mobile bottom navigation bar in thumb zone');
+  assert.ok(content.includes('wibu-mob-cta-btn'), 'Must render primary Save PDF CTA button in bottom bar');
   assert.ok(!content.includes('window.confirm'), 'window.confirm alert must be removed');
 });
