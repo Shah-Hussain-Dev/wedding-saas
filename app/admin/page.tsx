@@ -242,6 +242,16 @@ export default function AdminDashboardPage() {
             </div>
           </div>
 
+          {/* PDF Builder Test Lab */}
+          <Link
+            href="/test-pdf-builder"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-300 bg-amber-50 text-amber-900 hover:bg-amber-100 text-xs font-semibold transition shadow-xs"
+            title="Open Claude PDF Invitation Builder Test Lab"
+          >
+            <Sparkle size={14} weight="fill" className="text-amber-600" />
+            <span>PDF Builder Lab</span>
+          </Link>
+
           {/* View Website */}
           <a
             href="/"
