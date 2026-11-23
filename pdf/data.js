@@ -61,6 +61,13 @@ export const THEMES = {
   champagneOyster: { label: "Champagne Oyster Pearl", bg: "#fdfbf7", bg2: "#f3ece0", ink: "#3c352d", accent: "#7a5c32", accent2: "#c4a36e", card: "rgba(255,255,255,.7)" },
   artDecoNoir: { label: "Art Deco Noir Gold", bg: "#15171c", bg2: "#0c0e12", ink: "#f2ede4", accent: "#e6c775", accent2: "#b39144", card: "rgba(255,255,255,.07)" },
   celestialMidnight: { label: "Celestial Midnight Navy", bg: "#0d1527", bg2: "#060a14", ink: "#e8effc", accent: "#8eb5f0", accent2: "#d4b358", card: "rgba(255,255,255,.08)" },
+
+  // ── Scenic & Illustrated Themes (Matching Pinterest Collection) ──
+  verandaSunset: { label: "Royal Veranda Sunset", bg: "#fdf8f4", bg2: "#f9e7d2", ink: "#3d2214", accent: "#9a3412", accent2: "#d97706", card: "rgba(255,255,255,.7)" },
+  lotusPinkGold: { label: "Sacred Lotus Pink & Gold", bg: "#fef8f9", bg2: "#fbe4ec", ink: "#441a24", accent: "#9d174d", accent2: "#c99a2e", card: "rgba(255,255,255,.75)" },
+  roseMarbleCream: { label: "Classical Rose & Marble", bg: "#fdfbf7", bg2: "#f6ede2", ink: "#382318", accent: "#7c2d12", accent2: "#b45309", card: "rgba(255,255,255,.7)" },
+  templeGoldCrimson: { label: "Temple Gold & Crimson", bg: "#fef9ee", bg2: "#f8e6c4", ink: "#451a03", accent: "#991b1b", accent2: "#d97706", card: "rgba(255,255,255,.75)" },
+  azureSkySandstone: { label: "Azure Sky & Sandstone", bg: "#f4f9fd", bg2: "#dcebf7", ink: "#123048", accent: "#1e40af", accent2: "#ca8a04", card: "rgba(255,255,255,.75)" },
 };
 
 /** Frame/ornament families. Each is an SVG drawn in pages.jsx. */
@@ -85,6 +92,13 @@ export const LAYOUTS = {
   graceMehndi: "Royal Grace 3D Olive Cartouche",
   crimsonGoldCrest: "Royal Elegance 3D Gold Crest",
   twilightRose: "Rose Gold 3D Twilight Seal",
+  // ── Scenic Illustrated Layouts ──
+  scenicVeranda: "Royal Veranda Sunset Mandap",
+  lotusJharokha: "Sacred Lotus Marble Jharokha",
+  functionVignettes: "Functions Itinerary & Vignettes",
+  chhatriGrove: "Royal Chhatri Umbrella Grove",
+  rosePavilion: "Classical Rose Marble Pavilion",
+  templeBells: "Swinging Temple Bells & Havelis",
 };
 
 export const MOTIFS = {
@@ -293,6 +307,249 @@ export const TEMPLATES = [
     motif: "olive",
     defaultPages: { cover: true, families: true, venue: true, combined: false },
   },
+
+  // ── 6 Scenic Illustrated & Vignette Masterpieces (Matching Reference Collection) ──
+  {
+    id: "scenic-veranda",
+    name: "Royal Veranda Reception",
+    structure: "2-page",
+    category: "scenic",
+    faiths: ALL_FAITHS,
+    layout: "scenicVeranda",
+    themeId: "verandaSunset",
+    fontId: "classic",
+    motif: "monogram",
+    defaultPages: { cover: true, combined: true, families: false, venue: false },
+  },
+  {
+    id: "scenic-lotus-jharokha",
+    name: "Sacred Lotus Jharokha",
+    structure: "2-page",
+    category: "scenic",
+    faiths: ALL_FAITHS,
+    layout: "lotusJharokha",
+    themeId: "lotusPinkGold",
+    fontId: "romantic",
+    motif: "lotus",
+    defaultPages: { cover: true, combined: true, families: false, venue: false },
+  },
+  {
+    id: "scenic-functions-vignette",
+    name: "The Functions Itinerary",
+    structure: "3-page",
+    category: "scenic",
+    faiths: ALL_FAITHS,
+    layout: "functionVignettes",
+    themeId: "royalMajesty",
+    fontId: "elegant",
+    motif: "peacock",
+    defaultPages: { cover: true, families: true, venue: true, combined: false },
+  },
+  {
+    id: "scenic-chhatri-grove",
+    name: "Chhatri & Palm Grove",
+    structure: "2-page",
+    category: "scenic",
+    faiths: ALL_FAITHS,
+    layout: "chhatriGrove",
+    themeId: "saffron",
+    fontId: "rustic",
+    motif: "sunburst",
+    defaultPages: { cover: true, combined: true, families: false, venue: false },
+  },
+  {
+    id: "scenic-rose-pavilion",
+    name: "Classical Rose Marble Pavilion",
+    structure: "3-page",
+    category: "scenic",
+    faiths: ALL_FAITHS,
+    layout: "rosePavilion",
+    themeId: "roseMarbleCream",
+    fontId: "classic",
+    motif: "knot",
+    defaultPages: { cover: true, families: true, venue: true, combined: false },
+  },
+  {
+    id: "scenic-temple-bells",
+    name: "Golden Temple Bells & Havelis",
+    structure: "2-page",
+    category: "scenic",
+    faiths: ALL_FAITHS,
+    layout: "templeBells",
+    themeId: "templeGoldCrimson",
+    fontId: "classic",
+    motif: "star",
+    defaultPages: { cover: true, combined: true, families: false, venue: false },
+  },
+];
+
+/**
+ * 3D & Realistic Decorative Elements Library
+ * Users can pick, place, drag, scale, and edit these directly in the live preview (Canva-style).
+ */
+export const ELEMENT_LIBRARY = [
+  // ── 1. Temple Bells & Chains ──
+  {
+    id: "bells-hanging-pair",
+    category: "bells",
+    name: "Swinging Golden Bells",
+    icon: "🔔",
+    defaultProps: { x: 50, y: 12, scale: 1, rotate: 0 },
+    width: 140,
+    height: 60,
+  },
+  {
+    id: "bell-corner-single",
+    category: "bells",
+    name: "Corner Brass Bell",
+    icon: "🔕",
+    defaultProps: { x: 18, y: 14, scale: 0.9, rotate: -5 },
+    width: 60,
+    height: 70,
+  },
+
+  // ── 2. Carved Arches & Mandaps ──
+  {
+    id: "arch-mughal-crest",
+    category: "arches",
+    name: "Mughal Carved Arch Top",
+    icon: "🏛️",
+    defaultProps: { x: 50, y: 15, scale: 1, rotate: 0 },
+    width: 160,
+    height: 70,
+  },
+  {
+    id: "arch-rose-marble-header",
+    category: "arches",
+    name: "Pink Rose Garland Arch",
+    icon: "🌸",
+    defaultProps: { x: 50, y: 14, scale: 1.05, rotate: 0 },
+    width: 170,
+    height: 65,
+  },
+
+  // ── 3. Royal Flora & Lotuses ──
+  {
+    id: "flora-lotus-bloom",
+    category: "flora",
+    name: "Blooming Pink Lotus",
+    icon: "🪷",
+    defaultProps: { x: 80, y: 84, scale: 1, rotate: 0 },
+    width: 75,
+    height: 75,
+  },
+  {
+    id: "flora-lotus-pair-bottom",
+    category: "flora",
+    name: "Dual Lotus Corner Base",
+    icon: "🌺",
+    defaultProps: { x: 50, y: 90, scale: 1, rotate: 0 },
+    width: 150,
+    height: 55,
+  },
+  {
+    id: "flora-marigold-toran",
+    category: "flora",
+    name: "Marigold Toran Festoon",
+    icon: "🌼",
+    defaultProps: { x: 50, y: 8, scale: 1, rotate: 0 },
+    width: 160,
+    height: 38,
+  },
+  {
+    id: "flora-banana-palm",
+    category: "flora",
+    name: "Tropical Banana Palm",
+    icon: "🌴",
+    defaultProps: { x: 15, y: 82, scale: 1, rotate: 0 },
+    width: 75,
+    height: 90,
+  },
+
+  // ── 4. Royal Accents & 3D Props ──
+  {
+    id: "accent-royal-chhatri",
+    category: "accents",
+    name: "Velvet Royal Chhatri",
+    icon: "☂️",
+    defaultProps: { x: 50, y: 22, scale: 1, rotate: 0 },
+    width: 90,
+    height: 80,
+  },
+  {
+    id: "accent-moroccan-lantern",
+    category: "accents",
+    name: "Hanging Brass Lantern",
+    icon: "🏮",
+    defaultProps: { x: 82, y: 18, scale: 0.95, rotate: 0 },
+    width: 48,
+    height: 95,
+  },
+  {
+    id: "accent-royal-peacock",
+    category: "accents",
+    name: "Royal Golden Peacock",
+    icon: "🦚",
+    defaultProps: { x: 50, y: 86, scale: 0.95, rotate: 0 },
+    width: 95,
+    height: 65,
+  },
+  {
+    id: "accent-wax-seal-gold",
+    category: "accents",
+    name: "3D Gold Monogram Wax Seal",
+    icon: "🪙",
+    defaultProps: { x: 50, y: 50, scale: 1, rotate: 0 },
+    width: 65,
+    height: 65,
+  },
+  {
+    id: "accent-diya-glow",
+    category: "accents",
+    name: "Sacred Brass Diya with Glow",
+    icon: "🪔",
+    defaultProps: { x: 50, y: 88, scale: 1, rotate: 0 },
+    width: 60,
+    height: 50,
+  },
+
+  // ── 5. Ceremony Vignettes (Illustrated Moments) ──
+  {
+    id: "vignette-haldi-moment",
+    category: "vignettes",
+    name: "Haldi Yellow Swing Vignette",
+    icon: "💛",
+    defaultProps: { x: 50, y: 45, scale: 1, rotate: 0 },
+    width: 110,
+    height: 90,
+  },
+  {
+    id: "vignette-mehndi-moment",
+    category: "vignettes",
+    name: "Henna Mehndi Art Vignette",
+    icon: "💚",
+    defaultProps: { x: 50, y: 45, scale: 1, rotate: 0 },
+    width: 110,
+    height: 90,
+  },
+  {
+    id: "vignette-sangeet-moment",
+    category: "vignettes",
+    name: "Sangeet Dance Duo Vignette",
+    icon: "💙",
+    defaultProps: { x: 50, y: 45, scale: 1, rotate: 0 },
+    width: 110,
+    height: 90,
+  },
+  {
+    id: "vignette-wedding-moment",
+    category: "vignettes",
+    name: "Sacred Vivah Mandap Vignette",
+    icon: "❤️",
+    defaultProps: { x: 50, y: 45, scale: 1, rotate: 0 },
+    width: 110,
+    height: 90,
+  },
 ];
 
 /** Tokens {bride} and {groom} in message text are replaced at render time. NO RSVP BLOCKS! */
@@ -491,6 +748,7 @@ export function initialState() {
     couple: { bride: "Anaya", groom: "Rohan", brideTitle: "", groomTitle: "", groomFirst: false, tagline: FAITHS.universal.tagline },
     date,
     venue,
+    elements: [],
   };
   return applyTemplate({ ...base, ...faithSlice("universal", date, venue.name) }, TEMPLATES[0]);
 }

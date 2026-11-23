@@ -51,14 +51,29 @@ export const CSS = `
 .wib-lines{font-size:1em;line-height:1.35;margin-top:.15em}
 
 /* ---------- print: only the A5 pages ---------- */
-.wib-print-root{display:none}
+#wib-portal-host, .wib-portal-host, .wib-print-root{display:none}
 @media print{
   @page{size:148mm 210mm;margin:0}
-  html,body{margin:0!important;padding:0!important;background:#fff!important}
-  body>*:not(.wib-print-root){display:none!important}
-  .wib-print-root{display:block!important}
-  .wib-print-root .wib-page{break-after:page;page-break-after:always;margin:0;box-shadow:none!important}
-  .wib-print-root,.wib-print-root *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{margin:0!important;padding:0!important;background:#fff!important;width:100%!important}
+  body>*:not(#wib-portal-host):not(.wib-portal-host):not(.wib-print-root){display:none!important}
+  #wib-portal-host, .wib-portal-host, .wib-print-root{display:block!important;margin:0!important;padding:0!important}
+  .wib-print-root .wib-page, #wib-portal-host .wib-page{
+    display:block!important;
+    position:relative!important;
+    width:148mm!important;
+    height:210mm!important;
+    break-after:page!important;
+    page-break-after:always!important;
+    margin:0 auto!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+  }
+  *, *::before, *::after{
+    -webkit-print-color-adjust:exact!important;
+    print-color-adjust:exact!important;
+  }
+  .wib-editable{outline:none!important;background:transparent!important;cursor:default!important}
+  .wib-selected-text,.wib-handle,.wib-floating-toolbar,.wib-element-selected,.wib-el-action,.wibu-page-badge,.wibu-page-container{display:none!important;outline:none!important;box-shadow:none!important}
 }
 
 /* ---------- builder UI ---------- */
@@ -146,8 +161,11 @@ export const CSS = `
 .wibu-zoom-tools{display:flex;align-items:center;gap:4px;background:#f1f5f9;border-radius:8px;padding:2px}
 .wibu-zoom-btn{border:none;background:transparent;padding:4px 8px;font-size:12px;font-weight:700;color:#334155;border-radius:6px;cursor:pointer}
 .wibu-zoom-btn:hover{background:#e2e8f0;color:#0f172a}
-.wibu-stage{padding:28px 16px 80px;display:flex;flex-direction:column;align-items:center;gap:36px;min-height:100%}
-.wibu-pagewrap{border-radius:4px;overflow:visible;background:transparent;transition:transform .2s ease}
+.wibu-stage{padding:32px 16px 100px;display:flex;flex-direction:column;align-items:center;gap:16px;min-height:100%}
+.wibu-page-container{display:flex;flex-direction:column;align-items:center;margin-bottom:52px;position:relative}
+.wibu-page-container:last-child{margin-bottom:28px}
+.wibu-page-badge{display:inline-flex;align-items:center;gap:6px;background:#ffffff;color:var(--u-brand);border:1px solid #cbd5e1;padding:5px 16px;border-radius:99px;font-size:11.5px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.wibu-pagewrap{border-radius:6px;overflow:visible;background:transparent;transition:transform .2s ease;box-shadow:0 12px 36px -4px rgba(0,0,0,0.18),0 0 0 1px rgba(0,0,0,0.06);position:relative}
 
 /* Mobile View Switcher */
 .wibu-mob-toggle{display:none}
@@ -161,6 +179,57 @@ export const CSS = `
   .wibu-mob-toggle button[aria-pressed=true]{background:var(--u-brand);color:#fff;border-color:var(--u-brand)}
   .wibu-swatches{grid-template-columns:repeat(3,1fr)}
   .wibu-tpls{grid-template-columns:repeat(2,1fr)}
-  .wibu-stage{padding:16px 8px 60px}
+  .wibu-stage{padding:20px 8px 80px;gap:16px}
+  .wibu-page-container{margin-bottom:44px}
 }
+
+/* Clickable Map Hyperlink Button */
+.wib-map-link-wrap{display:flex;align-items:center;justify-content:flex-start}
+.wib-map-link-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.92);border:1.2px solid var(--accent2);color:var(--accent);padding:5px 13px;border-radius:99px;font-family:var(--font-heading);font-size:0.7em;font-weight:700;letter-spacing:0.06em;text-decoration:none;text-transform:uppercase;box-shadow:0 2px 6px rgba(0,0,0,0.06);transition:all .15s ease;cursor:pointer;white-space:nowrap}
+.wib-map-link-btn:hover{background:var(--accent);color:var(--bg);border-color:var(--accent);transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,0.12)}
+
+/* ---------- Canva-Style Direct Canvas Editing ---------- */
+.wib-editable{cursor:pointer;position:relative;transition:background .15s,box-shadow .15s;border-radius:4px;outline:none;user-select:text}
+.wib-editable:hover{outline:1.5px dashed rgba(200,164,94,0.7)!important;outline-offset:3px;background:rgba(200,164,94,0.06)}
+.wib-editable:focus-visible{outline:none}
+.wib-selected-text{outline:2px solid #073D31!important;outline-offset:3px;box-shadow:0 0 0 3px rgba(200,164,94,0.45);background:rgba(255,255,255,0.25)!important;border-radius:4px;z-index:25}
+.wib-inline-editor{background:transparent!important;border:none!important;outline:none!important;width:100%!important;padding:0!important;margin:0!important;box-sizing:border-box!important;resize:none!important;overflow:hidden!important;font:inherit;color:inherit;text-align:inherit;letter-spacing:inherit;text-transform:inherit;display:block}
+.wib-handles-wrap{position:absolute;inset:0;pointer-events:none}
+.wib-handle{position:absolute;width:7px;height:7px;background:#fff;border:1.5px solid #073D31;border-radius:50%;pointer-events:none}
+.wib-handle.tl{top:-5px;left:-5px}
+.wib-handle.tr{top:-5px;right:-5px}
+.wib-handle.bl{bottom:-5px;left:-5px}
+.wib-handle.br{bottom:-5px;right:-5px}
+
+/* Floating Quick Format Bar (Canva-style) */
+.wib-floating-toolbar{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);background:rgba(15,23,42,0.95);color:#fff;backdrop-filter:blur(10px);border-radius:99px;padding:4px 10px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 12px 30px -6px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.15);z-index:100;white-space:nowrap;font-family:system-ui,-apple-system,sans-serif;font-size:12px;user-select:none;pointer-events:auto}
+.wib-toolbar-btn{background:none;border:none;color:#cbd5e1;padding:4px 8px;font-size:11.5px;font-weight:600;cursor:pointer;border-radius:99px;display:inline-flex;align-items:center;gap:4px;transition:all .12s}
+.wib-toolbar-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+.wib-toolbar-btn.danger:hover{background:#ef4444;color:#fff}
+.wib-toolbar-sep{width:1px;height:14px;background:rgba(255,255,255,0.2)}
+
+/* Movable 3D and Decorative Elements */
+.wib-elements-layer{position:absolute;inset:0;pointer-events:none;z-index:15;overflow:hidden}
+.wib-element-item{position:absolute;pointer-events:auto;cursor:grab;user-select:none;touch-action:none;display:inline-flex;align-items:center;justify-content:center;transition:filter .15s}
+.wib-element-item:hover{filter:drop-shadow(0 6px 14px rgba(7,61,49,0.3))}
+.wib-element-item.is-dragging{cursor:grabbing;z-index:40;filter:drop-shadow(0 12px 24px rgba(0,0,0,0.35))}
+.wib-element-selected{outline:2px solid #073D31;outline-offset:3px;box-shadow:0 0 0 3px rgba(200,164,94,0.45);border-radius:6px}
+.wib-el-action{position:absolute;width:28px;height:28px;background:#ffffff;border:1.5px solid #cbd5e1;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,0.28);z-index:50;pointer-events:auto;touch-action:manipulation;transition:all .15s ease}
+.wib-el-delete{top:-13px;right:-13px;color:#dc2626;opacity:0;pointer-events:none}
+.wib-element-item:hover .wib-el-delete,
+.wib-element-item.wib-element-selected .wib-el-delete,
+.wib-el-delete.is-visible{opacity:1;pointer-events:auto}
+.wib-el-delete:hover{background:#dc2626;color:#ffffff;border-color:#dc2626;transform:scale(1.15)}
+
+/* Sidebar Elements Catalog */
+.wibu-elements-filter{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.wibu-elements-filter::-webkit-scrollbar{display:none}
+.wibu-elements-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.wibu-element-card{border:1px solid var(--u-line);background:#fff;border-radius:10px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;cursor:pointer;transition:all .15s;font:inherit}
+.wibu-element-card:hover{border-color:var(--u-brand);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.06)}
+.wibu-element-preview{height:54px;display:flex;align-items:center;justify-content:center;width:100%}
+.wibu-element-preview svg{max-height:100%;max-width:100%}
+.wibu-element-card b{font-size:11.5px;color:#1e293b;line-height:1.2}
+.wibu-element-add-btn{width:100%;border:1px solid #cbd5e1;background:#f8fafc;border-radius:6px;padding:4px 8px;font-size:11px;font-weight:600;color:var(--u-brand);cursor:pointer;margin-top:2px}
+.wibu-element-add-btn:hover{background:var(--u-brand);color:#fff;border-color:var(--u-brand)}
 `;

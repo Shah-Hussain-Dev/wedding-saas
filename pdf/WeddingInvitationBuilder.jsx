@@ -3,10 +3,10 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { CSS } from "./styles";
 import {
-  FAITHS, FONT_SETS, GOOGLE_FONTS_URL, LAYOUTS, MOTIFS, PAGE_PX, TEMPLATES, THEMES,
+  ELEMENT_LIBRARY, FAITHS, FONT_SETS, GOOGLE_FONTS_URL, LAYOUTS, MOTIFS, PAGE_PX, TEMPLATES, THEMES,
   addDays, applyFaith, applyTemplate, initialState, setIn, uid,
 } from "./data";
-import { InvitationPage, visiblePages } from "./pages";
+import { ElementRenderer, InvitationPage, visiblePages } from "./pages";
 
 /* ---------- small form primitives ---------- */
 const Field = ({ label, hint, children }) => (
@@ -44,7 +44,7 @@ const Thumb = memo(function Thumb({ base, t }) {
   return (
     <span className="thumb" style={{ width: PAGE_PX.w * s, height: PAGE_PX.h * s }}>
       <span style={{ display: "block", width: PAGE_PX.w, height: PAGE_PX.h, transform: `scale(${s})`, transformOrigin: "0 0" }}>
-        <InvitationPage pageKey="cover" data={applyTemplate(base, t)} />
+        <InvitationPage pageKey="cover" data={applyTemplate(base, t)} isPrint={true} />
       </span>
     </span>
   );
@@ -52,6 +52,7 @@ const Thumb = memo(function Thumb({ base, t }) {
 
 const TABS = [
   ["template", "Template"],
+  ["elements", "Stickers & 3D"],
   ["details", "Details"],
   ["events", "Events"],
   ["sections", "Sections"],
@@ -60,6 +61,7 @@ const TABS = [
 
 const CATEGORIES = [
   ["all", "All Templates"],
+  ["scenic", "🌅 Scenic & Illustrated"],
   ["royal", "👑 3D Royal & Heritage"],
   ["universal", "✨ Universal Multi-Faith"],
   ["botanical", "🌿 Botanical & Floral"],
@@ -76,6 +78,9 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
   const [d, setD] = useState(() => initialData || initialState());
   const [tab, setTab] = useState("template");
   const [category, setCategory] = useState("all");
+  const [elementCat, setElementCat] = useState("all");
+  const [targetPage, setTargetPage] = useState("cover");
+  const [activeElement, setActiveElement] = useState(null);
   const [onlyFaith, setOnlyFaith] = useState(false);
   const [mobileView, setMobileView] = useState("editor");
   const [zoomMultiplier, setZoomMultiplier] = useState(1);
@@ -83,17 +88,29 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
   const [fontsTick, setFontsTick] = useState(0);
   const [hydrated, setHydrated] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [portalNode, setPortalNode] = useState(null);
   const [stageW, setStageW] = useState(560);
   const stageRef = useRef(null);
 
   /* restore + persist */
   useEffect(() => {
     setMounted(true);
+    let host = document.getElementById("wib-portal-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "wib-portal-host";
+      host.className = "wib-print-root wib-portal-host";
+      document.body.appendChild(host);
+    } else {
+      host.className = "wib-print-root wib-portal-host";
+    }
+    setPortalNode(host);
+
     if (!initialData) {
       try {
         const raw = localStorage.getItem(storageKey);
         if (raw) setD({ ...initialState(), ...JSON.parse(raw) });
-      } catch {}
+      } catch { }
     }
     setHydrated(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,7 +118,7 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
 
   useEffect(() => {
     if (!hydrated) return;
-    try { localStorage.setItem(storageKey, JSON.stringify(d)); } catch {}
+    try { localStorage.setItem(storageKey, JSON.stringify(d)); } catch { }
     onChange && onChange(d);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [d, hydrated]);
@@ -146,15 +163,74 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
   );
 
   const downloadPdf = () => {
+    let host = document.getElementById("wib-portal-host");
+    if (!host) {
+      host = document.createElement("div");
+      host.id = "wib-portal-host";
+      host.className = "wib-print-root wib-portal-host";
+      document.body.appendChild(host);
+      setPortalNode(host);
+    } else {
+      host.className = "wib-print-root wib-portal-host";
+    }
     const prev = document.title;
-    document.title = `${d.couple.bride}-${d.couple.groom}-invitation`.replace(/\s+/g, "-");
+    document.title = `${d.couple.bride || "Wedding"}-${d.couple.groom || "Invitation"}`.replace(/\s+/g, "-");
     const restore = () => { document.title = prev; window.removeEventListener("afterprint", restore); };
     window.addEventListener("afterprint", restore);
-    window.print();
+    // Allow DOM to layout print portal before opening browser print preview
+    setTimeout(() => {
+      window.print();
+    }, 60);
   };
 
   const reset = () => {
     setD(initialState());
+  };
+
+  /* Deselect on Escape key */
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setActiveElement(null);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const handleAddElement = (elem) => {
+    const newEl = {
+      id: uid(),
+      typeId: elem.id,
+      category: elem.category,
+      name: elem.name,
+      page: targetPage,
+      x: elem.defaultProps?.x ?? 50,
+      y: elem.defaultProps?.y ?? 50,
+      scale: elem.defaultProps?.scale ?? 1,
+      rotate: elem.defaultProps?.rotate ?? 0,
+    };
+    setD((s) => ({
+      ...s,
+      elements: [...(s.elements || []), newEl],
+    }));
+    setActiveElement({ id: newEl.id, type: "element", el: newEl });
+  };
+
+  const handleUpdateElement = (elId, updates) => {
+    setD((s) => ({
+      ...s,
+      elements: (s.elements || []).map((e) => (e.id === elId ? { ...e, ...updates } : e)),
+    }));
+    setActiveElement((prev) => (prev?.id === elId ? { ...prev, el: { ...prev.el, ...updates } } : prev));
+  };
+
+  const handleRemoveElement = (elId) => {
+    setD((s) => ({
+      ...s,
+      elements: (s.elements || []).filter((e) => e.id !== elId),
+    }));
+    if (activeElement?.id === elId) setActiveElement(null);
   };
 
   /* filtered templates list */
@@ -232,6 +308,107 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
           ))}
         </div>
       </Group>
+    </>
+  );
+
+  const elementsTab = (
+    <>
+      <Group title="3D & Realistic Decorative Elements">
+        <p style={{ margin: "0 0 6px", fontSize: "11.5px", color: "var(--u-mute)" }}>
+          Pick and place authentic 3D decorative elements, temple bells, and ceremony vignettes. Drag and edit them directly on the card!
+        </p>
+
+        {/* Target Page Selector */}
+        <Field label="Add elements to page">
+          <Select
+            value={targetPage}
+            onChange={setTargetPage}
+            options={pages.map((p) => [p.key, p.label])}
+          />
+        </Field>
+
+        {/* Category Filter Pills */}
+        <div className="wibu-elements-filter" style={{ marginTop: "4px" }}>
+          {[
+            ["all", "All Elements"],
+            ["couples", "👫 Anime Couples"],
+            ["vignettes", "💛 Vignettes"],
+            ["bells", "🔔 Bells"],
+            ["arches", "🏛️ Arches"],
+            ["flora", "🪷 Lotuses & Flora"],
+            ["accents", "👑 3D Props"],
+          ].map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              className="wibu-pill"
+              aria-pressed={elementCat === id}
+              onClick={() => setElementCat(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {/* Grid of Elements */}
+        <div className="wibu-elements-grid" style={{ marginTop: "10px" }}>
+          {ELEMENT_LIBRARY.filter((el) => elementCat === "all" || el.category === elementCat).map((elem) => (
+            <div key={elem.id} className="wibu-element-card" onClick={() => handleAddElement(elem)}>
+              <div className="wibu-element-preview">
+                <ElementRenderer elementId={elem.id} />
+              </div>
+              <b>{elem.name}</b>
+              <button type="button" className="wibu-element-add-btn">
+                + Add to Card
+              </button>
+            </div>
+          ))}
+        </div>
+      </Group>
+
+      {/* Currently Placed Elements on Card */}
+      {(d.elements || []).length > 0 && (
+        <Group title={`Placed Elements (${(d.elements || []).length})`}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            {(d.elements || []).map((el) => (
+              <div
+                key={el.id}
+                className="wibu-card"
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 12px",
+                  borderColor: activeElement?.id === el.id ? "var(--u-brand)" : undefined,
+                }}
+              >
+                <div>
+                  <b style={{ fontSize: "12px" }}>{el.name || el.typeId}</b>
+                  <small style={{ display: "block", color: "var(--u-mute)", fontSize: "10.5px" }}>
+                    {el.page === "cover" ? "Page 1 Cover" : el.page === "combined" ? "Page 2 Combined" : el.page === "families" ? "Page 2 Families" : "Page 3 Venue"} · pos ({el.x}%, {el.y}%)
+                  </small>
+                </div>
+                <div style={{ display: "flex", gap: "6px" }}>
+                  <button
+                    type="button"
+                    className="wibu-btn small"
+                    onClick={() => setActiveElement({ id: el.id, type: "element", el })}
+                  >
+                    Select
+                  </button>
+                  <button
+                    type="button"
+                    className="wibu-btn small danger"
+                    onClick={() => handleRemoveElement(el.id)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Group>
+      )}
     </>
   );
 
@@ -456,7 +633,7 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
     </>
   );
 
-  const body = { template: templatesTab, details: detailsTab, events: eventsTab, sections: sectionsTab, style: styleTab }[tab];
+  const body = { template: templatesTab, elements: elementsTab, details: detailsTab, events: eventsTab, sections: sectionsTab, style: styleTab }[tab];
 
   return (
     <div className="wibu">
@@ -483,7 +660,7 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
       <aside className={`wibu-side ${mobileView === "preview" ? "hidden md:flex" : "flex"}`}>
         <div className="wibu-head">
           <h1>PDF Invitation Studio</h1>
-          <p>Universal 2–3 page A5 wedding invitations with live auto-fit layout.</p>
+          <p>Universal 2–3 page A5 wedding invitations with Canva-style direct editing.</p>
         </div>
         <div className="wibu-tabs" role="tablist">
           {TABS.map(([id, label]) => (
@@ -497,7 +674,7 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
         <div className="wibu-bar">
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span>{pages.length} {pages.length === 1 ? "page" : "pages"} ({d.structure === "2-page" ? "2-Page Keepsake" : "3-Page Suite"}) · A5 portrait</span>
-            
+
             {/* Zoom Controls */}
             <div className="wibu-zoom-tools">
               <button
@@ -533,28 +710,127 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
           </span>
         </div>
 
-        <div className="wibu-stage" ref={stageRef}>
-          {pages.map((p) => (
-            <div
-              key={p.key}
-              className="wibu-pagewrap"
-              style={{ width: PAGE_PX.w * effectiveScale, height: PAGE_PX.h * effectiveScale }}
-              aria-label={p.label}
-            >
-              <div style={{ width: PAGE_PX.w, height: PAGE_PX.h, transform: `scale(${effectiveScale})`, transformOrigin: "0 0" }}>
-                <InvitationPage pageKey={p.key} data={d} measure onFit={onFit} sig={sig} />
+        <div className="wibu-stage" ref={stageRef} onClick={() => setActiveElement(null)}>
+          {/* Floating Canva Quick Format Toolbar */}
+          {activeElement && (
+            <div className="wib-floating-toolbar" onClick={(e) => e.stopPropagation()}>
+              {activeElement.type === "text" ? (
+                <>
+                  <span style={{ color: "#94a3b8", fontSize: "11px" }}>Editing: <b style={{ color: "#fff" }}>{activeElement.label}</b></span>
+                  <span className="wib-toolbar-sep" />
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn"
+                    onClick={() => setTab("details")}
+                    title="Open in Sidebar"
+                  >
+                    📝 Open in Sidebar
+                  </button>
+                  <span className="wib-toolbar-sep" />
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn"
+                    onClick={() => setActiveElement(null)}
+                    title="Done"
+                  >
+                    ✓ Done
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span style={{ color: "#94a3b8", fontSize: "11px" }}>3D Prop: <b style={{ color: "#fff" }}>{activeElement.el?.name || "Sticker"}</b></span>
+                  <span className="wib-toolbar-sep" />
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn"
+                    onClick={() => handleUpdateElement(activeElement.id, { scale: +((activeElement.el?.scale || 1) * 1.15).toFixed(2) })}
+                    title="Scale Up"
+                  >
+                    🔍+
+                  </button>
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn"
+                    onClick={() => handleUpdateElement(activeElement.id, { scale: Math.max(0.4, +((activeElement.el?.scale || 1) * 0.85).toFixed(2)) })}
+                    title="Scale Down"
+                  >
+                    🔍-
+                  </button>
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn"
+                    onClick={() => handleUpdateElement(activeElement.id, { rotate: ((activeElement.el?.rotate || 0) + 15) % 360 })}
+                    title="Rotate 15°"
+                  >
+                    🔄 Rotate
+                  </button>
+                  <span className="wib-toolbar-sep" />
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn danger"
+                    onClick={() => handleRemoveElement(activeElement.id)}
+                    title="Delete from card"
+                  >
+                    🗑️ Delete
+                  </button>
+                  <button
+                    type="button"
+                    className="wib-toolbar-btn"
+                    onClick={() => setActiveElement(null)}
+                    title="Done"
+                  >
+                    ✓
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+
+          {pages.map((p, idx) => (
+            <div key={p.key} className="wibu-page-container">
+              <div className="wibu-page-badge print:hidden">
+                ✦ {p.label.replace(/^Page \d+:\s*/, "")} · Page {idx + 1} of {pages.length} ✦
+              </div>
+              <div
+                className="wibu-pagewrap"
+                style={{ width: PAGE_PX.w * effectiveScale, height: PAGE_PX.h * effectiveScale }}
+                aria-label={p.label}
+              >
+                <div style={{ width: PAGE_PX.w, height: PAGE_PX.h, transform: `scale(${effectiveScale})`, transformOrigin: "0 0" }}>
+                  <InvitationPage
+                    pageKey={p.key}
+                    data={d}
+                    measure
+                    onFit={onFit}
+                    sig={sig}
+                    isPrint={false}
+                    activeElement={activeElement}
+                    onSelectElement={setActiveElement}
+                    onUpdateText={(path, val) => set(path, val)}
+                    onUpdateElement={handleUpdateElement}
+                    onRemoveElement={handleRemoveElement}
+                  />
+                </div>
               </div>
             </div>
           ))}
         </div>
       </main>
 
-      {mounted &&
+      {portalNode &&
         createPortal(
           <div className="wib-print-root">
-            {pages.map((p) => <InvitationPage key={p.key} pageKey={p.key} data={d} fit={fits[p.key] || 1} />)}
+            {pages.map((p) => (
+              <InvitationPage
+                key={p.key}
+                pageKey={p.key}
+                data={d}
+                fit={fits[p.key] || 1}
+                isPrint={true}
+              />
+            ))}
           </div>,
-          document.body
+          portalNode
         )}
     </div>
   );
