@@ -135,7 +135,7 @@ function CustomizeTemplateContent({ templateId }: { templateId: string }) {
 }
 
 export default function CustomizeTemplatePage({ params }: CustomizePageProps) {
-  const { templateId } = use(params);
+  const { templateId } = use(params); 
 
   return (
     <div
