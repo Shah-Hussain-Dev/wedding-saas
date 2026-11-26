@@ -1235,12 +1235,12 @@ export function InvitationCustomizerWizard({
   );
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col lg:grid lg:h-[100dvh] lg:max-h-[100dvh] lg:grid-cols-[minmax(min(100%,320px),26rem)_minmax(0,1fr)] lg:overflow-hidden lg:items-stretch">
+    <div className="flex min-h-0 w-full flex-col lg:grid lg:h-[100dvh] lg:max-h-[100dvh] lg:grid-cols-[minmax(min(100%,320px),26rem)_minmax(0,1fr)] lg:overflow-hidden lg:items-stretch">
       <aside
         ref={sidebarScrollRef}
         data-lenis-prevent
         data-lenis-prevent-wheel
-        className="customizer-sidebar-scroll flex min-h-0 w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto overscroll-y-contain bg-[#FAFAF8] lg:max-h-[100dvh] lg:min-h-0 lg:border-r lg:border-[#073D31]/10 lg:h-[100dvh]"
+        className="customizer-sidebar-scroll flex min-h-0 w-full min-w-0 flex-col overflow-x-hidden overflow-y-auto overscroll-y-contain bg-[#FAFAF8] lg:max-h-[100dvh] lg:min-h-0 lg:border-r lg:border-[#073D31]/10 lg:h-[100dvh] pb-10 lg:pb-0"
       >
         <div className="shrink-0 border-b border-[#073D31]/8 px-3 pt-5 pb-4 sm:px-4 lg:px-4 lg:pt-4">
       {/* Top Breadcrumbs / Back Navigation */}

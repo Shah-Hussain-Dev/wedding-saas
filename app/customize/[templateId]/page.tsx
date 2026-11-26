@@ -142,10 +142,10 @@ export default function CustomizeTemplatePage({ params }: CustomizePageProps) {
       data-lenis-prevent
       className="flex min-h-screen flex-col bg-[#FCFBF7] text-[#1A1A1A] lg:h-[100dvh] lg:max-h-[100dvh] lg:overflow-hidden lg:bg-[#E8E4DC]"
     >
-      <div className="lg:hidden">
+      <div className="lg:hidden relative z-40">
         <GlassNav />
       </div>
-      <main className="flex min-h-0 flex-1 flex-col pt-28 pb-20 lg:h-full lg:overflow-hidden lg:pt-0 lg:pb-0">
+      <main className="flex min-h-0 flex-1 flex-col pt-20 sm:pt-24 pb-8 lg:h-full lg:overflow-hidden lg:pt-0 lg:pb-0">
         <div className="flex min-h-0 flex-1 flex-col lg:h-full">
           <Suspense
             fallback={
@@ -161,7 +161,7 @@ export default function CustomizeTemplatePage({ params }: CustomizePageProps) {
           </Suspense>
         </div>
       </main>
-      <div className="lg:hidden">
+      <div className="lg:hidden relative z-10">
         <PremiumFooter />
       </div>
     </div>

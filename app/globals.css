@@ -605,6 +605,15 @@ main,
   touch-action: pan-y;
 }
 
+@media (max-width: 1023px) {
+  .customizer-sidebar-scroll {
+    overflow-y: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    touch-action: auto !important;
+  }
+}
+
 .customizer-sidebar-scroll input,
 .customizer-sidebar-scroll textarea,
 .customizer-sidebar-scroll select {
