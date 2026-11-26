@@ -10,6 +10,7 @@ import { siteConfig } from "@/config/site";
 
 const NAV_LINKS = [
   { href: "/templates", label: "Templates", hasMega: true, hasCaret: true },
+  { href: "/videos", label: "Videos" },
   { href: "/#how-it-works", label: "How It Works" },
   { href: "/#comparison", label: "Compare" },
   { href: "/#pricing", label: "Pricing" },

@@ -50,6 +50,14 @@ const ComplimentaryPdfShowcase = dynamic(
   { loading: () => <LandingSectionPlaceholder className="min-h-[28rem]" /> }
 );
 
+const FeaturedVideoInvitations = dynamic(
+  () =>
+    import("@/components/marketing/featured-video-invitations").then(
+      (m) => m.FeaturedVideoInvitations
+    ),
+  { loading: () => <LandingSectionPlaceholder className="min-h-[30rem]" /> }
+);
+
 const ValuePropsMinimal = dynamic(
   () =>
     import("@/components/marketing/value-props-minimal").then(
@@ -80,14 +88,6 @@ const CinematicFilmCanvas = dynamic(
       (m) => m.CinematicFilmCanvas
     ),
   { loading: () => <LandingSectionPlaceholder className="min-h-[70vh]" /> }
-);
-
-const PricingEditorial = dynamic(
-  () =>
-    import("@/components/marketing/pricing-editorial").then(
-      (m) => m.PricingEditorial
-    ),
-  { loading: () => <LandingSectionPlaceholder className="min-h-[32rem]" /> }
 );
 
 const FaqEditorial = dynamic(
@@ -231,6 +231,11 @@ export default function Home() {
           <InteractiveTemplateGrid />
         </div>
 
+        {/* 3b. Video Invitations Showcase & Promotion */}
+        <div className="landing-section-deferred">
+          <FeaturedVideoInvitations />
+        </div>
+
         {/* 4. Social proof — invitations in the wild */}
         <div className="landing-section-deferred">
           <InfiniteReelsTicker />
@@ -271,12 +276,7 @@ export default function Home() {
           <CinematicFilmCanvas />
         </div>
 
-        {/* 12. Pricing — nav #pricing */}
-        <div className="landing-section-deferred">
-          <PricingEditorial />
-        </div>
-
-        {/* 13. FAQ — schema #faq */}
+        {/* 12. FAQ — schema #faq */}
         <div className="landing-section-deferred">
           <FaqEditorial />
         </div>
