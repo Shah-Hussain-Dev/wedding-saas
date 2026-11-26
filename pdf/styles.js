@@ -34,6 +34,9 @@ export const CSS = `
 .wib-events{width:100%;display:flex;flex-direction:column;gap:.42em;margin-top:.3em}
 .wib-event{display:flex;align-items:center;justify-content:space-between;text-align:left;border:1px solid var(--accent2);
   border-radius:.7em;padding:.45em .85em;background:var(--card);box-shadow:0 3px 10px rgba(0,0,0,0.04);transition:all .15s}
+.wib-event-del-btn{border:none;background:rgba(239,68,68,0.12);color:#dc2626;border-radius:99px;width:22px;height:22px;font-size:11px;font-weight:bold;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;padding:0;margin-left:4px;flex-shrink:0}
+.wib-event-del-btn:hover{background:#dc2626;color:#fff;transform:scale(1.1)}
+.wibu-events-notice{display:flex;gap:8px;align-items:flex-start;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;font-size:11.5px;color:#1e40af;line-height:1.4;margin-bottom:10px}
 .wib-ev-title{font-size:1.08em;color:var(--accent);line-height:1.2}
 .wib-ev-meta{font-family:var(--font-heading);font-size:.58em;letter-spacing:.16em;text-transform:uppercase;color:var(--accent2);margin-top:.15em}
 .wib-ev-venue{font-size:.8em;font-style:italic;opacity:.85}
@@ -73,7 +76,7 @@ export const CSS = `
     print-color-adjust:exact!important;
   }
   .wib-editable{outline:none!important;background:transparent!important;cursor:default!important}
-  .wib-selected-text,.wib-handle,.wib-floating-toolbar,.wib-element-selected,.wib-el-action,.wibu-page-badge,.wibu-page-container{display:none!important;outline:none!important;box-shadow:none!important}
+  .wib-selected-text,.wib-handle,.wib-floating-toolbar,.wib-element-selected,.wib-el-action,.wib-event-del-btn,.wibu-page-badge,.wibu-page-container{display:none!important;outline:none!important;box-shadow:none!important}
 }
 
 /* ---------- builder UI ---------- */

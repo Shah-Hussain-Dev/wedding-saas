@@ -53,10 +53,26 @@ export function visiblePages(d) {
 }
 
 /* ---------------- date helpers ---------------- */
-const parse = (iso) => (iso ? new Date(iso + "T00:00:00") : null);
-const part = (iso, o) => (parse(iso) ? parse(iso).toLocaleDateString("en-IN", o) : "");
+const parse = (iso) => {
+  if (!iso) return null;
+  if (iso instanceof Date && !isNaN(iso.getTime())) return iso;
+  if (typeof iso === "string") {
+    const trimmed = iso.trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return new Date(trimmed + "T00:00:00");
+    const d = new Date(trimmed);
+    if (!isNaN(d.getTime())) return d;
+  }
+  return null;
+};
+const part = (iso, o) => {
+  const p = parse(iso);
+  return p ? p.toLocaleDateString("en-IN", o) : (typeof iso === "string" ? iso : "");
+};
 const longDate = (iso) => part(iso, { day: "2-digit", month: "long", year: "numeric" });
-const weekday = (iso) => part(iso, { weekday: "long" });
+const weekday = (iso) => {
+  const p = parse(iso);
+  return p ? p.toLocaleDateString("en-IN", { weekday: "long" }).toUpperCase() : "";
+};
 
 /* ---------------- monogram helper ---------------- */
 export function getInitials(d) {
@@ -1053,13 +1069,29 @@ function Families({ d, editProps = {} }) {
           <div className="wib-events">
             {d.events.map((e, idx) => (
               <div className="wib-event" key={e.id}>
-                <div>
+                <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
                   <EditableText path={`events.${idx}.title`} value={e.title} className="wib-ev-title" editProps={editProps} />
                   <div className="wib-ev-meta">{[e.date && longDate(e.date), e.time].filter(Boolean).join("  ·  ")}</div>
                   {e.venue && <div className="wib-ev-venue">{e.venue}</div>}
                   {e.note && <div className="wib-ev-venue">{e.note}</div>}
                 </div>
-                {e.date && <div className="wib-ev-day">{weekday(e.date)}</div>}
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  {e.date && <div className="wib-ev-day">{weekday(e.date)}</div>}
+                  {!isPrint && editProps.onRemoveEvent && (
+                    <button
+                      type="button"
+                      className="wib-event-del-btn"
+                      onClick={(ev) => {
+                        ev.stopPropagation();
+                        editProps.onRemoveEvent(e.id);
+                      }}
+                      title="Remove event from PDF invitation"
+                      aria-label={`Remove ${e.title} from PDF`}
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -1144,16 +1176,33 @@ function CombinedCelebrationPage({ d, editProps = {} }) {
 
       {/* Itinerary Timeline */}
       <div className="wib-events" style={{ gap: "0.35em", width: "100%" }}>
-        {d.events.slice(0, 3).map((e, idx) => (
+        {d.events.map((e, idx) => (
           <div className="wib-event" key={e.id} style={{ padding: "0.45em 0.85em" }}>
-            <div>
+            <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
               <EditableText path={`events.${idx}.title`} value={e.title} className="wib-ev-title" style={{ fontSize: "1.05em" }} editProps={editProps} />
               <div className="wib-ev-meta" style={{ fontSize: "0.55em" }}>
                 {[e.date && longDate(e.date), e.time].filter(Boolean).join("  ·  ")}
               </div>
               {e.venue && <div className="wib-ev-venue">{e.venue}</div>}
+              {e.note && <div className="wib-ev-venue">{e.note}</div>}
             </div>
-            {e.date && <div className="wib-ev-day" style={{ fontSize: "0.52em" }}>{weekday(e.date)}</div>}
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              {e.date && <div className="wib-ev-day" style={{ fontSize: "0.52em" }}>{weekday(e.date)}</div>}
+              {!isPrint && editProps.onRemoveEvent && (
+                <button
+                  type="button"
+                  className="wib-event-del-btn"
+                  onClick={(ev) => {
+                    ev.stopPropagation();
+                    editProps.onRemoveEvent(e.id);
+                  }}
+                  title="Remove event from PDF invitation"
+                  aria-label={`Remove ${e.title} from PDF`}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -1451,6 +1500,7 @@ export function InvitationPage({
   onUpdateText = null,
   onUpdateElement = null,
   onRemoveElement = null,
+  onRemoveEvent = null,
 }) {
   const style = useMemo(() => resolveStyle(data), [data]);
   const ref = useRef(null);
@@ -1480,6 +1530,7 @@ export function InvitationPage({
     activeElement,
     onSelectElement,
     onUpdateText,
+    onRemoveEvent,
   };
 
   return (

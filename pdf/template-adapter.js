@@ -272,22 +272,24 @@ export function adaptTemplateDataToPdfState(templateId, rawData = {}) {
     }
   }
 
-  // Parse raw events into stationery event cards
+  // Parse raw events into stationery event cards - ALL user-added events are preserved
   const rawEvents = Array.isArray(rawData.events) && rawData.events.length > 0
     ? rawData.events
     : (Array.isArray(rawData.eventsJson) && rawData.eventsJson.length > 0 ? rawData.eventsJson : null);
 
   let events = [];
   if (rawEvents && rawEvents.length > 0) {
-    events = rawEvents.slice(0, 4).map((ev, idx) => ({
-      id: ev.id || `ev-${idx}-${Date.now()}`,
-      title: ev.name || ev.title || `Celebration ${idx + 1}`,
-      date: ev.date || rawData.weddingDate || "14 February 2027",
-      time: ev.time || "6:30 PM",
-      venue: ev.venue || rawData.venueName || "The Grand Pavilion",
-      day: ev.day || "SUNDAY",
-      note: ev.note || ev.dressCode || "",
-    }));
+    events = rawEvents
+      .filter((ev) => ev && ev.enabled !== false)
+      .map((ev, idx) => ({
+        id: ev.id ? String(ev.id) : `ev-${idx}-${Date.now()}`,
+        title: ev.name || ev.title || `Celebration ${idx + 1}`,
+        date: ev.date || rawData.weddingDate || "14 February 2027",
+        time: ev.time || "6:30 PM",
+        venue: ev.venue || rawData.venueName || "The Grand Pavilion",
+        day: ev.day || "",
+        note: ev.note || ev.description || ev.dressCode || "",
+      }));
   } else {
     events = [
       {

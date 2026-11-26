@@ -104,4 +104,33 @@ describe("Template PDF Adapter Architecture Test Suite", () => {
     assert.ok(universalState.invocation.includes("love"));
     assert.equal(universalState.faith, "universal");
   });
+
+  test("All user-added events are preserved on PDF and removing an event from PDF leaves website events untouched", () => {
+    const websiteEvents = [
+      { id: "e1", name: "Roka Ceremony", date: "Dec 18, 2026", time: "11:00 AM", venue: "Home" },
+      { id: "e2", name: "Haldi Rasam", date: "Dec 19, 2026", time: "10:00 AM", venue: "Courtyard" },
+      { id: "e3", name: "Mehndi Night", date: "Dec 19, 2026", time: "06:00 PM", venue: "Lawn" },
+      { id: "e4", name: "Sangeet & Dance", date: "Dec 20, 2026", time: "07:30 PM", venue: "Ballroom" },
+      { id: "e5", name: "Shubh Vivah / Wedding", date: "Dec 21, 2026", time: "04:00 PM", venue: "Mandap" },
+      { id: "e6", name: "Grand Reception", date: "Dec 22, 2026", time: "08:00 PM", venue: "Grand Palace" },
+    ];
+
+    const originalLength = websiteEvents.length;
+    const originalEventsJson = JSON.stringify(websiteEvents);
+
+    const pdfState = adaptTemplateDataToPdfState("sheesh-mahal", { events: websiteEvents });
+
+    // Verify all 6 events are present on the PDF
+    assert.equal(pdfState.events.length, 6, "All 6 user-added events must be present on the PDF");
+    assert.equal(pdfState.events[0].title, "Roka Ceremony");
+    assert.equal(pdfState.events[5].title, "Grand Reception");
+
+    // Simulate removing an event from the PDF (e.g. user removes "Roka Ceremony" from PDF stationery)
+    const updatedPdfEvents = pdfState.events.filter((ev) => ev.id !== "e1");
+    assert.equal(updatedPdfEvents.length, 5, "PDF now has 5 events");
+
+    // Verify website events were completely untouched and unmodified
+    assert.equal(websiteEvents.length, originalLength, "Website events count must remain untouched");
+    assert.equal(JSON.stringify(websiteEvents), originalEventsJson, "Website events data must remain completely unmodified");
+  });
 });

@@ -520,6 +520,10 @@ export default function WeddingInvitationBuilder({
   const eventsTab = (
     <>
       <Group title="Ceremony & Event Schedule">
+        <div className="wibu-events-notice">
+          <span>💡</span>
+          <span>Events customized or removed here only apply to this PDF invitation and will never modify or delete events on your website.</span>
+        </div>
         <Field label="Section title"><Text value={d.eventsTitle} onChange={(v) => set("eventsTitle", v)} /></Field>
         {d.events.map((e, i) => (
           <div className="wibu-card" key={e.id}>
@@ -903,6 +907,7 @@ export default function WeddingInvitationBuilder({
                     onUpdateText={(path, val) => set(path, val)}
                     onUpdateElement={handleUpdateElement}
                     onRemoveElement={handleRemoveElement}
+                    onRemoveEvent={(eventId) => set("events", d.events.filter((x) => x.id !== eventId))}
                   />
                 </div>
               </div>
