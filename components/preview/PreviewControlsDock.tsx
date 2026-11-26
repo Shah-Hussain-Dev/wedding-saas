@@ -17,6 +17,7 @@ import {
   CaretRight,
   PencilSimple,
   ArrowLeft,
+  FilePdf,
 } from "@phosphor-icons/react";
 import {
   CURATED_AUDIO_TRACKS,
@@ -36,6 +37,7 @@ export interface PreviewControlsDockProps {
   isHeroTapped?: boolean;
   /** Hide tradition tab (template-locked customize & marketing embed previews). */
   hideFaithSelector?: boolean;
+  onOpenPdf?: () => void;
   className?: string;
 }
 
@@ -88,6 +90,7 @@ export function PreviewControlsDock({
   slug,
   isHeroTapped = false,
   hideFaithSelector = false,
+  onOpenPdf,
   className = "",
 }: PreviewControlsDockProps) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -371,6 +374,26 @@ export function PreviewControlsDock({
           bottom: "max(14px, env(safe-area-inset-bottom, 14px))",
         }}
       >
+        {/* PDF Stationery Button */}
+        {onOpenPdf && !isHeroTapped && (
+          <motion.button
+            type="button"
+            id="preview-pdf-btn"
+            aria-label="View Matching PDF Invitation Stationery"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenPdf();
+            }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            title="Matching PDF Stationery (2–3 Pages)"
+            className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-stone-950/85 hover:bg-stone-900 backdrop-blur-xl border border-amber-400/40 text-amber-300 shadow-[0_8px_24px_rgba(0,0,0,0.65)] flex items-center justify-center cursor-pointer select-none transition-colors"
+          >
+            <span className="absolute -inset-0.5 rounded-full bg-amber-500/20 blur-sm pointer-events-none" />
+            <FilePdf size={19} weight="bold" />
+          </motion.button>
+        )}
+
         {/* A. Controls Button (Sliders icon + Active tradition badge) - Hides on Tap to Open */}
         {!isHeroTapped && (
           <motion.button
@@ -868,6 +891,21 @@ export function PreviewControlsDock({
                 </Link>
 
                 <div className="flex items-center gap-2.5">
+                  {onOpenPdf && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsSheetOpen(false);
+                        onOpenPdf();
+                      }}
+                      className="flex items-center gap-1.5 text-xs font-semibold text-amber-400 hover:text-amber-300 transition-colors"
+                      title="Open Matching PDF Invitation Studio"
+                    >
+                      <FilePdf size={14} weight="bold" />
+                      <span>Matching PDF</span>
+                    </button>
+                  )}
+
                   <Link
                     href={`/customize/${templateId}${slug ? `?slug=${slug}` : ""}`}
                     className="flex items-center gap-1 text-xs font-semibold text-stone-400 hover:text-amber-300 transition-colors"

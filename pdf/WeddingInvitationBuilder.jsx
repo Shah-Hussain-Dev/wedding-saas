@@ -74,8 +74,25 @@ const CATEGORIES = [
  *  - initialData: a saved state object (same shape as initialState()). Skips localStorage restore.
  *  - onChange(data): called on every edit, e.g. to save to your database.
  */
-export default function WeddingInvitationBuilder({ initialData = null, onChange = null, storageKey = "wedding-invitation-builder:v2" } = {}) {
-  const [d, setD] = useState(() => initialData || initialState());
+export default function WeddingInvitationBuilder({
+  initialData = null,
+  onChange = null,
+  storageKey = "wedding-invitation-builder:v2",
+  isModal = false,
+  modalTitle = null,
+  onClose = null,
+} = {}) {
+  const [d, setD] = useState(() => {
+    const base = initialState();
+    if (!initialData) return base;
+    return {
+      ...base,
+      ...initialData,
+      couple: { ...base.couple, ...(initialData.couple || { bride: initialData.bride, groom: initialData.groom }) },
+      venue: { ...base.venue, ...(initialData.venue || { name: initialData.venueName, address: initialData.venueAddress }) },
+      parents: { ...base.parents, ...(initialData.parents || {}) },
+    };
+  });
   const [tab, setTab] = useState("template");
   const [category, setCategory] = useState("all");
   const [elementCat, setElementCat] = useState("all");
@@ -123,6 +140,23 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [d, hydrated]);
 
+  /* dynamic sync if initialData changes externally */
+  useEffect(() => {
+    if (initialData) {
+      setD((prev) => {
+        const base = initialState();
+        return {
+          ...base,
+          ...prev,
+          ...initialData,
+          couple: { ...base.couple, ...prev?.couple, ...(initialData.couple || { bride: initialData.bride, groom: initialData.groom }) },
+          venue: { ...base.venue, ...prev?.venue, ...(initialData.venue || { name: initialData.venueName, address: initialData.venueAddress }) },
+          parents: { ...base.parents, ...prev?.parents, ...(initialData.parents || {}) },
+        };
+      });
+    }
+  }, [initialData]);
+
   /* web fonts + re-fit when they finish loading */
   useEffect(() => {
     if (!document.getElementById("wib-fonts")) {
@@ -159,8 +193,16 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
   const theme = THEMES[d.themeId] || THEMES.sheeshMahal || THEMES.maroonGold;
 
   const coverBase = useMemo(
-    () => ({ colors: {}, pages: d.pages, couple: d.couple, heading: d.heading, invocation: d.invocation, date: d.date, venue: { name: d.venue.name } }),
-    [d.pages, d.couple, d.heading, d.invocation, d.date, d.venue.name]
+    () => ({
+      colors: {},
+      pages: d.pages,
+      couple: d.couple || { bride: d.bride || "", groom: d.groom || "" },
+      heading: d.heading,
+      invocation: d.invocation,
+      date: d.date || d.weddingDate,
+      venue: { name: d.venue?.name || d.venueName || "" },
+    }),
+    [d.pages, d.couple, d.bride, d.groom, d.heading, d.invocation, d.date, d.weddingDate, d.venue?.name, d.venueName]
   );
 
   const downloadPdf = () => {
@@ -175,7 +217,7 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
       host.className = "wib-print-root wib-portal-host";
     }
     const prev = document.title;
-    document.title = `${d.couple.bride || "Wedding"}-${d.couple.groom || "Invitation"}`.replace(/\s+/g, "-");
+    document.title = `${d.couple?.bride || d.bride || "Wedding"}-${d.couple?.groom || d.groom || "Invitation"}`.replace(/\s+/g, "-");
     const restore = () => { document.title = prev; window.removeEventListener("afterprint", restore); };
     window.addEventListener("afterprint", restore);
     // Allow DOM to layout print portal before opening browser print preview
@@ -637,12 +679,24 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
   const body = { template: templatesTab, elements: elementsTab, details: detailsTab, events: eventsTab, sections: sectionsTab, style: styleTab }[tab];
 
   return (
-    <div className="wibu">
+    <div className={`wibu ${isModal ? "is-modal" : ""}`}>
       <style>{CSS}</style>
 
       {/* 🌟 Mobile Ergonomic Bottom Action Bar (Thumb Zone) 🌟 */}
       <div className="wibu-mob-bottombar print:hidden">
         <div className="wibu-mob-nav-group" role="tablist">
+          {onClose && (
+            <button
+              type="button"
+              className="wibu-mob-nav-btn"
+              onClick={onClose}
+              title="Close"
+              style={{ color: "#ef4444" }}
+            >
+              <span>✕</span>
+              <span>Close</span>
+            </button>
+          )}
           <button
             type="button"
             className="wibu-mob-nav-btn"
@@ -676,7 +730,19 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
 
       <aside className={`wibu-side ${mobileView === "preview" ? "wibu-hidden-mobile" : ""}`}>
         <div className="wibu-head">
-          <h1>PDF Invitation Studio</h1>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+            <h1>{modalTitle || "PDF Invitation Studio"}</h1>
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                style={{ background: "none", border: "none", color: "#64748b", fontSize: "18px", cursor: "pointer", padding: "4px 8px", borderRadius: "4px", lineHeight: 1 }}
+                title="Close"
+              >
+                ✕
+              </button>
+            )}
+          </div>
           <p>Universal 2–3 page A5 wedding invitations with Canva-style direct editing.</p>
         </div>
         <div className="wibu-tabs" role="tablist">
@@ -690,6 +756,17 @@ export default function WeddingInvitationBuilder({ initialData = null, onChange 
       <main className={`wibu-main ${mobileView === "editor" ? "wibu-hidden-mobile" : ""}`}>
         <div className="wibu-bar">
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="wibu-btn small"
+                style={{ background: "#f1f5f9", color: "#334155", borderColor: "#cbd5e1", fontWeight: 600 }}
+                title="Close modal"
+              >
+                ✕ Close
+              </button>
+            )}
             <span>{pages.length} {pages.length === 1 ? "page" : "pages"} ({d.structure === "2-page" ? "2-Page Keepsake" : "3-Page Suite"}) · A5 portrait</span>
 
             {/* Zoom Controls */}

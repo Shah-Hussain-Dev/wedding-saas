@@ -80,6 +80,9 @@ export const CSS = `
 .wibu{--u-ink:#1f2330;--u-mute:#64748b;--u-line:#e2e8f0;--u-bg:#f8fafc;--u-brand:#073D31;--u-accent:#C8A45E;
   display:grid;grid-template-columns:minmax(340px,440px) 1fr;height:100vh;overflow:hidden;background:var(--u-bg);color:var(--u-ink);
   font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wibu.is-modal{height:100%!important;max-height:100vh!important}
+.wibu.is-modal .wibu-side{height:100%!important;max-height:100vh!important}
+.wibu.is-modal .wibu-main{height:100%!important;max-height:100vh!important}
 .wibu *{box-sizing:border-box}
 
 /* Left Sidebar with Dedicated Scrollbar */

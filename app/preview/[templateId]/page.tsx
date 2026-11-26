@@ -6,6 +6,7 @@ import { TemplateDemoPage } from "@/components/marketing/template-demo-page";
 import { TEMPLATES_MAP, NoorNikah, getTemplateDefaultData } from "@/templates";
 import { DemoBanner } from "@/components/preview/DemoBanner";
 import { PreviewControlsDock } from "@/components/preview/PreviewControlsDock";
+import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
 import {
   PreviewFaith,
   getDefaultFaithForTemplate,
@@ -110,6 +111,7 @@ function CustomizedInvitationPreview({
     return getDefaultFaithForTemplate(activeTemplateId);
   });
   const [isHeroTapped, setIsHeroTapped] = useState(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   const invitationData = getFaithAdjustedTemplateData(
     baseInvitationData,
@@ -232,7 +234,29 @@ function CustomizedInvitationPreview({
         onSelectFaith={(f) => setSelectedFaith(f)}
         slug={invitationData.slug || normalizedId}
         isHeroTapped={isHeroTapped}
+        onOpenPdf={() => setIsPdfModalOpen(true)}
       />
+
+      {/* Complimentary Matching Vector PDF Stationery Modal */}
+      {isPdfModalOpen && (
+        <PdfPreviewModal
+          isOpen={isPdfModalOpen}
+          onClose={() => setIsPdfModalOpen(false)}
+          templateId={activeTemplateId}
+          initialData={{
+            brideName: invitationData.brideName || invitationData.couple?.brideName,
+            groomName: invitationData.groomName || invitationData.couple?.groomName,
+            weddingDate: invitationData.weddingDate,
+            weddingTime: invitationData.weddingTime,
+            venueName: invitationData.venueName || invitationData.venue?.name,
+            venueAddress: invitationData.venueAddress || invitationData.venue?.address,
+            events: invitationData.events || [],
+            religion: selectedFaith,
+            sacredInvocation: invitationData.sacredInvocation,
+            sacredTranslation: invitationData.sacredTranslation,
+          }}
+        />
+      )}
     </div>
   );
 }
