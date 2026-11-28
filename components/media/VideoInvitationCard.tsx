@@ -2,7 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { Play, WhatsappLogo, Clock, Sparkle } from '@phosphor-icons/react';
+import Link from 'next/link';
+import { Play, WhatsappLogo, Clock, Sparkle, Sliders } from '@phosphor-icons/react';
 import { VideoInvitation, generateVideoWhatsAppUrl } from '@/data/video-invitations';
 
 interface VideoInvitationCardProps {
@@ -84,26 +85,37 @@ export function VideoInvitationCard({ video, onPreview }: VideoInvitationCardPro
           </p>
         </div>
 
-        {/* Action Buttons: Preview & WhatsApp */}
-        <div className="pt-2 border-t border-stone-800/80 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-          {/* Quick Preview Button */}
-          <button
-            onClick={() => onPreview(video)}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700/70 hover:border-amber-500/40 transition-colors cursor-pointer"
-          >
-            <Play size={14} weight="fill" />
-            <span>Watch Preview</span>
-          </button>
+        {/* Action Buttons: Preview, Studio Edit & WhatsApp */}
+        <div className="pt-2 border-t border-stone-800/80 flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            {/* Quick Preview Button */}
+            <button
+              onClick={() => onPreview(video)}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700/70 hover:border-amber-500/40 transition-colors cursor-pointer"
+            >
+              <Play size={13} weight="fill" />
+              <span>Watch</span>
+            </button>
+
+            {/* Customize in Video Studio */}
+            <Link
+              href="/studio"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 hover:border-amber-400 transition-colors cursor-pointer"
+            >
+              <Sliders size={13} weight="bold" />
+              <span>Edit Video</span>
+            </Link>
+          </div>
 
           {/* WhatsApp CTA Button */}
           <a
             href={whatsAppUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-950/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-950/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 cursor-pointer"
           >
-            <WhatsappLogo size={16} weight="fill" />
-            <span>Enquire</span>
+            <WhatsappLogo size={15} weight="fill" />
+            <span>Enquire on WhatsApp</span>
           </a>
         </div>
       </div>

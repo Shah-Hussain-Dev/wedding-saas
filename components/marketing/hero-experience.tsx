@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import {
   motion,
@@ -198,6 +199,20 @@ export function HeroExperience() {
   const [isModalPaused, setIsModalPaused] = useState(false);
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isPreviewOpen) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [isPreviewOpen]);
 
   const containerRef = useRef<HTMLElement | null>(null);
   const modalVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -896,17 +911,19 @@ export function HeroExperience() {
       )}
 
       {/* ========================================================= */}
-      {/* 5. WATCH DEMO CINEMATIC AUTO-CAROUSEL MODAL */}
+      {/* 5. WATCH DEMO CINEMATIC AUTO-CAROUSEL MODAL (Portaled to body) */}
       {/* ========================================================= */}
-      <AnimatePresence>
-        {isPreviewOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md"
-            onClick={() => setIsPreviewOpen(false)}
-          >
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isPreviewOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/90 backdrop-blur-md"
+                onClick={() => setIsPreviewOpen(false)}
+              >
             <motion.div
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -1121,7 +1138,9 @@ export function HeroExperience() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+    )}
     </section>
   );
 }

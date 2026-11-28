@@ -36,6 +36,8 @@ import {
   ArrowsClockwise,
   FilePdf,
   FloppyDisk,
+  FilmSlate,
+  VideoCamera,
 } from "@phosphor-icons/react";
 import { PdfPreviewModal } from "@/components/pdf-invitation/PdfPreviewModal";
 import { CulturalTradition } from "@/lib/pdf-theme-tokens";
@@ -2193,6 +2195,34 @@ export function InvitationCustomizerWizard({
                     <FilePdf size={16} weight="bold" className="text-[#C8A45E]" />
                     <span>Preview &amp; Download PDFs</span>
                   </button>
+                </div>
+
+                {/* ── WedInvites Video Studio Reel Showcase Card ── */}
+                <div className="flex min-w-0 flex-col justify-between gap-4 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/15 via-stone-900 to-stone-950 p-4 shadow-md sm:flex-row sm:items-center lg:flex-col lg:items-stretch text-white">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                      <span className="text-[10px] uppercase font-bold text-amber-300 tracking-widest font-sans">
+                        New: Video Studio Integration
+                      </span>
+                    </div>
+                    <h3 className="font-serif text-lg font-bold text-stone-100 flex items-center gap-2">
+                      <span>Generate Matching 9:16 Video Reel</span>
+                      <FilmSlate size={18} weight="fill" className="text-amber-400" />
+                    </h3>
+                    <p className="text-xs text-stone-300 max-w-md leading-relaxed">
+                      Convert your {meta.name} wedding details into an animated vertical video reel for Instagram &amp; WhatsApp Status. Easily toggle or remove sections, customize music, and download in full HD!
+                    </p>
+                  </div>
+
+                  <Link
+                    href={`/studio?template=${encodeURIComponent(templateId)}&groom=${encodeURIComponent(groomName)}&bride=${encodeURIComponent(brideName)}&date=${encodeURIComponent(weddingDate)}&venue=${encodeURIComponent(venueName)}`}
+                    target="_blank"
+                    className="px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-xs uppercase tracking-wider font-sans transition-all shadow-md hover:scale-105 active:scale-98 flex items-center justify-center gap-2 cursor-pointer shrink-0"
+                  >
+                    <VideoCamera size={16} weight="bold" />
+                    <span>Open in Video Studio</span>
+                  </Link>
                 </div>
 
                 {/* Status Note */}
