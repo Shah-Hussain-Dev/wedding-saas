@@ -2,7 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import WeddingInvitationBuilder from "@/pdf/WeddingInvitationBuilder";
+import dynamic from "next/dynamic";
+
+const WeddingInvitationBuilder = dynamic(
+  () => import("@/pdf/WeddingInvitationBuilder"),
+  { ssr: false }
+);
 import {
   ArrowLeft,
   FilePdf,

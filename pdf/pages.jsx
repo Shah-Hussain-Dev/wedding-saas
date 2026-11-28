@@ -1050,6 +1050,7 @@ function Side({ d, side, name, title, sideKey, editProps }) {
 
 /** Page 2 of 3-Page Cards: Families & Auspicious Ceremonies */
 function Families({ d, editProps = {} }) {
+  const { isPrint = false } = editProps;
   const c = d.couple;
   const bride = <Side d={d} side={d.families.brideSide} name={c.bride} title={c.brideTitle} sideKey="brideSide" editProps={editProps} />;
   const groom = <Side d={d} side={d.families.groomSide} name={c.groom} title={c.groomTitle} sideKey="groomSide" editProps={editProps} />;

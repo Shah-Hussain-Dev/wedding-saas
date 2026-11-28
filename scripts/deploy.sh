@@ -31,6 +31,9 @@ main() {
   git fetch origin main
   git reset --hard origin/main
 
+  echo "🧹 Cleaning previous build cache..."
+  rm -rf .next
+
   echo "📦 2. Installing dependencies..."
   npm ci --prefer-offline --no-audit || npm install --legacy-peer-deps --prefer-offline --no-audit
 
