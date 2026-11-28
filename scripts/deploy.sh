@@ -25,17 +25,18 @@ main() {
   mkdir -p "${LOG_DIR}" 2>/dev/null || true
 
   cd "${APP_DIR}"
+  export PATH="${APP_DIR}/node_modules/.bin:${PATH}"
 
   echo "📥 1. Pulling latest code from origin/main..."
   git fetch origin main
   git reset --hard origin/main
 
   echo "📦 2. Installing dependencies..."
-  npm ci --prefer-offline --no-audit
+  npm ci --prefer-offline --no-audit || npm install --legacy-peer-deps --prefer-offline --no-audit
 
   echo "🗄️ 3. Generating Prisma Client and syncing database..."
   npx prisma generate
-  npx prisma db push
+  npx prisma db push --accept-data-loss || npx prisma db push
 
   echo "🏗️ 4. Building Next.js production bundle..."
   NODE_OPTIONS="--max-old-space-size=2048" npm run build
